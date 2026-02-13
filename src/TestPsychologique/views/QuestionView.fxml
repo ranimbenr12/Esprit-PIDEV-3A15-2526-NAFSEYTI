@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="TestPsychologique.controllers.QuestionController"
+      spacing="0"
+      style="-fx-background-color: #f8f5f2;">
+
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <VBox.margin>
+            <Insets bottom="30"/>
+        </VBox.margin>
+
+        <Button text="← Retour" onAction="#handleBack"
+                style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #285921; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand;">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </Button>
+
+        <HBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
+            <Label text="❓" style="-fx-font-size: 36px;"/>
+            <VBox>
+                <Label text="Gestion des Questions"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <Label fx:id="lblTestInfo" text="Créez et gérez vos questions"
+                       style="-fx-font-size: 14px; -fx-text-fill: #666666;"/>
+            </VBox>
+        </HBox>
+
+        <Button fx:id="btnNouvelleQuestion" text="➕ Nouvelle Question" onAction="#toggleFormulaire"
+                style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 25; -fx-background-radius: 5; -fx-cursor: hand;">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </Button>
+    </HBox>
+
+    <!-- Test Filter Card -->
+    <HBox fx:id="testFilterCard" managed="false" visible="false" alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: linear-gradient(to right, #e8f5e9, #f1f8e9); -fx-background-radius: 10; -fx-padding: 15 20; -fx-border-color: #2e7d32; -fx-border-width: 2; -fx-border-radius: 10;">
+        <VBox.margin>
+            <Insets bottom="20"/>
+        </VBox.margin>
+        <Label text="📌" style="-fx-font-size: 24px;"/>
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="Questions filtrées pour le test:" style="-fx-font-size: 12px; -fx-text-fill: #555;"/>
+            <Label fx:id="lblSelectedTestName" text="Nom du Test"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+        </VBox>
+        <Button text="✖️ Afficher Toutes" onAction="#clearTestFilter"
+                style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 15; -fx-background-radius: 15; -fx-cursor: hand;">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </Button>
+    </HBox>
+
+    <!-- Form Card -->
+    <VBox fx:id="formulaireCard" managed="false" visible="false" spacing="20"
+          style="-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 10; -fx-padding: 25;">
+        <VBox.margin>
+            <Insets bottom="20"/>
+        </VBox.margin>
+
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="✏️" style="-fx-font-size: 24px;"/>
+            <Label fx:id="formTitle" text="Ajouter une Nouvelle Question"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+        </HBox>
+
+        <Separator/>
+
+        <GridPane hgap="20" vgap="15">
+
+            <Label text="Test Associé *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="cmbTestAssocie" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      promptText="Sélectionnez un test" prefWidth="400"/>
+
+            <Label text="Question *" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextArea fx:id="txtTexte" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      wrapText="true" prefRowCount="3"/>
+
+            <Label text="Type de Question *" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="comboTypeQuestion"
+                      GridPane.columnIndex="1"
+                      GridPane.rowIndex="2"
+                      prefWidth="200"
+                      promptText="Type de question"/>
+
+            <Label text="Réponses Possibles" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextArea fx:id="txtReponsesPossibles" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                      wrapText="true" prefRowCount="2"/>
+
+            <Label text="Points" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <HBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <TextField fx:id="txtPoints" promptText="Ex: 5" prefWidth="100"/>
+                <Label text="Ordre"/>
+                <TextField fx:id="txtOrdre" promptText="Ex: 1" prefWidth="100"/>
+            </HBox>
+
+            <Label text="Options" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <HBox spacing="30" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <CheckBox fx:id="chkObligatoire" text="Question obligatoire" selected="true"/>
+                <ComboBox fx:id="cmbStatus" promptText="Statut" prefWidth="150"/>
+            </HBox>
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="80"/>
+            </columnConstraints>
+
+        </GridPane>
+
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Button text="💾 Enregistrer" onAction="#handleSaveOrUpdate"/>
+            <Button text="🔄 Réinitialiser" onAction="#handleReset"/>
+            <Button text="✖️ Fermer" onAction="#toggleFormulaire"/>
+        </HBox>
+    </VBox>
+
+    <!-- Table -->
+    <VBox spacing="20" VBox.vgrow="ALWAYS"
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 25;">
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="🔍"/>
+            <TextField fx:id="txtRecherche" promptText="Rechercher une question..." HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblTotalQuestions" text="0 question(s)"/>
+        </HBox>
+
+        <TableView fx:id="tableQuestions" VBox.vgrow="ALWAYS">
+
+            <columns>
+
+                <TableColumn text="ID" prefWidth="50">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="id"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Test" prefWidth="150">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="testNom"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Question" prefWidth="300">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="texte"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Type" prefWidth="120">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="typeQuestion"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Points" prefWidth="80">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="points"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Ordre" prefWidth="70">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="ordre"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Obligatoire" prefWidth="100">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="obligatoire"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Status" prefWidth="90">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="status"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="280" style="-fx-alignment: CENTER;">
+                </TableColumn>
+
+            </columns>
+
+        </TableView>
+
+    </VBox>
+
+</VBox>

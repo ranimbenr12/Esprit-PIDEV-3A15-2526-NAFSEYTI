@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="TestPsychologique.controllers.TestController"
+      spacing="0" style="-fx-background-color: #f8f5f2;">
+
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <!-- Header with Back Button and Title -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <VBox.margin>
+            <Insets bottom="30"/>
+        </VBox.margin>
+
+        <!-- Back Button -->
+        <Button text="← Retour" onAction="#handleBack"
+                style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #285921; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand;">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+        </Button>
+
+        <!-- Title and Icon -->
+        <HBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
+            <Label text="📝" style="-fx-font-size: 36px;"/>
+            <VBox>
+                <Label text="Gestion des Tests Psychologiques"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <Label text="Créez et gérez vos tests psychologiques"
+                       style="-fx-font-size: 14px; -fx-text-fill: #666666;"/>
+            </VBox>
+        </HBox>
+
+        <!-- New Test Button -->
+        <Button fx:id="btnNouveauTest" text="➕ Nouveau Test" onAction="#toggleFormulaire"
+                style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 25; -fx-background-radius: 5; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+        </Button>
+    </HBox>
+
+    <!-- Formulaire Card (Hidden by default) -->
+    <VBox fx:id="formulaireCard" managed="false" visible="false" spacing="20"
+          style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+        <VBox.margin>
+            <Insets bottom="20"/>
+        </VBox.margin>
+
+        <!-- Form Title -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="✏️" style="-fx-font-size: 24px;"/>
+            <Label fx:id="formTitle" text="Ajouter un Nouveau Test"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+        </HBox>
+
+        <Separator style="-fx-background-color: #e0e0e0;"/>
+
+        <!-- Form Fields -->
+        <GridPane hgap="20" vgap="15">
+
+            <!-- Nom du Test -->
+            <Label text="Nom du Test *" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+            <TextField fx:id="txtNom" promptText="Ex: Test de Personnalité MBTI"
+                       GridPane.columnIndex="1" GridPane.rowIndex="0"
+                       style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10; -fx-font-size: 13px;"/>
+
+            <!-- Description -->
+            <Label text="Description *" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+            <TextArea fx:id="txtDescription" promptText="Décrivez brièvement le test..."
+                      wrapText="true" prefRowCount="3"
+                      GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10; -fx-font-size: 13px;"/>
+
+            <!-- Catégorie -->
+            <Label text="Catégorie" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+            <ComboBox fx:id="cmbCategorie" promptText="Sélectionnez une catégorie"
+                      GridPane.columnIndex="1" GridPane.rowIndex="2"
+                      style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 10;">
+                <items>
+                    <javafx.collections.FXCollections fx:factory="observableArrayList">
+
+                        <String fx:value="Personnalité"/>
+                        <String fx:value="Intelligence"/>
+                        <String fx:value="Aptitudes"/>
+                        <String fx:value="Émotionnel"/>
+                        <String fx:value="Comportemental"/>
+                        <String fx:value="Clinique"/>
+                        <String fx:value="Professionnel"/>
+                        <String fx:value="Autre"/>
+                    </javafx.collections.FXCollections>
+                </items>
+            </ComboBox>
+
+            <!-- Durée -->
+            <Label text="Durée (minutes)" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+            <TextField fx:id="txtDuree" promptText="Ex: 30"
+                       GridPane.columnIndex="1" GridPane.rowIndex="3"
+                       style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10; -fx-font-size: 13px;"/>
+
+            <!-- Status -->
+            <Label text="Status" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+            <ComboBox fx:id="cmbStatus" promptText="Statut du test"
+                      GridPane.columnIndex="1" GridPane.rowIndex="4"
+                      style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 10;">
+                <items>
+                    <javafx.collections.FXCollections fx:factory="observableArrayList">
+                        <String fx:value="actif"/>
+                        <String fx:value="inactif"/>
+                        <String fx:value="brouillon"/>
+                    </javafx.collections.FXCollections>
+                </items>
+            </ComboBox>
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="80"/>
+            </columnConstraints>
+        </GridPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Button text="💾 Enregistrer" onAction="#handleSaveOrUpdate"
+                    style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 5; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+            <Button text="🔄 Réinitialiser" onAction="#handleReset"
+                    style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 5; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+            <Button text="✖️ Fermer" onAction="#toggleFormulaire"
+                    style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-font-size: 14px; -fx-border-color: #ddd; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 12 30; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+        </HBox>
+    </VBox>
+
+    <!-- Table Card -->
+    <VBox spacing="20" VBox.vgrow="ALWAYS"
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+
+        <!-- Search Bar -->
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="🔍" style="-fx-font-size: 20px;"/>
+            <TextField fx:id="txtRecherche" promptText="Rechercher un test..."
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+            <Label fx:id="lblTotalTests" text="0 test(s)"
+                   style="-fx-font-size: 14px; -fx-text-fill: #666; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Table -->
+        <TableView fx:id="tableTests" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
+
+            <columns>
+                <TableColumn text="ID" prefWidth="60" style="-fx-alignment: CENTER;">
+                    <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                </TableColumn>
+
+
+
+                <TableColumn text="Description" prefWidth="300">
+                    <cellValueFactory><PropertyValueFactory property="description"/></cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Catégorie" prefWidth="120" style="-fx-alignment: CENTER;">
+                    <cellValueFactory><PropertyValueFactory property="categorie"/></cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Durée (min)" prefWidth="100" style="-fx-alignment: CENTER;">
+                    <cellValueFactory><PropertyValueFactory property="duree"/></cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Status" prefWidth="100" style="-fx-alignment: CENTER;">
+                    <cellValueFactory><PropertyValueFactory property="status"/></cellValueFactory>
+                </TableColumn>
+
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="280" style="-fx-alignment: CENTER;">
+                    <!-- Actions buttons will be added programmatically in controller -->
+                </TableColumn>
+            </columns>
+
+            <placeholder>
+                <VBox alignment="CENTER" spacing="15">
+                    <Label text="📋" style="-fx-font-size: 48px; -fx-opacity: 0.5;"/>
+                    <Label text="Aucun test disponible" style="-fx-font-size: 16px; -fx-text-fill: #999;"/>
+                    <Label text="Cliquez sur 'Nouveau Test' pour commencer" style="-fx-font-size: 12px; -fx-text-fill: #bbb;"/>
+                </VBox>
+            </placeholder>
+        </TableView>
+
+    </VBox>
+
+</VBox>

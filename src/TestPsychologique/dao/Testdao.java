@@ -117,14 +117,14 @@ public class Testdao {
             System.out.println("🔍 DEBUG - Lignes affectées : " + rowsAffected);
 
             if (rowsAffected > 0) {
-                System.out.println("✅ Test modifié avec succès !");
+                System.out.println(" Test modifié avec succès !");
                 return true;
             } else {
-                System.out.println("❌ Aucun test modifié (ID inexistant ?)");
+                System.out.println(" Aucun test modifié (ID inexistant ?)");
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de la modification : " + e.getMessage());
+            System.err.println(" Erreur lors de la modification : " + e.getMessage());
             e.printStackTrace();
         }
         return false;
