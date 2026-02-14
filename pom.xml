@@ -13,11 +13,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>25.0.2</javafx.version>
     </properties>
 
-
-
-    <!-- Ajoutez cette section -->
     <repositories>
         <repository>
             <id>central</id>
@@ -26,6 +24,18 @@
     </repositories>
 
     <dependencies>
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
         <!-- Driver MySQL -->
         <dependency>
             <groupId>com.mysql</groupId>

@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 
 public class TestController implements Initializable {
     @FXML private VBox formulaireCard;
-
     @FXML private HBox testFilterCard;
     @FXML private Label formTitle, lblTotalTests;
     @FXML private Button btnNouveauTest;
@@ -46,6 +45,10 @@ public class TestController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("=================================");
+        System.out.println("🔧 INITIALISATION DU TESTCONTROLLER");
+        System.out.println("=================================");
+
         setupTable();
         loadTests();
         setupSearchFilter();
@@ -53,9 +56,13 @@ public class TestController implements Initializable {
         // Set default values for ComboBoxes
         cmbCategorie.setValue("Personnalité");
         cmbStatus.setValue("actif");
+
+        System.out.println("✅ Initialisation terminée");
     }
 
     private void setupTable() {
+        System.out.println("📋 Configuration de la table...");
+
         // Setup action column with buttons
         colActions.setCellFactory(new Callback<TableColumn<Test, Void>, TableCell<Test, Void>>() {
             @Override
@@ -119,22 +126,27 @@ public class TestController implements Initializable {
 
         return btn;
     }
-    @FXML
-    private void handleDashboardClick() {
-        handleBack();
-    }
-
-    @FXML
-    private void handleTestsClick() {
-        // توا أصلاً إنت في tests، تنجم تخليها فارغة
-    }
 
     private void loadTests() {
+        System.out.println("\n📥 Chargement des tests depuis la base de données...");
         testsList.clear();
         List<Test> tests = testdao.getAllTests();
+
+        System.out.println("📊 Nombre de tests récupérés: " + tests.size());
+
+        if (tests.isEmpty()) {
+            System.out.println("⚠️ Aucun test trouvé dans la base de données");
+        } else {
+            for (Test test : tests) {
+                System.out.println("  - Test ID: " + test.getId() + " | Titre: " + test.getTitre());
+            }
+        }
+
         testsList.addAll(tests);
         tableTests.setItems(testsList);
         updateTestCount();
+
+        System.out.println("✅ Tests chargés dans la table");
     }
 
     private void setupSearchFilter() {
@@ -146,7 +158,6 @@ public class TestController implements Initializable {
                 for (Test test : testsList) {
                     if (test.getTitre().toLowerCase().contains(newValue.toLowerCase()) ||
                             test.getDescription().toLowerCase().contains(newValue.toLowerCase())) {
-
                         filteredList.add(test);
                     }
                 }
@@ -157,7 +168,9 @@ public class TestController implements Initializable {
     }
 
     private void updateTestCount() {
-        lblTotalTests.setText(tableTests.getItems().size() + " test(s)");
+        int count = tableTests.getItems().size();
+        lblTotalTests.setText(count + " test(s)");
+        System.out.println("📊 Compteur mis à jour: " + count + " test(s)");
     }
 
     @FXML
@@ -203,8 +216,11 @@ public class TestController implements Initializable {
 
     @FXML
     private void handleSaveOrUpdate() {
+        System.out.println("\n💾 Tentative d'enregistrement du test...");
+
         // Validation
         if (txtNom.getText().trim().isEmpty() || txtDescription.getText().trim().isEmpty()) {
+            System.out.println("❌ Validation échouée: champs vides");
             showAlert(Alert.AlertType.ERROR, "Erreur de Validation",
                     "Veuillez remplir tous les champs obligatoires (Nom et Description)");
             return;
@@ -212,38 +228,70 @@ public class TestController implements Initializable {
 
         try {
             if (selectedTest == null) {
+                System.out.println("➕ Mode AJOUT - Création d'un nouveau test");
+
                 // Ajouter nouveau test
                 Test newTest = new Test();
                 newTest.setTitre(txtNom.getText().trim());
-
                 newTest.setDescription(txtDescription.getText().trim());
                 newTest.setCategorie(cmbCategorie.getValue());
                 newTest.setDuree(txtDuree.getText().isEmpty() ? 0 : Integer.parseInt(txtDuree.getText()));
                 newTest.setStatus(cmbStatus.getValue());
+                newTest.setNiveau("Débutant"); // Valeur par défaut
+                newTest.setScoreMax(0); // Valeur par défaut
+                newTest.setCreatedBy(1); // Valeur par défaut (ID admin)
 
-                testdao.ajouterTest(newTest);
-                showAlert(Alert.AlertType.INFORMATION, "Succès", "Test ajouté avec succès!");
+                System.out.println("📝 Données du nouveau test:");
+                System.out.println("  - Titre: " + newTest.getTitre());
+                System.out.println("  - Description: " + newTest.getDescription());
+                System.out.println("  - Catégorie: " + newTest.getCategorie());
+                System.out.println("  - Durée: " + newTest.getDuree());
+                System.out.println("  - Status: " + newTest.getStatus());
+
+                boolean success = testdao.ajouterTest(newTest);
+
+                if (success) {
+                    System.out.println("✅ Test ajouté avec succès! ID: " + newTest.getId());
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Test ajouté avec succès!");
+                } else {
+                    System.out.println("❌ Échec de l'ajout du test");
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de l'ajout du test");
+                    return;
+                }
+
             } else {
+                System.out.println("✏️ Mode MODIFICATION - ID: " + selectedTest.getId());
+
                 // Modifier test existant
                 selectedTest.setTitre(txtNom.getText().trim());
-
                 selectedTest.setDescription(txtDescription.getText().trim());
                 selectedTest.setCategorie(cmbCategorie.getValue());
                 selectedTest.setDuree(txtDuree.getText().isEmpty() ? 0 : Integer.parseInt(txtDuree.getText()));
                 selectedTest.setStatus(cmbStatus.getValue());
 
-                testdao.modifierTest(selectedTest);
-                showAlert(Alert.AlertType.INFORMATION, "Succès", "Test modifié avec succès!");
+                boolean success = testdao.modifierTest(selectedTest);
+
+                if (success) {
+                    System.out.println("✅ Test modifié avec succès!");
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Test modifié avec succès!");
+                } else {
+                    System.out.println("❌ Échec de la modification du test");
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la modification du test");
+                    return;
+                }
             }
 
+            System.out.println("🔄 Rechargement de la liste des tests...");
             loadTests();
             toggleFormulaire();
 
         } catch (NumberFormatException e) {
+            System.out.println("❌ Erreur: durée invalide");
             showAlert(Alert.AlertType.ERROR, "Erreur", "La durée doit être un nombre valide");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'enregistrement: " + e.getMessage());
+            System.out.println("❌ Erreur inattendue: " + e.getMessage());
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'enregistrement: " + e.getMessage());
         }
     }
 
@@ -263,7 +311,6 @@ public class TestController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/TestPsychologique/views/QuestionsView.fxml"));
             Parent root = loader.load();
 
-            // Pass the selected test to QuestionController
             QuestionController controller = loader.getController();
             controller.setFilteredTest(test);
 
@@ -282,7 +329,6 @@ public class TestController implements Initializable {
         selectedTest = test;
 
         txtNom.setText(test.getTitre());
-
         txtDescription.setText(test.getDescription());
         cmbCategorie.setValue(test.getCategorie());
         txtDuree.setText(String.valueOf(test.getDuree()));
