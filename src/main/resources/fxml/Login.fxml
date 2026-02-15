@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.projet.fxml.controllers.LoginController">
+   <children>
+      <!-- Left Side - Branding -->
+      <VBox alignment="CENTER" layoutX="0.0" layoutY="0.0" prefHeight="600.0" prefWidth="400.0" styleClass="left-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label styleClass="app-title" text="Mental Health" />
+            <Label styleClass="app-subtitle" text="PLATFORM">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </Label>
+            <Label styleClass="tagline" text="Your wellbeing matters" />
+         </children>
+      </VBox>
+
+      <!-- Right Side - Login Form -->
+      <VBox alignment="CENTER" layoutX="400.0" layoutY="0.0" prefHeight="600.0" prefWidth="500.0" spacing="20.0" styleClass="right-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="50.0" left="80.0" right="80.0" top="50.0" />
+         </padding>
+         <children>
+            <Label styleClass="form-title" text="Welcome Back" />
+            <Label styleClass="form-subtitle" text="Please login to your account">
+               <VBox.margin>
+                  <Insets bottom="30.0" />
+               </VBox.margin>
+            </Label>
+
+            <!-- Email Field -->
+            <VBox spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Email" />
+                  <TextField fx:id="emailField" promptText="Enter your email" styleClass="custom-field" />
+               </children>
+            </VBox>
+
+            <!-- Password Field -->
+            <VBox spacing="8.0">
+               <children>
+                  <Label styleClass="field-label" text="Password" />
+                  <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="custom-field" />
+               </children>
+            </VBox>
+
+            <!-- Error Label -->
+            <Label fx:id="errorLabel" styleClass="error-label" textFill="RED" visible="false" />
+
+            <!-- Login Button -->
+            <Button fx:id="loginButton" maxWidth="Infinity" onAction="#handleLogin" styleClass="primary-button" text="Login">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+
+            <!-- Register Link -->
+            <HBox alignment="CENTER" spacing="5.0">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+               <children>
+                  <Label text="Don't have an account?" />
+                  <Hyperlink fx:id="registerLink" onAction="#handleRegister" styleClass="link" text="Register here" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

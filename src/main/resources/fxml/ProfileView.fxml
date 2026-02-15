@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.image.ImageView?>
+
+<ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.projet.fxml.controllers.ProfileViewController">
+   <content>
+      <VBox alignment="TOP_CENTER" spacing="30.0" styleClass="content-area">
+         <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+         </padding>
+         
+         <children>
+            <!-- Profile Header Card -->
+            <VBox alignment="CENTER" spacing="20.0" styleClass="profile-card">
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+               
+               <!-- Profile Picture -->
+               <StackPane>
+                  <Circle fx:id="profilePictureBorder" radius="75.0" strokeWidth="3.0">
+                     <style>
+                        -fx-fill: #f0f0f0;
+                        -fx-stroke: #667eea;
+                     </style>
+                  </Circle>
+                  <ImageView fx:id="profilePictureView" fitHeight="150.0" fitWidth="150.0" preserveRatio="false">
+                     <clip>
+                        <Circle centerX="75.0" centerY="75.0" radius="75.0" />
+                     </clip>
+                  </ImageView>
+                  <!-- Placeholder icon when no image -->
+                  <Label fx:id="profilePlaceholder" text="👤" visible="true">
+                     <style>
+                        -fx-font-size: 60px;
+                     </style>
+                  </Label>
+               </StackPane>
+               
+               <!-- User Name -->
+               <Label fx:id="nameLabel" text="Loading...">
+                  <style>
+                     -fx-font-size: 28px;
+                     -fx-font-weight: bold;
+                     -fx-text-fill: #333;
+                  </style>
+               </Label>
+               
+               <!-- Role Badge -->
+               <HBox alignment="CENTER">
+                  <Label fx:id="roleLabel" text="user" styleClass="role-badge">
+                     <style>
+                        -fx-background-color: #667eea;
+                        -fx-text-fill: white;
+                        -fx-padding: 5 15;
+                        -fx-background-radius: 15;
+                        -fx-font-size: 12px;
+                        -fx-font-weight: bold;
+                     </style>
+                  </Label>
+               </HBox>
+            </VBox>
+            
+            <!-- Profile Details Card -->
+            <VBox spacing="0" styleClass="details-card">
+               <padding>
+                  <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+               </padding>
+               
+               <!-- Email -->
+               <HBox spacing="15.0" styleClass="info-row">
+                  <padding>
+                     <Insets bottom="15.0" top="15.0" />
+                  </padding>
+                  <Label text="📧" styleClass="info-icon">
+                     <style>
+                        -fx-font-size: 18px;
+                     </style>
+                  </Label>
+                  <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                     <Label text="Email" styleClass="info-label">
+                        <style>
+                           -fx-font-size: 11px;
+                           -fx-text-fill: #999;
+                           -fx-font-weight: 600;
+                        </style>
+                     </Label>
+                     <Label fx:id="emailLabel" text="email@example.com" styleClass="info-value">
+                        <style>
+                           -fx-font-size: 14px;
+                           -fx-text-fill: #333;
+                        </style>
+                     </Label>
+                  </VBox>
+               </HBox>
+               
+               <Separator />
+               
+               <!-- Phone -->
+               <HBox spacing="15.0" styleClass="info-row">
+                  <padding>
+                     <Insets bottom="15.0" top="15.0" />
+                  </padding>
+                  <Label text="📱" styleClass="info-icon">
+                     <style>
+                        -fx-font-size: 18px;
+                     </style>
+                  </Label>
+                  <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                     <Label text="Phone Number" styleClass="info-label">
+                        <style>
+                           -fx-font-size: 11px;
+                           -fx-text-fill: #999;
+                           -fx-font-weight: 600;
+                        </style>
+                     </Label>
+                     <Label fx:id="phoneLabel" text="N/A" styleClass="info-value">
+                        <style>
+                           -fx-font-size: 14px;
+                           -fx-text-fill: #333;
+                        </style>
+                     </Label>
+                  </VBox>
+               </HBox>
+               
+               <Separator />
+               
+               <!-- Address -->
+               <HBox spacing="15.0" styleClass="info-row">
+                  <padding>
+                     <Insets bottom="15.0" top="15.0" />
+                  </padding>
+                  <Label text="🏠" styleClass="info-icon">
+                     <style>
+                        -fx-font-size: 18px;
+                     </style>
+                  </Label>
+                  <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                     <Label text="Address" styleClass="info-label">
+                        <style>
+                           -fx-font-size: 11px;
+                           -fx-text-fill: #999;
+                           -fx-font-weight: 600;
+                        </style>
+                     </Label>
+                     <Label fx:id="addressLabel" text="N/A" styleClass="info-value">
+                        <style>
+                           -fx-font-size: 14px;
+                           -fx-text-fill: #333;
+                        </style>
+                     </Label>
+                  </VBox>
+               </HBox>
+               
+               <Separator />
+               
+               <!-- Location -->
+               <HBox spacing="15.0" styleClass="info-row">
+                  <padding>
+                     <Insets bottom="15.0" top="15.0" />
+                  </padding>
+                  <Label text="📍" styleClass="info-icon">
+                     <style>
+                        -fx-font-size: 18px;
+                     </style>
+                  </Label>
+                  <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                     <Label text="Location" styleClass="info-label">
+                        <style>
+                           -fx-font-size: 11px;
+                           -fx-text-fill: #999;
+                           -fx-font-weight: 600;
+                        </style>
+                     </Label>
+                     <Label fx:id="locationLabel" text="N/A" styleClass="info-value">
+                        <style>
+                           -fx-font-size: 14px;
+                           -fx-text-fill: #333;
+                        </style>
+                     </Label>
+                  </VBox>
+               </HBox>
+            </VBox>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

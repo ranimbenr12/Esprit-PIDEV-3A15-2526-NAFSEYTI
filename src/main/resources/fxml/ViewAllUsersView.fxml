@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_LEFT" prefHeight="600.0" prefWidth="1000.0" spacing="15.0" styleClass="content-area" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.projet.fxml.controllers.ViewAllUsersViewController">
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+   
+   <children>
+      <Label text="All Users">
+         <style>
+            -fx-font-size: 24px;
+            -fx-font-weight: bold;
+         </style>
+      </Label>
+      
+      <Label text="Manage all registered users" textFill="#666" />
+      
+      <TableView fx:id="usersTable" prefHeight="400.0">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+         <columns>
+            <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" visible="false" />
+            <TableColumn fx:id="nameColumn" prefWidth="180.0" text="Name" />
+            <TableColumn fx:id="emailColumn" prefWidth="230.0" text="Email" />
+            <TableColumn fx:id="roleColumn" prefWidth="120.0" text="Role" />
+            <TableColumn fx:id="phoneColumn" prefWidth="150.0" text="Phone" />
+            <TableColumn fx:id="actionsColumn" prefWidth="200.0" text="Actions" />
+         </columns>
+      </TableView>
+      
+      <HBox alignment="CENTER_LEFT" spacing="20.0">
+         <Label fx:id="totalLabel" text="Total Users: 0">
+            <style>
+               -fx-font-weight: bold;
+            </style>
+         </Label>
+         <Button fx:id="refreshButton" onAction="#handleRefresh" text="Refresh">
+            <style>
+               -fx-background-color: #2196F3;
+               -fx-text-fill: white;
+               -fx-padding: 8 15;
+            </style>
+         </Button>
+      </HBox>
+   </children>
+</VBox>

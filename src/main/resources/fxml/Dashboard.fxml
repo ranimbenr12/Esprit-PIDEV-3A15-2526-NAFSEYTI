@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.projet.fxml.controllers.DashboardController">
+   <!-- Top Bar -->
+   <top>
+      <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="20.0" styleClass="top-bar" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
+         <children>
+            <Label styleClass="dashboard-title" text="Mental Health Platform">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="welcomeLabel" styleClass="welcome-label" text="Welcome, User!" />
+            <Button fx:id="logoutButton" onAction="#handleLogout" styleClass="secondary-button" text="Logout" />
+         </children>
+      </HBox>
+   </top>
+
+   <!-- Left Sidebar -->
+   <left>
+      <VBox prefWidth="200.0" spacing="10.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <children>
+            <Label styleClass="sidebar-title" text="Menu">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+            <Button fx:id="profileButton" maxWidth="Infinity" onAction="#showProfile" styleClass="menu-button" text="My Profile" />
+            <Button fx:id="updateButton" maxWidth="Infinity" onAction="#showUpdateProfile" styleClass="menu-button" text="Update Profile" />
+            <Button fx:id="changePasswordButton" maxWidth="Infinity" onAction="#showChangePassword" styleClass="menu-button" text="Change Password" />
+            <Button fx:id="deleteAccountButton" maxWidth="Infinity" onAction="#showDeleteAccount" styleClass="menu-button-danger" text="Delete Account" />
+            
+            <!-- Admin Section (visible only for admin) -->
+            <Separator>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Separator>
+            <Label fx:id="adminLabel" styleClass="sidebar-title" text="Admin" visible="false">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Button fx:id="viewAllUsersButton" maxWidth="Infinity" onAction="#showAllUsers" styleClass="menu-button" text="Manage Users" visible="false" />
+         </children>
+      </VBox>
+   </left>
+
+   <!-- Center Content Area -->
+   <center>
+      <StackPane fx:id="contentArea" styleClass="content-area" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Label styleClass="content-title" text="Welcome to Your Dashboard" />
+                  <Label styleClass="content-subtitle" text="Select an option from the menu" />
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>
