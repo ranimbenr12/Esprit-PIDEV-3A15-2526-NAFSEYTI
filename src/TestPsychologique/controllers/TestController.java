@@ -23,6 +23,14 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import TestPsychologique.dao.Questiondao;
+import TestPsychologique.models.Question;
+import java.util.List;
 
 public class TestController implements Initializable {
     @FXML private VBox formulaireCard;
@@ -306,22 +314,119 @@ public class TestController implements Initializable {
         formTitle.setText("Ajouter un Nouveau Test");
     }
 
+    /**
+     * Affiche les questions d'un test dans un popup
+     */
     private void handleGererQuestions(Test test) {
+        afficherQuestionsPopup(test);
+    }
+
+    /**
+     * Affiche les questions dans un popup
+     */
+    private void afficherQuestionsPopup(Test test) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TestPsychologique/views/QuestionsView.fxml"));
-            Parent root = loader.load();
+            System.out.println("📝 Chargement des questions pour: " + test.getTitre());
 
-            QuestionController controller = loader.getController();
-            controller.setFilteredTest(test);
+            Questiondao questionDao = new Questiondao();
+            List<Question> questions = questionDao.getQuestionsByTestId(test.getId());
 
-            Stage stage = (Stage) tableTests.getScene().getWindow();
-            Scene scene = new Scene(root);
+            if (questions == null || questions.isEmpty()) {
+                showAlert(Alert.AlertType.INFORMATION, "Questions", "Ce test ne contient pas encore de questions.");
+                return;
+            }
+
+            // Créer une nouvelle fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("Questions - " + test.getTitre() + " (" + questions.size() + ")");
+
+            VBox mainBox = new VBox(20);
+            mainBox.setPadding(new Insets(30));
+            mainBox.setStyle("-fx-background-color: #f8f5f2;");
+
+            // Titre
+            Label titleLabel = new Label("📝 Questions du test");
+            titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #285921;");
+
+            Label subtitleLabel = new Label(test.getTitre());
+            subtitleLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666;");
+
+            // ScrollPane
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setFitToWidth(true);
+            scrollPane.setStyle("-fx-background: transparent;");
+
+            VBox questionsBox = new VBox(15);
+            questionsBox.setPadding(new Insets(10));
+
+            // Ajouter chaque question
+            int index = 1;
+            for (Question question : questions) {
+                VBox questionCard = new VBox(10);
+                questionCard.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);");
+
+                Label numLabel = new Label("Question " + index);
+                numLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #285921; -fx-background-color: #e8f5e9; -fx-padding: 5 15; -fx-background-radius: 15;");
+
+                Label questionLabel = new Label(question.getTexte());
+                questionLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #333;");
+                questionLabel.setWrapText(true);
+
+                HBox metaBox = new HBox(15);
+                Label typeLabel = new Label("Type: " + question.getTypeQuestion());
+                typeLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+                Label pointsLabel = new Label("Points: " + question.getPoints());
+                pointsLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+                metaBox.getChildren().addAll(typeLabel, pointsLabel);
+
+                questionCard.getChildren().addAll(numLabel, questionLabel, metaBox);
+
+                if (question.getReponsesPossibles() != null && !question.getReponsesPossibles().isEmpty()) {
+                    Label reponsesLabel = new Label("Réponses: " + question.getReponsesPossibles());
+                    reponsesLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+                    reponsesLabel.setWrapText(true);
+                    questionCard.getChildren().add(reponsesLabel);
+                }
+
+                questionsBox.getChildren().add(questionCard);
+                index++;
+            }
+
+            scrollPane.setContent(questionsBox);
+            VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+            // Boutons
+            HBox buttonsBox = new HBox(15);
+            buttonsBox.setAlignment(Pos.CENTER);
+
+            Button closeBtn = new Button("Fermer");
+            closeBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 5;");
+            closeBtn.setOnAction(e -> stage.close());
+
+            Button addBtn = new Button("+ Ajouter une question");
+            addBtn.setStyle("-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 5;");
+            addBtn.setOnAction(e -> {
+                stage.close();
+                // TODO: Ouvrir l'interface d'ajout de question
+                System.out.println("Ajout de question pour test: " + test.getId());
+            });
+
+            buttonsBox.getChildren().addAll(addBtn, closeBtn);
+
+            mainBox.getChildren().addAll(titleLabel, subtitleLabel, scrollPane, buttonsBox);
+
+            Scene scene = new Scene(mainBox, 800, 600);
             stage.setScene(scene);
             stage.show();
 
+            System.out.println("✅ Questions affichées en popup!");
+
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue des questions");
+            System.err.println("❌ Erreur: " + e.getMessage());
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'afficher les questions: " + e.getMessage());
         }
     }
 

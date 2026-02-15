@@ -2,11 +2,11 @@ package TestPsychologique.dao;
 
 import TestPsychologique.models.Resultat;
 import TestPsychologique.models.Interpretation;
+import TestPsychologique.dao.DataBaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Resultatdao {
 
@@ -104,7 +104,7 @@ public class Resultatdao {
                 resultats.add(resultat);
             }
 
-            System.out.println("✅ " + resultats.size() + " résultats trouvés pour l'utilisateur " + userId);
+            System.out.println("✅ " + resultats.size() + " résultat(s) trouvé(s) pour l'utilisateur " + userId);
 
         } catch (SQLException e) {
             System.err.println("❌ Erreur lors de la récupération des résultats: " + e.getMessage());
@@ -115,10 +115,11 @@ public class Resultatdao {
     }
 
     /**
-     * Récupérer un résultat par son ID
+     * Récupérer un résultat par son ID avec les infos du test
      */
-    public Resultat getResultatById(int resultatId) {
-        String sql = "SELECT * FROM resultats WHERE id = ?";
+    public Resultat getResultatByIdAvecTest(int resultatId) {
+        String sql = "SELECT r.*, t.titre as test_titre FROM resultats r " +
+                "JOIN tests t ON r.test_id = t.id WHERE r.id = ?";
 
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

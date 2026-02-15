@@ -10,51 +10,33 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.File;
-
 public class ResultatViewController {
 
-    @FXML
-    private Label testNameLabel;
-
-    @FXML
-    private Label scoreLabel;
-
-    @FXML
-    private Label questionsLabel;
-
-    @FXML
-    private Label interpretationTitreLabel;
-
-    @FXML
-    private Label interpretationDescLabel;
-
-    @FXML
-    private Label interpretationConseilsLabel;
-
-    @FXML
-    private VBox interpretationCard;
-
-    @FXML
-    private VBox conseilsBox;
+    @FXML private Label testNameLabel;
+    @FXML private Label scoreLabel;
+    @FXML private Label questionsLabel;
+    @FXML private Label interpretationTitreLabel;
+    @FXML private Label interpretationDescLabel;
+    @FXML private Label interpretationConseilsLabel;
+    @FXML private VBox interpretationCard;
+    @FXML private VBox conseilsBox;
 
     private Test currentTest;
+    private int scoreTotal;
+    private int scoreMax;
 
     /**
      * Affiche le résultat du test avec son interprétation
      */
     public void afficherResultat(Test test, int scoreTotal, int questionsRepondues, int totalQuestions, Interpretation interpretation) {
         this.currentTest = test;
+        this.scoreTotal = scoreTotal;
 
         // Afficher le nom du test
         testNameLabel.setText(test.getTitre());
 
-        // Afficher le score
-        int scoreMax = test.getScoreMax();
-        if (scoreMax == 0) {
-            // Calculer le score max basé sur les questions
-            scoreMax = totalQuestions * 5; // estimation
-        }
+        // Calculer le score max (par exemple: nombre de questions × 5 points)
+        this.scoreMax = totalQuestions * 5;
         scoreLabel.setText(scoreTotal + " / " + scoreMax);
 
         // Afficher les questions répondues
@@ -75,9 +57,11 @@ public class ResultatViewController {
                 conseilsBox.setManaged(false);
             }
         } else {
-            // Pas d'interprétation disponible
-            interpretationCard.setVisible(false);
-            interpretationCard.setManaged(false);
+            // Pas d'interprétation disponible - afficher un message par défaut
+            interpretationTitreLabel.setText("Résultat enregistré");
+            interpretationDescLabel.setText("Votre score a été enregistré. Consultez votre psychologue pour une interprétation détaillée.");
+            conseilsBox.setVisible(false);
+            conseilsBox.setManaged(false);
         }
     }
 
@@ -87,8 +71,7 @@ public class ResultatViewController {
     @FXML
     private void returnToHome() {
         try {
-            File fxmlFile = new File("src/TestPsychologique/views/UserInterface.fxml");
-            FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/UserInterface.fxml"));
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
@@ -97,7 +80,7 @@ public class ResultatViewController {
             stage.setTitle("NAFSEYTI - Interface Utilisateur");
 
         } catch (Exception e) {
-            System.err.println("Erreur lors du retour à l'accueil: " + e.getMessage());
+            System.err.println("❌ Erreur lors du retour à l'accueil: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -108,21 +91,17 @@ public class ResultatViewController {
     @FXML
     private void refaireTest() {
         try {
-            File fxmlFile = new File("src/TestPsychologique/views/ListTestsfront.fxml");
-            FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+            // Fermer la fenêtre actuelle et retourner à la liste des tests
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ListTests.fxml"));
             Parent root = loader.load();
-
-            // Passer le test au contrôleur
-            ListTestsfrontController controller = loader.getController();
-            controller.initTest(currentTest);
 
             Scene scene = new Scene(root);
             Stage stage = (Stage) testNameLabel.getScene().getWindow();
             stage.setScene(scene);
-            stage.setTitle("Test: " + currentTest.getTitre());
+            stage.setTitle("Tests Disponibles");
 
         } catch (Exception e) {
-            System.err.println("Erreur lors du rechargement du test: " + e.getMessage());
+            System.err.println("❌ Erreur lors du rechargement: " + e.getMessage());
             e.printStackTrace();
         }
     }

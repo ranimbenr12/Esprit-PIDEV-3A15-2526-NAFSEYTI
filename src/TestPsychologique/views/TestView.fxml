@@ -165,9 +165,7 @@
                    style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
 
             <columns>
-                <TableColumn text="ID" prefWidth="60" style="-fx-alignment: CENTER;">
-                    <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
-                </TableColumn>
+
 
                 <!-- ✅ COLONNE TITRE AJOUTÉE ICI -->
                 <TableColumn fx:id="colNom" text="Titre" prefWidth="200">

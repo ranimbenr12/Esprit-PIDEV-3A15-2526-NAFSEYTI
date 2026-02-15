@@ -144,17 +144,9 @@
 
             <columns>
 
-                <TableColumn text="ID" prefWidth="50">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="id"/>
-                    </cellValueFactory>
-                </TableColumn>
 
-                <TableColumn text="Test" prefWidth="150">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="testNom"/>
-                    </cellValueFactory>
-                </TableColumn>
+
+
 
                 <TableColumn text="Question" prefWidth="300">
                     <cellValueFactory>

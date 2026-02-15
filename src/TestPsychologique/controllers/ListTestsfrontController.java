@@ -1,8 +1,11 @@
 package TestPsychologique.controllers;
 
 import TestPsychologique.dao.Questiondao;
+import TestPsychologique.dao.Resultatdao;
 import TestPsychologique.models.Question;
 import TestPsychologique.models.Test;
+import TestPsychologique.models.Resultat;
+import TestPsychologique.models.Interpretation;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -52,9 +55,14 @@ public class ListTestsfrontController {
     private int currentQuestionIndex = 0;
     private Map<Integer, String> answers; // questionId -> response
     private Questiondao questionDao;
+    private Resultatdao resultatDao;
+
+    // TODO: Remplacer par l'ID de l'utilisateur connecté via SessionManager
+    private int userId = 1; // ← À MODIFIER
 
     public ListTestsfrontController() {
         questionDao = new Questiondao();
+        resultatDao = new Resultatdao();
         answers = new HashMap<>();
     }
 
@@ -410,7 +418,7 @@ public class ListTestsfrontController {
     }
 
     /**
-     * Soumettre le test
+     * Soumettre le test - MODIFIÉ AVEC ENREGISTREMENT DU RÉSULTAT
      */
     @FXML
     public void submitTest() {
@@ -428,25 +436,311 @@ public class ListTestsfrontController {
             }
         }
 
-        // Afficher un résumé
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Test terminé");
-        alert.setHeaderText("Félicitations! 🎉");
-        alert.setContentText("Vous avez répondu à " + answers.size() + " questions sur " + questions.size() + ".\n\nVos résultats seront bientôt disponibles.");
-        alert.showAndWait();
+        // 🆕 CALCUL DU SCORE
+        int scoreTotal = calculerScore();
 
-        // Retourner à l'interface principale
-        returnToHome();
+        System.out.println("📊 Score calculé: " + scoreTotal + " points");
+        System.out.println("📝 Questions répondues: " + answers.size() + "/" + questions.size());
+
+        // 🆕 ENREGISTRER LE RÉSULTAT
+        enregistrerEtAfficherResultat(scoreTotal);
     }
 
+    /**
+     * 🆕 Calculer le score total selon les réponses
+     */
+    private int calculerScore() {
+        int score = 0;
+
+        for (Question question : questions) {
+            String reponseUser = answers.get(question.getId());
+
+            if (reponseUser != null && !reponseUser.trim().isEmpty()) {
+                // Ajouter les points de la question
+                score += question.getPoints();
+
+                // TODO: Si vous voulez vérifier les bonnes réponses:
+                // if (reponseUser.equals(question.getBonneReponse())) {
+                //     score += question.getPoints();
+                // }
+            }
+        }
+
+        return score;
+    }
+
+    /**
+     * 🆕 Enregistrer le résultat et afficher l'interprétation
+     */
+    private void enregistrerEtAfficherResultat(int scoreTotal) {
+        try {
+            System.out.println("💾 Enregistrement du résultat...");
+
+            // 1. Créer l'objet Resultat
+            Resultat resultat = new Resultat(userId, currentTest.getId(), scoreTotal);
+
+            // 2. Enregistrer dans la BDD
+            int resultatId = resultatDao.enregistrerResultat(resultat);
+
+            if (resultatId > 0) {
+                System.out.println("✅ Résultat enregistré avec ID: " + resultatId);
+
+                // 3. Récupérer l'interprétation selon le score
+                Interpretation interpretation = resultatDao.getInterpretation(
+                        currentTest.getId(),
+                        scoreTotal
+                );
+
+                if (interpretation != null) {
+                    System.out.println("✅ Interprétation trouvée: " + interpretation.getTitre());
+                } else {
+                    System.out.println("⚠️ Aucune interprétation trouvée pour ce score");
+                }
+
+                // 4. Afficher la page de résultat
+                afficherPageResultat(scoreTotal, interpretation);
+
+            } else {
+                System.err.println("❌ Erreur lors de l'enregistrement du résultat");
+
+                // Afficher quand même le résultat sans l'enregistrer
+                showAlert("Avertissement",
+                        "Le résultat n'a pas pu être enregistré, mais vous pouvez voir votre score.",
+                        Alert.AlertType.WARNING);
+
+                afficherPageResultat(scoreTotal, null);
+            }
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur: " + e.getMessage());
+            e.printStackTrace();
+
+            showAlert("Erreur",
+                    "Une erreur est survenue lors de l'enregistrement du résultat.",
+                    Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * 🆕 Afficher la page de résultat avec l'interprétation
+     */
+    /**
+     * 🎨 Afficher un popup moderne et élégant pour les résultats
+     */
+    private void afficherPageResultat(int scoreTotal, Interpretation interpretation) {
+        System.out.println("🎉 Affichage du résultat en popup élégant...");
+
+        // Créer une nouvelle fenêtre (Stage)
+        Stage resultStage = new Stage();
+        resultStage.setTitle("✅ Résultats du Test");
+        resultStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        // Container principal
+        VBox mainContainer = new VBox(0);
+        mainContainer.setStyle("-fx-background-color: #f8f5f2;");
+
+        // ========== HEADER AVEC DÉGRADÉ ==========
+        StackPane header = new StackPane();
+        header.setPrefHeight(150);
+        header.setStyle("-fx-background-color: linear-gradient(to right, #285921, #2e7d32); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 5);");
+
+        VBox headerContent = new VBox(10);
+        headerContent.setAlignment(Pos.CENTER);
+        headerContent.setPadding(new Insets(20));
+
+        Label successIcon = new Label("🎉");
+        successIcon.setStyle("-fx-font-size: 48px;");
+
+        Label headerTitle = new Label("Félicitations !");
+        headerTitle.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;");
+
+        Label headerSubtitle = new Label("Vous avez terminé le test : " + currentTest.getTitre());
+        headerSubtitle.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.9);");
+        headerSubtitle.setWrapText(true);
+        headerSubtitle.setAlignment(Pos.CENTER);
+
+        headerContent.getChildren().addAll(successIcon, headerTitle, headerSubtitle);
+        header.getChildren().add(headerContent);
+
+        // ========== ZONE SCORE ==========
+        VBox scoreSection = new VBox(15);
+        scoreSection.setPadding(new Insets(30, 40, 30, 40));
+        scoreSection.setAlignment(Pos.CENTER);
+        scoreSection.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        VBox.setMargin(scoreSection, new Insets(30, 40, 20, 40));
+
+        Label scoreLabel = new Label("VOTRE SCORE");
+        scoreLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #666; -fx-letter-spacing: 2px;");
+
+        // Score géant avec cercle
+        StackPane scoreCircle = new StackPane();
+        scoreCircle.setPrefSize(160, 160);
+        scoreCircle.setStyle("-fx-background-color: linear-gradient(to bottom right, #e8f5e9, #c8e6c9); -fx-background-radius: 80; -fx-border-color: #2e7d32; -fx-border-width: 4; -fx-border-radius: 80;");
+
+        Label scoreValue = new Label(String.valueOf(scoreTotal));
+        scoreValue.setStyle("-fx-font-size: 64px; -fx-font-weight: bold; -fx-text-fill: #285921;");
+
+        Label pointsLabel = new Label("points");
+        pointsLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666;");
+
+        VBox scoreBox = new VBox(5);
+        scoreBox.setAlignment(Pos.CENTER);
+        scoreBox.getChildren().addAll(scoreValue, pointsLabel);
+
+        scoreCircle.getChildren().add(scoreBox);
+
+        // Stats
+        HBox statsBox = new HBox(30);
+        statsBox.setAlignment(Pos.CENTER);
+        statsBox.setPadding(new Insets(15, 0, 0, 0));
+
+        VBox questionsBox = createStatBox("📝", answers.size() + "/" + questions.size(), "Questions répondues");
+        VBox completionBox = createStatBox("✅", Math.round((float)answers.size() / questions.size() * 100) + "%", "Taux de complétion");
+
+        statsBox.getChildren().addAll(questionsBox, completionBox);
+
+        scoreSection.getChildren().addAll(scoreLabel, scoreCircle, statsBox);
+
+        // ========== ZONE INTERPRÉTATION ==========
+        VBox interpretationSection = null;
+
+        if (interpretation != null) {
+            interpretationSection = new VBox(15);
+            interpretationSection.setPadding(new Insets(25));
+            interpretationSection.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+            VBox.setMargin(interpretationSection, new Insets(0, 40, 20, 40));
+
+            // Titre de l'interprétation
+            HBox interpHeader = new HBox(10);
+            interpHeader.setAlignment(Pos.CENTER_LEFT);
+
+            Label interpIcon = new Label("🎯");
+            interpIcon.setStyle("-fx-font-size: 24px;");
+
+            Label interpTitle = new Label(interpretation.getTitre());
+            interpTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;");
+
+            interpHeader.getChildren().addAll(interpIcon, interpTitle);
+
+            // Description
+            VBox descBox = new VBox(8);
+            descBox.setPadding(new Insets(10, 0, 0, 0));
+
+            Label descTitle = new Label("📝 Description");
+            descTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #666;");
+
+            Label descText = new Label(interpretation.getDescription());
+            descText.setStyle("-fx-font-size: 14px; -fx-text-fill: #333; -fx-line-spacing: 5px;");
+            descText.setWrapText(true);
+
+            descBox.getChildren().addAll(descTitle, descText);
+
+            // Recommandations
+            VBox conseilsBox = null;
+            if (interpretation.getConseils() != null && !interpretation.getConseils().isEmpty()) {
+                conseilsBox = new VBox(8);
+                conseilsBox.setPadding(new Insets(10, 0, 0, 0));
+
+                Label conseilsTitle = new Label("💡 Recommandations");
+                conseilsTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #666;");
+
+                Label conseilsText = new Label(interpretation.getConseils());
+                conseilsText.setStyle("-fx-font-size: 14px; -fx-text-fill: #333; -fx-line-spacing: 5px;");
+                conseilsText.setWrapText(true);
+
+                conseilsBox.getChildren().addAll(conseilsTitle, conseilsText);
+            }
+
+            interpretationSection.getChildren().addAll(interpHeader, new Separator(), descBox);
+            if (conseilsBox != null) {
+                interpretationSection.getChildren().addAll(new Separator(), conseilsBox);
+            }
+        }
+
+        // ========== BOUTONS ==========
+        HBox buttonsBox = new HBox(15);
+        buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.setPadding(new Insets(20, 40, 30, 40));
+
+        Button closeButton = new Button("Fermer");
+        closeButton.setStyle("-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand;");
+        closeButton.setOnAction(e -> {
+            resultStage.close();
+            // Fermer aussi la fenêtre du test
+            try {
+                Stage stage = (Stage) questionContainer.getScene().getWindow();
+                stage.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Button homeButton = new Button("🏠 Retour à l'accueil");
+        homeButton.setStyle("-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand;");
+        homeButton.setOnAction(e -> {
+            resultStage.close();
+            returnToHome();
+        });
+
+        // Effets hover
+        closeButton.setOnMouseEntered(e -> closeButton.setStyle("-fx-background-color: #616161; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand;"));
+        closeButton.setOnMouseExited(e -> closeButton.setStyle("-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand;"));
+
+        homeButton.setOnMouseEntered(e -> homeButton.setStyle("-fx-background-color: #1b5e20; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand;"));
+        homeButton.setOnMouseExited(e -> homeButton.setStyle("-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand;"));
+
+        buttonsBox.getChildren().addAll(homeButton, closeButton);
+
+        // ========== ASSEMBLAGE ==========
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: #f8f5f2; -fx-background-color: #f8f5f2;");
+
+        VBox contentBox = new VBox();
+        contentBox.getChildren().add(scoreSection);
+        if (interpretationSection != null) {
+            contentBox.getChildren().add(interpretationSection);
+        }
+
+        scrollPane.setContent(contentBox);
+
+        mainContainer.getChildren().addAll(header, scrollPane, buttonsBox);
+
+        // ========== SCÈNE ==========
+        Scene scene = new Scene(mainContainer, 650, 750);
+        resultStage.setScene(scene);
+        resultStage.setResizable(false);
+        resultStage.show();
+
+        System.out.println("✅ Popup élégant affiché!");
+    }
+
+    /**
+     * 🎨 Créer une petite carte de statistique
+     */
+    private VBox createStatBox(String icon, String value, String label) {
+        VBox box = new VBox(5);
+        box.setAlignment(Pos.CENTER);
+
+        Label iconLabel = new Label(icon);
+        iconLabel.setStyle("-fx-font-size: 24px;");
+
+        Label valueLabel = new Label(value);
+        valueLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;");
+
+        Label textLabel = new Label(label);
+        textLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+        box.getChildren().addAll(iconLabel, valueLabel, textLabel);
+        return box;
+    }
     /**
      * Retourne à l'interface principale
      */
     @FXML
     public void returnToHome() {
         try {
-            File fxmlFile = new File("src/TestPsychologique/views/UserInterface.fxml");
-            FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TestPsychologique/views/UserInterface.fxml"));
             Parent root = loader.load();
 
             Scene scene = new Scene(root);

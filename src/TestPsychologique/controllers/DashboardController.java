@@ -9,9 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;  // AJOUTÉ
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.InputStream;  // AJOUTÉ
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -19,6 +22,8 @@ public class DashboardController implements Initializable {
 
     @FXML private StackPane contentArea;
     @FXML private Label lblTotalTests, lblTotalQuestions;
+    @FXML private ImageView logoImage;        // AJOUTÉ
+    @FXML private ImageView backgroundImage;   // AJOUTÉ
 
     @FXML private Button btnDashboard, btnUsers, btnAppointments, btnContent;
     @FXML private Button btnTests, btnQuestions, btnEvents, btnTracking, btnFeedback;
@@ -30,6 +35,28 @@ public class DashboardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loadStatistics();
         setActiveButton(btnDashboard);
+        chargerImages();  // MODIFIÉ (au lieu de chargerLogo)
+    }
+
+    // MODIFIÉ - méthode pour charger le logo ET l'image de fond
+    private void chargerImages() {
+        try {
+            // Charger le logo
+            InputStream logoStream = getClass().getResourceAsStream("../views/logo.png");
+            if (logoStream != null) {
+                Image logo = new Image(logoStream);
+                logoImage.setImage(logo);
+            }
+
+            // Charger l'image de fond
+            InputStream bgStream = getClass().getResourceAsStream("../views/background.jpg");
+            if (bgStream != null) {
+                Image bg = new Image(bgStream);
+                backgroundImage.setImage(bg);
+            }
+        } catch (Exception e) {
+            System.err.println("Images non chargées: " + e.getMessage());
+        }
     }
 
     private void loadStatistics() {
