@@ -1,0 +1,125 @@
+/* ================== BODY ET FOND ================== */
+.root {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #f5f5f5;
+}
+
+/* ================== SIDEBAR ================== */
+.vbox.sidebar {
+    -fx-background-color: #ece6df;
+    -fx-padding: 20 10;
+    -fx-spacing: 5;
+}
+
+.vbox.sidebar .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #69685c;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+}
+
+.vbox.sidebar .button:hover {
+    -fx-background-color: #d6d0c3;
+}
+
+.vbox.sidebar .button.active {
+    -fx-background-color: #374535;
+    -fx-text-fill: white;
+}
+
+/* ================== HEADER ================== */
+.hbox-header {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 10;
+    -fx-padding: 10 0;
+}
+
+.hbox-header .label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.hbox-header .image-view {
+    -fx-fit-height: 50;
+    -fx-fit-width: 50;
+}
+
+/* ================== CARTES ================== */
+.vbox-card {
+    -fx-background-color: rgba(255,255,255,0.7);
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+}
+
+.vbox-card .label-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.vbox-card .label-count {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 0;
+}
+
+.vbox-card .label-desc {
+    -fx-text-fill: #666;
+}
+
+/* ================== BOUTONS DES CARTES ================== */
+.vbox-card .button {
+    -fx-background-color: #374535;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.vbox-card .button:hover {
+    -fx-background-color: #2e7d32;
+}
+
+/* ================== FLOWPANE FORUM ================== */
+.flow-pane {
+    -fx-padding: 10;
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+}
+
+.flow-pane .vbox {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+}
+
+.flow-pane .vbox .label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.flow-pane .vbox .button {
+    -fx-background-color: #374535;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 8 15;
+}
+
+.flow-pane .vbox .button:hover {
+    -fx-background-color: #2e7d32;
+}
+
+/* ================== IMAGES ================== */
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+/* ================== REGION POUR ESPACEMENT ================== */
+.region-spacer {
+    -fx-background-color: transparent;
+    -fx-min-height: 20;
+}
