@@ -15,7 +15,7 @@ public class test {
         s1.setidpsychologue(2);
         s1.settitre("Suivi de stress");
         s1.setdescription("Accompagnement pour gérer le stress des examens");
-        s1.setstatut("actif");
+        s1.settype_suivi("actif");
 
         // Ajouter le suivi à la base de données
         suiviService service = new suiviService();

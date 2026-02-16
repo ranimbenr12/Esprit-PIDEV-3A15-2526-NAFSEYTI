@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<!-- ✅ fx:controller sur l'élément RACINE ScrollPane -->
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.projet.gui.SuiviClientController"
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            style="-fx-background-color: #f8f5f2; -fx-border-color: transparent;">
+
+    <VBox spacing="15"
+          style="-fx-background-color: #f8f5f2; -fx-padding: 25;"
+          fillWidth="true">
+
+        <!-- TITRE -->
+        <Label text="📈 Mon Progression"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #374535;"/>
+
+        <!-- ===== SECTION 1 : MES SUIVIS ===== -->
+        <VBox spacing="8"
+              style="-fx-background-color: white; -fx-padding: 15;
+                     -fx-background-radius: 10; -fx-border-color: #374535;
+                     -fx-border-radius: 10; -fx-border-width: 1.5;">
+
+            <Label text="📋 Mes Suivis — cliquez sur un suivi pour voir ses objectifs"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374535;"/>
+
+            <TableView fx:id="tableSuivis"
+                       onMouseClicked="#chargerObjectifs"
+                       prefHeight="180"
+                       maxWidth="1920"
+                       style="-fx-font-size: 13px;">
+                <columns>
+                    <TableColumn fx:id="colIdSuivi"    text="ID"          prefWidth="55"/>
+                    <TableColumn fx:id="colTitreSuivi" text="Titre"       prefWidth="250"/>
+                    <TableColumn fx:id="colDescSuivi"  text="Description" prefWidth="600"/>
+                </columns>
+                <placeholder>
+                    <Label text="Chargement des suivis..." style="-fx-text-fill:#999;"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+
+        <!-- ===== SECTION 2 : OBJECTIFS ===== -->
+        <VBox spacing="8"
+              style="-fx-background-color: white; -fx-padding: 15;
+                     -fx-background-radius: 10; -fx-border-color: #2980b9;
+                     -fx-border-radius: 10; -fx-border-width: 1.5;">
+
+            <Label fx:id="lblSuiviSelectionne"
+                   text="📌 Sélectionnez un suivi ci-dessus pour voir vos objectifs"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+
+            <TableView fx:id="tableObjectifs"
+                       onMouseClicked="#selectionnerObjectif"
+                       prefHeight="180"
+                       maxWidth="1920"
+                       style="-fx-font-size: 13px;">
+                <columns>
+                    <TableColumn fx:id="colIdObj"      text="ID"                  prefWidth="55"/>
+                    <TableColumn fx:id="colTitreObj"   text="Titre de l'objectif" prefWidth="380"/>
+                    <TableColumn fx:id="colNbFichiers" text="Fichiers déposés"    prefWidth="160"/>
+                    <TableColumn fx:id="colValide"     text="Validé ?"            prefWidth="120"/>
+                </columns>
+                <placeholder>
+                    <Label text="Sélectionnez un suivi pour voir vos objectifs." style="-fx-text-fill:#999;"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+
+        <!-- ===== SECTION 3 : DÉPOSER UN DOCUMENT ===== -->
+        <VBox spacing="12"
+              style="-fx-background-color: white; -fx-padding: 18;
+                     -fx-background-radius: 10; -fx-border-color: #27ae60;
+                     -fx-border-radius: 10; -fx-border-width: 1.5;">
+
+            <Label text="📤 Déposer un document pour valider mon objectif"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT"
+                  style="-fx-background-color: #f0f7f0; -fx-padding: 10; -fx-background-radius: 8;">
+                <Label text="🎯 Objectif :"
+                       style="-fx-font-weight: bold; -fx-text-fill: #374535;"/>
+                <Label fx:id="lblObjectifSelectionne"
+                       text="← Cliquez d'abord sur un objectif dans le tableau ci-dessus"
+                       style="-fx-text-fill: #666; -fx-font-style: italic;"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="📎 Fichier :"
+                       style="-fx-font-weight: bold; -fx-min-width: 80;"/>
+                <Label fx:id="lblFichierChoisi"
+                       text="Aucun fichier choisi"
+                       style="-fx-text-fill: #888;"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Button text="📁 Choisir un fichier"
+                        onAction="#choisirFichier"
+                        prefHeight="38" prefWidth="180"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                <Button text="⬆️ Envoyer au psychologue"
+                        onAction="#uploadFichier"
+                        prefHeight="38" prefWidth="210"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+
+            <Label text="✅ Acceptés : Images (jpg, png) · Vidéos (mp4, avi) · Documents (pdf, docx, txt) · et tous les autres formats"
+                   style="-fx-font-size: 11px; -fx-text-fill: #aaa;"/>
+
+            <VBox fx:id="vboxPreview" visible="false" spacing="6"
+                  style="-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-background-radius: 8;">
+                <Label text="🖼️ Prévisualisation :"
+                       style="-fx-font-weight: bold; -fx-text-fill: #374535;"/>
+                <ImageView fx:id="imgPreview" fitWidth="320" fitHeight="220" preserveRatio="true"/>
+            </VBox>
+        </VBox>
+
+        <!-- ===== SECTION 4 : FICHIERS DÉJÀ DÉPOSÉS ===== -->
+        <VBox spacing="8"
+              style="-fx-background-color: white; -fx-padding: 15;
+                     -fx-background-radius: 10; -fx-border-color: #8e44ad;
+                     -fx-border-radius: 10; -fx-border-width: 1.5;">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label fx:id="lblMediasTitre"
+                       text="🗂️ Mes fichiers déposés pour cet objectif"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #8e44ad;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="👁️ Ouvrir"
+                        onAction="#ouvrirFichier"
+                        prefHeight="30" prefWidth="90"
+                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                <Button text="🗑️ Supprimer"
+                        onAction="#supprimerMedia"
+                        prefHeight="30" prefWidth="110"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;"/>
+            </HBox>
+
+            <TableView fx:id="tableMedias"
+                       onMouseClicked="#selectionnerMedia"
+                       prefHeight="150"
+                       maxWidth="1920"
+                       style="-fx-font-size: 13px;">
+                <columns>
+                    <TableColumn fx:id="colTypeMedia"  text="Type"          prefWidth="110"/>
+                    <TableColumn fx:id="colNomFichier" text="Nom du fichier" prefWidth="550"/>
+                    <TableColumn fx:id="colDateMedia"  text="Date d'envoi"   prefWidth="200"/>
+                </columns>
+                <placeholder>
+                    <Label text="Aucun fichier déposé pour cet objectif." style="-fx-text-fill:#999;"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

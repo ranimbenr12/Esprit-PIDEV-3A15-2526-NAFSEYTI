@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.projet.gui.GestionSuiviController"
+            fitToWidth="true"
+            style="-fx-background-color: #f4f6f8;">
+
+    <VBox spacing="15" style="-fx-background-color: #f4f6f8; -fx-padding: 20;">
+
+        <Label text="📋 Gestion des Suivis Personnels"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+        <!-- ===== SECTION SUIVI ===== -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 15;
+                     -fx-border-radius: 8; -fx-background-radius: 8;
+                     -fx-border-color: #dde3ea;">
+
+            <Label text="📋 Suivis"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #374535;"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="🔍 Recherche :" style="-fx-font-size: 13px;"/>
+                <TextField fx:id="txtRecherche"
+                           promptText="Rechercher par ID ou Titre..."
+                           prefWidth="300"
+                           style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            </HBox>
+
+            <TableView fx:id="tableSuivis"
+                       onMouseClicked="#chargerSuivi"
+                       prefHeight="200"
+                       prefWidth="900"
+                       style="-fx-font-size: 13px;">
+                <columns>
+                    <TableColumn fx:id="colId"          text="ID"            prefWidth="55"/>
+                    <TableColumn fx:id="colTitre"       text="Titre"         prefWidth="180"/>
+                    <TableColumn fx:id="colDescription" text="Description"   prefWidth="340"/>
+                    <TableColumn fx:id="colTypeSuivi"   text="Type de Suivi" prefWidth="140"/>
+                </columns>
+                <placeholder>
+                    <Label text="Aucun suivi trouvé." style="-fx-text-fill: #999;"/>
+                </placeholder>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Titre :" prefWidth="120" style="-fx-font-size: 13px;"/>
+                <TextField fx:id="txtTitre"
+                           promptText="Titre du suivi"
+                           prefWidth="300"
+                           style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="TOP_LEFT">
+                <Label text="Description :" prefWidth="120" style="-fx-font-size: 13px;"/>
+                <TextArea fx:id="txtDescription"
+                          promptText="Description du suivi"
+                          prefWidth="300" prefHeight="70"
+                          wrapText="true"
+                          style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Type de Suivi :" prefWidth="120" style="-fx-font-size: 13px;"/>
+                <ComboBox fx:id="cmbTypeSuivi"
+                          promptText="Choisir un type"
+                          prefWidth="200"
+                          style="-fx-padding: 5; -fx-background-radius: 5;"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="➕ Ajouter Suivi"
+                        onAction="#ajouterSuivi" prefHeight="35"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                <Button text="✏️ Modifier Suivi"
+                        onAction="#modifierSuivi" prefHeight="35"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                <Button text="🗑️ Supprimer Suivi"
+                        onAction="#supprimerSuivi" prefHeight="35"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                <Button text="🔄 Actualiser"
+                        onAction="#afficherSuivis" prefHeight="35"
+                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                <Button text="🎯 Gérer les objectifs"
+                        onAction="#afficherFormulaireObjectif" prefHeight="35"
+                        style="-fx-background-color: #e67e22; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+
+        <!-- ===== SECTION OBJECTIFS ===== -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 15;
+                     -fx-border-radius: 8; -fx-background-radius: 8;
+                     -fx-border-color: #dde3ea;">
+
+            <Label fx:id="lblSuiviSelectionne"
+                   text="🎯 Objectifs — Sélectionnez un suivi puis cliquez sur 🎯 Gérer les objectifs"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374535;"/>
+
+            <TableView fx:id="tableObjectifs"
+                       onMouseClicked="#voirFichiersClient"
+                       prefHeight="200"
+                       prefWidth="900"
+                       style="-fx-font-size: 13px;">
+                <columns>
+                    <TableColumn fx:id="colIdObj"       text="ID"               prefWidth="55"/>
+                    <TableColumn fx:id="colTitreObj"    text="Titre"            prefWidth="220"/>
+                    <TableColumn fx:id="colDateObj"     text="Date Échéance"    prefWidth="130"/>
+                    <TableColumn fx:id="colFichiersObj" text="Fichiers déposés" prefWidth="130"/>
+                    <TableColumn fx:id="colValideObj"   text="Validé ?"         prefWidth="110"/>
+                </columns>
+                <placeholder>
+                    <Label text="Sélectionnez un suivi puis 🎯 Gérer les objectifs."
+                           style="-fx-text-fill: #999;"/>
+                </placeholder>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="✅ Valider l'objectif sélectionné"
+                        onAction="#validerObjectif" prefHeight="35"
+                        style="-fx-background-color: #8e44ad; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+            </HBox>
+        </VBox>
+
+        <!-- ===== FORMULAIRE OBJECTIF (caché au départ) ===== -->
+        <VBox fx:id="vboxAjoutObjectif"
+              spacing="12"
+              visible="false"
+              managed="false"
+              style="-fx-background-color: white; -fx-padding: 18;
+                     -fx-border-radius: 8; -fx-background-radius: 8;
+                     -fx-border-color: #e67e22; -fx-border-width: 2;">
+
+            <Label fx:id="lblTitreAjoutObj"
+                   text="➕ Ajouter un objectif"
+                   style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #e67e22;"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Titre *" prefWidth="130"
+                       style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <TextField fx:id="txtObjTitre"
+                           promptText="Ex : Tenir un journal de bord"
+                           prefWidth="350"
+                           style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Date Échéance" prefWidth="130"
+                       style="-fx-font-size: 13px;"/>
+                <DatePicker fx:id="dpObjDate"
+                            promptText="Choisir une date"
+                            prefWidth="200"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="➕ Ajouter Objectif"
+                        onAction="#ajouterObjectif" prefHeight="35"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                <Button text="✏️ Modifier Objectif"
+                        onAction="#modifierObjectif" prefHeight="35"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+                <Button text="🗑️ Supprimer Objectif"
+                        onAction="#supprimerObjectif" prefHeight="35"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+            </HBox>
+
+            <Label text="💡 Pour modifier : cliquez sur un objectif dans le tableau ci-dessus, puis modifiez ici."
+                   style="-fx-font-size: 11px; -fx-text-fill: #aaa;"/>
+        </VBox>
+
+        <!-- ===== SECTION FICHIERS CLIENT ===== -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 15;
+                     -fx-border-radius: 8; -fx-background-radius: 8;
+                     -fx-border-color: #dde3ea;">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label fx:id="lblObjectifSelectionne"
+                       text="📎 Fichiers envoyés par le client"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="👁️ Ouvrir fichier"
+                        onAction="#ouvrirFichierClient" prefHeight="35"
+                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;"/>
+            </HBox>
+
+            <TableView fx:id="tableMedias"
+                       prefHeight="150"
+                       prefWidth="900"
+                       style="-fx-font-size: 13px;">
+                <columns>
+                    <TableColumn fx:id="colTypeMedia" text="Type"           prefWidth="110"/>
+                    <TableColumn fx:id="colNomMedia"  text="Nom du fichier" prefWidth="480"/>
+                    <TableColumn fx:id="colDateMedia" text="Date d'envoi"   prefWidth="180"/>
+                </columns>
+                <placeholder>
+                    <Label text="Cliquez sur un objectif pour voir les fichiers."
+                           style="-fx-text-fill: #999;"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+
+    </VBox>
+</ScrollPane>
