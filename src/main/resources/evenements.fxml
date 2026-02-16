@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20"
+      style="-fx-background-color:#F5F1E6; -fx-padding:20;"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.projet.gui.EvenementsController">
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="🔎" style="-fx-font-size:22px;" />
+
+        <TextField fx:id="searchField" promptText="Rechercher un événement..."
+                   HBox.hgrow="ALWAYS"
+                   style="-fx-background-radius:15; -fx-padding:8; -fx-background-color:#E0E0C8;"/>
+
+        <ComboBox fx:id="sortCombo" promptText="Trier par"
+                  style="-fx-background-radius:15; -fx-padding:8; -fx-background-color:#E0E0C8;"/>
+
+        <Button text="➕ Ajouter" fx:id="btnAjouter"
+                style="-fx-background-color:#374535; -fx-text-fill:white; -fx-background-radius:15; -fx-padding:8 18;
+                       -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),5,0.5,0,0);"/>
+
+        <Button text="🔄 Actualiser" fx:id="btnActualiser"
+                style="-fx-background-color:#4CAF50; -fx-text-fill:white; -fx-background-radius:15; -fx-padding:8 18;
+                       -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),5,0.5,0,0);"/>
+    </HBox>
+
+    <!-- Event Table -->
+    <TableView fx:id="tableEvents" VBox.vgrow="ALWAYS"
+               style="-fx-background-color:#ffffff; -fx-border-color:#CFCBB3; -fx-border-radius:10;">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+            <TableColumn fx:id="colTitre" text="Titre" prefWidth="160"/>
+            <TableColumn fx:id="colDateDebut" text="Date" prefWidth="110"/>
+            <TableColumn fx:id="colLieu" text="Localisation" prefWidth="140"/>
+            <TableColumn fx:id="colLink" text="Lien" prefWidth="160"/>
+            <TableColumn fx:id="colCreatedAt" text="Créé le" prefWidth="150"/>
+            <TableColumn fx:id="colIsNew" text="Status" prefWidth="100"/>
+            <TableColumn fx:id="colCreatorId" text="Creator" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button fx:id="btnModifier" text="✏️ Modifier"
+                style="-fx-background-color:#374535; -fx-text-fill:white; -fx-background-radius:15; -fx-padding:8 15;
+                       -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),5,0.5,0,0);"/>
+        <Button fx:id="btnSupprimer" text="🗑️ Supprimer"
+                style="-fx-background-color:#b22222; -fx-text-fill:white; -fx-background-radius:15; -fx-padding:8 15;
+                       -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),5,0.5,0,0);"/>
+    </HBox>
+
+    <!-- Planification Table -->
+
+        <TableView fx:id="tablePlanifications" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colPlanId" text="ID" prefWidth="80"/>
+                <TableColumn fx:id="colPlanDesc" text="Description" prefWidth="250"/>
+                <TableColumn fx:id="colPlanDuree" text="Durée" prefWidth="100"/>
+                <TableColumn fx:id="colPlanEventId" text="ID Événement" prefWidth="100"/>
+            </columns>
+
+    </TableView>
+</VBox>

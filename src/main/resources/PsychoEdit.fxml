@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<VBox spacing="20"
+      alignment="TOP_CENTER"
+      style="-fx-background-color:#F5F1E6; -fx-padding:30;"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.projet.gui.PsychoEditController">
+
+    <!-- HEADER -->
+    <Label text="✏ Edit Event"
+           style="-fx-font-size:24px; -fx-font-weight:bold;" />
+
+    <!-- FORM FIELDS -->
+    <VBox spacing="15" alignment="TOP_LEFT">
+
+        <TextField fx:id="titleField"
+                   promptText="Event Title"
+                   style="-fx-pref-width:500px;" />
+
+        <TextField fx:id="locationField"
+                   promptText="Location"
+                   style="-fx-pref-width:500px;" />
+
+        <DatePicker fx:id="datePicker"
+                    style="-fx-pref-width:200px;" />
+
+        <TextField fx:id="linkField"
+                   promptText="Image URL or Event Link"
+                   style="-fx-pref-width:500px;" />
+    </VBox>
+
+    <!-- IMAGE PREVIEW AREA -->
+    <VBox spacing="5"
+          alignment="CENTER"
+          onMouseClicked="#handleUploadImage"
+          style="-fx-border-style:dashed;
+                 -fx-border-width:2;
+                 -fx-border-color:#cccccc;
+                 -fx-border-radius:5;
+                 -fx-pref-height:170px;
+                 -fx-pref-width:500px;">
+
+        <Label text="☁ Click here to change image"
+               style="-fx-font-size:16px; -fx-text-fill:#888888;" />
+
+        <ImageView fx:id="imagePreview"
+                   fitHeight="120"
+                   fitWidth="250"
+                   preserveRatio="true"/>
+    </VBox>
+
+    <!-- ACTION BUTTONS -->
+    <HBox spacing="15" alignment="CENTER">
+
+        <Button fx:id="btnUpdate"
+                text="💾 Update"
+                style="-fx-background-color:#4CAF50;
+                       -fx-text-fill:white;
+                       -fx-font-weight:bold;" />
+
+        <Button fx:id="btnCancel"
+                text="Cancel"
+                style="-fx-background-color:#b22222;
+                       -fx-text-fill:white;
+                       -fx-font-weight:bold;" />
+    </HBox>
+    <TextField fx:id="planDescriptionField" promptText="Plan Description" style="-fx-pref-width:500px;"/>
+    <TextField fx:id="planDureeField" promptText="Plan Duration" style="-fx-pref-width:500px;"/>
+
+
+</VBox>
