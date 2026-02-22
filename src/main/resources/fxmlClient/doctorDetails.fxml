@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox alignment="TOP_CENTER" maxHeight="550" maxWidth="400" spacing="15" style="-fx-background-color: #f8f5f2; -fx-background-radius: 25; -fx-padding: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.nafseyti.view.DoctorDetailsController">
+
+    <!-- HEADER -->
+    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #374535;" text="Détails du docteur" />
+
+    <!-- PHOTO + NOM -->
+    <StackPane>
+        <Circle fill="white" radius="55" stroke="#4B0082" strokeWidth="3" />
+        <StackPane>
+            <!-- Cercle de fond -->
+            <Circle fill="white" radius="55" stroke="#374535" strokeWidth="3" />
+
+            <!-- ImageView -->
+            <ImageView fx:id="doctorPhoto" pickOnBounds="true" smooth="true">
+                <clip>
+                    <Circle fx:id="photoClip" centerX="55" centerY="55" radius="55" />
+                </clip>
+            </ImageView>
+        </StackPane>
+    </StackPane>
+
+    <Label fx:id="doctorNameLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #374535;" text="Dr. Nom Prénom" textAlignment="CENTER" wrapText="true" />
+
+    <!-- INFORMATIONS DANS UNE CARTE ARRONDIE -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+
+        <!-- Spécialité avec icône -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label style="-fx-font-size: 16px;" text="💼" textFill="#3a8932" />
+            <Label fx:id="specialtyLabel" style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Coach de vie" />
+        </HBox>
+
+        <!-- Adresse avec icône -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label style="-fx-font-size: 16px;" text="📍" textFill="#d92d2d" />
+            <Label fx:id="addressLabel" style="-fx-font-size: 12px;" text="Menzah 5" />
+        </HBox>
+
+        <!-- Téléphone avec icône -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label style="-fx-font-size: 16px;" text="📞" textFill="#2436d7" />
+            <Label fx:id="phoneLabel" style="-fx-font-size: 12px;" text="2968283" />
+        </HBox>
+
+    </VBox>
+
+    <!-- DISPONIBILITÉS -->
+    <Label style="-fx-font-weight: bold;" text="📅 Disponibilités" />
+    <ScrollPane fitToWidth="true" prefHeight="120" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        <VBox fx:id="availabilityContainer" spacing="6" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 10;">
+            <Label style="-fx-text-fill: #888; -fx-font-style: italic;" text="Aucun créneau disponible" />
+        </VBox>
+    </ScrollPane>
+
+    <!-- BOUTONS EN HBOX -->
+    <HBox alignment="CENTER" spacing="15">
+        <Button fx:id="btnBookAppointment" prefHeight="35" prefWidth="150" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20;" text="📅 Prendre rendez-vous" />
+        <Button fx:id="btnClose" prefHeight="35" prefWidth="100" style="-fx-background-color: #DDD; -fx-text-fill: #333; -fx-background-radius: 20;" text="❌ Fermer" />
+    </HBox>
+    <!-- Label pour les messages de confirmation / erreur -->
+    <Label fx:id="confirmationLabel" style="-fx-text-fill: green; -fx-font-weight: bold;" text="" />
+</VBox>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" spacing="15" style="-fx-background-color: #f8f5f2; -fx-background-radius: 25; -fx-padding: 25;"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.nafseyti.view.MyAppointmentsController">
+
+    <!-- ================= HEADER ================= -->
+    <!-- Nom de l'utilisateur connecté -->
+    <Label fx:id="connectedUserLabel"
+           style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#285921;"
+           text=" utilisateur !" />
+    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="📅 Mes Rendez-vous" />
+
+    <Separator prefWidth="500" style="-fx-background-color: #e0e0e0;" />
+
+    <!-- ================= STATS RAPIDES ================= -->
+    <HBox spacing="15" alignment="CENTER">
+
+        <!-- Total rendez-vous -->
+        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" prefWidth="150">
+            <Label style="-fx-font-size: 28px;" text="📊" />
+            <Label fx:id="totalRdvLabel" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="0" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #666;" text="Total" />
+        </VBox>
+
+        <!-- Rendez-vous à venir -->
+        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" prefWidth="150">
+            <Label style="-fx-font-size: 28px;" text="⏰" />
+            <Label fx:id="upcomingRdvLabel" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;" text="0" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #666;" text="En attente" />
+        </VBox>
+
+        <!-- Rendez-vous terminés -->
+        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" prefWidth="150">
+            <Label style="-fx-font-size: 28px;" text="✅" />
+            <Label fx:id="completedRdvLabel" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" text="0" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #666;" text="Confirmés" />
+        </VBox>
+
+    </HBox>
+
+    <!-- ================= LISTE DES RENDEZ-VOUS ================= -->
+    <VBox spacing="10">
+        <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="Mes rendez-vous :" />
+
+        <ScrollPane fitToWidth="true" prefHeight="300" prefWidth="500"
+                    style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox fx:id="appointmentsContainer" spacing="12"
+                  style="-fx-background-color: transparent; -fx-padding: 5;">
+                <!-- Les rendez-vous seront ajoutés dynamiquement ici -->
+                <Label style="-fx-text-fill: #888; -fx-font-style: italic; -fx-padding: 20;" text="Chargement de vos rendez-vous..." />
+            </VBox>
+        </ScrollPane>
+    </VBox>
+
+    <!-- ================= BOUTON FERMER ================= -->
+    <Button fx:id="btnClose" prefWidth="200" prefHeight="40"
+            style="-fx-background-color: #285921; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"
+            text="❌ Fermer" />
+
+</VBox>

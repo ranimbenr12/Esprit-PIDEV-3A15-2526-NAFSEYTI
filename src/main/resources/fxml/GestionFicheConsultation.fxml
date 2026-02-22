@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.nafseyti.view.GestionFicheConsultationController">
+
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <VBox prefWidth="200" spacing="5" style="-fx-background-color: #ece6df;">
+            <padding>
+                <Insets bottom="20" left="10" right="10" top="20" />
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitHeight="45" fitWidth="45">
+                    <image>
+                        <Image url="@../images/logo.png" />
+                    </image>
+                </ImageView>
+                <Label style="-fx-text-fill:#285921; -fx-font-size:18px; -fx-font-weight:bold;" text="NAFSEYTI" />
+            </HBox>
+
+            <Separator />
+
+            <Button style="-fx-background-color:transparent; -fx-text-fill:#69685c; -fx-alignment:CENTER_LEFT; -fx-padding:10;" text="📊 Tableau de bord" />
+
+            <Button style="-fx-background-color:transparent; -fx-text-fill:#69685c; -fx-alignment:CENTER_LEFT; -fx-padding:10;" />
+
+            <Button prefHeight="46.0" prefWidth="204.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 14;" text="📝 Gérer fiches de consultation" />
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <ImageView fitHeight="150" fitWidth="200" opacity="0.7" preserveRatio="true">
+                <image>
+                    <Image url="@../images/Therapy.jpg" />
+                </image>
+            </ImageView>
+         <Button contentDisplay="CENTER" prefHeight="34.0" prefWidth="202.0" style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-padding: 8 15; -fx-border-color: #285921;" text="🔓 Se déconnecter">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </Button>
+        </VBox>
+    </left>
+
+    <!-- ================= CONTENU ================= -->
+    <center>
+        <VBox spacing="20" style="-fx-background-color:#f8f5f2;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <!-- HEADER -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+
+                <Button fx:id="btnBack" onAction="#handleRetour" style="-fx-background-color:#6c757d; -fx-text-fill:white;" text="⬅ Retour" />
+
+                <Label style="-fx-font-size:24px; -fx-font-weight:bold;" text="Gestion des Fiches de Consultation" />
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Button style="-fx-background-color:#285921; -fx-text-fill:white; -fx-padding:10 20;" text="➕ Nouvelle Fiche" onAction="#handleNouvelleFiche"/>
+
+                <ImageView fitHeight="50" fitWidth="50" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/fournisseur.png" />
+                    </image>
+                </ImageView>
+            </HBox>
+
+            <!-- BARRE RECHERCHE -->
+            <HBox spacing="15" style="-fx-background-color:white; -fx-padding:15; -fx-background-radius:10;">
+
+                <Label style="-fx-font-weight:bold;" text="🔍 Recherche:" />
+
+                <TextField fx:id="txtRecherche" prefWidth="300" promptText="Rechercher par diagnostic..." />
+
+                <Button style="-fx-background-color:#6c757d; -fx-text-fill:white;" text="🔄 Actualiser" />
+            </HBox>
+
+            <!-- TABLEAU FICHE -->
+            <TableView fx:id="tableFiche" prefHeight="400.0" prefWidth="899.0" style="-fx-background-color:white; -fx-background-radius:10;">
+
+                <columns>
+
+                    <!-- Date du rendez-vous -->
+                    <TableColumn fx:id="colDateRdv" prefWidth="150" text="Date RDV">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="dateRendezVous" />
+                        </cellValueFactory>
+                    </TableColumn>
+
+                    <!-- Notes -->
+                    <TableColumn fx:id="colNotes" prefWidth="150" text="Notes">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="notes" />
+                        </cellValueFactory>
+                    </TableColumn>
+
+                    <!-- Problème principal -->
+                    <TableColumn fx:id="colProbleme" prefWidth="150" text="Problème">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="problemePrincipal" />
+                        </cellValueFactory>
+                    </TableColumn>
+
+                    <!-- Diagnostic -->
+                    <TableColumn fx:id="colDiagnostic" prefWidth="150" text="Diagnostic">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="diagnostic" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <!-- Recommandations -->
+                    <TableColumn fx:id="colRecommandations" prefWidth="150" text="Recommandations">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="recommandations" />
+                        </cellValueFactory>
+                    </TableColumn>
+
+                    <!-- Traitement -->
+                    <TableColumn fx:id="colTraitement" prefWidth="120" text="Traitement">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="traitement" />
+                        </cellValueFactory>
+                    </TableColumn>
+
+
+
+                    <!-- Date de création -->
+                    <TableColumn fx:id="colCreatedAt" prefWidth="150" text="Créé le">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="createdAt" />
+                        </cellValueFactory>
+                    </TableColumn>
+
+
+                    <TableColumn fx:id="colActions" prefWidth="150" text="Actions" />
+                </columns>
+
+                <placeholder>
+                    <Label style="-fx-font-size:16px; -fx-text-fill:#999;" text="Aucune fiche trouvée" />
+                </placeholder>
+            </TableView>
+
+            <!-- EXPORT PDF -->
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Button fx:id="btnExportPdf" style="-fx-background-color: #513b8d; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 20;" text=" Exporter en PDF">
+
+                    <graphic>
+                        <ImageView fitHeight="18" fitWidth="18">
+                            <image>
+                                <Image url="@../images/pdf.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </HBox>
+
+
+        </VBox>
+    </center>
+</BorderPane>
