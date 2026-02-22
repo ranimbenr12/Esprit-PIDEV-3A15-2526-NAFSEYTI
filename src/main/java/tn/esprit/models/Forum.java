@@ -1,6 +1,5 @@
 package tn.esprit.models;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Forum {
@@ -11,7 +10,7 @@ public class Forum {
 
     private String statut;
 
-    public Forum() {
+    public Forum(int idForum, String titre, String contenu) {
     }
 
     public Forum(int idForum, String nomForum, String description, String statut) {

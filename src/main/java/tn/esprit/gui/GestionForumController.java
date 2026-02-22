@@ -34,9 +34,8 @@ public class GestionForumController {
     private TableColumn<Forum, String> colStatut;
     @FXML
     private TableColumn<Forum, Date> colDateCreation;
-
     @FXML
-    private TableColumn<Forum, Void> colAction; // utiliser Void pour les boutons
+    private TableColumn<Forum, Void> colAction; // pour les boutons
 
     private ForumService forumService;
 
@@ -47,11 +46,10 @@ public class GestionForumController {
         colNomForum.setCellValueFactory(new PropertyValueFactory<>("nomForum"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        colDateCreation.setCellValueFactory(new PropertyValueFactory<>("date_creation"));
 
-        addButtonToTable(); // Ajout des boutons Modifier / Supprimer
 
-        loadForums();
+        addButtonToTable(); // ajout boutons Modifier / Supprimer
+        loadForums(); // charger la liste
     }
 
     private void loadForums() throws SQLException {
@@ -70,21 +68,45 @@ public class GestionForumController {
                     private final HBox pane = new HBox(10, btnModifier, btnSupprimer);
 
                     {
+                        // Styles simples
                         btnModifier.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
                         btnSupprimer.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
 
+                        // Événement Modifier
                         btnModifier.setOnAction(event -> {
                             Forum forum = getTableView().getItems().get(getIndex());
-                            System.out.println("Modifier forum id = " + forum.getIdForum());
-                            // Appeler ici la méthode pour modifier le forum
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierForum.fxml"));
+                                Parent root = loader.load();
+
+                                ModifierForumController controller = loader.getController();
+                                controller.setForum(forum); // passer le forum à modifier
+
+                                Stage stage = new Stage();
+                                stage.setTitle("Modifier Forum");
+                                stage.setScene(new Scene(root));
+                                stage.show();
+
+                                // Optionnel : recharger la table après fermeture
+                                stage.setOnHiding(e -> {
+                                    try {
+                                        loadForums();
+                                    } catch (SQLException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         });
 
+                        // Événement Supprimer
                         btnSupprimer.setOnAction(event -> {
                             Forum forum = getTableView().getItems().get(getIndex());
-                            System.out.println("Supprimer forum id = " + forum.getIdForum());
                             try {
-                                forumService.supprimer(forum); // utiliser la méthode supprimer de ton service
-                                loadForums();
+                                forumService.supprimer(forum); // supprimer dans la base
+                                loadForums(); // recharger table
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
@@ -105,7 +127,6 @@ public class GestionForumController {
         });
     }
 
-
     @FXML
     private void ajouterForum() {
         try {
@@ -116,9 +137,18 @@ public class GestionForumController {
             stage.setTitle("Ajouter Forum");
             stage.setScene(new Scene(root));
             stage.show();
+
+            // Recharger table après ajout
+            stage.setOnHiding(e -> {
+                try {
+                    loadForums();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-

@@ -13,7 +13,8 @@ public class Main extends Application {
         System.out.println("START EXECUTED"); // <-- Ajoute ça pour tester
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/Dashboard.fxml")
+                getClass().getResource("/InterPrin.fxml")
+
         );
 
         Scene scene = new Scene(loader.load());

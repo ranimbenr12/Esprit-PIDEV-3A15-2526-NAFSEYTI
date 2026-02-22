@@ -47,8 +47,6 @@ public class Article {
     public LocalDateTime getDateCreation() { return dateCreation; }
     public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 
-    public int getIdTheme() { return idTheme; }
-    public void setIdTheme(int idTheme) { this.idTheme = idTheme; }
 
     public int getLikeCount() { return likeCount; }
     public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
@@ -80,5 +78,8 @@ public class Article {
                 '}';
     }
 
+    private int forumId;
 
+    public int getForumId() { return forumId; }
+    public void setForumId(int forumId) { this.forumId = forumId; }
 }
