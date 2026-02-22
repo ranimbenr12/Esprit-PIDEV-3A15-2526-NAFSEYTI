@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
-import tn.esprit.nafseyti.controllers.fiche_consultationController;
+import tn.esprit.nafseyti.service.fiche_consultationController;
 import tn.esprit.nafseyti.models.fiche_consultation;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 

@@ -9,12 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import tn.esprit.nafseyti.controllers.rendez_vousController;
+import tn.esprit.nafseyti.service.rendez_vousController;
 import tn.esprit.nafseyti.models.rendez_vous;
 
 import java.io.IOException;
@@ -23,7 +21,6 @@ import java.text.CollationElementIterator;
 import java.util.List;
 
 import javafx.util.Callback;
-import javafx.scene.paint.Color;
 
 
 public class GestionRendezVousController {

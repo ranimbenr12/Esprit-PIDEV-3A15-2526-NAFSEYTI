@@ -3,7 +3,7 @@ package tn.esprit.nafseyti.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import tn.esprit.nafseyti.controllers.rendez_vousController;
+import tn.esprit.nafseyti.service.rendez_vousController;
 import tn.esprit.nafseyti.models.rendez_vous;
 
 import java.sql.SQLException;

@@ -1,7 +1,7 @@
 package tn.esprit.nafseyti.test;
 
-import tn.esprit.nafseyti.controllers.fiche_consultationController;
-import tn.esprit.nafseyti.controllers.rendez_vousController;
+import tn.esprit.nafseyti.service.fiche_consultationController;
+import tn.esprit.nafseyti.service.rendez_vousController;
 import tn.esprit.nafseyti.models.fiche_consultation;
 import tn.esprit.nafseyti.models.rendez_vous;
 import tn.esprit.nafseyti.utils.MyBDConnexion;

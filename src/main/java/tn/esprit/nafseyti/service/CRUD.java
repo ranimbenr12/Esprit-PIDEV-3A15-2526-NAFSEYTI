@@ -1,4 +1,4 @@
-package tn.esprit.nafseyti.controllers;
+package tn.esprit.nafseyti.service;
 
 import java.sql.SQLException;
 import java.util.List;

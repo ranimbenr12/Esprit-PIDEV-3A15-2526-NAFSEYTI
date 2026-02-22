@@ -1,4 +1,4 @@
-package tn.esprit.nafseyti.controllers;
+package tn.esprit.nafseyti.service;
 
 import tn.esprit.nafseyti.models.fiche_consultation;
 import tn.esprit.nafseyti.utils.MyBDConnexion;

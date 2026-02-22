@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import tn.esprit.nafseyti.controllers.fiche_consultationController;
+import tn.esprit.nafseyti.service.fiche_consultationController;
 import tn.esprit.nafseyti.models.fiche_consultation;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
