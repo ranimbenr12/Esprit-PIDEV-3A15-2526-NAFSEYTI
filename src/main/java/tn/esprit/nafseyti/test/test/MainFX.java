@@ -12,6 +12,9 @@ public class MainFX extends Application {  // <-- EXTENDS Application
     public void start(Stage primaryStage) throws Exception {
         // Charger le FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlPsychologue/PsychologueInterface.fxml"));
+        // /fxmlPsychologue/PsychologueInterface.fxml
+        // /fxml/interfacePrincipal.fxml
+        // /fxmlClient/interfacePricClient.fxml
         Parent root = loader.load();
 
         // Créer la scène

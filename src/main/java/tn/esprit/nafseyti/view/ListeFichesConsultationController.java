@@ -9,9 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.utils.FicheConsultationPdfExporter;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -31,7 +34,8 @@ public class ListeFichesConsultationController implements Initializable {
     @FXML private TextField searchField;
     @FXML private Label psychologueNameLabel;
 
-    private int psychologueId = 2;
+    private int psychologueId = 6;
+    private String medecinNomComplet = "Dr. Psychologue";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -42,6 +46,7 @@ public class ListeFichesConsultationController implements Initializable {
 
     public void setPsychologueId(int psychologueId) {
         this.psychologueId = psychologueId;
+        loadPsychologueName();
         loadFichesConsultation();
     }
 
@@ -52,7 +57,10 @@ public class ListeFichesConsultationController implements Initializable {
             pst.setInt(1, psychologueId);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                psychologueNameLabel.setText("Dr. " + rs.getString("firstname") + " " + rs.getString("lastname"));
+                String prenom = rs.getString("firstname");
+                String nom = rs.getString("lastname");
+                medecinNomComplet = "Dr. " + prenom + " " + nom;
+                psychologueNameLabel.setText(medecinNomComplet);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +95,8 @@ public class ListeFichesConsultationController implements Initializable {
                         "    u.phone_number AS patient_phone " +
                         "FROM fiche_consultation fc " +
                         "INNER JOIN rendez_vous rv ON fc.rendez_vous_id = rv.id " +
-                        "INNER JOIN users u ON rv.userId = u.id " +
+                        "INNER JOIN reservationRendez_vous rr ON rr.rendez_vous_id = rv.id " +
+                        "INNER JOIN users u ON rr.user_id = u.id " +
                         "WHERE rv.medecinId = ? "
         );
 
@@ -153,9 +162,6 @@ public class ListeFichesConsultationController implements Initializable {
         }
     }
 
-    /**
-     * Créer une carte organisée avec couleurs nude
-     */
     private VBox createOrganizedFicheCard(int ficheId, LocalDate dateConsultation,
                                           LocalTime heureConsultation, String typeSeance,
                                           String notes, String problemePrincipal, String diagnostic,
@@ -168,30 +174,37 @@ public class ListeFichesConsultationController implements Initializable {
                 "-fx-background-color: #FAF8F6; " +
                         "-fx-border-color: #E8E3DD; " +
                         "-fx-border-width: 1; " +
-                        "-fx-border-radius: 12; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                        "-fx-border-radius: 14; " +
+                        "-fx-background-radius: 14; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 3);"
         );
 
-        // ========== HEADER COMPACT ==========
+        // ========== HEADER ==========
         HBox header = new HBox(15);
-        header.setPadding(new Insets(15, 20, 15, 20));
+        header.setPadding(new Insets(16, 20, 16, 20));
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color: #F5F1EC; -fx-background-radius: 12 12 0 0;");
+        header.setStyle("-fx-background-color: #F5F1EC; -fx-background-radius: 14 14 0 0;");
 
-        // Colonne 1 : Patient
+        // Badge ID coloré à gauche
+        Label idBadge = new Label("#" + ficheId);
+        idBadge.setStyle(
+                "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white; " +
+                        "-fx-background-color: #285921; " +
+                        "-fx-padding: 6 12; -fx-background-radius: 20;"
+        );
+
         VBox patientBox = new VBox(3);
         Label patientName = new Label(patientPrenom + " " + patientNom);
         patientName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #4A4542;");
 
         HBox contactRow = new HBox(10);
         if (patientEmail != null && !patientEmail.isEmpty()) {
-            Label email = new Label(patientEmail);
+            Label email = new Label("✉ " + patientEmail);
             email.setStyle("-fx-font-size: 10px; -fx-text-fill: #8B8580;");
             contactRow.getChildren().add(email);
         }
         if (patientPhone != null && !patientPhone.isEmpty()) {
-            Label phone = new Label("• " + patientPhone);
+            Label phone = new Label("📞 " + patientPhone);
             phone.setStyle("-fx-font-size: 10px; -fx-text-fill: #8B8580;");
             contactRow.getChildren().add(phone);
         }
@@ -200,240 +213,207 @@ public class ListeFichesConsultationController implements Initializable {
         Region spacer1 = new Region();
         HBox.setHgrow(spacer1, Priority.ALWAYS);
 
-        // Colonne 2 : Date/Heure
-        VBox dateBox = new VBox(2);
+        // Date + type à droite
+        VBox dateBox = new VBox(4);
         dateBox.setAlignment(Pos.CENTER_RIGHT);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH);
-        Label dateLabel = new Label(dateFormatter.format(dateConsultation));
-        dateLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #6B5D52;");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.FRENCH);
+        Label dateLabel = new Label("📅 " + dateFormatter.format(dateConsultation));
+        dateLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #6B5D52;");
 
         if (heureConsultation != null) {
-            Label timeLabel = new Label(heureConsultation.toString());
+            Label timeLabel = new Label("🕐 " + heureConsultation.toString());
             timeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #8B8580;");
             dateBox.getChildren().add(timeLabel);
         }
         dateBox.getChildren().add(dateLabel);
 
-        // Colonne 3 : Type + Badge ID
-        VBox badgeBox = new VBox(3);
-        badgeBox.setAlignment(Pos.CENTER_RIGHT);
-
         if (typeSeance != null && !typeSeance.isEmpty()) {
             Label typeLabel = new Label(typeSeance);
             typeLabel.setStyle(
-                    "-fx-font-size: 9px; -fx-text-fill: #8B8580; " +
+                    "-fx-font-size: 9px; -fx-text-fill: #6B5D52; " +
                             "-fx-background-color: #E8E3DD; " +
-                            "-fx-padding: 3 8; -fx-background-radius: 8;"
+                            "-fx-padding: 3 8; -fx-background-radius: 8; -fx-font-weight: bold;"
             );
-            badgeBox.getChildren().add(typeLabel);
+            dateBox.getChildren().add(typeLabel);
         }
 
-        Label idBadge = new Label("#" + ficheId);
-        idBadge.setStyle(
-                "-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #6B5D52; " +
-                        "-fx-background-color: #D9D3CC; " +
-                        "-fx-padding: 3 10; -fx-background-radius: 10;"
-        );
-        badgeBox.getChildren().add(idBadge);
-
-        header.getChildren().addAll(patientBox, spacer1, dateBox, badgeBox);
+        header.getChildren().addAll(idBadge, patientBox, spacer1, dateBox);
 
         // ========== BODY : GRILLE 2 COLONNES ==========
         GridPane contentGrid = new GridPane();
-        contentGrid.setPadding(new Insets(18, 20, 18, 20));
-        contentGrid.setHgap(20);
-        contentGrid.setVgap(12);
+        contentGrid.setPadding(new Insets(18, 20, 14, 20));
+        contentGrid.setHgap(16);
+        contentGrid.setVgap(10);
         contentGrid.setStyle("-fx-background-color: #FAF8F6;");
 
         int row = 0;
 
-        // Ligne 1 : Notes | Problème principal
         if (notes != null && !notes.isEmpty()) {
-            VBox notesBox = createCompactInfoBox("Notes", notes, "#C9B8A8");
-            contentGrid.add(notesBox, 0, row);
+            contentGrid.add(createCompactInfoBox("Notes", notes, "#C9B8A8"), 0, row);
         }
         if (problemePrincipal != null && !problemePrincipal.isEmpty()) {
-            VBox problemeBox = createCompactInfoBox("Problème", problemePrincipal, "#D4A373");
-            contentGrid.add(problemeBox, 1, row);
+            contentGrid.add(createCompactInfoBox("Problème principal", problemePrincipal, "#D4A373"), 1, row);
         }
         if (notes != null || problemePrincipal != null) row++;
 
-        // Ligne 2 : Diagnostic | Recommandations
         if (diagnostic != null && !diagnostic.isEmpty()) {
-            VBox diagBox = createCompactInfoBox("Diagnostic", diagnostic, "#B8906D");
-            contentGrid.add(diagBox, 0, row);
+            contentGrid.add(createCompactInfoBox("Diagnostic", diagnostic, "#B8906D"), 0, row);
         }
         if (recommandations != null && !recommandations.isEmpty()) {
-            VBox recoBox = createCompactInfoBox("Recommandations", recommandations, "#9C8470");
-            contentGrid.add(recoBox, 1, row);
+            contentGrid.add(createCompactInfoBox("Recommandations", recommandations, "#9C8470"), 1, row);
         }
         if (diagnostic != null || recommandations != null) row++;
 
-        // Ligne 3 : Traitement (pleine largeur)
         if (traitement != null && !traitement.isEmpty()) {
-            VBox traitBox = createCompactInfoBox("Traitement", traitement, "#8B7865");
-            contentGrid.add(traitBox, 0, row, 2, 1);
+            contentGrid.add(createCompactInfoBox("Traitement", traitement, "#8B7865"), 0, row, 2, 1);
         }
 
-        // Contraintes colonnes égales
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setPercentWidth(50);
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setPercentWidth(50);
         contentGrid.getColumnConstraints().addAll(col1, col2);
 
-        // ========== FOOTER : ACTIONS ==========
+        // ========== FOOTER : BOUTONS ==========
         HBox footer = new HBox(10);
-        footer.setPadding(new Insets(12, 20, 15, 20));
+        footer.setPadding(new Insets(12, 20, 14, 20));
         footer.setAlignment(Pos.CENTER_RIGHT);
-        footer.setStyle("-fx-background-color: #F5F1EC; -fx-background-radius: 0 0 12 12;");
+        footer.setStyle("-fx-background-color: #F0ECE7; -fx-background-radius: 0 0 14 14;");
 
-        Button editBtn = createNudeButton("Modifier", "#B8906D", ficheId, true);
-        Button deleteBtn = createNudeButton("Supprimer", "#A67C52", ficheId, false);
+        // Bouton PDF (prioritaire, mis en avant)
+        Button pdfBtn = new Button("📄 Exporter PDF");
+        pdfBtn.setStyle(
+                "-fx-background-color: #fdb9ce; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 8 20; " +
+                        "-fx-background-radius: 20; " +
+                        "-fx-cursor: hand;"
+        );
+        pdfBtn.setOnMouseEntered(e -> pdfBtn.setStyle(
+                "-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"
+        ));
+        pdfBtn.setOnMouseExited(e -> pdfBtn.setStyle(
+                "-fx-background-color: #fdb9ce; -fx-text-fill: white; -fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"
+        ));
+        pdfBtn.setOnAction(e -> exporterEnPdf(
+                ficheId, patientPrenom, patientNom, patientEmail, patientPhone,
+                dateConsultation, heureConsultation, typeSeance,
+                notes, problemePrincipal, diagnostic, recommandations, traitement
+        ));
 
-        footer.getChildren().addAll(editBtn, deleteBtn);
+        Button editBtn = createActionButton("✏ Modifier", "#B8906D", ficheId, true);
+        Button deleteBtn = createActionButton("🗑 Supprimer", "#A67C52", ficheId, false);
 
-        // Assemblage
+        footer.getChildren().addAll(pdfBtn, editBtn, deleteBtn);
+
         mainCard.getChildren().addAll(header, contentGrid, footer);
 
-        // Effet hover
+        // Effet hover sur la carte
         mainCard.setOnMouseEntered(e -> mainCard.setStyle(
-                "-fx-background-color: #FAF8F6; " +
-                        "-fx-border-color: #D9D3CC; " +
-                        "-fx-border-width: 1; " +
-                        "-fx-border-radius: 12; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 3);"
+                "-fx-background-color: #FAF8F6; -fx-border-color: #C9B8A8; " +
+                        "-fx-border-width: 1; -fx-border-radius: 14; -fx-background-radius: 14; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 14, 0, 0, 4);"
         ));
         mainCard.setOnMouseExited(e -> mainCard.setStyle(
-                "-fx-background-color: #FAF8F6; " +
-                        "-fx-border-color: #E8E3DD; " +
-                        "-fx-border-width: 1; " +
-                        "-fx-border-radius: 12; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                "-fx-background-color: #FAF8F6; -fx-border-color: #E8E3DD; " +
+                        "-fx-border-width: 1; -fx-border-radius: 14; -fx-background-radius: 14; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 3);"
         ));
 
         return mainCard;
     }
 
-    /**
-     * Créer une box d'information compacte
-     */
+    // ─────────────────────────────────────────────
+    //  Export PDF
+    // ─────────────────────────────────────────────
+    private void exporterEnPdf(int ficheId, String patientPrenom, String patientNom,
+                               String patientEmail, String patientPhone,
+                               LocalDate dateConsultation, LocalTime heureConsultation,
+                               String typeSeance, String notes, String problemePrincipal,
+                               String diagnostic, String recommandations, String traitement) {
+        try {
+            String bureau = System.getProperty("user.home") + "/Desktop/";
+            String nomFichier = bureau + "fiche_" + patientPrenom + "_" + patientNom + "_" + ficheId + ".pdf";
+
+            FicheConsultationPdfExporter.exporterFiche(
+                    nomFichier, ficheId, patientPrenom, patientNom,
+                    patientEmail, patientPhone, dateConsultation,
+                    heureConsultation, typeSeance, notes,
+                    problemePrincipal, diagnostic, recommandations,
+                    traitement, medecinNomComplet
+            );
+
+            showAlert(Alert.AlertType.INFORMATION, "Export réussi",
+                    "✅ Fiche exportée sur le bureau :\n" + nomFichier);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur d'export",
+                    "❌ Impossible de générer le PDF : " + ex.getMessage());
+        }
+    }
+
     private VBox createCompactInfoBox(String title, String content, String borderColor) {
         VBox box = new VBox(6);
-        box.setPadding(new Insets(10, 12, 10, 12));
+        box.setPadding(new Insets(10, 12, 10, 14));
         box.setStyle(
                 "-fx-background-color: white; " +
                         "-fx-border-color: " + borderColor + "; " +
-                        "-fx-border-width: 0 0 0 3; " +
-                        "-fx-border-radius: 0; " +
+                        "-fx-border-width: 0 0 0 4; " +
                         "-fx-background-radius: 6;"
         );
 
-        Label titleLabel = new Label(title);
+        Label titleLabel = new Label(title.toUpperCase());
         titleLabel.setStyle(
-                "-fx-font-size: 10px; -fx-font-weight: bold; " +
-                        "-fx-text-fill: " + borderColor + "; " +
-                        "-fx-text-transform: uppercase;"
+                "-fx-font-size: 9px; -fx-font-weight: bold; " +
+                        "-fx-text-fill: " + borderColor + ";"
         );
 
         Label contentLabel = new Label(content);
-        contentLabel.setStyle(
-                "-fx-font-size: 12px; -fx-text-fill: #4A4542; " +
-                        "-fx-line-spacing: 1px;"
-        );
+        contentLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #4A4542; -fx-line-spacing: 1px;");
         contentLabel.setWrapText(true);
 
         box.getChildren().addAll(titleLabel, contentLabel);
         return box;
     }
 
-    /**
-     * Créer un bouton nude minimaliste
-     */
-    private Button createNudeButton(String text, String color, int ficheId, boolean isEdit) {
+    private Button createActionButton(String text, String color, int ficheId, boolean isEdit) {
         Button button = new Button(text);
-        button.setStyle(
-                "-fx-background-color: " + color + "; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 8 18; " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-cursor: hand; " +
-                        "-fx-border-color: transparent;"
-        );
+        String baseStyle = "-fx-background-color: transparent; -fx-text-fill: " + color +
+                "; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 8 16; " +
+                "-fx-background-radius: 20; -fx-cursor: hand; " +
+                "-fx-border-color: " + color + "; -fx-border-width: 1; -fx-border-radius: 20;";
+        String hoverStyle = "-fx-background-color: " + color + "; -fx-text-fill: white; " +
+                "-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 8 16; " +
+                "-fx-background-radius: 20; -fx-cursor: hand;";
 
-        if (isEdit) {
-           /* button.setOnAction(e -> modifierFiche(ficheId));*/
-        } else {
+        button.setStyle(baseStyle);
+        button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
+        button.setOnMouseExited(e -> button.setStyle(baseStyle));
+
+        if (!isEdit) {
             button.setOnAction(e -> supprimerFiche(ficheId));
         }
-
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-background-color: " + color + "; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 8 18; " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-cursor: hand; " +
-                        "-fx-opacity: 0.85;"
-        ));
-
-        button.setOnMouseExited(e -> button.setStyle(
-                "-fx-background-color: " + color + "; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 8 18; " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-cursor: hand; " +
-                        "-fx-border-color: transparent;"
-        ));
-
         return button;
     }
-
-    /*private void modifierFiche(int ficheId) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlPsychologue/ModifierFicheConsultation.fxml"));
-            VBox root = loader.load();
-
-            ModifierFicheConsultationController controller = loader.getController();
-            controller.setFicheId(ficheId);
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Modifier la fiche de consultation");
-            stage.setResizable(false);
-            stage.centerOnScreen();
-            stage.showAndWait();
-
-            loadFichesConsultation();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la fenêtre de modification");
-        }
-    }*/
 
     private void supprimerFiche(int ficheId) {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Confirmation");
         confirmAlert.setHeaderText("Retirer cette fiche ?");
-        confirmAlert.setContentText("Cette action est irréversible. Voulez-vous vraiment retirer cette fiche de consultation ?");
+        confirmAlert.setContentText("Cette action est irréversible.");
 
         Optional<ButtonType> result = confirmAlert.showAndWait();
-
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 Connection cnx = MyBDConnexion.getInstance().getCnx();
                 PreparedStatement pst = cnx.prepareStatement("DELETE FROM fiche_consultation WHERE id = ?");
                 pst.setInt(1, ficheId);
                 int deleted = pst.executeUpdate();
-
                 if (deleted > 0) {
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Fiche retirée avec succès");
                     loadFichesConsultation();

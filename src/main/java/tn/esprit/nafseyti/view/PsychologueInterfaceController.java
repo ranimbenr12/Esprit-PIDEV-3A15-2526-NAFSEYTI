@@ -34,7 +34,7 @@ public class PsychologueInterfaceController implements Initializable {
     @FXML private Label totalFichesLabel;
     @FXML private Label psychologueNameLabel;
 
-    private int psychologueId = 2; // TODO: Remplacer par l'ID du psychologue connecté
+    private int psychologueId = 6; // TODO: Remplacer par l'ID du psychologue connecté
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
