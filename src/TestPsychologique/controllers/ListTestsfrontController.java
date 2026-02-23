@@ -4,6 +4,8 @@ import TestPsychologique.dao.Questiondao;
 import TestPsychologique.dao.Resultatdao;
 import TestPsychologique.models.Question;
 import TestPsychologique.models.Test;
+import TestPsychologique.dao.ReponseScoredao;
+
 import TestPsychologique.models.Resultat;
 import TestPsychologique.models.Interpretation;
 import javafx.fxml.FXML;
@@ -437,7 +439,7 @@ public class ListTestsfrontController {
         }
 
         // 🆕 CALCUL DU SCORE
-        int scoreTotal = calculerScore();
+        int scoreTotal = calculerScoreTotal();
 
         System.out.println("📊 Score calculé: " + scoreTotal + " points");
         System.out.println("📝 Questions répondues: " + answers.size() + "/" + questions.size());
@@ -449,26 +451,30 @@ public class ListTestsfrontController {
     /**
      * 🆕 Calculer le score total selon les réponses
      */
-    private int calculerScore() {
-        int score = 0;
+    private int calculerScoreTotal() {
+        int scoreTotal = 0;
+        ReponseScoredao reponseScoreDao = new ReponseScoredao();
 
-        for (Question question : questions) {
-            String reponseUser = answers.get(question.getId());
+        System.out.println("\n🧮 CALCUL DU SCORE:");
+        System.out.println("═══════════════════════════════");
 
-            if (reponseUser != null && !reponseUser.trim().isEmpty()) {
-                // Ajouter les points de la question
-                score += question.getPoints();
+        // Pour chaque réponse donnée par l'utilisateur
+        for (Map.Entry<Integer, String> entry : answers.entrySet()) {
+            int questionId = entry.getKey();      // ID de la question
+            String reponse = entry.getValue();    // Réponse choisie
 
-                // TODO: Si vous voulez vérifier les bonnes réponses:
-                // if (reponseUser.equals(question.getBonneReponse())) {
-                //     score += question.getPoints();
-                // }
-            }
+            // ✅ RÉCUPÉRER les points pour cette réponse spécifique
+            int points = reponseScoreDao.getPointsForAnswer(questionId, reponse);
+
+            scoreTotal += points;
         }
 
-        return score;
-    }
+        System.out.println("═══════════════════════════════");
+        System.out.println("🎯 SCORE TOTAL: " + scoreTotal + " points");
+        System.out.println("═══════════════════════════════\n");
 
+        return scoreTotal;
+    }
     /**
      * 🆕 Enregistrer le résultat et afficher l'interprétation
      */

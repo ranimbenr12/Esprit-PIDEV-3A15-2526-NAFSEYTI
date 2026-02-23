@@ -58,7 +58,10 @@
                 <padding>
                     <Insets left="15" right="15"/>
                 </padding>
-
+                <Button text="📔  Mon Journal" maxWidth="Infinity" onAction="#showJournal"
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
                 <Button text="📊  Tableau de bord" maxWidth="Infinity"
                         style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
@@ -77,6 +80,18 @@
                 <Button text="🕐  Historique" maxWidth="Infinity" onAction="#showResultats"
                         style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+                <!-- Bouton API Blague -->
+                <Button text="😄 Blague du jour"
+                        onAction="#handleJoke"
+                        styleClass="btn-joke"
+                        style="-fx-background-color: #ff9800;
+               -fx-text-fill: white;
+               -fx-font-size: 14px;
+               -fx-font-weight: bold;
+               -fx-padding: 12 25;
+               -fx-background-radius: 8;
+               -fx-cursor: hand;">
                 </Button>
             </VBox>
 

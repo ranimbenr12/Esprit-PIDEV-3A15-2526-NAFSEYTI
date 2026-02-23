@@ -226,40 +226,70 @@ public class TestController implements Initializable {
     private void handleSaveOrUpdate() {
         System.out.println("\n💾 Tentative d'enregistrement du test...");
 
-        // Validation
-        if (txtNom.getText().trim().isEmpty() || txtDescription.getText().trim().isEmpty()) {
-            System.out.println("❌ Validation échouée: champs vides");
-            showAlert(Alert.AlertType.ERROR, "Erreur de Validation",
-                    "Veuillez remplir tous les champs obligatoires (Nom et Description)");
+        // ✅ VALIDATION SIMPLE
+        String erreurs = "";
+
+        // 1. Vérifier titre
+        if (txtNom.getText().trim().isEmpty()) {
+            erreurs += "• Le titre est obligatoire\n";
+        } else if (txtNom.getText().trim().length() < 3) {
+            erreurs += "• Le titre doit contenir au moins 3 caractères\n";
+        }
+
+        // 2. Vérifier description
+        if (txtDescription.getText().trim().isEmpty()) {
+            erreurs += "• La description est obligatoire\n";
+        } else if (txtDescription.getText().trim().length() < 10) {
+            erreurs += "• La description doit contenir au moins 10 caractères\n";
+        }
+
+        // 3. Vérifier durée
+        if (txtDuree.getText().trim().isEmpty()) {
+            erreurs += "• La durée est obligatoire\n";
+        } else {
+            try {
+                int duree = Integer.parseInt(txtDuree.getText().trim());
+                if (duree <= 0) {
+                    erreurs += "• La durée doit être supérieure à 0\n";
+                } else if (duree > 180) {
+                    erreurs += "• La durée ne peut pas dépasser 180 minutes\n";
+                }
+            } catch (NumberFormatException e) {
+                erreurs += "• La durée doit être un nombre valide\n";
+            }
+        }
+
+        // Si des erreurs existent, afficher et arrêter
+        if (!erreurs.isEmpty()) {
+            System.out.println("❌ Validation échouée");
+            showAlert(Alert.AlertType.WARNING, "Erreurs de saisie", erreurs);
             return;
         }
 
+        // ✅ Si tout est OK, continuer avec l'enregistrement
         try {
             if (selectedTest == null) {
                 System.out.println("➕ Mode AJOUT - Création d'un nouveau test");
 
-                // Ajouter nouveau test
                 Test newTest = new Test();
                 newTest.setTitre(txtNom.getText().trim());
                 newTest.setDescription(txtDescription.getText().trim());
                 newTest.setCategorie(cmbCategorie.getValue());
-                newTest.setDuree(txtDuree.getText().isEmpty() ? 0 : Integer.parseInt(txtDuree.getText()));
+                newTest.setDuree(Integer.parseInt(txtDuree.getText().trim()));
                 newTest.setStatus(cmbStatus.getValue());
-                newTest.setNiveau("Débutant"); // Valeur par défaut
-                newTest.setScoreMax(0); // Valeur par défaut
-                newTest.setCreatedBy(1); // Valeur par défaut (ID admin)
+                newTest.setNiveau("Débutant");
+                newTest.setScoreMax(0);
+                newTest.setCreatedBy(1);
 
                 System.out.println("📝 Données du nouveau test:");
                 System.out.println("  - Titre: " + newTest.getTitre());
                 System.out.println("  - Description: " + newTest.getDescription());
-                System.out.println("  - Catégorie: " + newTest.getCategorie());
                 System.out.println("  - Durée: " + newTest.getDuree());
-                System.out.println("  - Status: " + newTest.getStatus());
 
                 boolean success = testdao.ajouterTest(newTest);
 
                 if (success) {
-                    System.out.println("✅ Test ajouté avec succès! ID: " + newTest.getId());
+                    System.out.println("✅ Test ajouté avec succès!");
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Test ajouté avec succès!");
                 } else {
                     System.out.println("❌ Échec de l'ajout du test");
@@ -270,11 +300,10 @@ public class TestController implements Initializable {
             } else {
                 System.out.println("✏️ Mode MODIFICATION - ID: " + selectedTest.getId());
 
-                // Modifier test existant
                 selectedTest.setTitre(txtNom.getText().trim());
                 selectedTest.setDescription(txtDescription.getText().trim());
                 selectedTest.setCategorie(cmbCategorie.getValue());
-                selectedTest.setDuree(txtDuree.getText().isEmpty() ? 0 : Integer.parseInt(txtDuree.getText()));
+                selectedTest.setDuree(Integer.parseInt(txtDuree.getText().trim()));
                 selectedTest.setStatus(cmbStatus.getValue());
 
                 boolean success = testdao.modifierTest(selectedTest);
@@ -283,23 +312,20 @@ public class TestController implements Initializable {
                     System.out.println("✅ Test modifié avec succès!");
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Test modifié avec succès!");
                 } else {
-                    System.out.println("❌ Échec de la modification du test");
+                    System.out.println("❌ Échec de la modification");
                     showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la modification du test");
                     return;
                 }
             }
 
-            System.out.println("🔄 Rechargement de la liste des tests...");
+            System.out.println("🔄 Rechargement de la liste...");
             loadTests();
             toggleFormulaire();
 
-        } catch (NumberFormatException e) {
-            System.out.println("❌ Erreur: durée invalide");
-            showAlert(Alert.AlertType.ERROR, "Erreur", "La durée doit être un nombre valide");
         } catch (Exception e) {
-            System.out.println("❌ Erreur inattendue: " + e.getMessage());
+            System.out.println("❌ Erreur: " + e.getMessage());
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'enregistrement: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur: " + e.getMessage());
         }
     }
 

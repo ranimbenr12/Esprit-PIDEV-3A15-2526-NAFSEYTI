@@ -130,7 +130,7 @@
     <center>
         <StackPane fx:id="contentArea">
             <!-- Image de fond (AJOUTÉE) -->
-            
+
             <!-- Default Dashboard Content (INCHANGÉ) -->
             <VBox alignment="CENTER" spacing="30">
                 <padding>

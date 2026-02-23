@@ -6,6 +6,7 @@ import TestPsychologique.dao.Resultatdao;
 import TestPsychologique.models.Test;
 import TestPsychologique.models.Resultat;
 import TestPsychologique.models.Interpretation;
+import TestPsychologique.utils.JokeAPI;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -23,7 +24,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.InputStream;
 import java.util.List;
-
+import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import TestPsychologique.utils.JokeAPI;
 public class UserInterfaceController {
 
     @FXML private Label welcomeLabel;
@@ -56,6 +64,129 @@ public class UserInterfaceController {
         loadStatistics();
     }
 
+    @FXML
+    private void handleJoke() {
+        System.out.println("🎭 Bouton Blague cliqué!");
+
+        // Créer une nouvelle fenêtre
+        Stage stage = new Stage();
+        stage.setTitle("😄 Blague du jour");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(true);
+        stage.setMinWidth(600);
+        stage.setMinHeight(600);
+
+        // VBox principal
+        VBox mainBox = new VBox(20);
+        mainBox.setPadding(new Insets(30));
+        mainBox.setAlignment(Pos.CENTER);
+        mainBox.setStyle("-fx-background-color: linear-gradient(to bottom, #fff9e6, #ffffff);");
+
+        // Header avec emoji
+        Label emojiLabel = new Label("😄");
+        emojiLabel.setStyle("-fx-font-size: 60px;");
+
+        Label titleLabel = new Label("Blague du jour");
+        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ff9800;");
+
+        // Ligne de séparation
+        Separator separator = new Separator();
+        separator.setMaxWidth(400);
+        separator.setStyle("-fx-background-color: #ff9800;");
+
+        // Zone de la blague
+        VBox jokeBox = new VBox(15);
+        jokeBox.setAlignment(Pos.CENTER);
+        jokeBox.setPadding(new Insets(20));
+        jokeBox.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 3); -fx-border-color: #ffe0b2; -fx-border-width: 2; -fx-border-radius: 15;");
+
+        // Message de chargement (CORRECTION ICI!)
+        Label loadingLabel = new Label("⏳ Chargement de la blague...");
+        loadingLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+        jokeBox.getChildren().add(loadingLabel);
+
+        // Boutons
+        HBox buttonsBox = new HBox(15);
+        buttonsBox.setAlignment(Pos.CENTER);
+
+        Button closeBtn = new Button("✖ Fermer");
+        closeBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;");
+        closeBtn.setOnAction(e -> stage.close());
+
+        Button reloadBtn = new Button("🔄 Autre blague");
+        reloadBtn.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;");
+
+        buttonsBox.getChildren().addAll(reloadBtn, closeBtn);
+
+        // Ajouter tout
+        mainBox.getChildren().addAll(emojiLabel, titleLabel, separator, jokeBox, buttonsBox);
+
+        // Scène
+        Scene scene = new Scene(mainBox);
+        stage.setScene(scene);
+        stage.show();
+
+        // Charger la blague
+        new Thread(() -> {
+            String joke = JokeAPI.getJoke();
+            String[] parts = joke.split("\n\n");
+            String setup = parts.length > 0 ? parts[0].replace("😄 ", "") : "";
+            String punchline = parts.length > 1 ? parts[1].replace("😂 ", "") : "";
+
+            javafx.application.Platform.runLater(() -> {
+                jokeBox.getChildren().clear();
+
+                Label setupLabel = new Label(setup);
+                setupLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333; -fx-text-alignment: center;");
+                setupLabel.setWrapText(true);
+                setupLabel.setMaxWidth(500);
+
+                Label punchlineLabel = new Label(punchline);
+                punchlineLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ff9800; -fx-text-alignment: center;");
+                punchlineLabel.setWrapText(true);
+                punchlineLabel.setMaxWidth(500);
+
+                Label laughEmoji = new Label("😂");
+                laughEmoji.setStyle("-fx-font-size: 40px;");
+
+                jokeBox.getChildren().addAll(setupLabel, laughEmoji, punchlineLabel);
+            });
+        }).start();
+
+        // Bouton "Autre blague"
+        reloadBtn.setOnAction(e -> {
+            jokeBox.getChildren().clear();
+            Label reloading = new Label("⏳ Chargement...");
+            reloading.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+            jokeBox.getChildren().add(reloading);
+
+            new Thread(() -> {
+                String newJoke = JokeAPI.getJoke();
+                String[] parts = newJoke.split("\n\n");
+                String setup = parts.length > 0 ? parts[0].replace("😄 ", "") : "";
+                String punchline = parts.length > 1 ? parts[1].replace("😂 ", "") : "";
+
+                javafx.application.Platform.runLater(() -> {
+                    jokeBox.getChildren().clear();
+
+                    Label setupLabel = new Label(setup);
+                    setupLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333; -fx-text-alignment: center;");
+                    setupLabel.setWrapText(true);
+                    setupLabel.setMaxWidth(500);
+
+                    Label punchlineLabel = new Label(punchline);
+                    punchlineLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ff9800; -fx-text-alignment: center;");
+                    punchlineLabel.setWrapText(true);
+                    punchlineLabel.setMaxWidth(500);
+
+                    Label laughEmoji = new Label("😂");
+                    laughEmoji.setStyle("-fx-font-size: 40px;");
+
+                    jokeBox.getChildren().addAll(setupLabel, laughEmoji, punchlineLabel);
+                });
+            }).start();
+        });
+    }
     /**
      * Charge le logo et l'image de fond depuis le dossier views
      */
@@ -704,7 +835,25 @@ public class UserInterfaceController {
         alert.setContentText("Reprise du test en cours...");
         alert.showAndWait();
     }
+    /**
+     * Ouvrir le journal émotionnel
+     */
+    @FXML
+    private void showJournal() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TestPsychologique/views/JournalView.fxml"));
+            Parent root = loader.load();
 
+            Stage stage = (Stage) testsListContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1200, 900));
+            stage.setTitle("NAFSEYTI - Mon Journal");
+            stage.show();
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur ouverture journal: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     @FXML
     private void refreshTests() {
         loadTests();
