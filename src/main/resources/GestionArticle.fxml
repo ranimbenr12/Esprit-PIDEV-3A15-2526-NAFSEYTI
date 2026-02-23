@@ -115,7 +115,7 @@
                     <TableColumn fx:id="colTitre" prefWidth="140" text="Titre" />
                     <TableColumn fx:id="colContenu" prefWidth="218" text="contenu" />
                     <TableColumn fx:id="colDateCreation" prefWidth="164" text="Date Création" />
-                    <TableColumn fx:id="colLike" prefWidth="100" text="like_count" />
+                    <TableColumn fx:id="colLike" prefWidth="100" text="Like_Count" />
                     <TableColumn fx:id="colStatut" prefWidth="120" text="statut" />
 
                     <TableColumn fx:id="colAction" prefWidth="216.79998779296875" text="Action" />

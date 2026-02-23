@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -19,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.ArticleListController" stylesheets="@/styles.css">
+<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.ArticleListController">
 
     <!-- SIDEBAR GAUCHE -->
     <left>
@@ -61,7 +57,7 @@
                 </VBox.margin>
             </Button>
 
-            <Button fx:id="btnContenu"  prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📚 Mon Contenu">
+            <Button fx:id="btnContenu" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📚 Mon Contenu">
                 <VBox.margin>
                     <Insets bottom="5.0" />
                 </VBox.margin>
@@ -106,16 +102,35 @@
     <center>
         <VBox spacing="20" style="-fx-background-color:#f8f5f2;">
             <padding>
-                <Insets top="30" left="30" right="30" bottom="20"/>
+                <Insets bottom="20" left="30" right="30" top="30" />
             </padding>
 
+
             <!-- titre forum -->
-            <Label fx:id="titreForum"
-                   style="-fx-font-size:28; -fx-font-weight:bold; -fx-text-fill:#285921;"/>
+            <Label fx:id="titreForum" style="-fx-font-size:28; -fx-font-weight:bold; -fx-text-fill:#285921;" />
+            <HBox alignment="CENTER_LEFT" prefHeight="76.0" prefWidth="919.0" spacing="10">
+                <Button fx:id="btnRetour" onAction="#retournerVersForums" prefHeight="26.0" prefWidth="112.0" text="← Retour" />
+                <Label fx:id="titreForum" />
+                <Region prefHeight="46.0" prefWidth="834.0" HBox.hgrow="ALWAYS" />
+                
+            </HBox>
+
+            <HBox alignment="CENTER_RIGHT" prefHeight="179.0" prefWidth="919.0" spacing="10">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+   
+                <!-- Bouton Poster un article -->
+                <Button fx:id="btnPosterArticle" onAction="#ouvrirFenetrePoster" prefHeight="50.0" prefWidth="200" style="-fx-background-color:#4CAF50; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" text="📝 Poster un article" />
+            </HBox>
 
             <!-- container des articles -->
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                <VBox fx:id="articleContainer" spacing="20" style="-fx-padding:10;"/>
+            <ScrollPane fitToWidth="true" prefHeight="578.0" prefWidth="919.0" VBox.vgrow="ALWAYS">
+                <VBox fx:id="articleContainer" spacing="20">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                </VBox>
             </ScrollPane>
 
         </VBox>
