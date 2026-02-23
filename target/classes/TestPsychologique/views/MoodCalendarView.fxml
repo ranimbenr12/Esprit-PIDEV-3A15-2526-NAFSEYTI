@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="TestPsychologique.controllers.MoodCalendarController"
+            style="-fx-background-color: #f8f5f2;">
+
+    <!-- Header -->
+    <top>
+        <VBox spacing="0" style="-fx-background-color: linear-gradient(to right, #285921, #2e7d32);">
+            <padding>
+                <Insets top="30" right="40" bottom="30" left="40"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button text="← Retour" onAction="#handleBack"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand;">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+
+                <VBox HBox.hgrow="ALWAYS">
+                    <Label text="📊 Mon Calendrier Émotionnel" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Suivez l'évolution de vos humeurs" style="-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.9);"/>
+                </VBox>
+
+                <!-- Navigation mois -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="btnPrevMonth" text="◀" onAction="#previousMonth"
+                            style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 10 15; -fx-background-radius: 5; -fx-cursor: hand;">
+                        <cursor><Cursor fx:constant="HAND"/></cursor>
+                    </Button>
+                    <Label fx:id="monthYearLabel" text="Janvier 2024"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white; -fx-min-width: 150; -fx-alignment: center;"/>
+                    <Button fx:id="btnNextMonth" text="▶" onAction="#nextMonth"
+                            style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 10 15; -fx-background-radius: 5; -fx-cursor: hand;">
+                        <cursor><Cursor fx:constant="HAND"/></cursor>
+                    </Button>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox spacing="25" style="-fx-padding: 40;">
+
+                <!-- Statistiques du mois -->
+                <HBox spacing="20">
+                    <!-- Stat 1 -->
+                    <VBox alignment="CENTER" spacing="10" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                        <Label text="📔" style="-fx-font-size: 32px;"/>
+                        <Label fx:id="lblEntriesCount" text="0" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                        <Label text="Entrées ce mois" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <!-- Stat 2 -->
+                    <VBox alignment="CENTER" spacing="10" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                        <Label fx:id="lblDominantMood" text="😊" style="-fx-font-size: 32px;"/>
+                        <Label fx:id="lblDominantMoodText" text="Excellent" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                        <Label text="Humeur dominante" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <!-- Stat 3 -->
+                    <VBox alignment="CENTER" spacing="10" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                        <Label text="⚡" style="-fx-font-size: 32px;"/>
+                        <Label fx:id="lblAvgEnergie" text="0.0" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                        <Label text="Énergie moyenne" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Calendrier des humeurs -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <Label text="Calendrier du mois" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
+                    <!-- En-têtes jours de la semaine -->
+                    <GridPane fx:id="calendarHeader" hgap="5" vgap="5">
+                        <!-- Sera rempli dynamiquement -->
+                    </GridPane>
+
+                    <Separator/>
+
+                    <!-- Grille du calendrier -->
+                    <GridPane fx:id="calendarGrid" hgap="5" vgap="5">
+                        <!-- Sera rempli dynamiquement avec les jours -->
+                    </GridPane>
+
+                    <!-- Légende -->
+                    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 15 0 0 0;">
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="😊" style="-fx-font-size: 16px;"/>
+                            <Label text="Excellent" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="🙂" style="-fx-font-size: 16px;"/>
+                            <Label text="Bien" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="😐" style="-fx-font-size: 16px;"/>
+                            <Label text="Moyen" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="😔" style="-fx-font-size: 16px;"/>
+                            <Label text="Difficile" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="😰" style="-fx-font-size: 16px;"/>
+                            <Label text="Très difficile" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Graphique d'évolution -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <Label text="Évolution de l'humeur" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
+                    <LineChart fx:id="moodChart" prefHeight="300" legendVisible="false">
+                        <xAxis>
+                            <CategoryAxis label="Jours" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Score d'humeur" side="LEFT" lowerBound="1" upperBound="5" tickUnit="1"/>
+                        </yAxis>
+                    </LineChart>
+                </VBox>
+
+                <!-- Émotions fréquentes -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <Label text="Émotions les plus fréquentes" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
+                    <FlowPane fx:id="topEmotionsPane" hgap="10" vgap="10">
+                        <!-- Sera rempli dynamiquement -->
+                    </FlowPane>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
