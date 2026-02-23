@@ -17,7 +17,10 @@
 
     <!-- FORM FIELDS -->
     <VBox spacing="15" alignment="TOP_LEFT">
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd80a9a (final update)
         <TextField fx:id="titleField"
                    promptText="Event Title"
                    style="-fx-pref-width:500px;" />
@@ -29,6 +32,13 @@
         <DatePicker fx:id="datePicker"
                     style="-fx-pref-width:200px;" />
 
+<<<<<<< HEAD
+=======
+        <TextField fx:id="maxParticipantsField"
+                   promptText="Maximum Participants"
+                   style="-fx-pref-width:500px;" />
+
+>>>>>>> fd80a9a (final update)
         <TextField fx:id="linkField"
                    promptText="Image URL or Event Link"
                    style="-fx-pref-width:500px;" />
@@ -54,9 +64,18 @@
                    preserveRatio="true"/>
     </VBox>
 
+<<<<<<< HEAD
     <!-- ACTION BUTTONS -->
     <HBox spacing="15" alignment="CENTER">
 
+=======
+    <!-- Planification Fields -->
+    <TextField fx:id="planDescriptionField" promptText="Plan Description (Optional)" style="-fx-pref-width:500px;"/>
+    <TextField fx:id="planDureeField" promptText="Plan Duration (Optional)" style="-fx-pref-width:500px;"/>
+
+    <!-- ACTION BUTTONS -->
+    <HBox spacing="15" alignment="CENTER">
+>>>>>>> fd80a9a (final update)
         <Button fx:id="btnUpdate"
                 text="💾 Update"
                 style="-fx-background-color:#4CAF50;
@@ -69,8 +88,12 @@
                        -fx-text-fill:white;
                        -fx-font-weight:bold;" />
     </HBox>
+<<<<<<< HEAD
     <TextField fx:id="planDescriptionField" promptText="Plan Description" style="-fx-pref-width:500px;"/>
     <TextField fx:id="planDureeField" promptText="Plan Duration" style="-fx-pref-width:500px;"/>
 
 
 </VBox>
+=======
+</VBox>
+>>>>>>> fd80a9a (final update)

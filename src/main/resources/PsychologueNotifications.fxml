@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20"
+      style="-fx-background-color:#F5F1E6; -fx-padding:20;"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.projet.gui.PsychologueNotificationsController">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="🔔 Participations à mes événements"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="unreadCountLabel"
+               style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <!-- Toolbar -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="markAllReadBtn" text="✅ Marquer tout comme lu"
+                style="-fx-background-color: #374535; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Button fx:id="refreshBtn" text="🔄 Actualiser"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- Notifications Table -->
+    <TableView fx:id="notificationsTable" VBox.vgrow="ALWAYS"
+               style="-fx-background-color: #ffffff; -fx-border-color: #CFCBB3; -fx-border-radius: 10;">
+        <columns>
+            <TableColumn fx:id="colMessage" text="Message" prefWidth="300"/>
+            <TableColumn fx:id="colEvent" text="Événement" prefWidth="150"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
+            <TableColumn fx:id="colStatus" text="Statut" prefWidth="100"/>
+            <TableColumn fx:id="colAction" text="Action" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+</VBox>

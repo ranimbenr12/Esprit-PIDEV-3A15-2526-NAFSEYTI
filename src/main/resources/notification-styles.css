@@ -1,0 +1,70 @@
+/* notification-styles.css */
+
+.root {
+    -fx-font-family: 'Segoe UI', 'System';
+}
+
+/* Table row styling */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f0f0f0 transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e8f5e9;
+    -fx-cursor: hand;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #c8e6c9;
+    -fx-text-fill: #1e4a18;
+}
+
+/* Button hover effects */
+.button:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-transition: all 0.2s ease;
+}
+
+/* Scrollbar styling */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #285921;
+    -fx-background-radius: 6;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #1e4a18;
+}
+
+/* Animation for new notifications */
+@keyframes pulse {
+    0% { -fx-scale: 1; }
+    50% { -fx-scale: 1.1; }
+    100% { -fx-scale: 1; }
+}
+
+.new-notification {
+    -fx-background-color: #FFE0B2;
+    -fx-animation: pulse 1s infinite;
+}
+
+/* Status indicators */
+.status-read {
+    -fx-text-fill: #8b9a8b;
+}
+
+.status-unread {
+    -fx-text-fill: #F44336;
+    -fx-font-weight: bold;
+}

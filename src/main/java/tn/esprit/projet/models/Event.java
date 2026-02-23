@@ -12,11 +12,17 @@ public class Event {
     private String link;
     private LocalDateTime createdAt;
     private int creator_id;
+    private int maxParticipants;
+    private int currentParticipants; // For display purposes
 
     public Event() {}
 
     public Event(int id, String title, LocalDate eventDate, String location, String link,
+<<<<<<< HEAD
                  LocalDateTime createdAt, int creator_id) {
+=======
+                 LocalDateTime createdAt, int creator_id, int maxParticipants) {
+>>>>>>> fd80a9a (final update)
         this.id = id;
         this.title = title;
         this.eventDate = eventDate;
@@ -24,6 +30,7 @@ public class Event {
         this.link = link;
         this.createdAt = createdAt;
         this.creator_id = creator_id;
+        this.maxParticipants = maxParticipants;
     }
 
     // Getters
@@ -34,6 +41,11 @@ public class Event {
     public String getLink() { return link; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public int getCreator_id() { return creator_id; }
+<<<<<<< HEAD
+=======
+    public int getMaxParticipants() { return maxParticipants; }
+    public int getCurrentParticipants() { return currentParticipants; }
+>>>>>>> fd80a9a (final update)
 
     // Setters
     public void setId(int id) { this.id = id; }
@@ -43,6 +55,11 @@ public class Event {
     public void setLink(String link) { this.link = link; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public void setCreator_id(int creator_id) { this.creator_id = creator_id; }
+<<<<<<< HEAD
+=======
+    public void setMaxParticipants(int maxParticipants) { this.maxParticipants = maxParticipants; }
+    public void setCurrentParticipants(int currentParticipants) { this.currentParticipants = currentParticipants; }
+>>>>>>> fd80a9a (final update)
 
     @Override
     public String toString() {
@@ -54,13 +71,19 @@ public class Event {
                 ", link='" + link + '\'' +
                 ", createdAt=" + createdAt +
                 ", creator_id=" + creator_id +
+                ", maxParticipants=" + maxParticipants +
+                ", currentParticipants=" + currentParticipants +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Event e)) return false;
+<<<<<<< HEAD
         return creator_id == e.creator_id &&
+=======
+        return creator_id == e.creator_id && maxParticipants == e.maxParticipants &&
+>>>>>>> fd80a9a (final update)
                 Objects.equals(title, e.title) &&
                 Objects.equals(eventDate, e.eventDate) &&
                 Objects.equals(location, e.location) &&
@@ -70,6 +93,10 @@ public class Event {
 
     @Override
     public int hashCode() {
+<<<<<<< HEAD
         return Objects.hash(id, title, eventDate, location, link, createdAt, creator_id);
+=======
+        return Objects.hash(id, title, eventDate, location, link, createdAt, creator_id, maxParticipants);
+>>>>>>> fd80a9a (final update)
     }
 }

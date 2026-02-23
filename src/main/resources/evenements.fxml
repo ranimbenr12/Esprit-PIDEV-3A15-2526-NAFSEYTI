@@ -8,6 +8,39 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="tn.esprit.projet.gui.EvenementsController">
 
+<<<<<<< HEAD
+=======
+    <!-- Top Bar with Notification Bell and AI Assistant -->
+    <HBox alignment="CENTER_RIGHT" spacing="15"
+          style="-fx-background-color: #374535; -fx-padding: 10 20; -fx-background-radius: 10;">
+
+        <Label text="Gestion des événements"
+               style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <!-- AI Assistant Button -->
+        <Button fx:id="aiAssistantButton" text="🤖 AI Assistant"
+                style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-size: 14px;
+                       -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 15;
+                       -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),5,0.5,0,0);"/>
+
+        <!-- Notification Bell Button -->
+        <StackPane>
+            <Button fx:id="notificationBell" text="🔔"
+                    style="-fx-font-size: 24px; -fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: white;"/>
+
+            <!-- Red Badge for unread count -->
+            <Label fx:id="notificationBadge" text="0"
+                   style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px;
+                          -fx-min-width: 16px; -fx-min-height: 16px; -fx-max-width: 16px; -fx-max-height: 16px;
+                          -fx-background-radius: 50%; -fx-alignment: center; -fx-translate-x: 10; -fx-translate-y: -10;"
+                   visible="false"/>
+        </StackPane>
+    </HBox>
+
+    <!-- Search and Action Bar -->
+>>>>>>> fd80a9a (final update)
     <HBox spacing="15" alignment="CENTER_LEFT">
         <Label text="🔎" style="-fx-font-size:22px;" />
 
@@ -38,10 +71,18 @@
             <TableColumn fx:id="colLink" text="Lien" prefWidth="160"/>
             <TableColumn fx:id="colCreatedAt" text="Créé le" prefWidth="150"/>
             <TableColumn fx:id="colIsNew" text="Status" prefWidth="100"/>
+<<<<<<< HEAD
+=======
+            <TableColumn fx:id="colParticipants" text="Participants" prefWidth="150"/>
+>>>>>>> fd80a9a (final update)
             <TableColumn fx:id="colCreatorId" text="Creator" prefWidth="100"/>
         </columns>
     </TableView>
 
+<<<<<<< HEAD
+=======
+    <!-- Action Buttons -->
+>>>>>>> fd80a9a (final update)
     <HBox spacing="15" alignment="CENTER_RIGHT">
         <Button fx:id="btnModifier" text="✏️ Modifier"
                 style="-fx-background-color:#374535; -fx-text-fill:white; -fx-background-radius:15; -fx-padding:8 15;
@@ -52,6 +93,7 @@
     </HBox>
 
     <!-- Planification Table -->
+<<<<<<< HEAD
 
         <TableView fx:id="tablePlanifications" VBox.vgrow="ALWAYS">
             <columns>
@@ -63,3 +105,16 @@
 
     </TableView>
 </VBox>
+=======
+    <TableView fx:id="tablePlanifications" VBox.vgrow="ALWAYS"
+               style="-fx-background-color:#ffffff; -fx-border-color:#CFCBB3; -fx-border-radius:10;">
+        <columns>
+            <TableColumn fx:id="colPlanId" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="colPlanDesc" text="Description" prefWidth="250"/>
+            <TableColumn fx:id="colPlanDuree" text="Durée" prefWidth="100"/>
+            <TableColumn fx:id="colPlanEventId" text="ID Événement" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>
+>>>>>>> fd80a9a (final update)

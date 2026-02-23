@@ -46,7 +46,11 @@ public class Test extends Application {
         }
 
         //  Load FXML AFTER that
+<<<<<<< HEAD
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventClient.fxml"));
+=======
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Psychologue.fxml"));
+>>>>>>> fd80a9a (final update)
         Scene scene = new Scene(loader.load());
         stage.setTitle("Fintech App");
         stage.setScene(scene);

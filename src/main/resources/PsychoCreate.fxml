@@ -20,6 +20,10 @@
         <TextField fx:id="titleField" promptText="Event Title" style="-fx-pref-width:500px;"/>
         <TextField fx:id="locationField" promptText="Location" style="-fx-pref-width:500px;"/>
         <DatePicker fx:id="datePicker" style="-fx-pref-width:200px;"/>
+<<<<<<< HEAD
+=======
+        <TextField fx:id="maxParticipantsField" promptText="Maximum Participants" style="-fx-pref-width:500px;"/>
+>>>>>>> fd80a9a (final update)
         <TextField fx:id="linkField" promptText="Image URL or Event Link" style="-fx-pref-width:500px;"/>
     </VBox>
 
@@ -31,14 +35,25 @@
         <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
     </VBox>
 
+<<<<<<< HEAD
+=======
+    <!-- Planification Fields (Optional) -->
+    <TextField fx:id="planDescriptionField" promptText="Plan Description (Optional)" style="-fx-pref-width:500px;"/>
+    <TextField fx:id="planDureeField" promptText="Plan Duration (Optional)" style="-fx-pref-width:500px;"/>
+
+>>>>>>> fd80a9a (final update)
     <!-- ACTION BUTTONS -->
     <HBox spacing="15" alignment="CENTER">
         <Button fx:id="btnSave" text="Save" style="-fx-background-color:#4CAF50; -fx-text-fill:white; -fx-font-weight:bold;"/>
         <Button fx:id="btnCancel" text="Cancel" style="-fx-background-color:#f44336; -fx-text-fill:white; -fx-font-weight:bold;"/>
     </HBox>
 
+<<<<<<< HEAD
     <TextField fx:id="planDescriptionField" promptText="Plan Description" style="-fx-pref-width:500px;"/>
     <TextField fx:id="planDureeField" promptText="Plan Duration" style="-fx-pref-width:500px;"/>
 
 
 </VBox>
+=======
+</VBox>
+>>>>>>> fd80a9a (final update)

@@ -15,10 +15,28 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
+<<<<<<< HEAD
 import tn.esprit.projet.models.Event;
 import tn.esprit.projet.models.Planification;
 import tn.esprit.projet.view.EventService;
 import tn.esprit.projet.view.PlanificationService;
+=======
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
+import javafx.application.Platform;
+import tn.esprit.projet.models.Event;
+import tn.esprit.projet.models.Planification;
+import tn.esprit.projet.models.Participation;
+import tn.esprit.projet.view.EventService;
+import tn.esprit.projet.view.PlanificationService;
+import tn.esprit.projet.view.NotificationService;
+import tn.esprit.projet.view.ParticipationService;
+import tn.esprit.projet.utils.SoundUtil;
+>>>>>>> fd80a9a (final update)
 
 import java.io.File;
 import java.sql.SQLException;
@@ -27,7 +45,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
+<<<<<<< HEAD
 public class PsychologueController{
+=======
+public class PsychologueController {
+>>>>>>> fd80a9a (final update)
 
     @FXML
     private BorderPane mainBorderPane;
@@ -35,8 +57,22 @@ public class PsychologueController{
     @FXML
     private Button btnAccueil, btnRendezVous, btnContenu, btnTests, btnEvenements, btnSuivi, btnFeedback;
 
+<<<<<<< HEAD
     private EventService eventService;
     private PlanificationService planificationService;
+=======
+    @FXML
+    private Button notificationBell;
+    @FXML
+    private Label notificationBadge;
+    @FXML
+    private Button aiAssistantButton; // AI Assistant button
+
+    private EventService eventService;
+    private PlanificationService planificationService;
+    private NotificationService notificationService;
+    private ParticipationService participationService;
+>>>>>>> fd80a9a (final update)
     private List<Event> allEvents;
     private List<Planification> allPlanifications;
     private VBox eventsContainer;
@@ -44,6 +80,7 @@ public class PsychologueController{
     private Set<Integer> likedEventIds;
     private Button showLikedButton;
     private boolean showingOnlyLiked = false;
+<<<<<<< HEAD
 
     @FXML
     public void initialize() {
@@ -51,14 +88,39 @@ public class PsychologueController{
 
         eventService = new EventService();
         planificationService = new PlanificationService();
+=======
+    private int currentPsychologueId = 2; // Assuming psychologist ID is 2 (Sarra)
+    private Timeline notificationChecker;
+
+    @FXML
+    public void initialize() {
+        System.out.println("Psychologue interface loaded successfully!");
+
+        eventService = new EventService();
+        planificationService = new PlanificationService();
+        notificationService = new NotificationService();
+        participationService = new ParticipationService();
+>>>>>>> fd80a9a (final update)
         allEvents = new ArrayList<>();
         allPlanifications = new ArrayList<>();
         likedEventIds = new HashSet<>();
 
+<<<<<<< HEAD
         // Handle click for Événements et Ateliers
         btnEvenements.setOnAction(event -> {
             highlightButton(btnEvenements);
             openBlankPage();
+=======
+        // Initialize AI Assistant button
+        if (aiAssistantButton != null) {
+            aiAssistantButton.setOnAction(e -> openAIAssistant());
+        }
+
+        // Handle click for Événements et Ateliers
+        btnEvenements.setOnAction(event -> {
+            highlightButton(btnEvenements);
+            openEventsPage();
+>>>>>>> fd80a9a (final update)
         });
 
         // Handle click for Mes Rendez-vous
@@ -69,12 +131,38 @@ public class PsychologueController{
         btnTests.setOnAction(event -> highlightButton(btnTests));
         btnSuivi.setOnAction(event -> highlightButton(btnSuivi));
         btnFeedback.setOnAction(event -> highlightButton(btnFeedback));
+<<<<<<< HEAD
+=======
+
+        // Start notification checker
+        startNotificationChecker();
+>>>>>>> fd80a9a (final update)
     }
 
     @FXML
     private void handleBtnRendezVous() {
         highlightButton(btnRendezVous);
         System.out.println("Mes rendez-vous clicked!");
+<<<<<<< HEAD
+=======
+        showInfo("Fonctionnalité à venir: Mes rendez-vous");
+    }
+
+    // Open AI Assistant
+    private void openAIAssistant() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AIAssistant.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            stage.setTitle("🤖 Assistant Événementiel");
+            stage.setMinWidth(600);
+            stage.setMinHeight(700);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Impossible d'ouvrir l'assistant IA : " + e.getMessage());
+        }
+>>>>>>> fd80a9a (final update)
     }
 
     // Highlight selected button
@@ -91,12 +179,217 @@ public class PsychologueController{
         }
     }
 
+<<<<<<< HEAD
     // Load a page with search bar + sort options inside the center
     private void openBlankPage() {
         VBox blankPage = new VBox(25);
         blankPage.setStyle("-fx-background-color: linear-gradient(to bottom right, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);");
         blankPage.setPrefSize(1000, 600);
         blankPage.setPadding(new Insets(30));
+=======
+    private void startNotificationChecker() {
+        notificationChecker = new Timeline(
+                new KeyFrame(Duration.seconds(5), e -> updateNotificationBadge())
+        );
+        notificationChecker.setCycleCount(Animation.INDEFINITE);
+        notificationChecker.play();
+    }
+
+    private void updateNotificationBadge() {
+        try {
+            int unreadCount = notificationService.getUnreadCountForPsychologue(currentPsychologueId);
+
+            if (unreadCount > 0) {
+                notificationBadge.setText(String.valueOf(unreadCount));
+                notificationBadge.setVisible(true);
+                animateBell();
+            } else {
+                notificationBadge.setVisible(false);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void animateBell() {
+        Timeline bellShake = new Timeline(
+                new KeyFrame(Duration.seconds(0.1), e -> notificationBell.setRotate(15)),
+                new KeyFrame(Duration.seconds(0.2), e -> notificationBell.setRotate(-15)),
+                new KeyFrame(Duration.seconds(0.3), e -> notificationBell.setRotate(10)),
+                new KeyFrame(Duration.seconds(0.4), e -> notificationBell.setRotate(-10)),
+                new KeyFrame(Duration.seconds(0.5), e -> notificationBell.setRotate(5)),
+                new KeyFrame(Duration.seconds(0.6), e -> notificationBell.setRotate(-5)),
+                new KeyFrame(Duration.seconds(0.7), e -> notificationBell.setRotate(0))
+        );
+        bellShake.play();
+    }
+
+    private void openNotifications() {
+        try {
+            // Debug: Check if resource exists
+            String resourcePath = "/PsychologueNotifications.fxml";
+            java.net.URL resourceUrl = getClass().getResource(resourcePath);
+
+            System.out.println("Looking for FXML at: " + resourcePath);
+            System.out.println("Resource URL: " + resourceUrl);
+
+            if (resourceUrl == null) {
+                System.err.println("ERROR: FXML file not found at " + resourcePath);
+                System.err.println("Current classpath: " + System.getProperty("java.class.path"));
+                showError("Fichier PsychologueNotifications.fxml introuvable!");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Notifications de participations");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            stage.setOnHidden(e -> updateNotificationBadge());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Impossible d'ouvrir les notifications : " + e.getMessage());
+        }
+    }
+
+    private boolean checkIfUserParticipated(int eventId) {
+        try {
+            Participation participation = participationService.getByUserAndEvent(currentPsychologueId, eventId);
+            return participation != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private Button createParticipationButton(Event event) {
+        Button participateBtn = new Button();
+
+        // Check if user already participated
+        boolean hasParticipated = checkIfUserParticipated(event.getId());
+
+        if (hasParticipated) {
+            participateBtn.setText("✅ Déjà inscrit");
+            participateBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
+                    "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+            participateBtn.setDisable(true);
+        } else {
+            // Check if event is full
+            if (event.getCurrentParticipants() >= event.getMaxParticipants()) {
+                participateBtn.setText("Complet");
+                participateBtn.setStyle("-fx-background-color: #b22222; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                participateBtn.setDisable(true);
+            } else {
+                participateBtn.setText("🎯 S'inscrire");
+                participateBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15; " +
+                        "-fx-cursor: hand;");
+
+                participateBtn.setOnAction(e -> {
+                    // Play click sound
+                    SoundUtil.playClickSound();
+
+                    // Change button to red temporarily
+                    participateBtn.setStyle("-fx-background-color: #b22222; -fx-text-fill: white; " +
+                            "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                    participateBtn.setText("⏳ Traitement...");
+                    participateBtn.setDisable(true);
+
+                    // Process participation
+                    processParticipation(event, participateBtn);
+                });
+
+                // Hover effect
+                participateBtn.setOnMouseEntered(e -> {
+                    if (!participateBtn.isDisable()) {
+                        participateBtn.setStyle("-fx-background-color: #3d7e33; -fx-text-fill: white; " +
+                                "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15; " +
+                                "-fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(40,89,33,0.4), 8,0,0,2);");
+                    }
+                });
+
+                participateBtn.setOnMouseExited(e -> {
+                    if (!participateBtn.isDisable()) {
+                        participateBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; " +
+                                "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                    }
+                });
+            }
+        }
+
+        return participateBtn;
+    }
+
+    private void processParticipation(Event event, Button participateBtn) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+        pause.setOnFinished(e -> {
+            try {
+                // Check again if event is full
+                if (event.getCurrentParticipants() >= event.getMaxParticipants()) {
+                    Platform.runLater(() -> {
+                        showError("Désolé, cet événement est complet !");
+                    });
+                    participateBtn.setStyle("-fx-background-color: #b22222; -fx-text-fill: white; " +
+                            "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                    participateBtn.setText("Complet");
+                    return;
+                }
+
+                // Create participation
+                Participation participation = new Participation();
+                participation.setUserId(currentPsychologueId);
+                participation.setEventId(event.getId());
+                participation.setStatus("confirmed");
+
+                participationService.insertOne(participation);
+
+                // Play notification sound
+                SoundUtil.playNotificationSound();
+
+                // Success - change button to green
+                participateBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                participateBtn.setText("✅ Inscrit !");
+
+                // Use Platform.runLater to show dialog after animation
+                Platform.runLater(() -> {
+                    showInfo("Inscription réussie ! Vous êtes inscrit à l'événement.");
+                });
+
+                // Refresh the events to update participation count
+                loadEventsAndPlanifications();
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+
+                // Error - revert button
+                participateBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15; " +
+                        "-fx-cursor: hand;");
+                participateBtn.setText("🎯 S'inscrire");
+                participateBtn.setDisable(false);
+
+                Platform.runLater(() -> {
+                    showError("Erreur lors de l'inscription : " + ex.getMessage());
+                });
+            }
+        });
+        pause.play();
+    }
+
+    // Load events page
+    private void openEventsPage() {
+        VBox eventsPage = new VBox(25);
+        eventsPage.setStyle("-fx-background-color: linear-gradient(to bottom right, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);");
+        eventsPage.setPrefSize(1000, 600);
+        eventsPage.setPadding(new Insets(30));
+>>>>>>> fd80a9a (final update)
 
         // ===== Psychology-themed Header with Mind/Brain Theme =====
         VBox headerBox = new VBox(10);
@@ -144,6 +437,7 @@ public class PsychologueController{
         titleBox.getChildren().addAll(headerTitle, headerSubtitle);
         titleRow.getChildren().addAll(iconContainer, titleBox);
 
+<<<<<<< HEAD
         // ===== ADD ADMIN BUTTONS (Ajouter, Modifier, Supprimer) =====
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -153,6 +447,50 @@ public class PsychologueController{
 
         titleRow.getChildren().addAll(spacer, btnAjouter);
         headerBox.getChildren().add(titleRow);
+=======
+        // ===== ADD NOTIFICATION BELL AND AI ASSISTANT =====
+        HBox headerWithBell = new HBox(10);
+        headerWithBell.setAlignment(Pos.CENTER_LEFT);
+
+        // AI Assistant Button
+        Button aiBtn = new Button("🤖 Assistant IA");
+        aiBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-size: 14px; " +
+                "-fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 15; " +
+                "-fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),5,0.5,0,0);");
+        aiBtn.setOnAction(e -> openAIAssistant());
+
+        // Notification Bell
+        StackPane notificationStack = new StackPane();
+        Button bellBtn = new Button("🔔");
+        bellBtn.setStyle("-fx-font-size: 24px; -fx-background-color: transparent; -fx-cursor: hand;");
+        bellBtn.setOnAction(e -> openNotifications());
+
+        Label badge = new Label("0");
+        badge.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px; " +
+                "-fx-min-width: 16px; -fx-min-height: 16px; -fx-max-width: 16px; -fx-max-height: 16px; " +
+                "-fx-background-radius: 50%; -fx-alignment: center; -fx-translate-x: 10; -fx-translate-y: -10;");
+        badge.setVisible(false);
+
+        notificationBell = bellBtn;
+        notificationBadge = badge;
+
+        notificationStack.getChildren().addAll(bellBtn, badge);
+
+        Region bellSpacer = new Region();
+        HBox.setHgrow(bellSpacer, Priority.ALWAYS);
+
+        // ===== ADD ADMIN BUTTONS (Ajouter) =====
+        Button btnAjouter = createAdminButton("➕ Ajouter", "#4CAF50", "#45a049");
+        btnAjouter.setOnAction(e -> openCreateEventWindow());
+
+        // Add all buttons in order: Title + AI Assistant in a group, then spacer, then bell, then ajouter
+        HBox leftGroup = new HBox(15);
+        leftGroup.setAlignment(Pos.CENTER_LEFT);
+        leftGroup.getChildren().addAll(titleRow, aiBtn);
+
+        headerWithBell.getChildren().addAll(leftGroup, bellSpacer, notificationStack, btnAjouter);
+        headerBox.getChildren().add(headerWithBell);
+>>>>>>> fd80a9a (final update)
 
         // ===== Psychology-themed Search and Sort Bar =====
         HBox searchSortBox = new HBox(15);
@@ -201,12 +539,20 @@ public class PsychologueController{
             filterAndDisplayEvents(newValue);
         });
 
+<<<<<<< HEAD
         // Wellness-themed Sort button
+=======
+        // Wellness-themed Sort button - FIXED GRADIENT
+>>>>>>> fd80a9a (final update)
         MenuButton sortButton = new MenuButton("✨ Trier par");
         sortButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%); " +
+=======
+                "-fx-background-color: #7ec8a3; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                 "-fx-text-fill: #000000; " +
                 "-fx-padding: 14 22 14 22; " +
                 "-fx-font-weight: bold; " +
@@ -216,7 +562,11 @@ public class PsychologueController{
             sortButton.setStyle("-fx-font-size: 14px; " +
                     "-fx-background-radius: 15; " +
                     "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(135deg, #7ec8a3 0%, #5fb88b 100%); " +
+=======
+                    "-fx-background-color: #5fb88b; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                     "-fx-text-fill: #000000; " +
                     "-fx-padding: 14 22 14 22; " +
                     "-fx-font-weight: bold; " +
@@ -229,7 +579,11 @@ public class PsychologueController{
             sortButton.setStyle("-fx-font-size: 14px; " +
                     "-fx-background-radius: 15; " +
                     "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%); " +
+=======
+                    "-fx-background-color: #7ec8a3; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                     "-fx-text-fill: #000000; " +
                     "-fx-padding: 14 22 14 22; " +
                     "-fx-font-weight: bold; " +
@@ -264,12 +618,20 @@ public class PsychologueController{
             displayEvents(getCurrentFilteredEvents());
         });
 
+<<<<<<< HEAD
         // Favorites button with beige/brown theme
+=======
+        // Favorites button - FIXED GRADIENT
+>>>>>>> fd80a9a (final update)
         showLikedButton = new Button("💛 Mes Favoris");
         showLikedButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #d4b896 0%, #c9b99b 100%); " +
+=======
+                "-fx-background-color: #c9b99b; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                 "-fx-text-fill: #000000; " +
                 "-fx-padding: 14 22 14 22; " +
                 "-fx-font-weight: bold; " +
@@ -278,7 +640,11 @@ public class PsychologueController{
         showLikedButton.setOnMouseEntered(e -> showLikedButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #c9b99b 0%, #b8a888 100%); " +
+=======
+                "-fx-background-color: #b8a888; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                 "-fx-text-fill: #000000; " +
                 "-fx-padding: 14 22 14 22; " +
                 "-fx-font-weight: bold; " +
@@ -290,7 +656,11 @@ public class PsychologueController{
                 showLikedButton.setStyle("-fx-font-size: 14px; " +
                         "-fx-background-radius: 15; " +
                         "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                         "-fx-background-color: linear-gradient(135deg, #d4b896 0%, #c9b99b 100%); " +
+=======
+                        "-fx-background-color: #c9b99b; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                         "-fx-text-fill: #000000; " +
                         "-fx-padding: 14 22 14 22; " +
                         "-fx-font-weight: bold; " +
@@ -305,7 +675,11 @@ public class PsychologueController{
                 showLikedButton.setStyle("-fx-font-size: 14px; " +
                         "-fx-background-radius: 15; " +
                         "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                         "-fx-background-color: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%); " +
+=======
+                        "-fx-background-color: #7ec8a3; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                         "-fx-text-fill: #000000; " +
                         "-fx-padding: 14 22 14 22; " +
                         "-fx-font-weight: bold; " +
@@ -315,7 +689,11 @@ public class PsychologueController{
                 showLikedButton.setStyle("-fx-font-size: 14px; " +
                         "-fx-background-radius: 15; " +
                         "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                         "-fx-background-color: linear-gradient(135deg, #d4b896 0%, #c9b99b 100%); " +
+=======
+                        "-fx-background-color: #c9b99b; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                         "-fx-text-fill: #000000; " +
                         "-fx-padding: 14 22 14 22; " +
                         "-fx-font-weight: bold; " +
@@ -362,9 +740,15 @@ public class PsychologueController{
         eventCount.setText("🎯 " + allEvents.size() + " événement" + (allEvents.size() > 1 ? "s" : ""));
 
         // Add all to the main VBox
+<<<<<<< HEAD
         blankPage.getChildren().addAll(headerBox, searchSortBox, scrollPane);
 
         mainBorderPane.setCenter(blankPage);
+=======
+        eventsPage.getChildren().addAll(headerBox, searchSortBox, scrollPane);
+
+        mainBorderPane.setCenter(eventsPage);
+>>>>>>> fd80a9a (final update)
     }
 
     // ===== CREATE ADMIN BUTTON HELPER =====
@@ -618,7 +1002,11 @@ public class PsychologueController{
             Label newBadge = new Label("NOUVEAU");
             newBadge.setStyle("-fx-font-size: 10px; " +
                     "-fx-text-fill: white; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(to right, #a8e6cf, #7ec8a3); " +
+=======
+                    "-fx-background-color: #7ec8a3; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                     "-fx-background-radius: 6; " +
                     "-fx-padding: 4 10 4 10; " +
                     "-fx-font-weight: bold; " +
@@ -633,7 +1021,11 @@ public class PsychologueController{
             Label badge = new Label("🎯 " + planifications.size() + " activité" + (planifications.size() > 1 ? "s" : ""));
             badge.setStyle("-fx-font-size: 11px; " +
                     "-fx-text-fill: white; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(to right, #d4b896, #c9b99b); " +
+=======
+                    "-fx-background-color: #c9b99b; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                     "-fx-background-radius: 15; " +
                     "-fx-padding: 5 12 5 12; " +
                     "-fx-font-weight: bold; " +
@@ -645,6 +1037,12 @@ public class PsychologueController{
         HBox.setHgrow(titleSpacer, Priority.ALWAYS);
         titleRow.getChildren().add(titleSpacer);
 
+<<<<<<< HEAD
+=======
+        // Add participation button
+        Button participateBtn = createParticipationButton(event);
+
+>>>>>>> fd80a9a (final update)
         // ===== ADD ADMIN ACTION BUTTONS (Modifier, Supprimer) =====
         HBox adminButtonsBox = new HBox(8);
         adminButtonsBox.setAlignment(Pos.CENTER_RIGHT);
@@ -661,7 +1059,11 @@ public class PsychologueController{
         Button heartButton = createHeartButton(event.getId());
 
         HBox actionButtonsRow = new HBox(10);
+<<<<<<< HEAD
         actionButtonsRow.getChildren().addAll(adminButtonsBox, heartButton);
+=======
+        actionButtonsRow.getChildren().addAll(participateBtn, adminButtonsBox, heartButton);
+>>>>>>> fd80a9a (final update)
         titleRow.getChildren().add(actionButtonsRow);
 
         infoBox.getChildren().add(titleRow);
@@ -703,6 +1105,33 @@ public class PsychologueController{
             detailsBox.getChildren().add(createdBox);
         }
 
+<<<<<<< HEAD
+=======
+        // Participants count with progress
+        HBox participantsBox = new HBox(10);
+        participantsBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label participantsIcon = new Label("👥");
+        participantsIcon.setStyle("-fx-font-size: 15px;");
+
+        double ratio = (double) event.getCurrentParticipants() / event.getMaxParticipants();
+        String participantsText = event.getCurrentParticipants() + " / " + event.getMaxParticipants() + " participants";
+        Label participantsLabel = new Label(participantsText);
+        participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #5a6c5a;");
+
+        // Add color coding based on availability
+        if (ratio >= 1.0) {
+            participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #b22222; -fx-font-weight: bold;");
+        } else if (ratio >= 0.8) {
+            participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #ff9800; -fx-font-weight: bold;");
+        } else {
+            participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+        }
+
+        participantsBox.getChildren().addAll(participantsIcon, participantsLabel);
+        detailsBox.getChildren().add(participantsBox);
+
+>>>>>>> fd80a9a (final update)
         infoBox.getChildren().add(detailsBox);
 
         // Planifications section with mindfulness theme
@@ -808,12 +1237,20 @@ public class PsychologueController{
                 "-fx-background-radius: 15; " +
                 "-fx-effect: dropshadow(gaussian, rgba(40, 89, 33, 0.15), 8, 0, 0, 3);");
 
+<<<<<<< HEAD
         // Month header with green gradient
+=======
+        // Month header with green gradient - FIXED
+>>>>>>> fd80a9a (final update)
         Label monthLabel = new Label(date.getMonth().getDisplayName(TextStyle.SHORT, Locale.FRENCH).toUpperCase());
         monthLabel.setStyle("-fx-font-size: 11px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-text-fill: white; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(to right, #2e6a28, #285921); " +
+=======
+                "-fx-background-color: #2e6a28; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                 "-fx-padding: 6 0 6 0; " +
                 "-fx-background-radius: 13 13 0 0;");
         monthLabel.setMaxWidth(Double.MAX_VALUE);
@@ -923,12 +1360,20 @@ public class PsychologueController{
                 "-fx-border-radius: 15; " +
                 "-fx-effect: dropshadow(gaussian, rgba(40, 89, 33, 0.05), 4, 0, 0, 2);");
 
+<<<<<<< HEAD
         // Number badge with green colors
+=======
+        // Number badge with green colors - FIXED
+>>>>>>> fd80a9a (final update)
         Label numberLabel = new Label(String.valueOf(number));
         numberLabel.setStyle("-fx-font-size: 15px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-text-fill: white; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #2e6a28, #285921); " +
+=======
+                "-fx-background-color: #2e6a28; " + // Solid color instead of gradient
+>>>>>>> fd80a9a (final update)
                 "-fx-background-radius: 50%; " +
                 "-fx-min-width: 34; " +
                 "-fx-min-height: 34; " +

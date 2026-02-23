@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="15" style="-fx-background-color: #1E2A3A; -fx-padding: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.projet.gui.AIAssistantController">
+    <children>
+        <Label style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;" text="🤖 Assistant Événementiel">
+            <font>
+                <Font size="28.0" />
+            </font>
+        </Label>
+
+        <Label style="-fx-text-fill: #A0B0C0; -fx-font-size: 14px;" text="Votre partenaire créatif pour planifier des événements exceptionnels!" />
+
+        <!-- Quick Filters -->
+        <VBox spacing="10" style="-fx-background-color: #2C3A4A; -fx-padding: 15; -fx-background-radius: 10;">
+            <Label style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="🔍 Filtres rapides" />
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ComboBox fx:id="eventTypeCombo" promptText="Type d'événement" style="-fx-background-color: #3A4A5A; -fx-text-fill: white; -fx-prompt-text-fill: #8090A0;" HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="budgetCombo" promptText="Budget" style="-fx-background-color: #3A4A5A; -fx-text-fill: white; -fx-prompt-text-fill: #8090A0;" HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="audienceSizeCombo" promptText="Taille audience" style="-fx-background-color: #3A4A5A; -fx-text-fill: white; -fx-prompt-text-fill: #8090A0;" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="💡 Idée rapide" onAction="#handleQuickIdea" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-background-radius: 15; -fx-padding: 5 15;" />
+                <Button text="💰 Aide budget" onAction="#handleBudgetHelp" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 15; -fx-padding: 5 15;" />
+                <Button text="📅 Calendrier" onAction="#handleTimelineHelp" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-background-radius: 15; -fx-padding: 5 15;" />
+            </HBox>
+        </VBox>
+
+        <!-- Description TextArea with proper text color -->
+        <TextArea fx:id="eventDescriptionArea" promptText="Décrivez votre événement ou demandez des idées... (ex: 'Je veux créer un événement sur l'amour de soi' ou 'Donne-moi des idées de fête')"
+                  style="-fx-background-color: #2C3A4A; -fx-text-fill: WHITE; -fx-prompt-text-fill: #A0B0C0; -fx-border-color: #3A4A5A; -fx-border-radius: 5; -fx-font-size: 14px; -fx-control-inner-background: #2C3A4A;"
+                  prefRowCount="3" VBox.vgrow="NEVER">
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+        </TextArea>
+
+        <HBox alignment="CENTER" spacing="15">
+            <children>
+                <Button fx:id="generateButton" onAction="#generateIdeas" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25;" text="✨ Générer des idées" />
+                <Button fx:id="clearButton" onAction="#clearFields" style="-fx-background-color: #E0E0E0; -fx-text-fill: #333333; -fx-font-size: 16px; -fx-padding: 12 30; -fx-background-radius: 25;" text="🗑️ Effacer" />
+            </children>
+        </HBox>
+
+        <ProgressIndicator fx:id="loadingIndicator" maxHeight="50.0" maxWidth="50.0" visible="false" />
+
+        <!-- Result Area -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background: #2C3A4A; -fx-background-color: #2C3A4A; -fx-border-color: #3A4A5A; -fx-border-radius: 10;">
+            <content>
+                <TextArea fx:id="resultArea" editable="false" style="-fx-background-color: #2C3A4A; -fx-text-fill: #E0E0E0; -fx-control-inner-background: #2C3A4A; -fx-font-family: 'Monospaced'; -fx-font-size: 14px;" wrapText="true" prefRowCount="20" />
+            </content>
+        </ScrollPane>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <children>
+                <Button fx:id="copyButton" onAction="#copyToClipboard" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 15;" text="📋 Copier les idées" />
+                <Button fx:id="closeButton" onAction="#closeWindow" style="-fx-background-color: #b22222; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 15;" text="❌ Fermer" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

@@ -2,6 +2,7 @@ package tn.esprit.projet.gui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+<<<<<<< HEAD
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -14,6 +15,25 @@ import tn.esprit.projet.models.Event;
 import tn.esprit.projet.models.Planification;
 import tn.esprit.projet.view.EventService;
 import tn.esprit.projet.view.PlanificationService;
+=======
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
+import javafx.fxml.FXML;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
+import tn.esprit.projet.models.Event;
+import tn.esprit.projet.models.Planification;
+import tn.esprit.projet.models.Participation;
+import tn.esprit.projet.view.EventService;
+import tn.esprit.projet.view.PlanificationService;
+import tn.esprit.projet.view.ParticipationService;
+import tn.esprit.projet.utils.SoundUtil;
+>>>>>>> fd80a9a (final update)
 
 import java.io.File;
 import java.sql.SQLException;
@@ -21,6 +41,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
+<<<<<<< HEAD
+=======
+import javafx.application.Platform;
+>>>>>>> fd80a9a (final update)
 
 public class EventClientController {
 
@@ -32,6 +56,10 @@ public class EventClientController {
 
     private EventService eventService;
     private PlanificationService planificationService;
+<<<<<<< HEAD
+=======
+    private ParticipationService participationService;
+>>>>>>> fd80a9a (final update)
     private List<Event> allEvents;
     private List<Planification> allPlanifications;
     private VBox eventsContainer;
@@ -39,6 +67,10 @@ public class EventClientController {
     private Set<Integer> likedEventIds;
     private Button showLikedButton;
     private boolean showingOnlyLiked = false;
+<<<<<<< HEAD
+=======
+    private int currentUserId = 3; // Assuming student ID is 3 (Omar)
+>>>>>>> fd80a9a (final update)
 
     @FXML
     public void initialize() {
@@ -46,6 +78,10 @@ public class EventClientController {
 
         eventService = new EventService();
         planificationService = new PlanificationService();
+<<<<<<< HEAD
+=======
+        participationService = new ParticipationService();
+>>>>>>> fd80a9a (final update)
         allEvents = new ArrayList<>();
         allPlanifications = new ArrayList<>();
         likedEventIds = new HashSet<>();
@@ -53,7 +89,11 @@ public class EventClientController {
         // Handle click for Événements et Ateliers
         btnEvenements.setOnAction(event -> {
             highlightButton(btnEvenements);
+<<<<<<< HEAD
             openBlankPage();
+=======
+            openEventsPage();
+>>>>>>> fd80a9a (final update)
         });
 
         // Handle click for Mes Rendez-vous
@@ -70,6 +110,10 @@ public class EventClientController {
     private void handleBtnRendezVous() {
         highlightButton(btnRendezVous);
         System.out.println("Mes rendez-vous clicked!");
+<<<<<<< HEAD
+=======
+        showInfo("Fonctionnalité à venir: Mes rendez-vous");
+>>>>>>> fd80a9a (final update)
     }
 
     // Highlight selected button
@@ -86,12 +130,147 @@ public class EventClientController {
         }
     }
 
+<<<<<<< HEAD
     // Load a page with search bar + sort options inside the center
     private void openBlankPage() {
         VBox blankPage = new VBox(25);
         blankPage.setStyle("-fx-background-color: linear-gradient(to bottom right, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);");
         blankPage.setPrefSize(1000, 600);
         blankPage.setPadding(new Insets(30));
+=======
+    private boolean checkIfUserParticipated(int eventId) {
+        try {
+            Participation participation = participationService.getByUserAndEvent(currentUserId, eventId);
+            return participation != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private Button createParticipationButton(Event event) {
+        Button participateBtn = new Button();
+
+        // Check if user already participated
+        boolean hasParticipated = checkIfUserParticipated(event.getId());
+
+        if (hasParticipated) {
+            participateBtn.setText("✅ Déjà inscrit");
+            participateBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
+                    "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+            participateBtn.setDisable(true);
+        } else {
+            // Check if event is full
+            if (event.getCurrentParticipants() >= event.getMaxParticipants()) {
+                participateBtn.setText("Complet");
+                participateBtn.setStyle("-fx-background-color: #b22222; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                participateBtn.setDisable(true);
+            } else {
+                participateBtn.setText("🎯 S'inscrire");
+                participateBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15; " +
+                        "-fx-cursor: hand;");
+
+                participateBtn.setOnAction(e -> {
+                    // Play click sound
+                    SoundUtil.playClickSound();
+
+                    // Change button to red temporarily
+                    participateBtn.setStyle("-fx-background-color: #b22222; -fx-text-fill: white; " +
+                            "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                    participateBtn.setText("⏳ Traitement...");
+                    participateBtn.setDisable(true);
+
+                    // Process participation
+                    processParticipation(event, participateBtn);
+                });
+
+                // Hover effect
+                participateBtn.setOnMouseEntered(e -> {
+                    if (!participateBtn.isDisable()) {
+                        participateBtn.setStyle("-fx-background-color: #3d7e33; -fx-text-fill: white; " +
+                                "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15; " +
+                                "-fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(40,89,33,0.4), 8,0,0,2);");
+                    }
+                });
+
+                participateBtn.setOnMouseExited(e -> {
+                    if (!participateBtn.isDisable()) {
+                        participateBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; " +
+                                "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                    }
+                });
+            }
+        }
+
+        return participateBtn;
+    }
+
+    private void processParticipation(Event event, Button participateBtn) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+        pause.setOnFinished(e -> {
+            try {
+                // Check again if event is full
+                if (event.getCurrentParticipants() >= event.getMaxParticipants()) {
+                    Platform.runLater(() -> {
+                        showError("Désolé, cet événement est complet !");
+                    });
+                    participateBtn.setStyle("-fx-background-color: #b22222; -fx-text-fill: white; " +
+                            "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                    participateBtn.setText("Complet");
+                    return;
+                }
+
+                // Create participation
+                Participation participation = new Participation();
+                participation.setUserId(currentUserId);
+                participation.setEventId(event.getId());
+                participation.setStatus("confirmed");
+
+                participationService.insertOne(participation);
+
+                // Play notification sound
+                SoundUtil.playNotificationSound();
+
+                // Success - change button to green
+                participateBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15;");
+                participateBtn.setText("✅ Inscrit !");
+
+                // Use Platform.runLater to show dialog after animation
+                Platform.runLater(() -> {
+                    showSuccess("Inscription réussie ! Vous êtes inscrit à l'événement.");
+                });
+
+                // Refresh the events to update participation count
+                loadEventsAndPlanifications();
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+
+                // Error - revert button
+                participateBtn.setStyle("-fx-background-color: #285921; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-padding: 5 15; -fx-background-radius: 15; " +
+                        "-fx-cursor: hand;");
+                participateBtn.setText("🎯 S'inscrire");
+                participateBtn.setDisable(false);
+
+                Platform.runLater(() -> {
+                    showError("Erreur lors de l'inscription : " + ex.getMessage());
+                });
+            }
+        });
+        pause.play();
+    }
+
+    // Load events page
+    private void openEventsPage() {
+        VBox eventsPage = new VBox(25);
+        eventsPage.setStyle("-fx-background-color: linear-gradient(to bottom right, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);");
+        eventsPage.setPrefSize(1000, 600);
+        eventsPage.setPadding(new Insets(30));
+>>>>>>> fd80a9a (final update)
 
         // ===== Psychology-themed Header with Mind/Brain Theme =====
         VBox headerBox = new VBox(10);
@@ -124,7 +303,11 @@ public class EventClientController {
         }
 
         VBox titleBox = new VBox(5);
+<<<<<<< HEAD
         Label headerTitle = new Label("Événements & Planifications");
+=======
+        Label headerTitle = new Label("Événements & Ateliers");
+>>>>>>> fd80a9a (final update)
         headerTitle.setStyle("-fx-font-size: 30px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-text-fill: #285921; " +
@@ -138,7 +321,10 @@ public class EventClientController {
 
         titleBox.getChildren().addAll(headerTitle, headerSubtitle);
         titleRow.getChildren().addAll(iconContainer, titleBox);
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd80a9a (final update)
         headerBox.getChildren().add(titleRow);
 
         // ===== Psychology-themed Search and Sort Bar =====
@@ -193,7 +379,11 @@ public class EventClientController {
         sortButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%); " +
+=======
+                "-fx-background-color: #7ec8a3; " +
+>>>>>>> fd80a9a (final update)
                 "-fx-text-fill: #000000; " +
                 "-fx-padding: 14 22 14 22; " +
                 "-fx-font-weight: bold; " +
@@ -203,7 +393,11 @@ public class EventClientController {
             sortButton.setStyle("-fx-font-size: 14px; " +
                     "-fx-background-radius: 15; " +
                     "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(135deg, #7ec8a3 0%, #5fb88b 100%); " +
+=======
+                    "-fx-background-color: #5fb88b; " +
+>>>>>>> fd80a9a (final update)
                     "-fx-text-fill: #000000; " +
                     "-fx-padding: 14 22 14 22; " +
                     "-fx-font-weight: bold; " +
@@ -216,7 +410,11 @@ public class EventClientController {
             sortButton.setStyle("-fx-font-size: 14px; " +
                     "-fx-background-radius: 15; " +
                     "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%); " +
+=======
+                    "-fx-background-color: #7ec8a3; " +
+>>>>>>> fd80a9a (final update)
                     "-fx-text-fill: #000000; " +
                     "-fx-padding: 14 22 14 22; " +
                     "-fx-font-weight: bold; " +
@@ -252,11 +450,19 @@ public class EventClientController {
         });
 
         // Favorites button with beige/brown theme
+<<<<<<< HEAD
         showLikedButton = new Button("💛 Mes Favoris");
         showLikedButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
                 "-fx-background-color: linear-gradient(135deg, #d4b896 0%, #c9b99b 100%); " +
+=======
+        showLikedButton = new Button(showingOnlyLiked ? "🌟 Tous" : "💛 Mes Favoris");
+        showLikedButton.setStyle("-fx-font-size: 14px; " +
+                "-fx-background-radius: 15; " +
+                "-fx-border-radius: 15; " +
+                "-fx-background-color: #c9b99b; " +
+>>>>>>> fd80a9a (final update)
                 "-fx-text-fill: #000000; " +
                 "-fx-padding: 14 22 14 22; " +
                 "-fx-font-weight: bold; " +
@@ -265,7 +471,11 @@ public class EventClientController {
         showLikedButton.setOnMouseEntered(e -> showLikedButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #c9b99b 0%, #b8a888 100%); " +
+=======
+                "-fx-background-color: #b8a888; " +
+>>>>>>> fd80a9a (final update)
                 "-fx-text-fill: #000000; " +
                 "-fx-padding: 14 22 14 22; " +
                 "-fx-font-weight: bold; " +
@@ -277,7 +487,11 @@ public class EventClientController {
                 showLikedButton.setStyle("-fx-font-size: 14px; " +
                         "-fx-background-radius: 15; " +
                         "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                         "-fx-background-color: linear-gradient(135deg, #d4b896 0%, #c9b99b 100%); " +
+=======
+                        "-fx-background-color: #c9b99b; " +
+>>>>>>> fd80a9a (final update)
                         "-fx-text-fill: #000000; " +
                         "-fx-padding: 14 22 14 22; " +
                         "-fx-font-weight: bold; " +
@@ -292,7 +506,11 @@ public class EventClientController {
                 showLikedButton.setStyle("-fx-font-size: 14px; " +
                         "-fx-background-radius: 15; " +
                         "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                         "-fx-background-color: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%); " +
+=======
+                        "-fx-background-color: #7ec8a3; " +
+>>>>>>> fd80a9a (final update)
                         "-fx-text-fill: #000000; " +
                         "-fx-padding: 14 22 14 22; " +
                         "-fx-font-weight: bold; " +
@@ -302,7 +520,11 @@ public class EventClientController {
                 showLikedButton.setStyle("-fx-font-size: 14px; " +
                         "-fx-background-radius: 15; " +
                         "-fx-border-radius: 15; " +
+<<<<<<< HEAD
                         "-fx-background-color: linear-gradient(135deg, #d4b896 0%, #c9b99b 100%); " +
+=======
+                        "-fx-background-color: #c9b99b; " +
+>>>>>>> fd80a9a (final update)
                         "-fx-text-fill: #000000; " +
                         "-fx-padding: 14 22 14 22; " +
                         "-fx-font-weight: bold; " +
@@ -349,9 +571,15 @@ public class EventClientController {
         eventCount.setText("🎯 " + allEvents.size() + " événement" + (allEvents.size() > 1 ? "s" : ""));
 
         // Add all to the main VBox
+<<<<<<< HEAD
         blankPage.getChildren().addAll(headerBox, searchSortBox, scrollPane);
 
         mainBorderPane.setCenter(blankPage);
+=======
+        eventsPage.getChildren().addAll(headerBox, searchSortBox, scrollPane);
+
+        mainBorderPane.setCenter(eventsPage);
+>>>>>>> fd80a9a (final update)
     }
 
     private void loadEventsAndPlanifications() {
@@ -391,6 +619,7 @@ public class EventClientController {
             Label emptyIcon = new Label(showingOnlyLiked ? "💛" : "🌸");
             emptyIcon.setStyle("-fx-font-size: 72px;");
 
+<<<<<<< HEAD
             Label emptyText = new Label(showingOnlyLiked ? "Aucun événement dans vos favoris" : "Aucun événement trouvé");
             emptyText.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #285921;");
 
@@ -402,6 +631,22 @@ public class EventClientController {
             emptySubtext.setMaxWidth(400);
 
             emptyState.getChildren().addAll(emptyIcon, emptyText, emptySubtext);
+=======
+            String emptyText = showingOnlyLiked ? "Aucun événement dans vos favoris" : "Aucun événement trouvé";
+            String emptySubtext = showingOnlyLiked ?
+                    "💫 Ajoutez des ateliers à vos favoris pour les retrouver facilement" :
+                    "🌱 Essayez une autre recherche ou revenez bientôt";
+
+            Label emptyTextLabel = new Label(emptyText);
+            emptyTextLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #285921;");
+
+            Label emptySubtextLabel = new Label(emptySubtext);
+            emptySubtextLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #5a6c5a; -fx-text-alignment: center;");
+            emptySubtextLabel.setWrapText(true);
+            emptySubtextLabel.setMaxWidth(400);
+
+            emptyState.getChildren().addAll(emptyIcon, emptyTextLabel, emptySubtextLabel);
+>>>>>>> fd80a9a (final update)
             eventsContainer.getChildren().add(emptyState);
             return;
         }
@@ -486,7 +731,11 @@ public class EventClientController {
             Label newBadge = new Label("NOUVEAU");
             newBadge.setStyle("-fx-font-size: 10px; " +
                     "-fx-text-fill: white; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(to right, #a8e6cf, #7ec8a3); " +
+=======
+                    "-fx-background-color: #7ec8a3; " +
+>>>>>>> fd80a9a (final update)
                     "-fx-background-radius: 6; " +
                     "-fx-padding: 4 10 4 10; " +
                     "-fx-font-weight: bold; " +
@@ -501,7 +750,11 @@ public class EventClientController {
             Label badge = new Label("🎯 " + planifications.size() + " activité" + (planifications.size() > 1 ? "s" : ""));
             badge.setStyle("-fx-font-size: 11px; " +
                     "-fx-text-fill: white; " +
+<<<<<<< HEAD
                     "-fx-background-color: linear-gradient(to right, #d4b896, #c9b99b); " +
+=======
+                    "-fx-background-color: #c9b99b; " +
+>>>>>>> fd80a9a (final update)
                     "-fx-background-radius: 15; " +
                     "-fx-padding: 5 12 5 12; " +
                     "-fx-font-weight: bold; " +
@@ -513,9 +766,20 @@ public class EventClientController {
         HBox.setHgrow(titleSpacer, Priority.ALWAYS);
         titleRow.getChildren().add(titleSpacer);
 
+<<<<<<< HEAD
         // Heart button for favorites
         Button heartButton = createHeartButton(event.getId());
         titleRow.getChildren().add(heartButton);
+=======
+        // Create buttons for actions
+        Button participateBtn = createParticipationButton(event);
+        Button qrBtn = createQRCodeButton(event);
+        Button heartButton = createHeartButton(event.getId());
+
+        HBox actionButtonsRow = new HBox(10);
+        actionButtonsRow.getChildren().addAll(participateBtn, qrBtn, heartButton);
+        titleRow.getChildren().add(actionButtonsRow);
+>>>>>>> fd80a9a (final update)
 
         infoBox.getChildren().add(titleRow);
 
@@ -556,6 +820,33 @@ public class EventClientController {
             detailsBox.getChildren().add(createdBox);
         }
 
+<<<<<<< HEAD
+=======
+        // Participants count with progress
+        HBox participantsBox = new HBox(10);
+        participantsBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label participantsIcon = new Label("👥");
+        participantsIcon.setStyle("-fx-font-size: 15px;");
+
+        double ratio = (double) event.getCurrentParticipants() / event.getMaxParticipants();
+        String participantsText = event.getCurrentParticipants() + " / " + event.getMaxParticipants() + " participants";
+        Label participantsLabel = new Label(participantsText);
+        participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #5a6c5a;");
+
+        // Add color coding based on availability
+        if (ratio >= 1.0) {
+            participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #b22222; -fx-font-weight: bold;");
+        } else if (ratio >= 0.8) {
+            participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #ff9800; -fx-font-weight: bold;");
+        } else {
+            participantsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+        }
+
+        participantsBox.getChildren().addAll(participantsIcon, participantsLabel);
+        detailsBox.getChildren().add(participantsBox);
+
+>>>>>>> fd80a9a (final update)
         infoBox.getChildren().add(detailsBox);
 
         // Planifications section with mindfulness theme
@@ -621,14 +912,25 @@ public class EventClientController {
                 "-fx-background-radius: 15; " +
                 "-fx-effect: dropshadow(gaussian, rgba(40, 89, 33, 0.15), 8, 0, 0, 3);");
 
+<<<<<<< HEAD
         // Month header with green gradient
+=======
+        // Month header with green color
+>>>>>>> fd80a9a (final update)
         Label monthLabel = new Label(date.getMonth().getDisplayName(TextStyle.SHORT, Locale.FRENCH).toUpperCase());
         monthLabel.setStyle("-fx-font-size: 11px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-text-fill: white; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(to right, #2e6a28, #285921); " +
                 "-fx-padding: 6 0 6 0; " +
                 "-fx-background-radius: 13 13 0 0;");
+=======
+                "-fx-background-color: #2e6a28; " +
+                "-fx-padding: 6 0 6 0; " +
+                "-fx-background-radius: 13 13 0 0;");
+
+>>>>>>> fd80a9a (final update)
         monthLabel.setMaxWidth(Double.MAX_VALUE);
         monthLabel.setAlignment(Pos.CENTER);
 
@@ -741,7 +1043,11 @@ public class EventClientController {
         numberLabel.setStyle("-fx-font-size: 15px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-text-fill: white; " +
+<<<<<<< HEAD
                 "-fx-background-color: linear-gradient(135deg, #2e6a28, #285921); " +
+=======
+                "-fx-background-color: #2e6a28; " +
+>>>>>>> fd80a9a (final update)
                 "-fx-background-radius: 50%; " +
                 "-fx-min-width: 34; " +
                 "-fx-min-height: 34; " +
@@ -820,7 +1126,11 @@ public class EventClientController {
             return;
         }
 
+<<<<<<< HEAD
         String searchLower = searchText.toLowerCase().trim();
+=======
+        String searchLower = searchText.toLowerCase();
+>>>>>>> fd80a9a (final update)
         List<Event> filteredEvents = baseEvents.stream()
                 .filter(event ->
                         (event.getTitle() != null && event.getTitle().toLowerCase().contains(searchLower)) ||
@@ -859,4 +1169,37 @@ public class EventClientController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+<<<<<<< HEAD
+=======
+
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showInfo(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private Button createQRCodeButton(Event event) {
+        Button qrBtn = new Button("📍");
+        qrBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-cursor: hand;");
+        qrBtn.setTooltip(new Tooltip("Voir la localisation sur Google Maps"));
+
+        qrBtn.setOnAction(e -> QRCodeDialog.showQRCode(event));
+
+        // Hover effect
+        qrBtn.setOnMouseEntered(e -> qrBtn.setStyle("-fx-background-color: rgba(40, 89, 33, 0.1); -fx-background-radius: 50%; -fx-font-size: 20px;"));
+        qrBtn.setOnMouseExited(e -> qrBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 18px;"));
+
+        return qrBtn;
+    }
+>>>>>>> fd80a9a (final update)
 }

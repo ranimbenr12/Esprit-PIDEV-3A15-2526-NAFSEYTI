@@ -2,7 +2,11 @@ package tn.esprit.projet.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+<<<<<<< HEAD
         import javafx.scene.image.Image;
+=======
+import javafx.scene.image.Image;
+>>>>>>> fd80a9a (final update)
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -18,6 +22,7 @@ import java.util.List;
 
 public class PsychoEditController {
 
+<<<<<<< HEAD
     @FXML
     private TextField titleField;
     @FXML private TextField locationField;
@@ -25,6 +30,15 @@ public class PsychoEditController {
     @FXML private TextField linkField;
     @FXML private TextField planDescriptionField; // new
     @FXML private TextField planDureeField;       // new
+=======
+    @FXML private TextField titleField;
+    @FXML private TextField locationField;
+    @FXML private DatePicker datePicker;
+    @FXML private TextField linkField;
+    @FXML private TextField maxParticipantsField; // NEW FIELD
+    @FXML private TextField planDescriptionField;
+    @FXML private TextField planDureeField;
+>>>>>>> fd80a9a (final update)
     @FXML private Button btnUpdate;
     @FXML private Button btnCancel;
     @FXML private ImageView imagePreview;
@@ -42,6 +56,10 @@ public class PsychoEditController {
         locationField.setText(event.getLocation());
         datePicker.setValue(event.getEventDate());
         linkField.setText(event.getLink());
+<<<<<<< HEAD
+=======
+        maxParticipantsField.setText(String.valueOf(event.getMaxParticipants())); // Set max participants
+>>>>>>> fd80a9a (final update)
 
         // Load image if exists
         if (event.getLink() != null && !event.getLink().isEmpty()) {
@@ -77,11 +95,139 @@ public class PsychoEditController {
         btnUpdate.setOnAction(e -> updateEvent());
         btnCancel.setOnAction(e -> closeWindow());
 
+<<<<<<< HEAD
+=======
+        // Add listeners for real-time validation
+        titleField.textProperty().addListener((obs, old, newVal) -> validateTitle());
+        locationField.textProperty().addListener((obs, old, newVal) -> validateLocation());
+        maxParticipantsField.textProperty().addListener((obs, old, newVal) -> validateMaxParticipants());
+        planDescriptionField.textProperty().addListener((obs, old, newVal) -> validatePlanificationFields());
+        planDureeField.textProperty().addListener((obs, old, newVal) -> validatePlanificationFields());
+
+>>>>>>> fd80a9a (final update)
         // Hover effects
         addHoverEffect(btnUpdate, "#4CAF50", "#45a049");
         addHoverEffect(btnCancel, "#b22222", "#8b0000");
     }
 
+<<<<<<< HEAD
+=======
+    private boolean validateTitle() {
+        String title = titleField.getText().trim();
+        if (title.isEmpty()) {
+            titleField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            return false;
+        } else if (title.length() < 3) {
+            titleField.setStyle("-fx-border-color: orange; -fx-border-width: 2;");
+            return false;
+        } else {
+            titleField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+            return true;
+        }
+    }
+
+    private boolean validateLocation() {
+        String location = locationField.getText().trim();
+        if (location.isEmpty()) {
+            locationField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            return false;
+        } else if (location.length() < 3) {
+            locationField.setStyle("-fx-border-color: orange; -fx-border-width: 2;");
+            return false;
+        } else {
+            locationField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+            return true;
+        }
+    }
+
+    private boolean validateDate() {
+        if (datePicker.getValue() == null) {
+            datePicker.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            return false;
+        } else {
+            datePicker.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+            return true;
+        }
+    }
+
+    private boolean validateMaxParticipants() {
+        String maxPart = maxParticipantsField.getText().trim();
+        if (maxPart.isEmpty()) {
+            maxParticipantsField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            return false;
+        }
+
+        try {
+            int value = Integer.parseInt(maxPart);
+            if (value <= 0) {
+                maxParticipantsField.setStyle("-fx-border-color: orange; -fx-border-width: 2;");
+                return false;
+            } else {
+                maxParticipantsField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            maxParticipantsField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            return false;
+        }
+    }
+
+    private boolean validatePlanificationFields() {
+        String planDesc = planDescriptionField.getText().trim();
+        String planDuree = planDureeField.getText().trim();
+
+        // If both fields are empty, it's valid (optional)
+        if (planDesc.isEmpty() && planDuree.isEmpty()) {
+            planDescriptionField.setStyle("");
+            planDureeField.setStyle("");
+            return true;
+        }
+
+        // If one field is filled and the other is empty
+        if (!planDesc.isEmpty() && planDuree.isEmpty()) {
+            planDescriptionField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+            planDureeField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            return false;
+        }
+
+        if (planDesc.isEmpty() && !planDuree.isEmpty()) {
+            planDescriptionField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            planDureeField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+            return false;
+        }
+
+        // Both fields are filled - validate each
+        boolean valid = true;
+
+        if (planDesc.length() < 4) {
+            planDescriptionField.setStyle("-fx-border-color: orange; -fx-border-width: 2;");
+            valid = false;
+        } else {
+            planDescriptionField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+        }
+
+        if (planDuree.isEmpty()) {
+            planDureeField.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+            valid = false;
+        } else {
+            planDureeField.setStyle("-fx-border-color: green; -fx-border-width: 2;");
+        }
+
+        return valid;
+    }
+
+    private boolean validateAll() {
+        boolean isValid = true;
+
+        if (!validateTitle()) isValid = false;
+        if (!validateLocation()) isValid = false;
+        if (!validateDate()) isValid = false;
+        if (!validateMaxParticipants()) isValid = false;
+
+        return isValid;
+    }
+
+>>>>>>> fd80a9a (final update)
     @FXML
     private void handleUploadImage() {
         FileChooser fileChooser = new FileChooser();
@@ -101,14 +247,20 @@ public class PsychoEditController {
     }
 
     private void updateEvent() {
+<<<<<<< HEAD
         if (titleField.getText().length() < 3 ||
                 locationField.getText().length() < 3 ||
                 datePicker.getValue() == null) {
             showAlert("Veuillez remplir correctement le titre, le lieu et la date (min 3 caractères).");
+=======
+        if (!validateAll()) {
+            showAlert("Veuillez remplir correctement tous les champs obligatoires !");
+>>>>>>> fd80a9a (final update)
             return;
         }
 
         try {
+<<<<<<< HEAD
             eventToEdit.setTitle(titleField.getText());
             eventToEdit.setLocation(locationField.getText());
             eventToEdit.setEventDate(datePicker.getValue());
@@ -122,10 +274,44 @@ public class PsychoEditController {
             String planDuree = planDureeField.getText().trim();
             if(!planDesc.isEmpty() || !planDuree.isEmpty()) {
                 if(currentPlan != null) {
+=======
+            // Update Event
+            eventToEdit.setTitle(titleField.getText().trim());
+            eventToEdit.setLocation(locationField.getText().trim());
+            eventToEdit.setEventDate(datePicker.getValue());
+            eventToEdit.setLink(linkField.getText());
+            eventToEdit.setCreatedAt(LocalDateTime.now());
+            eventToEdit.setMaxParticipants(Integer.parseInt(maxParticipantsField.getText().trim()));
+
+            eventService.updateOne(eventToEdit);
+
+            // Handle Planification - Three possible scenarios:
+            String planDesc = planDescriptionField.getText().trim();
+            String planDuree = planDureeField.getText().trim();
+
+            // Scenario 1: User wants to remove planification (both fields empty)
+            if (planDesc.isEmpty() && planDuree.isEmpty()) {
+                if (currentPlan != null) {
+                    // Delete existing planification
+                    planService.deletOne(currentPlan);
+                    currentPlan = null;
+                }
+            }
+            // Scenario 2: User wants to add or update planification (both fields filled)
+            else if (!planDesc.isEmpty() && !planDuree.isEmpty()) {
+                if (planDesc.length() < 4) {
+                    showAlert("La description de la planification doit contenir au moins 4 caractères !");
+                    return;
+                }
+
+                if (currentPlan != null) {
+                    // Update existing planification
+>>>>>>> fd80a9a (final update)
                     currentPlan.setDescription(planDesc);
                     currentPlan.setDuree(planDuree);
                     planService.updateOne(currentPlan);
                 } else {
+<<<<<<< HEAD
                     Planification newPlan = new Planification();
                     newPlan.setIdEvent(eventToEdit.getId());
                     newPlan.setDescription(planDesc.isEmpty() ? "N/A" : planDesc);
@@ -134,11 +320,37 @@ public class PsychoEditController {
                 }
             }
 
+=======
+                    // Create new planification
+                    Planification newPlan = new Planification();
+                    newPlan.setIdEvent(eventToEdit.getId());
+                    newPlan.setDescription(planDesc);
+                    newPlan.setDuree(planDuree);
+                    planService.insertOne(newPlan);
+                }
+            }
+            // Scenario 3: Invalid state - one field filled, one empty
+            else {
+                if (!planDesc.isEmpty() && planDuree.isEmpty()) {
+                    showAlert("Veuillez ajouter une durée pour la planification !");
+                } else if (planDesc.isEmpty() && !planDuree.isEmpty()) {
+                    showAlert("Veuillez ajouter une description pour la planification !");
+                }
+                return;
+            }
+
+            showInfo("Événement modifié avec succès !");
+>>>>>>> fd80a9a (final update)
             closeWindow();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
             showAlert("Erreur lors de la mise à jour !");
+<<<<<<< HEAD
+=======
+        } catch (NumberFormatException ex) {
+            showAlert("Le nombre de participants doit être un nombre valide !");
+>>>>>>> fd80a9a (final update)
         }
     }
 
@@ -155,6 +367,17 @@ public class PsychoEditController {
         alert.showAndWait();
     }
 
+<<<<<<< HEAD
+=======
+    private void showInfo(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+>>>>>>> fd80a9a (final update)
     private void addHoverEffect(Button btn, String normalColor, String hoverColor) {
         btn.setStyle("-fx-background-color:" + normalColor + ";" +
                 "-fx-text-fill:white; -fx-font-weight:bold; " +
@@ -172,5 +395,9 @@ public class PsychoEditController {
                         "-fx-background-radius:15; -fx-padding:10 20;"
         ));
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> fd80a9a (final update)
