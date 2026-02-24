@@ -8,15 +8,13 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 import tn.esprit.projet.models.User;
 
 import java.util.List;
 import java.util.Optional;
 
-/**
- * ViewAllUsersViewController - Controller for viewing all users with Update/Delete actions
- */
+
 public class ViewAllUsersViewController {
 
     @FXML
@@ -146,9 +144,7 @@ public class ViewAllUsersViewController {
         totalLabel.setText("Total Users: " + users.size());
     }
 
-    /**
-     * Handle update role for a user
-     */
+
     private void handleUpdateRole(User user) {
         // Create dialog for role selection
         Dialog<String> dialog = new Dialog<>();
@@ -189,9 +185,7 @@ public class ViewAllUsersViewController {
         });
     }
 
-    /**
-     * Handle delete user
-     */
+
     private void handleDeleteUser(User user) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Delete User");

@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# === Sensitive files ===
+src/main/resources/client_secret.json
+tokens/
+uploads/

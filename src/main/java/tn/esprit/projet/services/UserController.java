@@ -1,15 +1,11 @@
-package tn.esprit.projet.controllers;
+package tn.esprit.projet.services;
 
 import tn.esprit.projet.models.User;
-import tn.esprit.projet.controllers.services.UserCRUD;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * UserController - Handles all user-related operations
- * Implements UserCRUD for CRUD operations
- * Contains business logic and validation
- */
+
 public class UserController implements UserCRUD {
 
     // Email validation pattern
@@ -21,10 +17,7 @@ public class UserController implements UserCRUD {
 
     // ========== BUSINESS LOGIC METHODS ==========
 
-    /**
-     * Register a new user
-     * @return User object if successful, null otherwise
-     */
+
     public User registerUser(String firstname, String lastname, String email,
                              String password, String confirmPassword) {
 
@@ -51,10 +44,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Login user with email and password
-     * @return User object if authentication successful, null otherwise
-     */
+
     public User loginUser(String email, String password) {
         if (email == null || email.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
@@ -73,9 +63,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Get user by ID with validation
-     */
+
     public User getUserById(int id) {
         if (id <= 0) {
             System.out.println("Error: Invalid user ID");
@@ -89,32 +77,22 @@ public class UserController implements UserCRUD {
         return user;
     }
 
-    /**
-     * Get user by email with validation
-     */
+
     public User getUserByEmail(String email) {
         if (!isValidEmail(email)) {
             System.out.println("Error: Invalid email format");
             return null;
         }
 
-        User user = findByEmail(email);
-        if (user == null) {
-            System.out.println("Error: User not found with email: " + email);
-        }
-        return user;
+        return findByEmail(email);  // Just return, no error message
     }
 
-    /**
-     * Get all users
-     */
+
     public List<User> getAllUsers() {
         return findAll();
     }
 
-    /**
-     * Get users by role with validation
-     */
+
     public List<User> getUsersByRole(String role) {
         if (role == null || role.trim().isEmpty()) {
             System.out.println("Error: Role cannot be empty");
@@ -123,9 +101,7 @@ public class UserController implements UserCRUD {
         return findByRole(role);
     }
 
-    /**
-     * Update user profile
-     */
+
     public boolean updateUserProfile(User user, String firstname, String lastname,
                                      String address, String location, String phoneNumber) {
         if (user == null) {
@@ -183,9 +159,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Update user email
-     */
+
     public boolean updateUserEmail(User user, String newEmail) {
         if (user == null) {
             System.out.println("Error: User object is null");
@@ -214,9 +188,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Update user password
-     */
+
     public boolean updateUserPassword(User user, String currentPassword,
                                       String newPassword, String confirmPassword) {
         if (user == null) {
@@ -253,9 +225,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Update profile photo
-     */
+
     public boolean updateProfilePhoto(User user, String photoPath) {
         if (user == null) {
             System.out.println("Error: User object is null");
@@ -278,9 +248,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Update user role (admin function)
-     */
+
     public boolean updateUserRole(User user, String newRole) {
         if (user == null) {
             System.out.println("Error: User object is null");
@@ -303,9 +271,7 @@ public class UserController implements UserCRUD {
         }
     }
 
-    /**
-     * Delete user account with validation
-     */
+
     public boolean deleteUser(int userId) {
         if (userId <= 0) {
             System.out.println("Error: Invalid user ID");
@@ -323,81 +289,61 @@ public class UserController implements UserCRUD {
 
     // ========== CRUD OPERATIONS (Interface Implementation) ==========
 
-    /**
-     * Save a new user to the database
-     */
+
     @Override
     public boolean save(User user) {
         return user.save();
     }
 
-    /**
-     * Find user by ID
-     */
+
     @Override
     public User findById(int id) {
         return User.findById(id);
     }
 
-    /**
-     * Find user by email
-     */
+
     @Override
     public User findByEmail(String email) {
         return User.findByEmail(email);
     }
 
-    /**
-     * Find all users
-     */
+
     @Override
     public List<User> findAll() {
         return User.findAll();
     }
 
-    /**
-     * Find users by role
-     */
+
     @Override
     public List<User> findByRole(String role) {
         return User.findByRole(role);
     }
 
-    /**
-     * Check if email exists
-     */
+
     @Override
     public boolean emailExists(String email) {
         return User.emailExists(email);
     }
 
-    /**
-     * Authenticate user
-     */
+
     @Override
     public User authenticate(String email, String password) {
         return User.authenticate(email, password);
     }
 
-    /**
-     * Update user
-     */
+
     @Override
     public boolean update(User user) {
         return user.update();
     }
 
-    /**
-     * Delete user by ID
-     */
+
     @Override
     public boolean deleteById(int userId) {
         return User.deleteById(userId);
     }
 
-    /**
-     * Delete user object
-     */
+
     @Override
     public boolean delete(User user) {
         return user.delete();
@@ -405,9 +351,7 @@ public class UserController implements UserCRUD {
 
     // ========== VALIDATION METHODS ==========
 
-    /**
-     * Validate registration inputs
-     */
+
     private boolean validateRegistration(String firstname, String lastname,
                                          String email, String password, String confirmPassword) {
         // Check for null or empty fields
@@ -463,24 +407,17 @@ public class UserController implements UserCRUD {
         return true;
     }
 
-    /**
-     * Validate email format
-     */
+
     private boolean isValidEmail(String email) {
         return email != null && EMAIL_PATTERN.matcher(email).matches();
     }
 
-    /**
-     * Validate password strength
-     */
+
     private boolean isValidPassword(String password) {
         return password != null && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
-    /**
-     * Hash password (placeholder - implement proper hashing in production)
-     * TODO: Implement BCrypt or similar hashing algorithm
-     */
+
     private String hashPassword(String password) {
         // This is a placeholder. In production, use BCrypt or similar
         // For now, returning as-is for development purposes
@@ -490,9 +427,7 @@ public class UserController implements UserCRUD {
 
     // ========== DISPLAY METHODS ==========
 
-    /**
-     * Display user information (for debugging/testing)
-     */
+
     public void displayUserInfo(User user) {
         if (user == null) {
             System.out.println("No user to display");
@@ -511,21 +446,4 @@ public class UserController implements UserCRUD {
         System.out.println("===========================\n");
     }
 
-    /**
-     * Display all users (for debugging/testing)
-     */
-    public void displayAllUsers() {
-        List<User> users = getAllUsers();
-
-        if (users.isEmpty()) {
-            System.out.println("No users found in the database");
-            return;
-        }
-
-        System.out.println("\n===== All Users (" + users.size() + ") =====");
-        for (User user : users) {
-            System.out.println(user);
-        }
-        System.out.println("===========================\n");
-    }
 }

@@ -1,4 +1,4 @@
-package tn.esprit.projet.controllers.services;
+package tn.esprit.projet.services;
 
 import tn.esprit.projet.models.User;
 import java.util.List;

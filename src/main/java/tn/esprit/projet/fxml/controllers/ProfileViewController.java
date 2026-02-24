@@ -9,9 +9,7 @@ import tn.esprit.projet.models.User;
 
 import java.io.File;
 
-/**
- * ProfileViewController - Enhanced controller with profile picture support
- */
+
 public class ProfileViewController {
 
     @FXML
@@ -41,9 +39,7 @@ public class ProfileViewController {
     @FXML
     private Label locationLabel;
 
-    /**
-     * Set user data to display
-     */
+
     public void setUser(User user) {
         if (user != null) {
             // Set name
@@ -64,9 +60,7 @@ public class ProfileViewController {
         }
     }
 
-    /**
-     * Load profile picture from path or show placeholder
-     */
+
     private void loadProfilePicture(String photoPath) {
         if (photoPath != null && !photoPath.trim().isEmpty()) {
             try {
@@ -93,17 +87,13 @@ public class ProfileViewController {
         }
     }
 
-    /**
-     * Show placeholder icon
-     */
+
     private void showPlaceholder() {
         profilePictureView.setVisible(false);
         profilePlaceholder.setVisible(true);
     }
 
-    /**
-     * Style role badge based on role
-     */
+
     private void styleRoleBadge(String role) {
         String color;
         switch (role.toLowerCase()) {

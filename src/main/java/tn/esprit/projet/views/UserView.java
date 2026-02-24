@@ -1,6 +1,6 @@
 package tn.esprit.projet.views;
 
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 import tn.esprit.projet.models.User;
 import java.util.List;
 import java.util.Scanner;

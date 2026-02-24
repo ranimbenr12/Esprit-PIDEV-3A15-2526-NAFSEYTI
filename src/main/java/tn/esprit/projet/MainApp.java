@@ -6,10 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * tn.esprit.projet.config.MainApp - JavaFX Application Entry Point
- * Mental Health Platform
- */
+
 public class MainApp extends Application {
 
     @Override
@@ -24,7 +21,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
         // Configure stage
-        primaryStage.setTitle("Mental Health Platform - Login");
+        primaryStage.setTitle("NAFSEYTI - Login");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();

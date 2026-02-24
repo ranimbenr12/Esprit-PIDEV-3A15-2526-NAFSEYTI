@@ -1,6 +1,6 @@
 package tn.esprit.projet.fxml.controllers;
 
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +15,7 @@ import tn.esprit.projet.models.User;
 
 import java.util.Optional;
 
-/**
- * DashboardController - Main dashboard (Manage Roles section removed)
- */
+
 public class DashboardController {
 
     @FXML
@@ -56,9 +54,9 @@ public class DashboardController {
 
     public void setUser(User user) {
         this.currentUser = user;
-        welcomeLabel.setText("Welcome, " + user.getFirstname() + "!");
+        welcomeLabel.setText("Welcome, " + user.getFirstname() + " TO NAFSEYTI !");
 
-        // Show admin button if user is admin
+        // Show admin section if user is admin
         if ("admin".equals(user.getRole())) {
             adminLabel.setVisible(true);
             viewAllUsersButton.setVisible(true);
@@ -73,7 +71,7 @@ public class DashboardController {
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("Mental Health Platform - Login");
+            stage.setTitle("NAFSEYTI - Login");
             stage.setWidth(900);
             stage.setHeight(600);
             stage.centerOnScreen();
@@ -151,13 +149,11 @@ public class DashboardController {
     @FXML
     private void showAllUsers(ActionEvent event) {
         loadView("/fxml/ViewAllUsersView.fxml", controller -> {
-            // ViewAllUsersViewController loads users automatically
+
         });
     }
 
-    /**
-     * Generic method to load any FXML view into content area
-     */
+
     private void loadView(String fxmlPath, ControllerCallback callback) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -185,9 +181,7 @@ public class DashboardController {
         alert.showAndWait();
     }
 
-    /**
-     * Functional interface for controller configuration
-     */
+
     @FunctionalInterface
     private interface ControllerCallback {
         void configure(Object controller);

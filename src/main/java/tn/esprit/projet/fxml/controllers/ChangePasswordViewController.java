@@ -3,12 +3,10 @@ package tn.esprit.projet.fxml.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 import tn.esprit.projet.models.User;
 
-/**
- * ChangePasswordViewController - Controller for change password view
- */
+
 public class ChangePasswordViewController {
 
     @FXML
@@ -33,9 +31,7 @@ public class ChangePasswordViewController {
         this.userController = new UserController();
     }
 
-    /**
-     * Set current user
-     */
+
     public void setUser(User user) {
         this.currentUser = user;
     }

@@ -5,10 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User Model - Represents a user in the mental health platform
- * Handles all database operations for the users table
- */
+
 public class User {
     // Attributes matching the database schema
     private int id;

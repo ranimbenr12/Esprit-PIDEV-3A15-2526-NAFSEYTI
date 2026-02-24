@@ -8,11 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.esprit.projet.models.User;
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 
-/**
- * RegisterController - JavaFX Controller for Registration Screen
- */
+
 public class RegisterController {
 
     @FXML
@@ -99,7 +97,7 @@ public class RegisterController {
                             Scene scene = new Scene(root);
                             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
                             stage.setScene(scene);
-                            stage.setTitle("Mental Health Platform - Login");
+                            stage.setTitle("NAFSEYTI - Login");
                             stage.setHeight(600);
                             stage.centerOnScreen();
                         } catch (Exception ex) {
@@ -125,7 +123,7 @@ public class RegisterController {
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("Mental Health Platform - Login");
+            stage.setTitle("NAFSEYTI - Login");
             stage.setHeight(600);
             stage.centerOnScreen();
 

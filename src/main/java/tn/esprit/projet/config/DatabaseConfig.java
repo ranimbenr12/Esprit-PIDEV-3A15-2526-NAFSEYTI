@@ -4,16 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * DatabaseConfig - Centralized database connection management
- * Handles all database connections for the Mental Health Platform
- */
+
 public class DatabaseConfig {
 
     // Database connection parameters
     private static final String DB_HOST = "localhost";
     private static final String DB_PORT = "3306";
-    private static final String DB_NAME = "mental_health_platform";
+    private static final String DB_NAME = "nafseyti";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
@@ -47,10 +44,7 @@ public class DatabaseConfig {
         }
     }
 
-    /**
-     * Test database connection
-     * @return true if connection successful, false otherwise
-     */
+
     public static boolean testConnection() {
         try (Connection conn = getConnection()) {
             System.out.println("✓ Database connection successful!");
@@ -64,10 +58,7 @@ public class DatabaseConfig {
         }
     }
 
-    /**
-     * Close database connection safely
-     * @param conn Connection to close
-     */
+
     public static void closeConnection(Connection conn) {
         if (conn != null) {
             try {
@@ -95,9 +86,7 @@ public class DatabaseConfig {
         return DB_URL;
     }
 
-    /**
-     * Main method for testing database connection
-     */
+
     public static void main(String[] args) {
         System.out.println("========================================");
         System.out.println("  Database Connection Test");

@@ -4,14 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 import tn.esprit.projet.models.User;
 
 import java.util.Optional;
 
-/**
- * ManageRolesViewController - Controller for manage roles view (Admin only)
- */
+
 public class ManageRolesViewController {
 
     @FXML

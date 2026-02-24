@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import tn.esprit.projet.controllers.UserController;
+import tn.esprit.projet.services.UserController;
 import tn.esprit.projet.models.User;
 
 import java.io.File;
@@ -17,9 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-/**
- * UpdateProfileViewController - Controller with profile picture upload
- */
+
 public class UpdateProfileViewController {
 
     @FXML
@@ -64,9 +62,7 @@ public class UpdateProfileViewController {
         this.userController = new UserController();
     }
 
-    /**
-     * Set user data and optional callback for refresh
-     */
+
     public void setUser(User user, Runnable onUpdateCallback) {
         this.currentUser = user;
         this.onUpdateCallback = onUpdateCallback;
@@ -190,9 +186,7 @@ public class UpdateProfileViewController {
         }
     }
 
-    /**
-     * Load profile picture from path
-     */
+
     private void loadProfilePicture(String photoPath) {
         if (photoPath != null && !photoPath.trim().isEmpty()) {
             try {
@@ -214,18 +208,14 @@ public class UpdateProfileViewController {
         }
     }
 
-    /**
-     * Show placeholder
-     */
+
     private void showPlaceholder() {
         profilePicturePreview.setVisible(false);
         profilePlaceholder.setVisible(true);
         removePhotoButton.setVisible(false);
     }
 
-    /**
-     * Get file extension
-     */
+
     private String getFileExtension(String fileName) {
         int lastIndexOf = fileName.lastIndexOf(".");
         if (lastIndexOf == -1) {
@@ -240,9 +230,7 @@ public class UpdateProfileViewController {
         messageLabel.setVisible(true);
     }
 
-    /**
-     * Get the updated user (useful for parent controllers)
-     */
+
     public User getUpdatedUser() {
         return currentUser;
     }
