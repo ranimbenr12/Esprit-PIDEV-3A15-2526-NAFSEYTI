@@ -12,13 +12,14 @@ public class JokeAPI {
         try {
             System.out.println("🔄 Appel à l'API Joke...");
 
-            // 1. URL de l'API
-            String urlString = "https://official-joke-api.appspot.com/random_joke";
+            // 1. URL avec langue française + type two-part (setup/punchline)
+            String urlString = "https://v2.jokeapi.dev/joke/Any?lang=fr&type=twopart";
             URL url = new URL(urlString);
 
             // 2. Connexion
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);
 
@@ -36,13 +37,19 @@ public class JokeAPI {
 
             // 4. Parser JSON
             JSONObject json = new JSONObject(response.toString());
-            String setup = json.getString("setup");
-            String punchline = json.getString("punchline");
 
-            System.out.println("✅ Blague reçue!");
+            // Vérifier s'il y a une erreur retournée par l'API
+            if (json.getBoolean("error")) {
+                return "⚠️ Aucune blague trouvée en français pour le moment.";
+            }
+
+            String setup = json.getString("setup");
+            String delivery = json.getString("delivery"); // "delivery" et non "punchline" sur cette API
+
+            System.out.println("✅ Blague reçue !");
 
             // 5. Retourner la blague
-            return "😄 " + setup + "\n\n😂 " + punchline;
+            return "😄 " + setup + "\n\n😂 " + delivery;
 
         } catch (Exception e) {
             System.err.println("❌ Erreur: " + e.getMessage());

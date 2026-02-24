@@ -7,147 +7,138 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="TestPsychologique.controllers.JournalController"
-            style="-fx-background-color: #f8f5f2;">
+            style="-fx-background-color: linear-gradient(to bottom, #f0f4f8, #e8f0f7);">
 
-    <!-- Header -->
+    <!-- Header Compact -->
     <top>
-        <VBox spacing="0" style="-fx-background-color: linear-gradient(to right, #285921, #2e7d32);">
-            <padding>
-                <Insets top="30" right="40" bottom="30" left="40"/>
-            </padding>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 15 25;">
+            <Button text="←" onAction="#handleBack"
+                    style="-fx-background-color: #f5f5f5; -fx-text-fill: #333; -fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 35; -fx-pref-height: 35; -fx-background-radius: 18; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
 
-            <!-- Back Button + Title -->
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <Button text="← Retour" onAction="#handleBack"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand;">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
-                </Button>
+            <VBox HBox.hgrow="ALWAYS" spacing="2">
+                <Label fx:id="dateLabel" text="Vendredi 24 février 2024"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a;"/>
+                <Label text="Comment s'est passée votre journée ?"
+                       style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+            </VBox>
 
-                <VBox HBox.hgrow="ALWAYS">
-                    <Label text="📔 Mon Journal Quotidien" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                    <Label fx:id="dateLabel" text="Aujourd'hui" style="-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.9);"/>
-                </VBox>
+            <Label fx:id="streakLabel" text="🔥 7 jours"
+                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #ff6b35; -fx-background-color: #fff4f0; -fx-padding: 6 12; -fx-background-radius: 12;"/>
 
-                <Button text="📊 Voir Calendrier" onAction="#showCalendar"
-                        style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 25; -fx-background-radius: 5; -fx-cursor: hand;">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
-                </Button>
-            </HBox>
-
-            <!-- Streak Badge -->
-            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 15 0 0 0;">
-                <Label fx:id="streakLabel" text="🔥 0 jour(s) consécutif(s)"
-                       style="-fx-font-size: 14px; -fx-text-fill: white; -fx-background-color: rgba(255,255,255,0.15); -fx-padding: 8 15; -fx-background-radius: 15;"/>
-            </HBox>
-        </VBox>
+            <Button text="📊 Calendrier" onAction="#showCalendar"
+                    style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 15; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+        </HBox>
     </top>
 
-    <!-- Main Content -->
+    <!-- Main Content avec padding réduit -->
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
-            <VBox spacing="25" style="-fx-padding: 40;">
+            <VBox spacing="15" style="-fx-padding: 20; -fx-max-width: 800; -fx-alignment: TOP_CENTER;">
 
-                <!-- Humeur Section -->
-                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                    <Label text="Comment vous sentez-vous aujourd'hui ?"
-                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <!-- 1. HUMEUR -->
+                <VBox spacing="10">
+                    <Label text="😊 Comment vous sentez-vous ?"
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #1a1a1a;"/>
 
-                    <HBox spacing="15" alignment="CENTER">
-                        <Button fx:id="btnExcellent" text="😊" onAction="#selectHumeur"
-                                style="-fx-font-size: 48px; -fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 50; -fx-background-radius: 50; -fx-pref-width: 90; -fx-pref-height: 90; -fx-cursor: hand;">
+                    <HBox spacing="10" alignment="CENTER">
+                        <VBox fx:id="btnExcellent" onMouseClicked="#selectHumeur" alignment="CENTER" spacing="6"
+                              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15 10; -fx-pref-width: 85; -fx-pref-height: 95; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);"
+                              userData="excellent">
+                            <Label text="😊" style="-fx-font-size: 36px;"/>
+                            <Label text="Excellent" style="-fx-font-size: 10px; -fx-text-fill: #666; -fx-font-weight: 600;"/>
                             <cursor><Cursor fx:constant="HAND"/></cursor>
-                        </Button>
-                        <Button fx:id="btnBien" text="🙂" onAction="#selectHumeur"
-                                style="-fx-font-size: 48px; -fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 50; -fx-background-radius: 50; -fx-pref-width: 90; -fx-pref-height: 90; -fx-cursor: hand;">
+                        </VBox>
+
+                        <VBox fx:id="btnBien" onMouseClicked="#selectHumeur" alignment="CENTER" spacing="6"
+                              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15 10; -fx-pref-width: 85; -fx-pref-height: 95; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);"
+                              userData="bien">
+                            <Label text="🙂" style="-fx-font-size: 36px;"/>
+                            <Label text="Bien" style="-fx-font-size: 10px; -fx-text-fill: #666; -fx-font-weight: 600;"/>
                             <cursor><Cursor fx:constant="HAND"/></cursor>
-                        </Button>
-                        <Button fx:id="btnMoyen" text="😐" onAction="#selectHumeur"
-                                style="-fx-font-size: 48px; -fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 50; -fx-background-radius: 50; -fx-pref-width: 90; -fx-pref-height: 90; -fx-cursor: hand;">
+                        </VBox>
+
+                        <VBox fx:id="btnMoyen" onMouseClicked="#selectHumeur" alignment="CENTER" spacing="6"
+                              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15 10; -fx-pref-width: 85; -fx-pref-height: 95; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);"
+                              userData="moyen">
+                            <Label text="😐" style="-fx-font-size: 36px;"/>
+                            <Label text="Moyen" style="-fx-font-size: 10px; -fx-text-fill: #666; -fx-font-weight: 600;"/>
                             <cursor><Cursor fx:constant="HAND"/></cursor>
-                        </Button>
-                        <Button fx:id="btnDifficile" text="😔" onAction="#selectHumeur"
-                                style="-fx-font-size: 48px; -fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 50; -fx-background-radius: 50; -fx-pref-width: 90; -fx-pref-height: 90; -fx-cursor: hand;">
+                        </VBox>
+
+                        <VBox fx:id="btnDifficile" onMouseClicked="#selectHumeur" alignment="CENTER" spacing="6"
+                              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15 10; -fx-pref-width: 85; -fx-pref-height: 95; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);"
+                              userData="difficile">
+                            <Label text="😔" style="-fx-font-size: 36px;"/>
+                            <Label text="Difficile" style="-fx-font-size: 10px; -fx-text-fill: #666; -fx-font-weight: 600;"/>
                             <cursor><Cursor fx:constant="HAND"/></cursor>
-                        </Button>
-                        <Button fx:id="btnTresDifficile" text="😰" onAction="#selectHumeur"
-                                style="-fx-font-size: 48px; -fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 50; -fx-background-radius: 50; -fx-pref-width: 90; -fx-pref-height: 90; -fx-cursor: hand;">
+                        </VBox>
+
+                        <VBox fx:id="btnTresDifficile" onMouseClicked="#selectHumeur" alignment="CENTER" spacing="6"
+                              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15 10; -fx-pref-width: 85; -fx-pref-height: 95; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);"
+                              userData="très_difficile">
+                            <Label text="😰" style="-fx-font-size: 36px;"/>
+                            <Label text="Très difficile" style="-fx-font-size: 10px; -fx-text-fill: #666; -fx-font-weight: 600;"/>
                             <cursor><Cursor fx:constant="HAND"/></cursor>
-                        </Button>
+                        </VBox>
                     </HBox>
                 </VBox>
 
-                <!-- Emotions Section -->
-                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                    <Label text="Quelles émotions ressentez-vous ?"
-                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
-
-                    <FlowPane fx:id="emotionsPane" hgap="10" vgap="10">
-                        <!-- Les boutons émotions seront ajoutés dynamiquement -->
-                    </FlowPane>
+                <!-- 2. ÉMOTIONS -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+                    <Label text="💭 Quelles émotions ?"
+                           style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #1a1a1a;"/>
+                    <FlowPane fx:id="emotionsPane" hgap="8" vgap="8"/>
                 </VBox>
 
-                <!-- Énergie et Sommeil Section -->
-                <HBox spacing="20">
-                    <!-- Énergie -->
-                    <VBox spacing="15" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-                            <Label text="⚡" style="-fx-font-size: 24px;"/>
-                            <Label text="Niveau d'énergie" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <!-- 3. ÉNERGIE & SOMMEIL -->
+                <HBox spacing="12">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+                        <HBox alignment="CENTER_LEFT" spacing="6">
+                            <Label text="⚡" style="-fx-font-size: 18px;"/>
+                            <Label text="Énergie" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #1a1a1a;"/>
                         </HBox>
-
                         <Slider fx:id="energieSlider" min="1" max="10" value="5"
-                                showTickLabels="true" showTickMarks="true" majorTickUnit="1"
-                                blockIncrement="1" snapToTicks="true"
-                                style="-fx-control-inner-background: #e8f5e9;"/>
-
+                                showTickMarks="false" showTickLabels="false"/>
                         <Label fx:id="energieLabel" text="5/10"
                                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" alignment="CENTER"/>
                     </VBox>
 
-                    <!-- Sommeil -->
-                    <VBox spacing="15" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-                            <Label text="😴" style="-fx-font-size: 24px;"/>
-                            <Label text="Qualité du sommeil" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                    <VBox spacing="8" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+                        <HBox alignment="CENTER_LEFT" spacing="6">
+                            <Label text="😴" style="-fx-font-size: 18px;"/>
+                            <Label text="Sommeil" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #1a1a1a;"/>
                         </HBox>
-
                         <Slider fx:id="sommeilSlider" min="1" max="10" value="5"
-                                showTickLabels="true" showTickMarks="true" majorTickUnit="1"
-                                blockIncrement="1" snapToTicks="true"
-                                style="-fx-control-inner-background: #e8f5e9;"/>
-
+                                showTickMarks="false" showTickLabels="false"/>
                         <Label fx:id="sommeilLabel" text="5/10"
                                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" alignment="CENTER"/>
                     </VBox>
                 </HBox>
 
-                <!-- Notes Section -->
-                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="📝" style="-fx-font-size: 24px;"/>
-                        <Label text="Notes personnelles" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <!-- 4. NOTES -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+                    <HBox alignment="CENTER_LEFT" spacing="6">
+                        <Label text="✍️" style="-fx-font-size: 18px;"/>
+                        <Label text="Racontez votre journée" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #1a1a1a;"/>
                     </HBox>
-
-                    <Label text="Qu'est-ce qui a marqué votre journée ? Comment vous sentez-vous ?"
-                           style="-fx-font-size: 13px; -fx-text-fill: #666; -fx-font-style: italic;"/>
-
-                    <TextArea fx:id="notesArea" promptText="Écrivez vos pensées, vos réflexions..."
-                              wrapText="true" prefRowCount="6"
-                              style="-fx-font-size: 14px; -fx-background-color: #f5f5f5; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 15;"/>
-
+                    <TextArea fx:id="notesArea" promptText="Qu'est-ce qui a marqué votre journée ?"
+                              wrapText="true" prefRowCount="4"
+                              style="-fx-font-size: 13px; -fx-background-color: #f8f9fa; -fx-border-color: transparent; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12;"/>
                     <Label fx:id="charCountLabel" text="0 caractères"
-                           style="-fx-font-size: 12px; -fx-text-fill: #999;" alignment="CENTER_RIGHT"/>
+                           style="-fx-font-size: 10px; -fx-text-fill: #999;" alignment="CENTER_RIGHT"/>
                 </VBox>
 
-                <!-- Save Button -->
-                <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 20 0;">
-                    <Button text="💾 Enregistrer l'entrée" onAction="#saveEntry"
-                            style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 15 40; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);">
-                        <cursor><Cursor fx:constant="HAND"/></cursor>
-                    </Button>
-                </HBox>
+                <!-- 5. BOUTON SAVE -->
+                <Button text="💾 Enregistrer" onAction="#saveEntry"
+                        style="-fx-background-color: linear-gradient(to right, #2e7d32, #43a047); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 14 0; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.3), 8, 0, 0, 3); -fx-min-height: 50;">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
 
             </VBox>
         </ScrollPane>

@@ -7,7 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -16,17 +18,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * 📔 Contrôleur du Journal Émotionnel - Version Moderne
+ */
 public class JournalController {
 
     @FXML private Label dateLabel;
     @FXML private Label streakLabel;
 
-    // Boutons humeur
-    @FXML private Button btnExcellent;
-    @FXML private Button btnBien;
-    @FXML private Button btnMoyen;
-    @FXML private Button btnDifficile;
-    @FXML private Button btnTresDifficile;
+    // Boutons humeur (maintenant des VBox)
+    @FXML private VBox btnExcellent;
+    @FXML private VBox btnBien;
+    @FXML private VBox btnMoyen;
+    @FXML private VBox btnDifficile;
+    @FXML private VBox btnTresDifficile;
 
     // Émotions
     @FXML private FlowPane emotionsPane;
@@ -45,7 +50,7 @@ public class JournalController {
     private int userId = 1; // TODO: Remplacer par SessionManager
     private String selectedHumeur = null;
     private List<String> selectedEmotions = new ArrayList<>();
-    private Map<String, Button> humeurButtons = new HashMap<>();
+    private Map<String, VBox> humeurButtons = new HashMap<>();
     private Map<String, ToggleButton> emotionButtons = new HashMap<>();
 
     // Émotions disponibles avec emojis
@@ -87,7 +92,7 @@ public class JournalController {
     }
 
     /**
-     * Configuration des boutons d'humeur
+     * Configuration des boutons d'humeur (VBox)
      */
     private void setupHumeurButtons() {
         humeurButtons.put("excellent", btnExcellent);
@@ -105,31 +110,33 @@ public class JournalController {
     }
 
     /**
-     * Sélectionner une humeur
+     * Sélectionner une humeur (MouseEvent pour VBox)
      */
     @FXML
-    private void selectHumeur(javafx.event.ActionEvent event) {
-        Button clickedButton = (Button) event.getSource();
-        selectedHumeur = (String) clickedButton.getUserData();
+    private void selectHumeur(MouseEvent event) {
+        VBox clickedBox = (VBox) event.getSource();
+        selectedHumeur = (String) clickedBox.getUserData();
 
         // Réinitialiser tous les boutons
-        for (Button btn : humeurButtons.values()) {
-            btn.setStyle(btn.getStyle().replace("-fx-background-color: #e8f5e9;", "-fx-background-color: transparent;")
-                    .replace("-fx-border-color: #2e7d32;", "-fx-border-color: #e0e0e0;")
-                    .replace("-fx-border-width: 3;", "-fx-border-width: 2;"));
+        for (VBox box : humeurButtons.values()) {
+            box.setStyle("-fx-background-color: white; " +
+                    "-fx-background-radius: 15; -fx-padding: 20 15; " +
+                    "-fx-pref-width: 100; -fx-pref-height: 110; -fx-cursor: hand; " +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);");
         }
 
-        // Mettre en surbrillance le bouton sélectionné
-        clickedButton.setStyle(clickedButton.getStyle()
-                .replace("-fx-background-color: transparent;", "-fx-background-color: #e8f5e9;")
-                .replace("-fx-border-color: #e0e0e0;", "-fx-border-color: #2e7d32;")
-                .replace("-fx-border-width: 2;", "-fx-border-width: 3;"));
+        // Mettre en surbrillance le sélectionné
+        clickedBox.setStyle("-fx-background-color: linear-gradient(to bottom, #e8f5e9, #c8e6c9); " +
+                "-fx-background-radius: 15; -fx-padding: 20 15; " +
+                "-fx-pref-width: 100; -fx-pref-height: 110; -fx-cursor: hand; " +
+                "-fx-border-color: #2e7d32; -fx-border-width: 3; -fx-border-radius: 15; " +
+                "-fx-effect: dropshadow(gaussian, rgba(46,125,50,0.4), 15, 0, 0, 5);");
 
         System.out.println("✅ Humeur sélectionnée: " + selectedHumeur);
     }
 
     /**
-     * Configuration des boutons d'émotions
+     * Configuration des boutons d'émotions (style moderne)
      */
     private void setupEmotionsButtons() {
         for (Map.Entry<String, String> entry : emotionsDisponibles.entrySet()) {
@@ -137,20 +144,23 @@ public class JournalController {
             String emoji = entry.getValue();
 
             ToggleButton btn = new ToggleButton(emoji + " " + emotionName);
-            btn.setStyle("-fx-font-size: 13px; -fx-padding: 10 15; -fx-background-color: white; " +
-                    "-fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 20; " +
-                    "-fx-background-radius: 20; -fx-cursor: hand;");
+            btn.setStyle("-fx-font-size: 12px; -fx-padding: 8 14; " +
+                    "-fx-background-color: #f0f4f8; -fx-border-color: transparent; " +
+                    "-fx-border-radius: 18; -fx-background-radius: 18; " +
+                    "-fx-cursor: hand; -fx-text-fill: #555;");
 
             btn.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
                 if (isSelected) {
-                    btn.setStyle("-fx-font-size: 13px; -fx-padding: 10 15; -fx-background-color: #e8f5e9; " +
-                            "-fx-border-color: #2e7d32; -fx-border-width: 2; -fx-border-radius: 20; " +
-                            "-fx-background-radius: 20; -fx-text-fill: #285921; -fx-font-weight: bold; -fx-cursor: hand;");
+                    btn.setStyle("-fx-font-size: 12px; -fx-padding: 8 14; " +
+                            "-fx-background-color: #2e7d32; -fx-border-color: transparent; " +
+                            "-fx-border-radius: 18; -fx-background-radius: 18; " +
+                            "-fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
                     selectedEmotions.add(emotionName);
                 } else {
-                    btn.setStyle("-fx-font-size: 13px; -fx-padding: 10 15; -fx-background-color: white; " +
-                            "-fx-border-color: #e0e0e0; -fx-border-width: 2; -fx-border-radius: 20; " +
-                            "-fx-background-radius: 20; -fx-cursor: hand;");
+                    btn.setStyle("-fx-font-size: 12px; -fx-padding: 8 14; " +
+                            "-fx-background-color: #f0f4f8; -fx-border-color: transparent; " +
+                            "-fx-border-radius: 18; -fx-background-radius: 18; " +
+                            "-fx-cursor: hand; -fx-text-fill: #555;");
                     selectedEmotions.remove(emotionName);
                 }
             });
@@ -216,10 +226,10 @@ public class JournalController {
         try {
             int streak = journalDao.getStreakDays(userId);
             String emoji = streak >= 7 ? "🔥🔥🔥" : streak >= 3 ? "🔥🔥" : "🔥";
-            streakLabel.setText(emoji + " " + streak + " jour(s) consécutif(s)");
+            streakLabel.setText(emoji + " " + streak + " jour" + (streak > 1 ? "s" : ""));
 
             if (streak >= 7) {
-                streakLabel.setStyle(streakLabel.getStyle() + "-fx-font-weight: bold;");
+                streakLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ff6b35; -fx-background-color: #fff4f0; -fx-padding: 8 15; -fx-background-radius: 15;");
             }
         } catch (Exception e) {
             System.err.println("❌ Erreur chargement streak: " + e.getMessage());
@@ -240,11 +250,12 @@ public class JournalController {
                 // Charger l'humeur
                 selectedHumeur = entry.getHumeur();
                 if (humeurButtons.containsKey(selectedHumeur)) {
-                    Button btn = humeurButtons.get(selectedHumeur);
-                    btn.setStyle(btn.getStyle()
-                            .replace("-fx-background-color: transparent;", "-fx-background-color: #e8f5e9;")
-                            .replace("-fx-border-color: #e0e0e0;", "-fx-border-color: #2e7d32;")
-                            .replace("-fx-border-width: 2;", "-fx-border-width: 3;"));
+                    VBox box = humeurButtons.get(selectedHumeur);
+                    box.setStyle("-fx-background-color: linear-gradient(to bottom, #e8f5e9, #c8e6c9); " +
+                            "-fx-background-radius: 15; -fx-padding: 20 15; " +
+                            "-fx-pref-width: 100; -fx-pref-height: 110; -fx-cursor: hand; " +
+                            "-fx-border-color: #2e7d32; -fx-border-width: 3; -fx-border-radius: 15; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(46,125,50,0.4), 15, 0, 0, 5);");
                 }
 
                 // Charger les émotions
@@ -334,7 +345,9 @@ public class JournalController {
             FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
             Parent root = loader.load();
 
-
+            // Passer le userId au contrôleur du calendrier
+            MoodCalendarController controller = loader.getController();
+            controller.setUserId(userId);
 
             Stage stage = new Stage();
             stage.setTitle("📊 Calendrier Émotionnel");

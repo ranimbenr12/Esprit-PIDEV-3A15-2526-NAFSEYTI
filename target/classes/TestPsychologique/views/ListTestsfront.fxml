@@ -20,7 +20,7 @@
         <VBox.margin>
             <Insets bottom="30"/>
         </VBox.margin>
-        <Button text="😄 Blague du jour" onAction="#handleJoke"/>
+
         <Button text="← Retour" onAction="#returnToHome"
                 style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #285921; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand;">
             <cursor><Cursor fx:constant="HAND"/></cursor>
