@@ -1045,7 +1045,7 @@ public class PsyContenu implements Initializable {
      */
     private void ouvrirCreationForum() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CreationForum.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterForum.fxml"));
             Parent root = loader.load();
 
             Scene currentScene = doctorContainer.getScene();

@@ -21,6 +21,8 @@ import tn.esprit.services.CommentaireService;
 import tn.esprit.services.CopilotService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -222,9 +224,6 @@ public class C_ArticleListController {
     /**
      * Recherche avancée
      */
-    /**
-     * Recherche avancée
-     */
     @FXML
     private void rechercherAvancee() {
         if (forumCourant == null) return;
@@ -234,7 +233,6 @@ public class C_ArticleListController {
         String statut = statutCombo != null ? statutCombo.getValue() : "";
 
         try {
-            // Appel correct avec 4 paramètres
             List<Article> articles = articleService.rechercherAvancee(motCle, theme, statut, forumCourant.getIdForum());
             displayArticles(articles);
 
@@ -1124,8 +1122,8 @@ public class C_ArticleListController {
                         "-fx-background-radius: 20;" +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 30, 0, 0, 10);"
         );
-        root.setMaxWidth(400);
-        root.setMaxHeight(500);
+        root.setMaxWidth(450);
+        root.setMaxHeight(550);
 
         // Animation d'apparition
         ScaleTransition st = new ScaleTransition(Duration.millis(300), root);
@@ -1195,95 +1193,75 @@ public class C_ArticleListController {
         previewBox.getChildren().addAll(articleTitle, articlePreview);
 
         // Options de partage
-        Label shareOptionsLabel = new Label("Partager via");
+        Label shareOptionsLabel = new Label("Partager sur les réseaux sociaux");
         shareOptionsLabel.setStyle(
                 "-fx-font-weight: bold;" +
-                        "-fx-font-size: 13;" +
-                        "-fx-text-fill: " + DARK_COLOR + ";"
+                        "-fx-font-size: 14;" +
+                        "-fx-text-fill: " + DARK_COLOR + ";" +
+                        "-fx-padding: 10 0 5 0;"
         );
 
         // Grille d'options de partage
         GridPane shareGrid = new GridPane();
-        shareGrid.setHgap(15);
-        shareGrid.setVgap(15);
+        shareGrid.setHgap(20);
+        shareGrid.setVgap(20);
         shareGrid.setAlignment(Pos.CENTER);
+        shareGrid.setPadding(new Insets(10));
 
-        // Option 1: Copier le lien
-        VBox copyOption = createShareOption(
-                "📋",
-                "Copier le lien",
-                "#667eea",
-                () -> copyArticleLink(article, shareStage)
-        );
-
-        // Option 2: Partager sur les réseaux
-        VBox twitterOption = createShareOption(
-                "🐦",
-                "Twitter",
-                "#1DA1F2",
-                () -> shareOnSocialMedia(article, "Twitter")
-        );
-
-        VBox facebookOption = createShareOption(
+        // Facebook
+        VBox facebookOption = createSocialShareOption(
                 "📘",
                 "Facebook",
                 "#4267B2",
-                () -> shareOnSocialMedia(article, "Facebook")
+                () -> shareOnFacebook(article)
         );
 
-        VBox linkedinOption = createShareOption(
+
+
+
+        // LinkedIn
+        VBox linkedinOption = createSocialShareOption(
                 "🔗",
                 "LinkedIn",
-                "#0077b5",
-                () -> shareOnSocialMedia(article, "LinkedIn")
+                "#0077B5",
+                () -> shareOnLinkedIn(article)
         );
 
-        // Option 3: Partager par email
-        VBox emailOption = createShareOption(
-                "📧",
-                "Email",
-                "#EA4335",
-                () -> shareByEmail(article)
+        // Twitter/X
+        VBox twitterOption = createSocialShareOption(
+                "🐦",
+                "Twitter",
+                "#1DA1F2",
+                () -> shareOnTwitter(article)
         );
 
-        // Option 4: Télécharger en PDF
-        VBox pdfOption = createShareOption(
-                "📄",
-                "PDF",
-                "#FF5722",
-                () -> exportToPDF(article)
+        // WhatsApp
+        VBox whatsappOption = createSocialShareOption(
+                "💬",
+                "WhatsApp",
+                "#25D366",
+                () -> shareOnWhatsApp(article)
         );
 
-        // Option 5: Imprimer
-        VBox printOption = createShareOption(
-                "🖨️",
-                "Imprimer",
-                "#607D8B",
-                () -> printArticle(article)
+        // Telegram
+        VBox telegramOption = createSocialShareOption(
+                "✈️",
+                "Telegram",
+                "#0088cc",
+                () -> shareOnTelegram(article)
         );
 
-        // Option 6: QR Code
-        VBox qrOption = createShareOption(
-                "📱",
-                "QR Code",
-                "#4CAF50",
-                () -> generateQRCode(article, shareStage)
-        );
-
-        // Ajout des options à la grille
-        shareGrid.add(copyOption, 0, 0);
-        shareGrid.add(twitterOption, 1, 0);
-        shareGrid.add(facebookOption, 2, 0);
+        // Ajout des options à la grille (2 colonnes)
+        shareGrid.add(facebookOption, 0, 0);
         shareGrid.add(linkedinOption, 0, 1);
-        shareGrid.add(emailOption, 1, 1);
-        shareGrid.add(pdfOption, 2, 1);
-        shareGrid.add(qrOption, 0, 2);
-        shareGrid.add(printOption, 1, 2);
+        shareGrid.add(twitterOption, 1, 0);
+        shareGrid.add(whatsappOption, 1, 1);
+        shareGrid.add(telegramOption, 2, 0);
 
         // Lien direct
         HBox directLinkBox = new HBox(10);
         directLinkBox.setAlignment(Pos.CENTER_LEFT);
-        directLinkBox.setPadding(new Insets(10, 0, 0, 0));
+        directLinkBox.setPadding(new Insets(15, 0, 0, 0));
 
         TextField linkField = new TextField(generateArticleLink(article));
         linkField.setEditable(false);
@@ -1338,29 +1316,29 @@ public class C_ArticleListController {
     }
 
     /**
-     * Crée une option de partage
+     * Crée une option de partage pour les réseaux sociaux
      */
-    private VBox createShareOption(String emoji, String label, String color, Runnable action) {
-        VBox option = new VBox(5);
+    private VBox createSocialShareOption(String emoji, String label, String color, Runnable action) {
+        VBox option = new VBox(8);
         option.setAlignment(Pos.CENTER);
-        option.setPadding(new Insets(10));
+        option.setPadding(new Insets(15));
         option.setStyle(
                 "-fx-background-color: " + color + "10;" +
                         "-fx-background-radius: 15;" +
                         "-fx-border-color: " + color + "30;" +
                         "-fx-border-radius: 15;" +
                         "-fx-border-width: 1;" +
-                        "-fx-cursor: hand;"
+                        "-fx-cursor: hand;" +
+                        "-fx-min-width: 100;" +
+                        "-fx-min-height: 90;"
         );
-        option.setPrefWidth(80);
-        option.setPrefHeight(80);
 
         Label emojiLabel = new Label(emoji);
-        emojiLabel.setStyle("-fx-font-size: 28;");
+        emojiLabel.setStyle("-fx-font-size: 32;");
 
         Label textLabel = new Label(label);
         textLabel.setStyle(
-                "-fx-font-size: 11;" +
+                "-fx-font-size: 12;" +
                         "-fx-text-fill: " + DARK_COLOR + ";" +
                         "-fx-font-weight: bold;"
         );
@@ -1376,10 +1354,12 @@ public class C_ArticleListController {
                             "-fx-border-radius: 15;" +
                             "-fx-border-width: 1;" +
                             "-fx-cursor: hand;" +
-                            "-fx-effect: dropshadow(gaussian, " + color + "40, 10, 0, 0, 2);"
+                            "-fx-effect: dropshadow(gaussian, " + color + "40, 10, 0, 0, 2);" +
+                            "-fx-min-width: 100;" +
+                            "-fx-min-height: 90;"
             );
-            emojiLabel.setStyle("-fx-font-size: 28; -fx-text-fill: white;");
-            textLabel.setStyle("-fx-font-size: 11; -fx-text-fill: white; -fx-font-weight: bold;");
+            emojiLabel.setStyle("-fx-font-size: 32; -fx-text-fill: white;");
+            textLabel.setStyle("-fx-font-size: 12; -fx-text-fill: white; -fx-font-weight: bold;");
         });
 
         option.setOnMouseExited(e -> {
@@ -1389,16 +1369,85 @@ public class C_ArticleListController {
                             "-fx-border-color: " + color + "30;" +
                             "-fx-border-radius: 15;" +
                             "-fx-border-width: 1;" +
-                            "-fx-cursor: hand;"
+                            "-fx-cursor: hand;" +
+                            "-fx-min-width: 100;" +
+                            "-fx-min-height: 90;"
             );
-            emojiLabel.setStyle("-fx-font-size: 28;");
-            textLabel.setStyle("-fx-font-size: 11; -fx-text-fill: " + DARK_COLOR + "; -fx-font-weight: bold;");
+            emojiLabel.setStyle("-fx-font-size: 32;");
+            textLabel.setStyle("-fx-font-size: 12; -fx-text-fill: " + DARK_COLOR + "; -fx-font-weight: bold;");
         });
 
         // Action au clic
-        option.setOnMouseClicked(e -> action.run());
+        option.setOnMouseClicked(e -> {
+            action.run();
+            showSuccessNotification("Redirection vers " + label + "...");
+        });
 
         return option;
+    }
+
+    /**
+     * Partage sur Facebook
+     */
+    private void shareOnFacebook(Article article) {
+        String url = "https://www.facebook.com/sharer/sharer.php?u=" +
+                URLEncoder.encode(generateArticleLink(article), StandardCharsets.UTF_8);
+        openWebPage(url);
+    }
+
+    /**
+
+
+    /**
+     * Partage sur LinkedIn
+     */
+    private void shareOnLinkedIn(Article article) {
+        String url = "https://www.linkedin.com/sharing/share-offsite/?url=" +
+                URLEncoder.encode(generateArticleLink(article), StandardCharsets.UTF_8);
+        openWebPage(url);
+    }
+
+    /**
+     * Partage sur Twitter/X
+     */
+    private void shareOnTwitter(Article article) {
+        String text = "Découvrez cet article : " + article.getTitre();
+        String url = "https://twitter.com/intent/tweet?text=" +
+                URLEncoder.encode(text, StandardCharsets.UTF_8) +
+                "&url=" + URLEncoder.encode(generateArticleLink(article), StandardCharsets.UTF_8);
+        openWebPage(url);
+    }
+
+    /**
+     * Partage sur WhatsApp
+     */
+    private void shareOnWhatsApp(Article article) {
+        String text = "Découvrez cet article : " + article.getTitre() + " - " + generateArticleLink(article);
+        String url = "https://wa.me/?text=" + URLEncoder.encode(text, StandardCharsets.UTF_8);
+        openWebPage(url);
+    }
+
+    /**
+     * Partage sur Telegram
+     */
+    private void shareOnTelegram(Article article) {
+        String text = "Découvrez cet article : " + article.getTitre() + " - " + generateArticleLink(article);
+        String url = "https://t.me/share/url?url=" +
+                URLEncoder.encode(generateArticleLink(article), StandardCharsets.UTF_8) +
+                "&text=" + URLEncoder.encode(article.getTitre(), StandardCharsets.UTF_8);
+        openWebPage(url);
+    }
+
+    /**
+     * Ouvre une page web dans le navigateur par défaut
+     */
+    private void openWebPage(String url) {
+        try {
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible d'ouvrir le navigateur");
+        }
     }
 
     /**
@@ -1407,11 +1456,7 @@ public class C_ArticleListController {
     private void copyArticleLink(Article article, Stage shareStage) {
         String link = generateArticleLink(article);
         copyToClipboard(link);
-
-        // Notification de succès
         showSuccessNotification("Lien copié dans le presse-papier !");
-
-        // Fermer la fenêtre de partage
         shareStage.close();
     }
 
@@ -1419,8 +1464,7 @@ public class C_ArticleListController {
      * Génère un lien pour l'article
      */
     private String generateArticleLink(Article article) {
-        // Simuler un lien d'article
-        return "https://esprit.tn/forum/" + forumCourant.getIdForum() + "/article/" + article.getIdPost();
+        return "https://nafseyeti.tn/forum/" + forumCourant.getIdForum() + "/article/" + article.getIdPost();
     }
 
     /**
@@ -1431,20 +1475,6 @@ public class C_ArticleListController {
         javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
         content.putString(text);
         clipboard.setContent(content);
-    }
-
-    /**
-     * Partage sur les réseaux sociaux (simulé)
-     */
-    private void shareOnSocialMedia(Article article, String platform) {
-        String message = "Découvrez cet article sur notre forum : " + article.getTitre() + "\n" + generateArticleLink(article);
-
-        // Simulation d'ouverture de navigateur
-        showSuccessNotification("Partage sur " + platform + " simulé !");
-
-        // Dans une vraie application, vous pourriez ouvrir une URL comme:
-        // String url = "https://twitter.com/intent/tweet?text=" + URLEncoder.encode(message, "UTF-8");
-        // getHostServices().showDocument(url);
     }
 
     /**
@@ -1459,13 +1489,10 @@ public class C_ArticleListController {
                 "Cordialement,\n" + "Utilisateur du forum";
 
         try {
-            // Créer un mailto URL
             String mailto = "mailto:?subject=" +
                     java.net.URLEncoder.encode(subject, "UTF-8").replace("+", "%20") +
                     "&body=" + java.net.URLEncoder.encode(body, "UTF-8").replace("+", "%20");
-
-            // Ouvrir le client mail par défaut
-            getHostServices().showDocument(mailto);
+            openWebPage(mailto);
         } catch (Exception e) {
             e.printStackTrace();
             showError("Erreur", "Impossible d'ouvrir le client mail");
@@ -1476,19 +1503,14 @@ public class C_ArticleListController {
      * Exporte l'article en PDF
      */
     private void exportToPDF(Article article) {
-        // Simulation d'export PDF
         Stage loadingStage = createModernLoadingStage();
         loadingStage.show();
 
         new Thread(() -> {
             try {
-                // Simuler un délai de génération PDF
                 Thread.sleep(2000);
-
                 Platform.runLater(() -> {
                     loadingStage.close();
-
-                    // Demander où sauvegarder
                     javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
                     fileChooser.setTitle("Sauvegarder le PDF");
                     fileChooser.getExtensionFilters().add(
@@ -1511,10 +1533,8 @@ public class C_ArticleListController {
      * Imprime l'article
      */
     private void printArticle(Article article) {
-        // Créer un contenu imprimable
         javafx.print.PrinterJob job = javafx.print.PrinterJob.createPrinterJob();
         if (job != null) {
-            // Créer une version imprimable de l'article
             VBox printableContent = new VBox(20);
             printableContent.setPadding(new Insets(20));
             printableContent.setStyle("-fx-background-color: white;");
@@ -1532,7 +1552,6 @@ public class C_ArticleListController {
 
             printableContent.getChildren().addAll(title, date, new Separator(), content);
 
-            // Lancer l'impression
             if (job.showPrintDialog(null)) {
                 boolean success = job.printPage(printableContent);
                 if (success) {
@@ -1560,7 +1579,6 @@ public class C_ArticleListController {
         );
         root.setMaxWidth(350);
 
-        // En-tête
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
 
@@ -1582,7 +1600,6 @@ public class C_ArticleListController {
 
         header.getChildren().addAll(titleLabel, spacer, closeBtn);
 
-        // Simulation de QR Code (dans une vraie app, utiliser une bibliothèque comme ZXing)
         StackPane qrPlaceholder = new StackPane();
         qrPlaceholder.setPrefSize(200, 200);
         qrPlaceholder.setStyle(
@@ -1612,7 +1629,6 @@ public class C_ArticleListController {
         articleInfo.setStyle("-fx-text-fill: #6c757d; -fx-font-size: 12;");
         articleInfo.setWrapText(true);
 
-        // Bouton de téléchargement
         Button downloadBtn = new Button("📥 Télécharger QR Code");
         downloadBtn.setStyle(
                 "-fx-background-color: " + PRIMARY_COLOR + ";" +
@@ -1634,7 +1650,6 @@ public class C_ArticleListController {
         scene.setFill(null);
         qrStage.setScene(scene);
 
-        // Centrer
         qrStage.setOnShown(e -> {
             qrStage.setX(parentStage.getX() + (parentStage.getWidth() - root.getWidth()) / 2);
             qrStage.setY(parentStage.getY() + (parentStage.getHeight() - root.getHeight()) / 2);
@@ -1667,14 +1682,6 @@ public class C_ArticleListController {
             button.setStyle(originalStyle);
         });
         pause.play();
-    }
-
-    /**
-     * Obtient le service d'hôte pour ouvrir des URLs
-     */
-    private javafx.application.HostServices getHostServices() {
-        // Note: Dans un vrai contrôleur FXML, vous devriez passer HostServices depuis l'application principale
-        return null;
     }
 
     /**
@@ -1911,16 +1918,13 @@ public class C_ArticleListController {
         stage.setTitle("Résumé IA - " + article.getTitre());
         stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-        // Conteneur principal
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f8fafd;");
         root.setPadding(new Insets(25));
 
-        // --- EN-TÊTE ---
         VBox headerBox = new VBox(10);
         headerBox.setPadding(new Insets(0, 0, 20, 0));
 
-        // Titre principal avec icône
         HBox titleBox = new HBox(10);
         titleBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -1933,7 +1937,6 @@ public class C_ArticleListController {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Badge de l'article
         Label articleBadge = new Label("Article #" + article.getIdPost());
         articleBadge.setStyle(
                 "-fx-background-color: #e9ecef;" +
@@ -1945,8 +1948,6 @@ public class C_ArticleListController {
         );
 
         titleBox.getChildren().addAll(iconLabel, mainTitle, spacer, articleBadge);
-
-        // Titre de l'article original
         Label articleTitle = new Label("« " + article.getTitre() + " »");
         articleTitle.setStyle(
                 "-fx-font-size: 16;" +
@@ -1957,7 +1958,6 @@ public class C_ArticleListController {
 
         headerBox.getChildren().addAll(titleBox, articleTitle);
 
-        // --- ZONE DE RÉSUMÉ ---
         VBox contentBox = new VBox(15);
         contentBox.setStyle(
                 "-fx-background-color: white;" +
@@ -1966,7 +1966,6 @@ public class C_ArticleListController {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);"
         );
 
-        // Label "Résumé généré"
         Label summaryLabel = new Label("RÉSUMÉ GÉNÉRÉ");
         summaryLabel.setStyle(
                 "-fx-font-size: 12;" +
@@ -1975,7 +1974,6 @@ public class C_ArticleListController {
                         "-fx-letter-spacing: 1px;"
         );
 
-        // Zone de texte du résumé
         TextArea resumeArea = new TextArea(resume);
         resumeArea.setWrapText(true);
         resumeArea.setEditable(false);
@@ -1988,14 +1986,11 @@ public class C_ArticleListController {
                         "-fx-border-radius: 10;" +
                         "-fx-border-color: #e9ecef;" +
                         "-fx-border-width: 1;" +
-                        "-fx-padding: 12;" +
-                        "-fx-font-family: 'System';"
+                        "-fx-padding: 12;"
         );
 
-        // Retirer le contour du focus
         resumeArea.setFocusTraversable(false);
 
-        // Statistiques du résumé
         HBox statsBox = new HBox(20);
         statsBox.setAlignment(Pos.CENTER_LEFT);
         statsBox.setPadding(new Insets(10, 0, 0, 0));
@@ -2014,15 +2009,12 @@ public class C_ArticleListController {
         timeLabel.setStyle("-fx-text-fill: #6c757d; -fx-font-size: 12;");
 
         statsBox.getChildren().addAll(motsLabel, charsLabel, timeLabel);
-
         contentBox.getChildren().addAll(summaryLabel, resumeArea, statsBox);
 
-        // --- BOUTONS D'ACTION ---
         HBox buttonBar = new HBox(12);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
         buttonBar.setPadding(new Insets(20, 0, 0, 0));
 
-        // Bouton Copier
         Button copyBtn = new Button("📋 Copier le résumé");
         copyBtn.setStyle(
                 "-fx-background-color: #667eea;" +
@@ -2033,63 +2025,12 @@ public class C_ArticleListController {
                         "-fx-padding: 10 20;" +
                         "-fx-font-size: 13;"
         );
-        copyBtn.setOnMouseEntered(e -> copyBtn.setStyle(
-                "-fx-background-color: #5a67d8;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 10 20;" +
-                        "-fx-font-size: 13;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(102,126,234,0.4), 10, 0, 0, 2);"
-        ));
-        copyBtn.setOnMouseExited(e -> copyBtn.setStyle(
-                "-fx-background-color: #667eea;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 10 20;" +
-                        "-fx-font-size: 13;"
-        ));
 
         copyBtn.setOnAction(ev -> {
-            javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
-            javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
-            content.putString(resume);
-            clipboard.setContent(content);
-
-            // Feedback visuel
-            copyBtn.setText("✓ Copié !");
-            copyBtn.setStyle(
-                    "-fx-background-color: #48bb78;" +
-                            "-fx-text-fill: white;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-background-radius: 10;" +
-                            "-fx-cursor: hand;" +
-                            "-fx-padding: 10 20;" +
-                            "-fx-font-size: 13;"
-            );
-
-            // Restaurer le bouton après 2 secondes
-            new Thread(() -> {
-                try { Thread.sleep(2000); } catch (InterruptedException ex) {}
-                javafx.application.Platform.runLater(() -> {
-                    copyBtn.setText("📋 Copier le résumé");
-                    copyBtn.setStyle(
-                            "-fx-background-color: #667eea;" +
-                                    "-fx-text-fill: white;" +
-                                    "-fx-font-weight: bold;" +
-                                    "-fx-background-radius: 10;" +
-                                    "-fx-cursor: hand;" +
-                                    "-fx-padding: 10 20;" +
-                                    "-fx-font-size: 13;"
-                    );
-                });
-            }).start();
+            copyToClipboard(resume);
+            showTemporaryNotification(copyBtn, "✓ Copié !", "#48bb78");
         });
 
-        // Bouton Fermer
         Button closeBtn = new Button("Fermer");
         closeBtn.setStyle(
                 "-fx-background-color: #e53e3e;" +
@@ -2100,35 +2041,14 @@ public class C_ArticleListController {
                         "-fx-padding: 10 25;" +
                         "-fx-font-size: 13;"
         );
-        closeBtn.setOnMouseEntered(e -> closeBtn.setStyle(
-                "-fx-background-color: #c53030;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 10 25;" +
-                        "-fx-font-size: 13;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(229,62,62,0.4), 10, 0, 0, 2);"
-        ));
-        closeBtn.setOnMouseExited(e -> closeBtn.setStyle(
-                "-fx-background-color: #e53e3e;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-padding: 10 25;" +
-                        "-fx-font-size: 13;"
-        ));
         closeBtn.setOnAction(ev -> stage.close());
 
         buttonBar.getChildren().addAll(copyBtn, closeBtn);
 
-        // Assemblage final
         root.setTop(headerBox);
         root.setCenter(contentBox);
         root.setBottom(buttonBar);
 
-        // Création et affichage de la scène
         Scene scene = new Scene(root, 600, 500);
         stage.setScene(scene);
         stage.show();
