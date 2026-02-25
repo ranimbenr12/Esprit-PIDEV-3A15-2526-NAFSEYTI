@@ -14,6 +14,7 @@ public class Main extends Application {
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/InterClient.fxml")
+               //getClass().getResource("/PsyContenu.fxml")
                 //getClass().getResource("/Dashboard.fxml")
 
         );

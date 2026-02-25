@@ -23,6 +23,9 @@ public class ArticleService implements CRUD<Article> {
         if (a.getDateCreation() == null) {
             a.setDateCreation(LocalDateTime.now());
         }
+        if (a.getTheme() == null || a.getTheme().isEmpty()) {
+            a.setTheme("Général");
+        }
 
         // Vérifier que le forum existe
         String checkForum = "SELECT COUNT(*) FROM forum WHERE id_forum=?";
@@ -45,8 +48,7 @@ public class ArticleService implements CRUD<Article> {
             }
         }
 
-        // Insertion de l'article avec les champs like_count et dislike_count
-        String sql = "INSERT INTO post(titre, contenu, date_creation, statut, forum_id, like_count, dislike_count) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO post(titre, contenu, date_creation, statut, forum_id, like_count, dislike_count, theme) VALUES (?,?,?,?,?,?,?,?)";
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setString(1, a.getTitre());
             ps.setString(2, a.getContenu());
@@ -55,6 +57,7 @@ public class ArticleService implements CRUD<Article> {
             ps.setInt(5, a.getForumId());
             ps.setInt(6, a.getLikeCount());
             ps.setInt(7, a.getDislikeCount());
+            ps.setString(8, a.getTheme());
             ps.executeUpdate();
         }
     }
@@ -66,15 +69,15 @@ public class ArticleService implements CRUD<Article> {
             a.setDateCreation(LocalDateTime.now());
         }
 
-        // Note: On ne modifie pas les compteurs de likes/dislikes ici
-        String sql = "UPDATE post SET titre=?, contenu=?, date_creation=?, statut=?, forum_id=? WHERE id_post=?";
+        String sql = "UPDATE post SET titre=?, contenu=?, date_creation=?, statut=?, forum_id=?, theme=? WHERE id_post=?";
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setString(1, a.getTitre());
             ps.setString(2, a.getContenu());
             ps.setTimestamp(3, Timestamp.valueOf(a.getDateCreation()));
             ps.setString(4, a.getStatut());
             ps.setInt(5, a.getForumId());
-            ps.setInt(6, a.getIdPost());
+            ps.setString(6, a.getTheme());
+            ps.setInt(7, a.getIdPost());
             ps.executeUpdate();
         }
     }
@@ -82,14 +85,12 @@ public class ArticleService implements CRUD<Article> {
     // ================= SUPPRIMER UN ARTICLE =================
     @Override
     public void supprimer(Article a) throws SQLException {
-        // D'abord supprimer les commentaires liés
         String deleteComments = "DELETE FROM commentaire WHERE id_post=?";
         try (PreparedStatement ps = cnx.prepareStatement(deleteComments)) {
             ps.setInt(1, a.getIdPost());
             ps.executeUpdate();
         }
 
-        // Puis supprimer l'article
         String sql = "DELETE FROM post WHERE id_post=?";
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, a.getIdPost());
@@ -104,7 +105,6 @@ public class ArticleService implements CRUD<Article> {
         String sql = "SELECT * FROM post ORDER BY date_creation DESC";
         try (Statement st = cnx.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
-
             while (rs.next()) {
                 Article a = extractArticleFromResultSet(rs);
                 list.add(a);
@@ -129,6 +129,110 @@ public class ArticleService implements CRUD<Article> {
         return list;
     }
 
+    // ================= RECHERCHE PAR THÈME =================
+    public List<Article> rechercherParTheme(String theme) throws SQLException {
+        List<Article> list = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE LOWER(theme) LIKE LOWER(?) ORDER BY date_creation DESC";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setString(1, "%" + theme + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Article a = extractArticleFromResultSet(rs);
+                    list.add(a);
+                }
+            }
+        }
+        return list;
+    }
+
+    // ================= RECHERCHE PAR THÈME ET FORUM =================
+    public List<Article> rechercherParThemeEtForum(String theme, int forumId) throws SQLException {
+        List<Article> list = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE LOWER(theme) LIKE LOWER(?) AND forum_id=? ORDER BY date_creation DESC";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setString(1, "%" + theme + "%");
+            ps.setInt(2, forumId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Article a = extractArticleFromResultSet(rs);
+                    list.add(a);
+                }
+            }
+        }
+        return list;
+    }
+
+    // ================= RECHERCHE AVANCÉE (CORRIGÉE - 4 PARAMÈTRES) =================
+    public List<Article> rechercherAvancee(String motCle, String theme, String statut, int forumId) throws SQLException {
+        List<Article> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM post WHERE forum_id=?");
+        List<Object> params = new ArrayList<>();
+        params.add(forumId);
+
+        if (motCle != null && !motCle.isEmpty()) {
+            sql.append(" AND (LOWER(titre) LIKE LOWER(?) OR LOWER(contenu) LIKE LOWER(?))");
+            params.add("%" + motCle + "%");
+            params.add("%" + motCle + "%");
+        }
+
+        if (theme != null && !theme.isEmpty() && !"Tous les thèmes".equals(theme)) {
+            sql.append(" AND LOWER(theme) LIKE LOWER(?)");
+            params.add("%" + theme + "%");
+        }
+
+        if (statut != null && !statut.isEmpty() && !"Tous".equals(statut)) {
+            sql.append(" AND statut = ?");
+            params.add(statut);
+        }
+
+        sql.append(" ORDER BY date_creation DESC");
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Article a = extractArticleFromResultSet(rs);
+                    list.add(a);
+                }
+            }
+        }
+        return list;
+    }
+
+    // ================= RECHERCHE PAR MOT CLÉ =================
+    public List<Article> rechercherParMotCle(String motCle) throws SQLException {
+        List<Article> list = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE LOWER(titre) LIKE LOWER(?) OR LOWER(contenu) LIKE LOWER(?) ORDER BY date_creation DESC";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            String searchPattern = "%" + motCle + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Article a = extractArticleFromResultSet(rs);
+                    list.add(a);
+                }
+            }
+        }
+        return list;
+    }
+
+    // ================= RÉCUPÉRER LES THÈMES UNIQUES =================
+    public List<String> getThemesUniques() throws SQLException {
+        List<String> themes = new ArrayList<>();
+        String sql = "SELECT DISTINCT theme FROM post WHERE theme IS NOT NULL ORDER BY theme";
+        try (Statement st = cnx.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                themes.add(rs.getString("theme"));
+            }
+        }
+        return themes;
+    }
+
     // ================= RÉCUPÉRER UN ARTICLE PAR ID =================
     public Article getArticleById(int id) throws SQLException {
         String sql = "SELECT * FROM post WHERE id_post=?";
@@ -141,22 +245,6 @@ public class ArticleService implements CRUD<Article> {
             }
         }
         return null;
-    }
-
-    // ================= RÉCUPÉRER LES ARTICLES LES PLUS POPULAIRES =================
-    public List<Article> getArticlesLesPlusPopulaires(int limite) throws SQLException {
-        List<Article> list = new ArrayList<>();
-        String sql = "SELECT *, (like_count - dislike_count) as score FROM post ORDER BY score DESC LIMIT ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, limite);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Article a = extractArticleFromResultSet(rs);
-                    list.add(a);
-                }
-            }
-        }
-        return list;
     }
 
     // ================= GESTION DES LIKES =================
@@ -226,15 +314,7 @@ public class ArticleService implements CRUD<Article> {
         }
     }
 
-    public void supprimerCommentaire(int commentaireId) throws SQLException {
-        String sql = "DELETE FROM commentaire WHERE id_commentaire=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, commentaireId);
-            ps.executeUpdate();
-        }
-    }
-
-    // ================= MÉTHODES UTILITAIRES =================
+    // ================= MÉTHODE UTILITAIRE =================
     private Article extractArticleFromResultSet(ResultSet rs) throws SQLException {
         Article a = new Article();
         a.setIdPost(rs.getInt("id_post"));
@@ -250,60 +330,18 @@ public class ArticleService implements CRUD<Article> {
         a.setForumId(rs.getInt("forum_id"));
         a.setLikeCount(rs.getInt("like_count"));
 
-        // Gérer le cas où dislike_count n'existe pas encore dans la base
         try {
             a.setDislikeCount(rs.getInt("dislike_count"));
         } catch (SQLException e) {
-            a.setDislikeCount(0); // Valeur par défaut si la colonne n'existe pas
+            a.setDislikeCount(0);
+        }
+
+        try {
+            a.setTheme(rs.getString("theme"));
+        } catch (SQLException e) {
+            a.setTheme("Général");
         }
 
         return a;
-    }
-
-    public int getArticleScore(int postId) throws SQLException {
-        String sql = "SELECT (like_count - dislike_count) as score FROM post WHERE id_post=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, postId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("score");
-                }
-            }
-        }
-        return 0;
-    }
-
-    // ================= STATISTIQUES =================
-    public int getNombreTotalArticles() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM post";
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        }
-        return 0;
-    }
-
-    public int getNombreTotalLikes() throws SQLException {
-        String sql = "SELECT SUM(like_count) FROM post";
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        }
-        return 0;
-    }
-
-    public int getNombreTotalDislikes() throws SQLException {
-        String sql = "SELECT SUM(dislike_count) FROM post";
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        }
-        return 0;
     }
 }

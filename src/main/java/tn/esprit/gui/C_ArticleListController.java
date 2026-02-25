@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +51,28 @@ public class C_ArticleListController {
 
     @FXML
     private Button btnRetour;
+
+    // Nouveaux composants pour la recherche par thème
+    @FXML
+    private TextField themeField;
+
+    @FXML
+    private TextField motCleField;
+
+    @FXML
+    private ComboBox<String> statutCombo;
+
+    @FXML
+    private ComboBox<String> themeCombo;
+
+    @FXML
+    private Button btnRechercherTheme;
+
+    @FXML
+    private Button btnRechercherAvancee;
+
+    @FXML
+    private Button btnResetRecherche;
 
     private ArticleService articleService = new ArticleService();
     private CommentaireService commentaireService = new CommentaireService();
@@ -102,6 +123,145 @@ public class C_ArticleListController {
     public void initialize() {
         setupUI();
         setupSearchAndSort();
+        setupRechercheThematique();
+        chargerThemes();
+    }
+
+    /**
+     * Configuration de la recherche thématique
+     */
+    private void setupRechercheThematique() {
+        if (statutCombo != null) {
+            statutCombo.getItems().addAll("Tous", "Publié", "Brouillon", "Archivé");
+            statutCombo.setValue("Tous");
+        }
+
+        if (btnRechercherTheme != null) {
+            btnRechercherTheme.setOnAction(e -> rechercherParTheme());
+            btnRechercherTheme.setStyle(
+                    "-fx-background-color: " + PRIMARY_COLOR + ";" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-background-radius: 25;" +
+                            "-fx-padding: 8 15;" +
+                            "-fx-cursor: hand;"
+            );
+        }
+
+        if (btnRechercherAvancee != null) {
+            btnRechercherAvancee.setOnAction(e -> rechercherAvancee());
+            btnRechercherAvancee.setStyle(
+                    "-fx-background-color: #9c88ff;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-background-radius: 25;" +
+                            "-fx-padding: 8 15;" +
+                            "-fx-cursor: hand;"
+            );
+        }
+
+        if (btnResetRecherche != null) {
+            btnResetRecherche.setOnAction(e -> resetRecherche());
+            btnResetRecherche.setStyle(
+                    "-fx-background-color: #95a5a6;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-background-radius: 25;" +
+                            "-fx-padding: 8 15;" +
+                            "-fx-cursor: hand;"
+            );
+        }
+    }
+
+    /**
+     * Charge les thèmes uniques dans le ComboBox
+     */
+    private void chargerThemes() {
+        try {
+            List<String> themes = articleService.getThemesUniques();
+            if (themeCombo != null) {
+                themeCombo.getItems().clear();
+                themeCombo.getItems().add("Tous les thèmes");
+                themeCombo.getItems().addAll(themes);
+                themeCombo.setValue("Tous les thèmes");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Recherche par thème
+     */
+    @FXML
+    private void rechercherParTheme() {
+        if (forumCourant == null) return;
+
+        String theme = themeField != null ? themeField.getText().trim() : "";
+
+        try {
+            List<Article> articles;
+            if (theme.isEmpty()) {
+                articles = articleService.getArticlesByForum(forumCourant.getIdForum());
+            } else {
+                articles = articleService.rechercherParThemeEtForum(theme, forumCourant.getIdForum());
+            }
+            displayArticles(articles);
+
+            if (articles.isEmpty()) {
+                showSuccessNotification("Aucun article trouvé pour le thème: " + theme);
+            } else {
+                showSuccessNotification(articles.size() + " article(s) trouvé(s)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible d'effectuer la recherche par thème");
+        }
+    }
+
+    /**
+     * Recherche avancée
+     */
+    /**
+     * Recherche avancée
+     */
+    @FXML
+    private void rechercherAvancee() {
+        if (forumCourant == null) return;
+
+        String motCle = motCleField != null ? motCleField.getText().trim() : "";
+        String theme = themeCombo != null ? themeCombo.getValue() : "";
+        String statut = statutCombo != null ? statutCombo.getValue() : "";
+
+        try {
+            // Appel correct avec 4 paramètres
+            List<Article> articles = articleService.rechercherAvancee(motCle, theme, statut, forumCourant.getIdForum());
+            displayArticles(articles);
+
+            if (articles.isEmpty()) {
+                showSuccessNotification("Aucun article trouvé");
+            } else {
+                showSuccessNotification(articles.size() + " article(s) trouvé(s)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible d'effectuer la recherche avancée");
+        }
+    }
+
+    /**
+     * Réinitialise la recherche
+     */
+    @FXML
+    private void resetRecherche() {
+        if (themeField != null) themeField.clear();
+        if (motCleField != null) motCleField.clear();
+        if (themeCombo != null) themeCombo.setValue("Tous les thèmes");
+        if (statutCombo != null) statutCombo.setValue("Tous");
+        if (searchField != null) searchField.clear();
+
+        chargerArticles(forumCourant.getIdForum());
+        showSuccessNotification("Recherche réinitialisée");
     }
 
     /**
@@ -257,7 +417,7 @@ public class C_ArticleListController {
     private void displayArticles(List<Article> articles) {
         articleContainer.getChildren().clear();
 
-        if (articles.isEmpty()) {
+        if (articles == null || articles.isEmpty()) {
             showEmptyState();
             return;
         }
@@ -392,7 +552,15 @@ public class C_ArticleListController {
             );
         }
 
-        authorInfo.getChildren().addAll(authorName, dateLabel);
+        // Ajout du thème
+        Label themeLabel = new Label("🏷️ " + (article.getTheme() != null ? article.getTheme() : "Général"));
+        themeLabel.setStyle(
+                "-fx-font-size: 11;" +
+                        "-fx-text-fill: " + PRIMARY_COLOR + ";" +
+                        "-fx-font-weight: bold;"
+        );
+
+        authorInfo.getChildren().addAll(authorName, dateLabel, themeLabel);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -922,8 +1090,8 @@ public class C_ArticleListController {
      * Affiche une notification de succès
      */
     private void showSuccessNotification(String message) {
-        // À implémenter selon votre système de notification
         System.out.println("✅ " + message);
+        // Vous pouvez implémenter une notification Toast ici
     }
 
     /**
@@ -1648,8 +1816,6 @@ public class C_ArticleListController {
         link.setText("Lire plus");
         link.setOnAction(e -> expandContent(body, link));
     }
-
-    // Méthodes existantes conservées...
 
     private void afficherCommentairesPopup(Article post) throws SQLException {
         List<Commentaire> commentaires = commentaireService.getCommentairesByPost(post.getIdPost());

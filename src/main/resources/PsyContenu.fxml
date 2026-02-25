@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.C_ArticleListController">
+<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.PsyContenu">
 
     <!-- SIDEBAR GAUCHE -->
     <left>
@@ -59,7 +58,7 @@
                 </VBox.margin>
             </Button>
 
-            <Button fx:id="btnContenu" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📚 Mon Contenu">
+            <Button fx:id="btnContenu" onAction="#MonContenu" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📚 Mon Contenu">
                 <VBox.margin>
                     <Insets bottom="5.0" />
                 </VBox.margin>
@@ -99,65 +98,42 @@
         </VBox>
     </left>
 
-    <!-- CENTER -->
+    <!-- CONTENU PRINCIPAL -->
     <center>
         <VBox spacing="20" style="-fx-background-color:#f8f5f2;">
             <padding>
                 <Insets bottom="20" left="30" right="30" top="30" />
             </padding>
 
-            <!-- titre forum et bouton retour -->
-            <HBox alignment="CENTER_LEFT" prefHeight="76.0" prefWidth="919.0" spacing="10">
-                <Button fx:id="btnRetour" onAction="#retournerVersForums" prefHeight="26.0" prefWidth="112.0" style="-fx-background-color: #69685c; -fx-text-fill: white; -fx-background-radius: 5;" text="← Retour" />
-                <Region prefHeight="46.0" prefWidth="834.0" HBox.hgrow="ALWAYS" />
+            <!-- ================= HEADER ================= -->
+            <VBox spacing="5">
+
+                <!-- HBox pour le titre + bouton -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label style="-fx-font-size:28; -fx-font-weight:bold; -fx-text-fill: #285921;" text="📅 Liste des Forums" />
+                    <Region HBox.hgrow="ALWAYS" />
+                </HBox>
+            </VBox>
+
+            <!-- ================= SEARCH + FILTER ================= -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <HBox style="-fx-background-color: white; -fx-background-radius: 25; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                    <TextField fx:id="searchField" promptText="Rechercher ..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14px;" HBox.hgrow="ALWAYS" />
+                </HBox>
             </HBox>
 
-            <Label fx:id="titreForum" style="-fx-font-size:28; -fx-font-weight:bold; -fx-text-fill:#285921;" />
+            <!-- ================= CONTENEUR SCROLLABLE - 3 CARTES PAR LIGNE ================= -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);" VBox.vgrow="ALWAYS">
 
-            <!-- BARRE DE RECHERCHE PAR THÈME AJOUTÉE -->
-            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921; -fx-padding: 0 0 15 0;" text="Nos Forums" />
 
-                <!-- Icône de recherche -->
-                <Label style="-fx-font-size: 18;" text="🔍" />
-
-                <!-- Champ de recherche par thème -->
-                <TextField fx:id="themeField" prefHeight="35.0" prefWidth="250.0" promptText="Rechercher par thème..." style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #e0e0e0; -fx-padding: 5 10;">
-                    <HBox.margin>
-                        <Insets right="10" />
-                    </HBox.margin>
-                </TextField>
-
-                <!-- Bouton de recherche -->
-                <Button fx:id="btnRechercherTheme" onAction="#rechercherParTheme" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #285921; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Rechercher" />
-
-                <!-- Bouton de réinitialisation -->
-                <Button fx:id="btnResetRecherche" onAction="#resetRecherche" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Réinitialiser" />
-
-                <Region HBox.hgrow="ALWAYS" />
-
-                <!-- Tri des articles -->
-                <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #285921;" text="Trier par:" />
-                <ComboBox fx:id="sortCombo" prefHeight="35.0" prefWidth="150.0" style="-fx-background-radius: 5;" />
-            </HBox>
-
-            <!-- Barre d'actions avec bouton poster -->
-            <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="919.0" spacing="10">
-                <padding>
-                    <Insets bottom="10" left="10" right="10" top="10" />
-                </padding>
-
-                <!-- Bouton Poster un article -->
-                <Button fx:id="btnPosterArticle" onAction="#ouvrirFenetrePoster" prefHeight="50.0" prefWidth="200" style="-fx-background-color:#4CAF50; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" text="📝 Poster un article" />
-            </HBox>
-
-            <!-- Container des articles -->
-            <ScrollPane fitToWidth="true" prefHeight="450.0" prefWidth="919.0" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
-                <VBox fx:id="articleContainer" spacing="20">
-                    <padding>
-                        <Insets bottom="10" left="10" right="10" top="10" />
-                    </padding>
-                </VBox>
-            </ScrollPane>
+                <!-- ScrollPane avec VBox contenant les lignes de 3 cartes -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="doctorContainer" spacing="25" style="-fx-background-color: transparent; -fx-padding: 10;">
+                        <!-- Les HBox (lignes de 3 cartes) seront ajoutées dynamiquement ici -->
+                    </VBox>
+                </ScrollPane>
+            </VBox>
 
         </VBox>
     </center>
