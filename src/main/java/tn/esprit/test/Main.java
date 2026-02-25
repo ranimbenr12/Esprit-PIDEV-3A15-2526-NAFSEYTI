@@ -10,11 +10,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        System.out.println("START EXECUTED"); // <-- Ajoute ça pour tester
+        System.out.println("START EXECUTED");
 
         FXMLLoader loader = new FXMLLoader(
-              //  getClass().getResource("/InterPrin.fxml")
-                getClass().getResource("/Dashboard.fxml")
+                getClass().getResource("/InterClient.fxml")
+                //getClass().getResource("/Dashboard.fxml")
 
         );
 

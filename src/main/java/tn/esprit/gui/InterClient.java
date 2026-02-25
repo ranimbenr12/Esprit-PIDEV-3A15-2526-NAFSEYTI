@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class InterPrin {
+public class InterClient {
 
     @FXML
     private Button btnAccueil;
@@ -43,7 +43,7 @@ public class InterPrin {
     @FXML
     private void MonContenu(ActionEvent event) {
         System.out.println("Mon contenu cliqué !");
-        loadFXML(event, "/MonContenu.fxml");
+        loadFXML(event, "/ClientContenu.fxml");
     }
 
 

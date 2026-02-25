@@ -14,7 +14,7 @@ public class CopilotService {
 
     private static final String API_URL = "https://openrouter.ai/api/v1/chat/completions";
     // Remplacez par VOTRE clé OpenRouter (celle que vous avez copiée)
-    private static final String API_KEY = "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";
+    private static final String API_KEY = "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";
 
     // ✅ MODÈLE QUI FONCTIONNE ACTUELLEMENT (février 2026)
     private static final String MODEL = "arcee-ai/trinity-large-preview:free";

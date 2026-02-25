@@ -26,8 +26,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ArticleListController {
+public class C_ArticleListController {
 
     @FXML
     private VBox articleContainer;
@@ -46,6 +49,7 @@ public class ArticleListController {
 
     @FXML
     private ComboBox<String> sortCombo;
+
     @FXML
     private Button btnRetour;
 
@@ -56,6 +60,9 @@ public class ArticleListController {
     private CopilotService copilotService = new CopilotService();
     private List<Article> allArticles;
 
+    // Map pour stocker l'état des likes/dislikes de l'utilisateur
+    private Map<Integer, String> userVotes = new HashMap<>(); // "like" ou "dislike" pour chaque article
+
     // Couleurs du thème
     private static final String PRIMARY_COLOR = "#4361ee";
     private static final String SECONDARY_COLOR = "#3f37c9";
@@ -65,10 +72,12 @@ public class ArticleListController {
     private static final String WARNING_COLOR = "#ffd166";
     private static final String DARK_COLOR = "#2b2d42";
     private static final String LIGHT_COLOR = "#f8f9fa";
+    private static final String DISLIKE_COLOR = "#f44336";
+
     @FXML
     private void retournerVersForums() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MonContenu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientContenu.fxml"));
             Parent root = loader.load();
 
             Scene currentScene = btnRetour.getScene();
@@ -81,6 +90,7 @@ public class ArticleListController {
             showError("Erreur", "Impossible de retourner aux forums");
         }
     }
+
     public void setForum(Forum forum) {
         this.forumCourant = forum;
         titreForum.setText(forum.getNomForum());
@@ -203,8 +213,8 @@ public class ArticleListController {
         }
 
         if (sortCombo != null) {
-            sortCombo.getItems().addAll("Plus récents", "Plus anciens", "Plus aimés", "Alphabétique");
-            sortCombo.setValue("Plus récents");
+            sortCombo.getItems().addAll("Plus populaires", "Moins populaires", "Plus récents", "Plus anciens", "Alphabétique");
+            sortCombo.setValue("Plus populaires");
             sortCombo.setStyle(
                     "-fx-background-radius: 25;" +
                             "-fx-border-radius: 25;" +
@@ -235,6 +245,13 @@ public class ArticleListController {
     }
 
     /**
+     * Calcule le score d'un article (likes - dislikes)
+     */
+    private int calculateScore(Article article) {
+        return article.getLikeCount() - article.getDislikeCount();
+    }
+
+    /**
      * Affiche les articles avec filtrage
      */
     private void displayArticles(List<Article> articles) {
@@ -245,7 +262,12 @@ public class ArticleListController {
             return;
         }
 
-        for (Article article : articles) {
+        // Trier par score par défaut (plus populaire en premier)
+        List<Article> sortedArticles = articles.stream()
+                .sorted((a1, a2) -> Integer.compare(calculateScore(a2), calculateScore(a1)))
+                .toList();
+
+        for (Article article : sortedArticles) {
             VBox card = createModernArticleCard(article);
             articleContainer.getChildren().add(card);
 
@@ -311,7 +333,7 @@ public class ArticleListController {
         // Section commentaires
         VBox commentSection = createModernCommentSection(article);
 
-        // Boutons d'action
+        // Boutons d'action avec Like/Dislike
         HBox actionButtons = createCardActions(article);
 
         card.getChildren().addAll(
@@ -353,7 +375,7 @@ public class ArticleListController {
         // Informations auteur
         VBox authorInfo = new VBox(3);
 
-        Label authorName = new Label( "Anonyme");
+        Label authorName = new Label("Anonyme");
         authorName.setStyle(
                 "-fx-font-weight: bold;" +
                         "-fx-font-size: 14;" +
@@ -375,12 +397,36 @@ public class ArticleListController {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Badge de catégorie (aléatoire pour l'exemple)
-        Label categoryBadge = createCategoryBadge();
+        // Badge de score
+        Label scoreBadge = createScoreBadge(article);
 
-        header.getChildren().addAll(avatar, authorInfo, spacer, categoryBadge);
+        header.getChildren().addAll(avatar, authorInfo, spacer, scoreBadge);
 
         return header;
+    }
+
+    /**
+     * Crée un badge de score
+     */
+    private Label createScoreBadge(Article article) {
+        int score = calculateScore(article);
+        String scoreText = score >= 0 ? "👍 " + score : "👎 " + Math.abs(score);
+        String color = score >= 0 ? SUCCESS_COLOR : DANGER_COLOR;
+
+        Label badge = new Label(scoreText);
+        badge.setStyle(
+                "-fx-background-color: " + color + "20;" +
+                        "-fx-text-fill: " + color + ";" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 12;" +
+                        "-fx-padding: 5 12;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-color: " + color + "40;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-border-width: 1;"
+        );
+
+        return badge;
     }
 
     /**
@@ -432,8 +478,15 @@ public class ArticleListController {
         stats.setPadding(new Insets(5, 0, 5, 0));
 
         // Likes
-        Label likesLabel = new Label("❤️ " + article.getLikeCount());
+        Label likesLabel = new Label("👍 " + article.getLikeCount());
         likesLabel.setStyle(
+                "-fx-font-size: 13;" +
+                        "-fx-text-fill: #6c757d;"
+        );
+
+        // Dislikes
+        Label dislikesLabel = new Label("👎 " + article.getDislikeCount());
+        dislikesLabel.setStyle(
                 "-fx-font-size: 13;" +
                         "-fx-text-fill: #6c757d;"
         );
@@ -446,7 +499,7 @@ public class ArticleListController {
                     "-fx-font-size: 13;" +
                             "-fx-text-fill: #6c757d;"
             );
-            stats.getChildren().addAll(likesLabel, commentsLabel);
+            stats.getChildren().addAll(likesLabel, dislikesLabel, commentsLabel);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -609,8 +662,10 @@ public class ArticleListController {
         actions.setAlignment(Pos.CENTER_LEFT);
 
         // Bouton Like
-        Button likeBtn = createStyledButton("❤️ J'aime", PRIMARY_COLOR, SECONDARY_COLOR);
-        likeBtn.setOnAction(e -> handleModernLike(article, likeBtn));
+        Button likeBtn = createVoteButton("👍", article, "like");
+
+        // Bouton Dislike
+        Button dislikeBtn = createVoteButton("👎", article, "dislike");
 
         // Bouton Résumé IA
         Button resumeBtn = createStyledButton("📝 Résumé IA", "#9c88ff", "#8c78ff");
@@ -620,9 +675,137 @@ public class ArticleListController {
         Button shareBtn = createStyledButton("📤 Partager", "#4cc9f0", "#3ab7e0");
         shareBtn.setOnAction(e -> showShareDialog(article));
 
-        actions.getChildren().addAll(likeBtn, resumeBtn, shareBtn);
+        actions.getChildren().addAll(likeBtn, dislikeBtn, resumeBtn, shareBtn);
 
         return actions;
+    }
+
+    /**
+     * Crée un bouton de vote (like/dislike)
+     */
+    private Button createVoteButton(String emoji, Article article, String voteType) {
+        int count = voteType.equals("like") ? article.getLikeCount() : article.getDislikeCount();
+        String text = emoji + " " + count;
+        String baseColor = voteType.equals("like") ? SUCCESS_COLOR : DISLIKE_COLOR;
+        String hoverColor = voteType.equals("like") ? "#05c79b" : "#e53935";
+
+        Button btn = new Button(text);
+
+        // Vérifier si l'utilisateur a déjà voté
+        String userVote = userVotes.get(article.getIdPost());
+        boolean isActive = userVote != null && userVote.equals(voteType);
+
+        String activeStyle = isActive ?
+                "-fx-background-color: " + baseColor + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-background-radius: 25; -fx-padding: 8 15; -fx-cursor: hand;" :
+                "-fx-background-color: " + baseColor + "20; -fx-text-fill: " + baseColor + "; -fx-font-weight: bold; -fx-font-size: 12; -fx-background-radius: 25; -fx-padding: 8 15; -fx-cursor: hand; -fx-border-color: " + baseColor + "40; -fx-border-radius: 25; -fx-border-width: 1;";
+
+        btn.setStyle(activeStyle);
+
+        btn.setOnMouseEntered(e -> {
+            if (!(userVotes.containsKey(article.getIdPost()) && userVotes.get(article.getIdPost()).equals(voteType))) {
+                btn.setStyle(
+                        "-fx-background-color: " + hoverColor + ";" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-font-size: 12;" +
+                                "-fx-background-radius: 25;" +
+                                "-fx-padding: 8 15;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, " + hoverColor + "60, 15, 0, 0, 5);" +
+                                "-fx-scale-x: 1.05;" +
+                                "-fx-scale-y: 1.05;"
+                );
+            }
+        });
+
+        btn.setOnMouseExited(e -> {
+            if (!(userVotes.containsKey(article.getIdPost()) && userVotes.get(article.getIdPost()).equals(voteType))) {
+                btn.setStyle(
+                        "-fx-background-color: " + baseColor + "20;" +
+                                "-fx-text-fill: " + baseColor + ";" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-font-size: 12;" +
+                                "-fx-background-radius: 25;" +
+                                "-fx-padding: 8 15;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-border-color: " + baseColor + "40;" +
+                                "-fx-border-radius: 25;" +
+                                "-fx-border-width: 1;"
+                );
+            }
+        });
+
+        btn.setOnAction(e -> handleVote(article, btn, voteType));
+
+        return btn;
+    }
+
+    /**
+     * Gère le vote (like/dislike)
+     */
+    private void handleVote(Article article, Button btn, String voteType) {
+        try {
+            String currentVote = userVotes.get(article.getIdPost());
+
+            if (currentVote == null) {
+                // Premier vote
+                if (voteType.equals("like")) {
+                    articleService.ajouterLike(article.getIdPost());
+                    article.setLikeCount(article.getLikeCount() + 1);
+                } else {
+                    articleService.ajouterDislike(article.getIdPost());
+                    article.setDislikeCount(article.getDislikeCount() + 1);
+                }
+                userVotes.put(article.getIdPost(), voteType);
+
+            } else if (currentVote.equals(voteType)) {
+                // Annuler le vote
+                if (voteType.equals("like")) {
+                    articleService.retirerLike(article.getIdPost());
+                    article.setLikeCount(article.getLikeCount() - 1);
+                } else {
+                    articleService.retirerDislike(article.getIdPost());
+                    article.setDislikeCount(article.getDislikeCount() - 1);
+                }
+                userVotes.remove(article.getIdPost());
+
+            } else {
+                // Changer de vote
+                if (voteType.equals("like")) {
+                    // Retirer le dislike, ajouter le like
+                    articleService.retirerDislike(article.getIdPost());
+                    articleService.ajouterLike(article.getIdPost());
+                    article.setDislikeCount(article.getDislikeCount() - 1);
+                    article.setLikeCount(article.getLikeCount() + 1);
+                } else {
+                    // Retirer le like, ajouter le dislike
+                    articleService.retirerLike(article.getIdPost());
+                    articleService.ajouterDislike(article.getIdPost());
+                    article.setLikeCount(article.getLikeCount() - 1);
+                    article.setDislikeCount(article.getDislikeCount() + 1);
+                }
+                userVotes.put(article.getIdPost(), voteType);
+            }
+
+            // Animation du bouton
+            ScaleTransition st = new ScaleTransition(Duration.millis(200), btn);
+            st.setFromX(1);
+            st.setFromY(1);
+            st.setToX(1.3);
+            st.setToY(1.3);
+            st.setAutoReverse(true);
+            st.setCycleCount(2);
+            st.play();
+
+            // Mettre à jour l'affichage
+            actualiserArticles();
+
+            showSuccessNotification(voteType.equals("like") ? "Like ajouté !" : "Dislike ajouté !");
+
+        } catch (SQLException ex) {
+            showError("Erreur", "Impossible de voter");
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -672,44 +855,6 @@ public class ArticleListController {
         });
 
         return btn;
-    }
-
-    /**
-     * Gère le like de façon moderne
-     */
-    private void handleModernLike(Article article, Button likeBtn) {
-        try {
-            articleService.ajouterLike(article.getIdPost());
-            article.setLikeCount(article.getLikeCount() + 1);
-
-            // Animation du bouton
-            ScaleTransition st = new ScaleTransition(Duration.millis(200), likeBtn);
-            st.setFromX(1);
-            st.setFromY(1);
-            st.setToX(1.3);
-            st.setToY(1.3);
-            st.setAutoReverse(true);
-            st.setCycleCount(2);
-            st.play();
-
-            // Changer la couleur
-            likeBtn.setStyle(
-                    "-fx-background-color: #ef476f;" +
-                            "-fx-text-fill: white;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-font-size: 12;" +
-                            "-fx-background-radius: 25;" +
-                            "-fx-padding: 8 15;" +
-                            "-fx-cursor: hand;"
-            );
-            likeBtn.setText("❤️ " + article.getLikeCount());
-
-            showSuccessNotification("Like ajouté !");
-
-        } catch (SQLException ex) {
-            showError("Erreur", "Impossible d'ajouter le like");
-            ex.printStackTrace();
-        }
     }
 
     /**
@@ -795,22 +940,588 @@ public class ArticleListController {
     }
 
     /**
-     * Affiche un dialogue de partage
+     * Affiche un dialogue de partage moderne avec plusieurs options
      */
     private void showShareDialog(Article article) {
-        // À implémenter selon vos besoins
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Partager");
-        alert.setHeaderText("Partager l'article");
-        alert.setContentText("Lien de partage : article_" + article.getIdPost());
-        alert.showAndWait();
+        // Création du stage de partage
+        Stage shareStage = new Stage();
+        shareStage.initStyle(StageStyle.TRANSPARENT);
+        shareStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        // Conteneur principal
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(25));
+        root.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 30, 0, 0, 10);"
+        );
+        root.setMaxWidth(400);
+        root.setMaxHeight(500);
+
+        // Animation d'apparition
+        ScaleTransition st = new ScaleTransition(Duration.millis(300), root);
+        st.setFromX(0.8);
+        st.setFromY(0.8);
+        st.setToX(1);
+        st.setToY(1);
+        st.setInterpolator(Interpolator.EASE_OUT);
+        st.play();
+
+        // En-tête
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        Label iconLabel = new Label("📤");
+        iconLabel.setStyle("-fx-font-size: 28;");
+
+        Label titleLabel = new Label("Partager l'article");
+        titleLabel.setStyle(
+                "-fx-font-size: 20;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: " + DARK_COLOR + ";"
+        );
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-text-fill: #95a5a6;" +
+                        "-fx-font-size: 16;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-padding: 5 10;"
+        );
+        closeBtn.setOnAction(e -> shareStage.close());
+
+        header.getChildren().addAll(iconLabel, titleLabel, spacer, closeBtn);
+
+        // Aperçu de l'article
+        VBox previewBox = new VBox(10);
+        previewBox.setPadding(new Insets(15));
+        previewBox.setStyle(
+                "-fx-background-color: #f8f9fa;" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-color: #e9ecef;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-border-width: 1;"
+        );
+
+        Label articleTitle = new Label(article.getTitre());
+        articleTitle.setStyle(
+                "-fx-font-weight: bold;" +
+                        "-fx-font-size: 14;" +
+                        "-fx-text-fill: " + DARK_COLOR + ";"
+        );
+        articleTitle.setWrapText(true);
+
+        Label articlePreview = new Label(getPreviewText(article.getContenu(), 100));
+        articlePreview.setStyle(
+                "-fx-font-size: 12;" +
+                        "-fx-text-fill: #6c757d;"
+        );
+        articlePreview.setWrapText(true);
+
+        previewBox.getChildren().addAll(articleTitle, articlePreview);
+
+        // Options de partage
+        Label shareOptionsLabel = new Label("Partager via");
+        shareOptionsLabel.setStyle(
+                "-fx-font-weight: bold;" +
+                        "-fx-font-size: 13;" +
+                        "-fx-text-fill: " + DARK_COLOR + ";"
+        );
+
+        // Grille d'options de partage
+        GridPane shareGrid = new GridPane();
+        shareGrid.setHgap(15);
+        shareGrid.setVgap(15);
+        shareGrid.setAlignment(Pos.CENTER);
+
+        // Option 1: Copier le lien
+        VBox copyOption = createShareOption(
+                "📋",
+                "Copier le lien",
+                "#667eea",
+                () -> copyArticleLink(article, shareStage)
+        );
+
+        // Option 2: Partager sur les réseaux
+        VBox twitterOption = createShareOption(
+                "🐦",
+                "Twitter",
+                "#1DA1F2",
+                () -> shareOnSocialMedia(article, "Twitter")
+        );
+
+        VBox facebookOption = createShareOption(
+                "📘",
+                "Facebook",
+                "#4267B2",
+                () -> shareOnSocialMedia(article, "Facebook")
+        );
+
+        VBox linkedinOption = createShareOption(
+                "🔗",
+                "LinkedIn",
+                "#0077b5",
+                () -> shareOnSocialMedia(article, "LinkedIn")
+        );
+
+        // Option 3: Partager par email
+        VBox emailOption = createShareOption(
+                "📧",
+                "Email",
+                "#EA4335",
+                () -> shareByEmail(article)
+        );
+
+        // Option 4: Télécharger en PDF
+        VBox pdfOption = createShareOption(
+                "📄",
+                "PDF",
+                "#FF5722",
+                () -> exportToPDF(article)
+        );
+
+        // Option 5: Imprimer
+        VBox printOption = createShareOption(
+                "🖨️",
+                "Imprimer",
+                "#607D8B",
+                () -> printArticle(article)
+        );
+
+        // Option 6: QR Code
+        VBox qrOption = createShareOption(
+                "📱",
+                "QR Code",
+                "#4CAF50",
+                () -> generateQRCode(article, shareStage)
+        );
+
+        // Ajout des options à la grille
+        shareGrid.add(copyOption, 0, 0);
+        shareGrid.add(twitterOption, 1, 0);
+        shareGrid.add(facebookOption, 2, 0);
+        shareGrid.add(linkedinOption, 0, 1);
+        shareGrid.add(emailOption, 1, 1);
+        shareGrid.add(pdfOption, 2, 1);
+        shareGrid.add(qrOption, 0, 2);
+        shareGrid.add(printOption, 1, 2);
+
+        // Lien direct
+        HBox directLinkBox = new HBox(10);
+        directLinkBox.setAlignment(Pos.CENTER_LEFT);
+        directLinkBox.setPadding(new Insets(10, 0, 0, 0));
+
+        TextField linkField = new TextField(generateArticleLink(article));
+        linkField.setEditable(false);
+        linkField.setStyle(
+                "-fx-background-color: #f1f3f4;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-padding: 10;" +
+                        "-fx-font-size: 12;"
+        );
+        HBox.setHgrow(linkField, Priority.ALWAYS);
+
+        Button copyLinkBtn = new Button("Copier");
+        copyLinkBtn.setStyle(
+                "-fx-background-color: " + PRIMARY_COLOR + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-padding: 8 15;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-font-size: 12;"
+        );
+        copyLinkBtn.setOnAction(e -> {
+            copyToClipboard(linkField.getText());
+            showTemporaryNotification(copyLinkBtn, "Copié !", "#48bb78");
+        });
+
+        directLinkBox.getChildren().addAll(linkField, copyLinkBtn);
+
+        // Assemblage final
+        root.getChildren().addAll(
+                header,
+                previewBox,
+                shareOptionsLabel,
+                shareGrid,
+                new Separator(),
+                directLinkBox
+        );
+
+        Scene scene = new Scene(root);
+        scene.setFill(null);
+        shareStage.setScene(scene);
+
+        // Centrer par rapport à la fenêtre principale
+        shareStage.setOnShown(e -> {
+            Stage mainStage = (Stage) btnPosterArticle.getScene().getWindow();
+            shareStage.setX(mainStage.getX() + (mainStage.getWidth() - root.getWidth()) / 2);
+            shareStage.setY(mainStage.getY() + (mainStage.getHeight() - root.getHeight()) / 2);
+        });
+
+        shareStage.show();
+    }
+
+    /**
+     * Crée une option de partage
+     */
+    private VBox createShareOption(String emoji, String label, String color, Runnable action) {
+        VBox option = new VBox(5);
+        option.setAlignment(Pos.CENTER);
+        option.setPadding(new Insets(10));
+        option.setStyle(
+                "-fx-background-color: " + color + "10;" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-color: " + color + "30;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-cursor: hand;"
+        );
+        option.setPrefWidth(80);
+        option.setPrefHeight(80);
+
+        Label emojiLabel = new Label(emoji);
+        emojiLabel.setStyle("-fx-font-size: 28;");
+
+        Label textLabel = new Label(label);
+        textLabel.setStyle(
+                "-fx-font-size: 11;" +
+                        "-fx-text-fill: " + DARK_COLOR + ";" +
+                        "-fx-font-weight: bold;"
+        );
+
+        option.getChildren().addAll(emojiLabel, textLabel);
+
+        // Effets de survol
+        option.setOnMouseEntered(e -> {
+            option.setStyle(
+                    "-fx-background-color: " + color + ";" +
+                            "-fx-background-radius: 15;" +
+                            "-fx-border-color: " + color + ";" +
+                            "-fx-border-radius: 15;" +
+                            "-fx-border-width: 1;" +
+                            "-fx-cursor: hand;" +
+                            "-fx-effect: dropshadow(gaussian, " + color + "40, 10, 0, 0, 2);"
+            );
+            emojiLabel.setStyle("-fx-font-size: 28; -fx-text-fill: white;");
+            textLabel.setStyle("-fx-font-size: 11; -fx-text-fill: white; -fx-font-weight: bold;");
+        });
+
+        option.setOnMouseExited(e -> {
+            option.setStyle(
+                    "-fx-background-color: " + color + "10;" +
+                            "-fx-background-radius: 15;" +
+                            "-fx-border-color: " + color + "30;" +
+                            "-fx-border-radius: 15;" +
+                            "-fx-border-width: 1;" +
+                            "-fx-cursor: hand;"
+            );
+            emojiLabel.setStyle("-fx-font-size: 28;");
+            textLabel.setStyle("-fx-font-size: 11; -fx-text-fill: " + DARK_COLOR + "; -fx-font-weight: bold;");
+        });
+
+        // Action au clic
+        option.setOnMouseClicked(e -> action.run());
+
+        return option;
+    }
+
+    /**
+     * Copie le lien de l'article
+     */
+    private void copyArticleLink(Article article, Stage shareStage) {
+        String link = generateArticleLink(article);
+        copyToClipboard(link);
+
+        // Notification de succès
+        showSuccessNotification("Lien copié dans le presse-papier !");
+
+        // Fermer la fenêtre de partage
+        shareStage.close();
+    }
+
+    /**
+     * Génère un lien pour l'article
+     */
+    private String generateArticleLink(Article article) {
+        // Simuler un lien d'article
+        return "https://esprit.tn/forum/" + forumCourant.getIdForum() + "/article/" + article.getIdPost();
+    }
+
+    /**
+     * Copie du texte dans le presse-papier
+     */
+    private void copyToClipboard(String text) {
+        javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+        javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+        content.putString(text);
+        clipboard.setContent(content);
+    }
+
+    /**
+     * Partage sur les réseaux sociaux (simulé)
+     */
+    private void shareOnSocialMedia(Article article, String platform) {
+        String message = "Découvrez cet article sur notre forum : " + article.getTitre() + "\n" + generateArticleLink(article);
+
+        // Simulation d'ouverture de navigateur
+        showSuccessNotification("Partage sur " + platform + " simulé !");
+
+        // Dans une vraie application, vous pourriez ouvrir une URL comme:
+        // String url = "https://twitter.com/intent/tweet?text=" + URLEncoder.encode(message, "UTF-8");
+        // getHostServices().showDocument(url);
+    }
+
+    /**
+     * Partage par email
+     */
+    private void shareByEmail(Article article) {
+        String subject = article.getTitre();
+        String body = "Bonjour,\n\nJe souhaite partager cet article avec vous :\n\n" +
+                article.getTitre() + "\n\n" +
+                getPreviewText(article.getContenu(), 200) + "\n\n" +
+                "Lien : " + generateArticleLink(article) + "\n\n" +
+                "Cordialement,\n" + "Utilisateur du forum";
+
+        try {
+            // Créer un mailto URL
+            String mailto = "mailto:?subject=" +
+                    java.net.URLEncoder.encode(subject, "UTF-8").replace("+", "%20") +
+                    "&body=" + java.net.URLEncoder.encode(body, "UTF-8").replace("+", "%20");
+
+            // Ouvrir le client mail par défaut
+            getHostServices().showDocument(mailto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Erreur", "Impossible d'ouvrir le client mail");
+        }
+    }
+
+    /**
+     * Exporte l'article en PDF
+     */
+    private void exportToPDF(Article article) {
+        // Simulation d'export PDF
+        Stage loadingStage = createModernLoadingStage();
+        loadingStage.show();
+
+        new Thread(() -> {
+            try {
+                // Simuler un délai de génération PDF
+                Thread.sleep(2000);
+
+                Platform.runLater(() -> {
+                    loadingStage.close();
+
+                    // Demander où sauvegarder
+                    javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+                    fileChooser.setTitle("Sauvegarder le PDF");
+                    fileChooser.getExtensionFilters().add(
+                            new javafx.stage.FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
+                    );
+                    fileChooser.setInitialFileName(article.getTitre().replaceAll("[^a-zA-Z0-9]", "_") + ".pdf");
+
+                    java.io.File file = fileChooser.showSaveDialog(null);
+                    if (file != null) {
+                        showSuccessNotification("PDF exporté avec succès !");
+                    }
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    /**
+     * Imprime l'article
+     */
+    private void printArticle(Article article) {
+        // Créer un contenu imprimable
+        javafx.print.PrinterJob job = javafx.print.PrinterJob.createPrinterJob();
+        if (job != null) {
+            // Créer une version imprimable de l'article
+            VBox printableContent = new VBox(20);
+            printableContent.setPadding(new Insets(20));
+            printableContent.setStyle("-fx-background-color: white;");
+
+            Label title = new Label(article.getTitre());
+            title.setStyle("-fx-font-size: 24; -fx-font-weight: bold;");
+
+            Label date = new Label("Publié le " +
+                    article.getDateCreation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            date.setStyle("-fx-font-size: 12; -fx-text-fill: gray;");
+
+            Label content = new Label(article.getContenu());
+            content.setWrapText(true);
+            content.setStyle("-fx-font-size: 14;");
+
+            printableContent.getChildren().addAll(title, date, new Separator(), content);
+
+            // Lancer l'impression
+            if (job.showPrintDialog(null)) {
+                boolean success = job.printPage(printableContent);
+                if (success) {
+                    job.endJob();
+                    showSuccessNotification("Article envoyé à l'impression !");
+                }
+            }
+        }
+    }
+
+    /**
+     * Génère un QR Code pour l'article
+     */
+    private void generateQRCode(Article article, Stage parentStage) {
+        Stage qrStage = new Stage();
+        qrStage.initStyle(StageStyle.TRANSPARENT);
+        qrStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(25));
+        root.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 30, 0, 0, 10);"
+        );
+        root.setMaxWidth(350);
+
+        // En-tête
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        Label titleLabel = new Label("📱 QR Code");
+        titleLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-text-fill: #95a5a6;" +
+                        "-fx-font-size: 16;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-cursor: hand;"
+        );
+        closeBtn.setOnAction(e -> qrStage.close());
+
+        header.getChildren().addAll(titleLabel, spacer, closeBtn);
+
+        // Simulation de QR Code (dans une vraie app, utiliser une bibliothèque comme ZXing)
+        StackPane qrPlaceholder = new StackPane();
+        qrPlaceholder.setPrefSize(200, 200);
+        qrPlaceholder.setStyle(
+                "-fx-background-color: #f0f0f0;" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-color: #e0e0e0;" +
+                        "-fx-border-radius: 15;"
+        );
+
+        Label qrSimulation = new Label("⬛⬛⬛⬛⬛⬛⬛\n" +
+                "⬛⬜⬜⬜⬜⬜⬛\n" +
+                "⬛⬜⬛⬛⬛⬜⬛\n" +
+                "⬛⬜⬛⬜⬛⬜⬛\n" +
+                "⬛⬜⬛⬛⬛⬜⬛\n" +
+                "⬛⬜⬜⬜⬜⬜⬛\n" +
+                "⬛⬛⬛⬛⬛⬛⬛");
+        qrSimulation.setStyle("-fx-font-family: monospace; -fx-font-size: 16;");
+        qrPlaceholder.getChildren().add(qrSimulation);
+
+        VBox infoBox = new VBox(10);
+        infoBox.setAlignment(Pos.CENTER);
+
+        Label scanLabel = new Label("Scannez pour accéder à l'article");
+        scanLabel.setStyle("-fx-font-weight: bold;");
+
+        Label articleInfo = new Label(article.getTitre());
+        articleInfo.setStyle("-fx-text-fill: #6c757d; -fx-font-size: 12;");
+        articleInfo.setWrapText(true);
+
+        // Bouton de téléchargement
+        Button downloadBtn = new Button("📥 Télécharger QR Code");
+        downloadBtn.setStyle(
+                "-fx-background-color: " + PRIMARY_COLOR + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-cursor: hand;"
+        );
+        downloadBtn.setOnAction(e -> {
+            showSuccessNotification("QR Code téléchargé !");
+            qrStage.close();
+        });
+
+        infoBox.getChildren().addAll(scanLabel, articleInfo);
+        root.getChildren().addAll(header, qrPlaceholder, infoBox, downloadBtn);
+
+        Scene scene = new Scene(root);
+        scene.setFill(null);
+        qrStage.setScene(scene);
+
+        // Centrer
+        qrStage.setOnShown(e -> {
+            qrStage.setX(parentStage.getX() + (parentStage.getWidth() - root.getWidth()) / 2);
+            qrStage.setY(parentStage.getY() + (parentStage.getHeight() - root.getHeight()) / 2);
+        });
+
+        qrStage.show();
+    }
+
+    /**
+     * Affiche une notification temporaire sur un bouton
+     */
+    private void showTemporaryNotification(Button button, String text, String color) {
+        String originalText = button.getText();
+        String originalStyle = button.getStyle();
+
+        button.setText(text);
+        button.setStyle(
+                "-fx-background-color: " + color + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-padding: 8 15;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-font-size: 12;"
+        );
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(e -> {
+            button.setText(originalText);
+            button.setStyle(originalStyle);
+        });
+        pause.play();
+    }
+
+    /**
+     * Obtient le service d'hôte pour ouvrir des URLs
+     */
+    private javafx.application.HostServices getHostServices() {
+        // Note: Dans un vrai contrôleur FXML, vous devriez passer HostServices depuis l'application principale
+        return null;
+    }
+
+    /**
+     * Obtient un aperçu du texte
+     */
+    private String getPreviewText(String text, int maxLength) {
+        if (text == null) return "";
+        if (text.length() <= maxLength) return text;
+        return text.substring(0, maxLength) + "...";
     }
 
     /**
      * Affiche le dialogue de résumé moderne
      */
     private void showModernResumeDialog(Article article, String resume) {
-        // Réutilisation de votre méthode existante ou nouvelle implémentation
         afficherFenetreResumeAmelioree(article, resume);
     }
 
@@ -880,6 +1591,16 @@ public class ArticleListController {
         List<Article> sorted = allArticles;
 
         switch (sortBy) {
+            case "Plus populaires":
+                sorted = allArticles.stream()
+                        .sorted((a1, a2) -> Integer.compare(calculateScore(a2), calculateScore(a1)))
+                        .toList();
+                break;
+            case "Moins populaires":
+                sorted = allArticles.stream()
+                        .sorted((a1, a2) -> Integer.compare(calculateScore(a1), calculateScore(a2)))
+                        .toList();
+                break;
             case "Plus récents":
                 sorted = allArticles.stream()
                         .sorted((a1, a2) -> a2.getDateCreation().compareTo(a1.getDateCreation()))
@@ -888,11 +1609,6 @@ public class ArticleListController {
             case "Plus anciens":
                 sorted = allArticles.stream()
                         .sorted((a1, a2) -> a1.getDateCreation().compareTo(a2.getDateCreation()))
-                        .toList();
-                break;
-            case "Plus aimés":
-                sorted = allArticles.stream()
-                        .sorted((a1, a2) -> Integer.compare(a2.getLikeCount(), a1.getLikeCount()))
                         .toList();
                 break;
             case "Alphabétique":
@@ -913,32 +1629,6 @@ public class ArticleListController {
         String[] parts = name.split(" ");
         if (parts.length == 1) return parts[0].substring(0, 1).toUpperCase();
         return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1)).toUpperCase();
-    }
-
-    /**
-     * Crée un badge de catégorie aléatoire
-     */
-    private Label createCategoryBadge() {
-        String[] categories = {"Général", "Question", "Discussion", "Annonce", "Tutoriel"};
-        String[] colors = {PRIMARY_COLOR, SUCCESS_COLOR, WARNING_COLOR, ACCENT_COLOR, DANGER_COLOR};
-
-        Random rand = new Random();
-        int index = rand.nextInt(categories.length);
-
-        Label badge = new Label(categories[index]);
-        badge.setStyle(
-                "-fx-background-color: " + colors[index] + "20;" +
-                        "-fx-text-fill: " + colors[index] + ";" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-font-size: 11;" +
-                        "-fx-padding: 3 10;" +
-                        "-fx-background-radius: 12;" +
-                        "-fx-border-color: " + colors[index] + "40;" +
-                        "-fx-border-radius: 12;" +
-                        "-fx-border-width: 1;"
-        );
-
-        return badge;
     }
 
     /**
@@ -1025,10 +1715,10 @@ public class ArticleListController {
     @FXML
     private void ouvrirFenetrePoster() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PosterArticle.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/C.PosterArticle.fxml"));
             Parent root = loader.load();
 
-            PosterArticleController controller = loader.getController();
+            C_PosterArticleController controller = loader.getController();
             controller.setForumId(forumCourant.getIdForum());
 
             Stage stage = new Stage();
@@ -1036,7 +1726,9 @@ public class ArticleListController {
             stage.setScene(new Scene(root, 400, 400));
             stage.setOnHidden(e -> actualiserArticles());
             stage.show();
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String genererResumeIA(String texte) {

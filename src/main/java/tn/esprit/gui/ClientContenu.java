@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class MonContenuController implements Initializable {
+public class ClientContenu implements Initializable {
 
     @FXML
     private VBox doctorContainer;
@@ -770,10 +770,10 @@ public class MonContenuController implements Initializable {
 
     private void ouvrirArticles(Forum forum) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ArticleList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/C.ArticleList.fxml"));
             Parent root = loader.load();
 
-            ArticleListController controller = loader.getController();
+            C_ArticleListController controller = loader.getController();
             controller.setForum(forum);
 
             Scene currentScene = doctorContainer.getScene();

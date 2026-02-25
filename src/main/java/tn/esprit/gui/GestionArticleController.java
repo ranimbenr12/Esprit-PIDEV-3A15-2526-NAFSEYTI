@@ -52,7 +52,7 @@ public class GestionArticleController {
         colContenu.setCellValueFactory(new PropertyValueFactory<>("contenu"));
         colDateCreation.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        colLike.setCellValueFactory(new PropertyValueFactory<>("Like_Count"));
+        colLike.setCellValueFactory(new PropertyValueFactory<>("LikeCount"));
 
         // Ajouter boutons Modifier/Supprimer dans la table
         addButtonToTable();

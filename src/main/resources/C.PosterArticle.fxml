@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="tn.esprit.gui.PosterArticleController" style="-fx-padding:20; -fx-background-color:#f5f5f5;">
+      fx:controller="tn.esprit.gui.C_PosterArticleController" style="-fx-padding:20; -fx-background-color:#f5f5f5;">
 
     <Label text="Créer un nouvel article" style="-fx-font-size:18; -fx-font-weight:bold;"/>
 

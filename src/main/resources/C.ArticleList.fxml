@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.ArticleListController">
+<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.C_ArticleListController">
 
     <!-- SIDEBAR GAUCHE -->
     <left>
@@ -107,13 +107,13 @@
 
 
             <!-- titre forum -->
-            <Label fx:id="titreForum" style="-fx-font-size:28; -fx-font-weight:bold; -fx-text-fill:#285921;" />
             <HBox alignment="CENTER_LEFT" prefHeight="76.0" prefWidth="919.0" spacing="10">
                 <Button fx:id="btnRetour" onAction="#retournerVersForums" prefHeight="26.0" prefWidth="112.0" text="← Retour" />
-                <Label fx:id="titreForum" />
                 <Region prefHeight="46.0" prefWidth="834.0" HBox.hgrow="ALWAYS" />
-                
+                <!-- Ajoutez ici d'autres éléments si nécessaire (recherche, tri, etc.) -->
             </HBox>
+            <Label fx:id="titreForum" style="-fx-font-size:28; -fx-font-weight:bold; -fx-text-fill:#285921;" />
+
 
             <HBox alignment="CENTER_RIGHT" prefHeight="179.0" prefWidth="919.0" spacing="10">
                 <padding>

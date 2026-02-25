@@ -8,9 +8,8 @@ import tn.esprit.models.Article;
 import tn.esprit.services.ArticleService;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
-public class PosterArticleController {
+public class C_PosterArticleController {
 
     private int forumIdCourant; // forum sélectionné
 
