@@ -37,6 +37,7 @@ public class mesRendezVousClientController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> specialtyFilter;
     @FXML private Label totalDoctorsLabel;
+    @FXML private Button btnTestIA;
 
     @FXML
     private BorderPane mainBorderPane;
@@ -440,6 +441,19 @@ public class mesRendezVousClientController implements Initializable {
             stage.setResizable(false);
             stage.centerOnScreen();
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleBtnTestIA() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlClient/testIA.fxml"));
+            Parent testView = loader.load();
+
+            // Remplacer seulement le centre
+            mainBorderPane.setCenter(testView);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

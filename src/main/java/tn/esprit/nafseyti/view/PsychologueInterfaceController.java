@@ -33,7 +33,7 @@ public class PsychologueInterfaceController implements Initializable {
     @FXML private Label pendingRdvLabel;
     @FXML private Label totalFichesLabel;
     @FXML private Label psychologueNameLabel;
-
+    @FXML private Button btnAccueil1;   // bouton "⏰ Gérer les rendez-vous"
     private int psychologueId = 6; // TODO: Remplacer par l'ID du psychologue connecté
 
     @Override
@@ -41,6 +41,11 @@ public class PsychologueInterfaceController implements Initializable {
         loadPsychologueName();
         loadRendezVous();
         loadStatistics();
+
+        // ← AJOUTER CES 3 LIGNES
+        if (btnAccueil1 != null) {
+            btnAccueil1.setOnAction(e -> handleBtnGererRendezVous());
+        }
     }
 
     private void loadPsychologueName() {
@@ -375,5 +380,24 @@ public class PsychologueInterfaceController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleBtnGererRendezVous() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlPsychologue/GererRendezVous.fxml"));
+            Parent root = loader.load();
 
+            // Passer l'ID du médecin connecté au nouveau contrôleur
+            GererRendezVousController controller = loader.getController();
+            controller.setPsychologueId(psychologueId);   // ← psychologueId déjà défini dans ta classe
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("❌ Impossible d'ouvrir GererRendezVous.fxml : " + e.getMessage());
+        }
+    }
 }

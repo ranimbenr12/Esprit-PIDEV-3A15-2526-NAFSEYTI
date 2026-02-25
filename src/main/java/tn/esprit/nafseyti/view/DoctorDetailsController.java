@@ -163,9 +163,11 @@ public class DoctorDetailsController implements Initializable {
 
             // 2️⃣ Mettre à jour le statut du rendez-vous
             PreparedStatement updateStmt = cnx.prepareStatement(
-                    "UPDATE rendez_vous SET statut = 'En attente' WHERE id = ?"
+                    "UPDATE rendez_vous SET statut = 'En attente', userId = ? WHERE id = ?"
             );
-            updateStmt.setInt(1, selectedRendezVousId);
+
+            updateStmt.setInt(1, userId);
+            updateStmt.setInt(2, selectedRendezVousId);
             updateStmt.executeUpdate();
 
             // 3️⃣ Confirmer

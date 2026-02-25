@@ -19,7 +19,6 @@ public class MainFX extends Application {  // <-- EXTENDS Application
 
         // Créer la scène
         Scene scene = new Scene(root);
-
         // Configurer et afficher la fenêtre
         primaryStage.setTitle("Tableau de bord");
         primaryStage.setScene(scene);

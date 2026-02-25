@@ -122,6 +122,13 @@
                 </HBox>
 
                 <Label style="-fx-text-fill:#69685c; -fx-font-size:14;" text="Choisissez le professionnel qui vous convient" />
+                <!-- Dans la VBox du HEADER, après le Label sous-titre -->
+                <HBox alignment="CENTER" spacing="10">
+                    <Button fx:id="btnTestIA"
+                            text="📋 Faire un test avant de réserver"
+                            style="-fx-background-color: #752503; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 25; -fx-font-size: 14px;"
+                            onAction="#handleBtnTestIA"/>
+                </HBox>
             </VBox>
 
 
