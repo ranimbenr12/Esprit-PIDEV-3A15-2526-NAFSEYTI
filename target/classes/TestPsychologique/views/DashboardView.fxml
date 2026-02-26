@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
@@ -14,111 +13,123 @@
             fx:controller="TestPsychologique.controllers.DashboardController"
             style="-fx-background-color: #f5f5f5;">
 
-    <!-- Sidebar -->
+    <!-- ════════════════════════════════ -->
+    <!-- SIDEBAR (Couleurs d'origine) -->
+    <!-- ════════════════════════════════ -->
     <left>
-        <VBox spacing="0" style="-fx-background-color: #ece6df; -fx-pref-width: 250;">
+        <VBox spacing="0" style="-fx-background-color: #ece6df; -fx-pref-width: 260; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 2, 0);">
             <padding>
-                <Insets top="30" right="0" bottom="30" left="0"/>
+                <Insets top="28" right="0" bottom="28" left="0"/>
             </padding>
 
-            <!-- Logo / App Name avec cercle décoratif -->
+            <!-- Logo Section Amélioré -->
             <VBox alignment="CENTER" spacing="10">
                 <padding>
-                    <Insets bottom="30"/>
+                    <Insets bottom="28"/>
                 </padding>
 
-                <!-- Logo circulaire avec image -->
+                <!-- Logo circulaire avec ombre -->
                 <StackPane>
-                    <Circle radius="50" style="-fx-fill: linear-gradient(to bottom right, #285921, #2e7d32);"/>
-                    <!-- ImageView pour le logo (AJOUTÉ) -->
-                    <ImageView fx:id="logoImage" fitHeight="80" fitWidth="80" preserveRatio="true"/>
+                    <Circle radius="52" style="-fx-fill: linear-gradient(to bottom right, #285921, #2e7d32); -fx-effect: dropshadow(gaussian, rgba(40,89,33,0.35), 12, 0, 0, 3);"/>
+                    <ImageView fx:id="logoImage" fitHeight="82" fitWidth="82" preserveRatio="true"/>
                 </StackPane>
 
-                <Label text="NAFSEYTI" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #285921; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
-                <Label text="Plateforme de Tests Psychologiques" style="-fx-font-size: 11px; -fx-text-fill: #69685c; -fx-font-style: italic;">
+                <Label text="NAFSEYTI" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #285921; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+                <Label text="Plateforme de Tests Psychologiques" style="-fx-font-size: 11px; -fx-text-fill: #69685c; -fx-font-style: italic; -fx-text-alignment: center;">
                     <padding>
-                        <Insets left="20" right="20"/>
+                        <Insets left="18" right="18"/>
                     </padding>
                 </Label>
             </VBox>
 
-            <Separator style="-fx-background-color: rgba(105, 104, 92, 0.2);">
+            <Separator style="-fx-background-color: rgba(105, 104, 92, 0.25); -fx-pref-height: 1;">
                 <VBox.margin>
-                    <Insets top="0" right="20" bottom="20" left="20"/>
+                    <Insets top="2" right="20" bottom="20" left="20"/>
                 </VBox.margin>
             </Separator>
 
-            <!-- Navigation Buttons with Icons -->
-            <VBox spacing="8">
+            <!-- Navigation Buttons (Couleurs d'origine) -->
+            <VBox spacing="7">
                 <padding>
                     <Insets left="15" right="15"/>
                 </padding>
 
+                <!-- Dashboard (Actif) -->
                 <Button fx:id="btnDashboard" text="📊  Tableau de bord" maxWidth="Infinity"
                         onAction="#handleDashboardClick"
-                        style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(55,69,53,0.4), 8, 0, 0, 2);">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Utilisateurs -->
                 <Button fx:id="btnUsers" text="👥  Utilisateurs" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Rendez-vous -->
                 <Button fx:id="btnAppointments" text="📅  Rendez-vous" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Contenu -->
                 <Button fx:id="btnContent" text="📄  Contenu" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Tests -->
                 <Button fx:id="btnTests" text="📝  Tests" maxWidth="Infinity"
                         onAction="#handleTestsClick"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Questions -->
                 <Button fx:id="btnQuestions" text="❓  Questions" maxWidth="Infinity"
                         onAction="#handleQuestionsClick"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Évènements -->
                 <Button fx:id="btnEvents" text="🎉  Évènements" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Suivi -->
                 <Button fx:id="btnTracking" text="📈  Suivi" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
+                <!-- Feedback -->
                 <Button fx:id="btnFeedback" text="💬  Feedback" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-background-radius: 5; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 16 20; -fx-background-radius: 8; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
 
             </VBox>
 
-            <!-- Spacer to push logout button to bottom -->
+            <!-- Spacer -->
             <Region VBox.vgrow="ALWAYS"/>
 
             <!-- Logout Button -->
             <VBox>
                 <padding>
-                    <Insets top="20" right="15" bottom="0" left="15"/>
+                    <Insets top="18" right="15" bottom="0" left="15"/>
                 </padding>
-                <Separator style="-fx-background-color: rgba(105, 104, 92, 0.2);">
+
+                <Separator style="-fx-background-color: rgba(105, 104, 92, 0.25); -fx-pref-height: 1;">
                     <VBox.margin>
-                        <Insets bottom="15"/>
+                        <Insets bottom="14"/>
                     </VBox.margin>
                 </Separator>
+
                 <Button text="🔓  Se déconnecter" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #285921; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 12 20; -fx-cursor: hand;">
+                        style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #285921; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 13 20; -fx-cursor: hand;">
                     <cursor><Cursor fx:constant="HAND"/></cursor>
                 </Button>
             </VBox>
@@ -126,72 +137,91 @@
         </VBox>
     </left>
 
-    <!-- Main Content Area -->
+    <!-- ════════════════════════════════ -->
+    <!-- MAIN CONTENT (Amélioré visuellement) -->
+    <!-- ════════════════════════════════ -->
     <center>
-        <StackPane fx:id="contentArea">
-            <!-- Image de fond (AJOUTÉE) -->
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;">
 
-            <!-- Default Dashboard Content (INCHANGÉ) -->
-            <VBox alignment="CENTER" spacing="30">
-                <padding>
-                    <Insets top="40" right="40" bottom="40" left="40"/>
-                </padding>
+            <!-- Dashboard Content -->
+            <VBox spacing="32" style="-fx-padding: 42;">
 
                 <!-- Welcome Section -->
-                <VBox alignment="CENTER" spacing="15">
-                    <Label text="Bienvenue sur NAFSEYTI" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <VBox alignment="CENTER" spacing="16">
+                    <Label text="Bienvenue sur NAFSEYTI" style="-fx-font-size: 38px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
                     <Label text="Gérez vos tests psychologiques et questions en toute simplicité"
                            style="-fx-font-size: 16px; -fx-text-fill: #666666;" wrapText="true" textAlignment="CENTER"/>
                 </VBox>
 
-                <!-- Stats Cards -->
-                <HBox spacing="30" alignment="CENTER">
+                <!-- Stats Cards (Améliorées) -->
+                <HBox spacing="28" alignment="CENTER">
 
                     <!-- Card 1: Tests -->
-                    <VBox alignment="CENTER" spacing="15"
-                          style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 3); -fx-pref-width: 250; -fx-pref-height: 200;">
-                        <Label text="📝" style="-fx-font-size: 48px;"/>
-                        <Label text="Tests Créés" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
-                        <Label fx:id="lblTotalTests" text="0" style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                    <VBox alignment="CENTER" spacing="14"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 32 38; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 4); -fx-pref-width: 260; -fx-pref-height: 215;">
+
+                        <!-- Icon avec fond coloré -->
+                        <StackPane style="-fx-background-color: #e8f5e9; -fx-background-radius: 50; -fx-pref-width: 72; -fx-pref-height: 72;">
+                            <Label text="📝" style="-fx-font-size: 40px;"/>
+                        </StackPane>
+
+                        <Label text="Tests Créés" style="-fx-font-size: 15px; -fx-text-fill: #666666; -fx-font-weight: 600;"/>
+                        <Label fx:id="lblTotalTests" text="0" style="-fx-font-size: 46px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
                         <Button text="Gérer les Tests" onAction="#handleTestsClick"
-                                style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;">
+                                style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 11 26; -fx-background-radius: 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.35), 8, 0, 0, 2);">
                             <cursor><Cursor fx:constant="HAND"/></cursor>
                         </Button>
                     </VBox>
 
                     <!-- Card 2: Questions -->
-                    <VBox alignment="CENTER" spacing="15"
-                          style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 3); -fx-pref-width: 250; -fx-pref-height: 200;">
-                        <Label text="❓" style="-fx-font-size: 48px;"/>
-                        <Label text="Questions" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
-                        <Label fx:id="lblTotalQuestions" text="0" style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                    <VBox alignment="CENTER" spacing="14"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 32 38; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 4); -fx-pref-width: 260; -fx-pref-height: 215;">
+
+                        <StackPane style="-fx-background-color: #fff3e0; -fx-background-radius: 50; -fx-pref-width: 72; -fx-pref-height: 72;">
+                            <Label text="❓" style="-fx-font-size: 40px;"/>
+                        </StackPane>
+
+                        <Label text="Questions" style="-fx-font-size: 15px; -fx-text-fill: #666666; -fx-font-weight: 600;"/>
+                        <Label fx:id="lblTotalQuestions" text="0" style="-fx-font-size: 46px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
                         <Button text="Gérer les Questions" onAction="#handleQuestionsClick"
-                                style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;">
+                                style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 11 26; -fx-background-radius: 22; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.35), 8, 0, 0, 2);">
                             <cursor><Cursor fx:constant="HAND"/></cursor>
                         </Button>
                     </VBox>
 
                     <!-- Card 3: Utilisateurs -->
-                    <VBox alignment="CENTER" spacing="15"
-                          style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 3); -fx-pref-width: 250; -fx-pref-height: 200;">
-                        <Label text="👥" style="-fx-font-size: 48px;"/>
-                        <Label text="Utilisateurs Actifs" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
-                        <Label text="127" style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
-                        <Label text="+12 ce mois" style="-fx-font-size: 12px; -fx-text-fill: #2e7d32; -fx-font-weight: bold;"/>
+                    <VBox alignment="CENTER" spacing="14"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 32 38; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 4); -fx-pref-width: 260; -fx-pref-height: 215;">
+
+                        <StackPane style="-fx-background-color: #e3f2fd; -fx-background-radius: 50; -fx-pref-width: 72; -fx-pref-height: 72;">
+                            <Label text="👥" style="-fx-font-size: 40px;"/>
+                        </StackPane>
+
+                        <Label text="Utilisateurs Actifs" style="-fx-font-size: 15px; -fx-text-fill: #666666; -fx-font-weight: 600;"/>
+                        <Label text="127" style="-fx-font-size: 46px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
+                        <HBox spacing="6" alignment="CENTER">
+                            <Label text="↗" style="-fx-font-size: 15px; -fx-text-fill: #2e7d32;"/>
+                            <Label text="+12 ce mois" style="-fx-font-size: 12px; -fx-text-fill: #2e7d32; -fx-font-weight: bold;"/>
+                        </HBox>
                     </VBox>
 
                 </HBox>
 
                 <!-- Quick Actions -->
-                <VBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 3);">
-                    <Label text="Actions Rapides" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+                <VBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 32 42; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 4);">
+                    <Label text="Actions Rapides" style="-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
+
                     <HBox spacing="20" alignment="CENTER">
                         <Button text="➕ Nouveau Test" onAction="#handleTestsClick"
-                                style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 5; -fx-cursor: hand;">
+                                style="-fx-background-color: #374535; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 14 36; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(55,69,53,0.35), 10, 0, 0, 3);">
                             <cursor><Cursor fx:constant="HAND"/></cursor>
                         </Button>
+
                         <Button text="➕ Nouvelle Question" onAction="#handleQuestionsClick"
-                                style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 5; -fx-cursor: hand;">
+                                style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 14 36; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.35), 10, 0, 0, 3);">
                             <cursor><Cursor fx:constant="HAND"/></cursor>
                         </Button>
                     </HBox>

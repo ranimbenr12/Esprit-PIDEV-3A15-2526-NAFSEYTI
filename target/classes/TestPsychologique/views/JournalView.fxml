@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.*?>
@@ -9,10 +8,10 @@
             fx:controller="TestPsychologique.controllers.JournalController"
             style="-fx-background-color: linear-gradient(to bottom, #f0f4f8, #e8f0f7);">
 
-    <!-- Header Compact -->
+    <!-- ═══ HEADER FIXE ═══ -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 15 25;">
-            <Button text="←" onAction="#handleBack"
+            <Button text="← Retour" onAction="#handleBack"
                     style="-fx-background-color: #f5f5f5; -fx-text-fill: #333; -fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 35; -fx-pref-height: 35; -fx-background-radius: 18; -fx-cursor: hand;">
                 <cursor><Cursor fx:constant="HAND"/></cursor>
             </Button>
@@ -34,10 +33,10 @@
         </HBox>
     </top>
 
-    <!-- Main Content avec padding réduit -->
+    <!-- ═══ CONTENU SCROLLABLE ═══ -->
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
-            <VBox spacing="15" style="-fx-padding: 20; -fx-max-width: 800; -fx-alignment: TOP_CENTER;">
+            <VBox spacing="15" style="-fx-padding: 20; -fx-max-width: 900; -fx-alignment: TOP_CENTER;">
 
                 <!-- 1. HUMEUR -->
                 <VBox spacing="10">
@@ -127,18 +126,21 @@
                         <Label text="✍️" style="-fx-font-size: 18px;"/>
                         <Label text="Racontez votre journée" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #1a1a1a;"/>
                     </HBox>
-                    <TextArea fx:id="notesArea" promptText="Qu'est-ce qui a marqué votre journée ?"
+                    <TextArea fx:id="notesArea" promptText="Qu'est-ce qui a marqué votre journée ? (Analysé par Gemini AI)"
                               wrapText="true" prefRowCount="4"
                               style="-fx-font-size: 13px; -fx-background-color: #f8f9fa; -fx-border-color: transparent; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12;"/>
                     <Label fx:id="charCountLabel" text="0 caractères"
                            style="-fx-font-size: 10px; -fx-text-fill: #999;" alignment="CENTER_RIGHT"/>
                 </VBox>
 
-                <!-- 5. BOUTON SAVE -->
-                <Button text="💾 Enregistrer" onAction="#saveEntry"
-                        style="-fx-background-color: linear-gradient(to right, #2e7d32, #43a047); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 14 0; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.3), 8, 0, 0, 3); -fx-min-height: 50;">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
-                </Button>
+                <!-- 5. BOUTON SAVE AVEC ESPACE -->
+                <VBox spacing="0" style="-fx-padding: 10 0 40 0;">
+                    <Button text="💾 Enregistrer et Analyser avec Gemini AI" onAction="#saveEntry"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: linear-gradient(to right, #2e7d32, #43a047); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 16 0; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.3), 8, 0, 0, 3); -fx-min-height: 55;">
+                        <cursor><Cursor fx:constant="HAND"/></cursor>
+                    </Button>
+                </VBox>
 
             </VBox>
         </ScrollPane>
