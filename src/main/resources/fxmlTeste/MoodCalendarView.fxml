@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.nafseyti.controllers.MoodCalendarController"
+            style="-fx-background-color: #fafbfc;">
+
+    <!-- Header Ultra Compact -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 12 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 3, 0, 0, 1);">
+            <Button text="✕" onAction="#handleBack"
+                    style="-fx-background-color: #f5f5f5; -fx-text-fill: #333; -fx-font-size: 16px; -fx-pref-width: 32; -fx-pref-height: 32; -fx-background-radius: 16; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+
+            <VBox HBox.hgrow="ALWAYS" spacing="0">
+                <Label text="Calendrier Émotionnel" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #1a1a1a;"/>
+            </VBox>
+
+            <!-- Navigation mois -->
+            <Button fx:id="btnPrevMonth" text="◀" onAction="#previousMonth"
+                    style="-fx-background-color: #f0f0f0; -fx-text-fill: #555; -fx-font-size: 11px; -fx-pref-width: 28; -fx-pref-height: 28; -fx-background-radius: 6; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+            <Label fx:id="monthYearLabel" text="Février 2024"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #333; -fx-min-width: 120; -fx-alignment: center;"/>
+            <Button fx:id="btnNextMonth" text="▶" onAction="#nextMonth"
+                    style="-fx-background-color: #f0f0f0; -fx-text-fill: #555; -fx-font-size: 11px; -fx-pref-width: 28; -fx-pref-height: 28; -fx-background-radius: 6; -fx-cursor: hand;">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #fafbfc; -fx-background-color: transparent;">
+            <HBox spacing="15" style="-fx-padding: 15; -fx-alignment: TOP_CENTER;">
+
+                <!-- COLONNE GAUCHE : Calendrier -->
+                <VBox spacing="12" style="-fx-max-width: 650;">
+
+                    <!-- Calendrier Grid -->
+                    <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+
+                        <!-- En-têtes -->
+                        <GridPane fx:id="calendarHeader" hgap="6" vgap="6"/>
+
+                        <Separator style="-fx-background-color: #f0f0f0;"/>
+
+                        <!-- Grille -->
+                        <GridPane fx:id="calendarGrid" hgap="6" vgap="6"/>
+
+                        <!-- Légende Mini -->
+                        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 8 0 0 0;">
+                            <Label text="😊" style="-fx-font-size: 12px;"/>
+                            <Label text="🙂" style="-fx-font-size: 12px;"/>
+                            <Label text="😐" style="-fx-font-size: 12px;"/>
+                            <Label text="😔" style="-fx-font-size: 12px;"/>
+                            <Label text="😰" style="-fx-font-size: 12px;"/>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+
+                <!-- COLONNE DROITE : Statistiques -->
+                <VBox spacing="12" style="-fx-min-width: 280; -fx-max-width: 280;">
+
+                    <!-- Stats Cards -->
+                    <VBox spacing="8">
+                        <!-- Card 1 -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                            <VBox alignment="CENTER" style="-fx-background-color: #e8f5e9; -fx-pref-width: 45; -fx-pref-height: 45; -fx-background-radius: 10;">
+                                <Label text="📔" style="-fx-font-size: 20px;"/>
+                            </VBox>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Entrées" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-weight: 500;"/>
+                                <Label fx:id="lblEntriesCount" text="0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Card 2 -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                            <VBox alignment="CENTER" style="-fx-background-color: #fff3e0; -fx-pref-width: 45; -fx-pref-height: 45; -fx-background-radius: 10;">
+                                <Label fx:id="lblDominantMood" text="😊" style="-fx-font-size: 20px;"/>
+                            </VBox>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Humeur dominante" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-weight: 500;"/>
+                                <Label fx:id="lblDominantMoodText" text="Excellent" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Card 3 -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                            <VBox alignment="CENTER" style="-fx-background-color: #fce4ec; -fx-pref-width: 45; -fx-pref-height: 45; -fx-background-radius: 10;">
+                                <Label text="⚡" style="-fx-font-size: 20px;"/>
+                            </VBox>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Énergie moyenne" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-weight: 500;"/>
+                                <HBox spacing="4" alignment="CENTER_LEFT">
+                                    <Label fx:id="lblAvgEnergie" text="0.0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #f57c00;"/>
+                                    <Label text="/10" style="-fx-font-size: 12px; -fx-text-fill: #999;"/>
+                                </HBox>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Card 4 -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                            <VBox alignment="CENTER" style="-fx-background-color: #e3f2fd; -fx-pref-width: 45; -fx-pref-height: 45; -fx-background-radius: 10;">
+                                <Label text="😴" style="-fx-font-size: 20px;"/>
+                            </VBox>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Sommeil moyen" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-weight: 500;"/>
+                                <HBox spacing="4" alignment="CENTER_LEFT">
+                                    <Label fx:id="lblAvgSommeil" text="0.0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1976d2;"/>
+                                    <Label text="/10" style="-fx-font-size: 12px; -fx-text-fill: #999;"/>
+                                </HBox>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Distribution Humeurs -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                        <Label text="📊 Répartition" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"/>
+                        <PieChart fx:id="moodPieChart" legendVisible="false" labelsVisible="false" prefHeight="180" animated="true"/>
+                    </VBox>
+
+                    <!-- Top Émotions -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);">
+                        <Label text="💭 Top Émotions" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"/>
+                        <VBox fx:id="topEmotionsPane" spacing="6"/>
+                    </VBox>
+
+                </VBox>
+
+            </HBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

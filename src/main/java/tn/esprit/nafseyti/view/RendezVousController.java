@@ -23,6 +23,7 @@ public class RendezVousController {
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
+    @FXML private Button btnTests;
 
     // ── Gérer le style actif des boutons ──
     private void setActiveButton(Button activeBtn) {
@@ -33,6 +34,7 @@ public class RendezVousController {
         btnRendezVous.setStyle(inactiveStyle);
         btnUtilisateurs.setStyle(inactiveStyle);
         btnTableauBord.setStyle(inactiveStyle);
+        btnTests.setStyle(inactiveStyle);
 
         // Celui actif devient coloré
         activeBtn.setStyle(activeStyle);
@@ -43,24 +45,23 @@ public class RendezVousController {
     private void handleUtilisateurs() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxmlUser/Dashboard.fxml")
+                    getClass().getResource("/fxml/interfacePrincipal.fxml")
             );
-            Parent dashboardContent = loader.load();
+            Parent root = loader.load();
 
-            DashboardController ctrl = loader.getController();
-            ctrl.setUser(currentUser);
+            interfacePrincipalController ctrl = loader.getController();
 
-            // Remplace uniquement le centre, la sidebar reste intacte
-            mainBorderPane.setCenter(dashboardContent);
+            // ✅ Une seule méthode qui fait set + navigate
+            ctrl.navigateToUtilisateurs(currentUser);
 
-            // Met le bouton Utilisateurs actif
-            setActiveButton(btnUtilisateurs);
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     // ── Retour Tableau de bord ──
     @FXML
     private void handleTableauBord() {
@@ -128,6 +129,25 @@ public class RendezVousController {
             stage.show();
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleTests() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlTeste/DashboardView.fxml")
+            );
+            Parent root = loader.load();
+
+            tn.esprit.nafseyti.controllers.DashboardController ctrl = loader.getController();
+            ctrl.setCurrentUser(currentUser); // si ton DashboardController accepte un user
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

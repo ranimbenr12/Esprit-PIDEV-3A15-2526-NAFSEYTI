@@ -66,7 +66,7 @@
                 </VBox.margin>
             </Button>
 
-            <Button fx:id="btnTests" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📊 Tests et Évaluations">
+            <Button fx:id="btnTests"  onAction="#handleBtnTests" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📊 Tests et Évaluations">
                 <VBox.margin>
                     <Insets bottom="5.0" />
                 </VBox.margin>

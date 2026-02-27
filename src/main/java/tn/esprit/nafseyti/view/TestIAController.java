@@ -45,7 +45,7 @@ public class TestIAController implements Initializable {
 
     private final List<ToggleGroup> toggleGroups = new ArrayList<>();
 
-    private static final String API_KEY = "AIzaSyCmL_7JD_4Bh0RFeUYg8KTdJ4W-UNU7NME";
+    private static final String API_KEY = "AIzaSyAAYV4HmP63gRuXTJxdJgi03ff5jrPvNT4";
     private static final String API_URL  =
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY;
 

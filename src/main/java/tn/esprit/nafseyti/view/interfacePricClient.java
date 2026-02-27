@@ -1,5 +1,6 @@
 package tn.esprit.nafseyti.view;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.controllers.UserInterfaceController;
 import tn.esprit.nafseyti.fxmlUser.controllers.DashboardController;
 import tn.esprit.nafseyti.models.User;
 
@@ -118,6 +120,24 @@ public class interfacePricClient {
         // Active le bouton cliqué (si non null)
         if (active != null) {
             active.setStyle(activeStyle);
+        }
+    }
+    @FXML
+    private void handleBtnTests(ActionEvent event) {
+        setActiveButton(btnTests);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlTeste/UserInterface.fxml"));
+            Parent root = loader.load();
+
+            // Passer l'utilisateur si le controller le supporte
+            UserInterfaceController ctrl = loader.getController();
+            ctrl.setUser(currentUser);
+
+            Stage stage = (Stage) btnTests.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

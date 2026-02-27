@@ -63,7 +63,7 @@ public class GoogleAuthService {
         flow.getCredentialDataStore().clear();
 
         LocalServerReceiver receiver = new LocalServerReceiver.Builder()
-                .setPort(8888)
+                .setPort(0)
                 .build();
 
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");

@@ -42,7 +42,7 @@ public class GmailService {
                         .setAccessType("offline")
                         .build();
 
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(0).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize(doctorEmail);
     }
 

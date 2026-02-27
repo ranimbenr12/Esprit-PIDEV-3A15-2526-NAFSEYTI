@@ -21,6 +21,11 @@ public class interfacePrincipalController {
     @FXML private Button btnTableauBord;
     private User currentUser;
 
+    // ✅ Remplacer handleUtilisateursFromOutside() par cette version qui accepte l'user
+    public void navigateToUtilisateurs(User user) {
+        this.currentUser = user; // ← setter intégré directement
+        handleUtilisateurs();    // ← maintenant currentUser est garanti non-null
+    }
     // Méthode appelée quand on clique sur le bouton "Rendez-vous"
     @FXML
     private void handleRendezVous(ActionEvent event) {
@@ -30,9 +35,11 @@ public class interfacePrincipalController {
             );
             Parent root = loader.load();
 
-            // ✅ Passer l'utilisateur au RendezVousController
             RendezVousController ctrl = loader.getController();
-            ctrl.setCurrentUser(currentUser);
+
+            System.out.println("currentUser dans interfacePrincipal: " + currentUser); // ← DEBUG
+
+            ctrl.setCurrentUser(currentUser); // ← currentUser doit être non null ici
 
             Stage stage = (Stage) mainBorderPane.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -42,37 +49,52 @@ public class interfacePrincipalController {
             e.printStackTrace();
         }
     }
-
     // Setter appelé depuis LoginController après connexion
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
 
     @FXML
+    private void handleTableauBord() {
+        // ✅ Supprimer seulement les vues ajoutées dynamiquement (index > 0)
+        if (mainContentArea.getChildren().size() > 1) {
+            mainContentArea.getChildren().remove(1, mainContentArea.getChildren().size());
+        }
+        resetMenuButtons();
+        btnTableauBord.setStyle(
+                "-fx-background-color: #374535; -fx-text-fill: white; " +
+                        "-fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
+        );
+    }
+
+    @FXML
     private void handleUtilisateurs() {
+        if (currentUser == null) {
+            System.err.println("❌ currentUser null !");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxmlUser/Dashboard.fxml")
             );
             Parent view = loader.load();
 
-            // Passer l'utilisateur au DashboardContentController
             DashboardController ctrl = loader.getController();
             ctrl.setUser(currentUser);
-            ctrl.setMainContentArea(mainContentArea); // pour recharger d'autres vues
+            ctrl.setMainContentArea(mainContentArea);
 
-            mainContentArea.getChildren().setAll(view);
-            // Rendre le StackPane transparent
-            view.setStyle("-fx-background-color: transparent;");
-            // Mettre à jour style bouton actif
+            // ✅ Callback retour : supprimer la vue dynamique
+           // ctrl.setOnBack(() -> handleTableauBord());
+
+            // ✅ Ajouter PAR-DESSUS le tableau de bord (pas remplacer)
+            if (mainContentArea.getChildren().size() > 1) {
+                mainContentArea.getChildren().remove(1, mainContentArea.getChildren().size());
+            }
+            mainContentArea.getChildren().add(view); // ← add() pas setAll()
+
             resetMenuButtons();
             btnUtilisateurs.setStyle(
                     "-fx-background-color: #374535; -fx-text-fill: white; " +
-                            "-fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
-            );
-            // Rendre le bouton "Tableau de bord" transparent
-            btnTableauBord.setStyle(
-                    "-fx-background-color: transparent; -fx-text-fill: #69685c; " +
                             "-fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
             );
 
@@ -85,6 +107,7 @@ public class interfacePrincipalController {
         String base = "-fx-background-color: transparent; -fx-text-fill: #69685c; " +
                 "-fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;";
         btnUtilisateurs.setStyle(base);
+        btnTableauBord.setStyle(base);
 
         // ... autres boutons
     }
@@ -106,4 +129,24 @@ public class interfacePrincipalController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleTests() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlTeste/DashboardView.fxml")
+            );
+            Parent root = loader.load();
+
+            tn.esprit.nafseyti.controllers.DashboardController ctrl = loader.getController();
+            ctrl.setCurrentUser(currentUser); // ✅ passer l'user
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

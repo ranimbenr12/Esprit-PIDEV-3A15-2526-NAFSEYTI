@@ -1,5 +1,6 @@
 package tn.esprit.nafseyti.view;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.controllers.UserInterfaceController;
 import tn.esprit.nafseyti.models.User;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
@@ -38,7 +40,7 @@ public class mesRendezVousClientController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> specialtyFilter;
     @FXML private Label totalDoctorsLabel;
-    @FXML private Button btnTestIA;
+    @FXML private Button btnTestIA,btnTests;
     private User currentUser;
 
     public void setUser(User user) {
@@ -481,6 +483,23 @@ public class mesRendezVousClientController implements Initializable {
             stage.centerOnScreen();
             stage.show();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleBtnTests(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlTeste/UserInterface.fxml"));
+            Parent root = loader.load();
+
+            // Passer l'utilisateur si le controller le supporte
+            UserInterfaceController ctrl = loader.getController();
+            ctrl.setUser(currentUser);
+
+            Stage stage = (Stage) btnTests.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

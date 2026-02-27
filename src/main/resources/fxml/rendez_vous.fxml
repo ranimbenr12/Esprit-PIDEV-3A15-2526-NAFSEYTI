@@ -45,7 +45,7 @@
             <Button id="btnRendezVous" fx:id="btnRendezVous" onAction="#handleTableauBord" prefHeight="42.0" prefWidth="181.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="📅 Rendez-vous" />
 
             <Button fx:id="btnContenu" prefHeight="41.0" prefWidth="215.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="📄 Contenu psychologique" />
-            <Button fx:id="btnTests" prefWidth="180" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="📝 Tests" />
+            <Button fx:id="btnTests" prefWidth="180" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="📝 Tests"  onAction="#handleTests" />
             <Button fx:id="btnEvenements" prefWidth="180" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="🎉 Évènements" />
             <Button fx:id="btnSuivi" prefWidth="180" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="📈 Suivi personnel" />
             <Button fx:id="btnFeedback" prefWidth="180" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;" text="💬 Feedback" />
