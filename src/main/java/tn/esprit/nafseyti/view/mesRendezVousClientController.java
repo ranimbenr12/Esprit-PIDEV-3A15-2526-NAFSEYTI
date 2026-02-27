@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.models.User;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
 import java.io.IOException;
@@ -37,6 +38,12 @@ public class mesRendezVousClientController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> specialtyFilter;
     @FXML private Label totalDoctorsLabel;
+    @FXML private Button btnTestIA;
+    private User currentUser;
+
+    public void setUser(User user) {
+        this.currentUser = user;
+    }
 
     @FXML
     private BorderPane mainBorderPane;
@@ -319,7 +326,7 @@ public class mesRendezVousClientController implements Initializable {
 
                 DoctorDetailsController controller = loader.getController();
                 controller.setDoctorId(doctorId);
-
+                controller.setUser(currentUser); // ← ajouter cette ligne
 
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
@@ -394,10 +401,10 @@ public class mesRendezVousClientController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlClient/interfacePricClient.fxml"));
             Parent root = loader.load();
 
-            // Récupérer le stage actuel
-            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            interfacePricClient ctrl = loader.getController();
+            ctrl.setUser(currentUser); // ← ne pas perdre le user au retour
 
-            // Créer une nouvelle scène avec le FXML complet
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
@@ -431,7 +438,7 @@ public class mesRendezVousClientController implements Initializable {
             VBox root = loader.load();
 
             MyAppointmentsController controller = loader.getController();
-            controller.setUserId(1); // TODO: Remplacer par ID réel
+            controller.setUserId(currentUser.getId()); // ← ID réel au lieu de 1
 
             Stage stage = new Stage();
             Scene scene = new Scene(root);
@@ -440,6 +447,40 @@ public class mesRendezVousClientController implements Initializable {
             stage.setResizable(false);
             stage.centerOnScreen();
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleBtnTestIA() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlClient/testIA.fxml"));
+            Parent testView = loader.load();
+
+            // Remplacer seulement le centre
+            mainBorderPane.setCenter(testView);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleDeconnexion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlUser/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("NAFSEYTI — Connexion");
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

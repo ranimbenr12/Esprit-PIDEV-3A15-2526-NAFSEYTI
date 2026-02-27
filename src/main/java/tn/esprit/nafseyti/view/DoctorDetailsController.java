@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.models.User;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
 import java.net.URL;
@@ -31,7 +32,12 @@ public class DoctorDetailsController implements Initializable {
     @FXML private Label confirmationLabel;
 
     private int doctorId; // id du docteur sélectionné
-    private int selectedRendezVousId = -1; // id du créneau sélectionné
+    private int selectedRendezVousId = -1;
+    private User currentUser; // ← ajouter
+
+    public void setUser(User user) {
+        this.currentUser = user;
+    }// id du créneau sélectionné
 
     public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
@@ -43,7 +49,13 @@ public class DoctorDetailsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnClose.setOnAction(e -> ((Stage) btnClose.getScene().getWindow()).close());
 
-        btnBookAppointment.setOnAction(e -> bookSelectedSlot(1)); // 1 = id du patient temporaire
+        btnBookAppointment.setOnAction(e -> {
+            if (currentUser != null) {
+                bookSelectedSlot(currentUser.getId()); // ← ID réel
+            } else {
+                confirmationLabel.setText("Erreur : utilisateur non connecté !");
+            }
+        });
     }
 
     private void loadDoctorDetails() {
@@ -163,9 +175,11 @@ public class DoctorDetailsController implements Initializable {
 
             // 2️⃣ Mettre à jour le statut du rendez-vous
             PreparedStatement updateStmt = cnx.prepareStatement(
-                    "UPDATE rendez_vous SET statut = 'En attente' WHERE id = ?"
+                    "UPDATE rendez_vous SET statut = 'En attente', userId = ? WHERE id = ?"
             );
-            updateStmt.setInt(1, selectedRendezVousId);
+
+            updateStmt.setInt(1, userId);
+            updateStmt.setInt(2, selectedRendezVousId);
             updateStmt.executeUpdate();
 
             // 3️⃣ Confirmer

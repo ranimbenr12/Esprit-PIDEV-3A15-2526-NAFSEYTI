@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.google.GmailService;
+import tn.esprit.nafseyti.models.User;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
 import java.io.IOException;
@@ -33,14 +35,26 @@ public class PsychologueInterfaceController implements Initializable {
     @FXML private Label pendingRdvLabel;
     @FXML private Label totalFichesLabel;
     @FXML private Label psychologueNameLabel;
+    @FXML private Button btnAccueil1;   // bouton "⏰ Gérer les rendez-vous"
+    private int psychologueId ; // TODO: Remplacer par l'ID du psychologue connecté
+    private User currentUser;
+    public void setUser(User user) {
+        this.currentUser = user;
+        this.psychologueId = user.getId(); // ← ID réel depuis login
 
-    private int psychologueId = 6; // TODO: Remplacer par l'ID du psychologue connecté
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Recharger avec le bon ID
         loadPsychologueName();
         loadRendezVous();
         loadStatistics();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        // ← AJOUTER CES 3 LIGNES
+        if (btnAccueil1 != null) {
+            btnAccueil1.setOnAction(e -> handleBtnGererRendezVous());
+        }
     }
 
     private void loadPsychologueName() {
@@ -300,15 +314,65 @@ public class PsychologueInterfaceController implements Initializable {
     private void confirmerRendezVous(int rendezVousId) {
         try {
             Connection cnx = MyBDConnexion.getInstance().getCnx();
-            PreparedStatement pst = cnx.prepareStatement("UPDATE rendez_vous SET statut = 'Confirmé' WHERE id = ?");
+
+            // 1️⃣ Mettre statut Confirmé
+            PreparedStatement pst = cnx.prepareStatement(
+                    "UPDATE rendez_vous SET statut = 'Confirmé' WHERE id = ?"
+            );
             pst.setInt(1, rendezVousId);
             pst.executeUpdate();
-            System.out.println("✅ Rendez-vous confirmé");
+
+            // 2️⃣ Récupérer toutes les infos du RDV + patient en une seule requête
+            PreparedStatement pstInfo = cnx.prepareStatement(
+                    "SELECT u.email, u.firstname, " +
+                            "       rv.dateRendezVous, rv.heureDebut, rv.heureFin, rv.type_seance " +
+                            "FROM users u " +
+                            "INNER JOIN rendez_vous rv ON rv.userId = u.id " +
+                            "WHERE rv.id = ?"
+            );
+            pstInfo.setInt(1, rendezVousId);
+            ResultSet rs = pstInfo.executeQuery();
+
+            if (rs.next()) {
+                String patientEmail = rs.getString("email");
+                String patientName  = rs.getString("firstname");
+                String date         = rs.getDate("dateRendezVous").toString(); // format YYYY-MM-DD ✅
+                String heureDebut   = rs.getTime("heureDebut").toString().substring(0, 5); // "10:00"
+                String heureFin     = rs.getTime("heureFin").toString().substring(0, 5);   // "11:00"
+                String typeSeance   = rs.getString("type_seance");
+
+                // 3️⃣ Récupérer email + nom complet du médecin
+                PreparedStatement pstDoctor = cnx.prepareStatement(
+                        "SELECT email, firstname, lastname FROM users WHERE id = ?"
+                );
+                pstDoctor.setInt(1, psychologueId);
+                ResultSet rsDoctor = pstDoctor.executeQuery();
+
+                if (rsDoctor.next()) {
+                    String doctorEmail    = rsDoctor.getString("email");
+                    String doctorFullName = rsDoctor.getString("firstname") + " " + rsDoctor.getString("lastname"); // ✅ corrigé
+
+                    // 4️⃣ Envoyer email HTML avec toutes les infos
+                    GmailService.sendEmail(
+                            doctorEmail,
+                            patientEmail,
+                            "✅ Confirmation de votre rendez-vous — NAFSEYTI",
+                            patientName,
+                            doctorFullName,
+                            date,
+                            heureDebut,
+                            heureFin,
+                            typeSeance
+                    );
+                }
+            }
+
+            System.out.println("✅ Rendez-vous confirmé et email envoyé");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     private void annulerRendezVous(int reservationId, int rendezVousId) {
         try {
             Connection cnx = MyBDConnexion.getInstance().getCnx();
@@ -361,11 +425,13 @@ public class PsychologueInterfaceController implements Initializable {
     @FXML
     private void handleBtnFichesConsultation() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlPsychologue/ListeFichesConsultation.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlPsychologue/ListeFichesConsultation.fxml"));
             Parent root = loader.load();
 
             ListeFichesConsultationController controller = loader.getController();
             controller.setPsychologueId(psychologueId);
+            controller.setUser(currentUser); // ← ajouter
 
             Stage stage = (Stage) mainBorderPane.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -375,5 +441,41 @@ public class PsychologueInterfaceController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleBtnGererRendezVous() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlPsychologue/GererRendezVous.fxml"));
+            Parent root = loader.load();
 
+            GererRendezVousController controller = loader.getController();
+            controller.setPsychologueId(psychologueId);
+            controller.setUser(currentUser); // ← ajouter cette ligne
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+    @FXML
+    private void handleDeconnexion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlUser/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("NAFSEYTI — Connexion");
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

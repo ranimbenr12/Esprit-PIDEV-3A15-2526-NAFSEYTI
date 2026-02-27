@@ -5,28 +5,83 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.fxmlUser.controllers.DashboardController;
+import tn.esprit.nafseyti.models.User;
+
 import java.io.IOException;
 public class RendezVousController {
+    @FXML private BorderPane mainBorderPane;
+    @FXML private Button btnTableauBord;
+    @FXML private Button btnUtilisateurs;
+    @FXML private Button btnRendezVous;
+
+    private User currentUser;  // ← stocker l'utilisateur
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    // ── Gérer le style actif des boutons ──
+    private void setActiveButton(Button activeBtn) {
+        String inactiveStyle = "-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;";
+        String activeStyle = "-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;";
+
+        // Tous les boutons redeviendront inactifs
+        btnRendezVous.setStyle(inactiveStyle);
+        btnUtilisateurs.setStyle(inactiveStyle);
+        btnTableauBord.setStyle(inactiveStyle);
+
+        // Celui actif devient coloré
+        activeBtn.setStyle(activeStyle);
+    }
+
+    // ── Aller vers Utilisateurs (Dashboard) ──
     @FXML
-    private void handleTableauBord(ActionEvent event) {
+    private void handleUtilisateurs() {
         try {
-            // Charger l'interface principale
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/interfacePrincipal.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlUser/Dashboard.fxml")
+            );
+            Parent dashboardContent = loader.load();
 
-            // Récupérer le stage actuel depuis n'importe quel bouton
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            DashboardController ctrl = loader.getController();
+            ctrl.setUser(currentUser);
 
-            // Mettre à jour la scène
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            // Remplace uniquement le centre, la sidebar reste intacte
+            mainBorderPane.setCenter(dashboardContent);
+
+            // Met le bouton Utilisateurs actif
+            setActiveButton(btnUtilisateurs);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    // ── Retour Tableau de bord ──
+    @FXML
+    private void handleTableauBord() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/interfacePrincipal.fxml")
+            );
+            Parent root = loader.load();
+
+            interfacePrincipalController ctrl = loader.getController();
+            ctrl.setCurrentUser(currentUser);  // ← passer l'utilisateur
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void handleGererRendezVous(ActionEvent event) {
         try {
@@ -59,5 +114,21 @@ public class RendezVousController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleDeconnexion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlUser/login.fxml")
+            );
+            Parent root = loader.load();
 
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Connexion - NAFSEYTI");
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

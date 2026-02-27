@@ -10,19 +10,19 @@ public class MainFX extends Application {  // <-- EXTENDS Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Charger le FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlPsychologue/PsychologueInterface.fxml"));
-        // /fxmlPsychologue/PsychologueInterface.fxml
-        // /fxml/interfacePrincipal.fxml
-        // /fxmlClient/interfacePricClient.fxml
-        Parent root = loader.load();
+        // Load the login screen FXML
+        Parent root = FXMLLoader.load(getClass().getResource("/fxmlUser/Login.fxml"));
+        ///fxmlPsychologue/PsychologueInterface.fxml
+        // Create scene
+        Scene scene = new Scene(root, 900, 600);
 
-        // Créer la scène
-        Scene scene = new Scene(root);
+        // Add CSS stylesheet (optional)
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-        // Configurer et afficher la fenêtre
-        primaryStage.setTitle("Tableau de bord");
+        // Configure stage
+        primaryStage.setTitle("NAFSEYTI - Login");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

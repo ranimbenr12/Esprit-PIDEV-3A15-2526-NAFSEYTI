@@ -1,0 +1,46 @@
+
+.profile-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.details-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-min-width: 500px;
+}
+
+.info-row {
+    -fx-alignment: center-left;
+}
+
+.info-row:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.info-icon {
+    -fx-min-width: 30px;
+    -fx-alignment: center;
+}
+
+.info-label {
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 0.5px;
+}
+
+.info-value {
+    -fx-font-weight: 500;
+}
+
+.role-badge {
+    -fx-cursor: default;
+}
+
+/* Separator styling */
+.separator .line {
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0.5px 0 0 0;
+}
+

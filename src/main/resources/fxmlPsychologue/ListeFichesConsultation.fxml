@@ -62,7 +62,7 @@
             <Region VBox.vgrow="ALWAYS"/>
             <Button prefHeight="40.0" prefWidth="190.0"
                     style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-border-color: #285921; -fx-border-radius: 8; -fx-background-radius: 8;"
-                    text="🔓 Se déconnecter">
+                    text="🔓 Se déconnecter" onAction="#handleDeconnexion">
                 <font><Font size="14.0"/></font>
             </Button>
         </VBox>
@@ -169,16 +169,14 @@
                 </HBox>
 
                 <!-- Badge PDF -->
-                <HBox alignment="CENTER" spacing="6"
-                      style="-fx-background-color: #EEF5EE;
-                             -fx-background-radius: 20;
-                             -fx-border-color: #B8D4B8;
-                             -fx-border-radius: 20;
-                             -fx-border-width: 1;
-                             -fx-padding: 9 16;">
-                    <Label text="📄" style="-fx-font-size: 13px;"/>
-                    <Label text="Export PDF disponible" style="-fx-font-size: 11px; -fx-text-fill: #285921; -fx-font-weight: bold;"/>
-                </HBox>
+                <Button onAction="#handleBtnExportSheets"
+                        prefHeight="40.0" prefWidth="190.0"
+                        style="-fx-background-color: #0F9D58; -fx-text-fill: white;
+               -fx-alignment: CENTER_LEFT; -fx-padding: 10;
+               -fx-font-size: 13px; -fx-background-radius: 8;"
+                        text="📊 Export Google Sheets">
+                    <VBox.margin><Insets bottom="5.0" /></VBox.margin>
+                </Button>
 
             </HBox>
 

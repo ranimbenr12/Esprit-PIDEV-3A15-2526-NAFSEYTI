@@ -15,53 +15,41 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0"
-            style="-fx-background-color: #f5f5f5;"
-            xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.esprit.nafseyti.view.PsychologueInterfaceController">
+<BorderPane fx:id="mainBorderPane" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.nafseyti.view.PsychologueInterfaceController">
 
     <!-- SIDEBAR GAUCHE INCHANGEE -->
     <left>
-        <VBox prefWidth="220" spacing="5"
-              style="-fx-background-color: #ece6df; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <VBox prefWidth="220" spacing="5" style="-fx-background-color: #ece6df; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
             <padding>
-                <Insets bottom="20" left="15" right="15" top="20"/>
+                <Insets bottom="20" left="15" right="15" top="20" />
             </padding>
             <VBox alignment="CENTER" spacing="10">
                 <StackPane>
-                    <Circle fill="#285921" radius="35.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0"/>
-                    <Label style="-fx-font-size: 30px; -fx-text-fill: white;" text="👤"/>
+                    <Circle fill="#285921" radius="35.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" />
+                    <Label style="-fx-font-size: 30px; -fx-text-fill: white;" text="👤" />
                     <ImageView fitHeight="59.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
-                        <image><Image url="@../images/logo.png"/></image>
+                        <image><Image url="@../images/logo.png" /></image>
                     </ImageView>
                 </StackPane>
-                <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="NAFSEYTI"/>
-                <Label fx:id="psychologueNameLabel" style="-fx-font-size: 14px; -fx-text-fill: #69685c;" text="Dr. Psychologue"/>
+                <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="NAFSEYTI" />
+                <Label fx:id="psychologueNameLabel" style="-fx-font-size: 14px; -fx-text-fill: #69685c;" text="Dr. Psychologue" />
             </VBox>
             <Separator style="-fx-background-color: #e0e0e0;">
-                <VBox.margin><Insets bottom="10.0" top="10.0"/></VBox.margin>
+                <VBox.margin><Insets bottom="10.0" top="10.0" /></VBox.margin>
             </Separator>
-            <Button fx:id="btnAccueil" prefHeight="40.0" prefWidth="190.0"
-                    style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;"
-                    text="🏠 Accueil">
-                <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+            <Button fx:id="btnAccueil" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="🏠 Accueil">
+                <VBox.margin><Insets bottom="5.0" /></VBox.margin>
             </Button>
-            <Button fx:id="btnRendezVous" prefHeight="40.0" prefWidth="190.0"
-                    style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;"
-                    text="📅 Mes rendez-vous">
-                <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+         <Button fx:id="btnAccueil1" layoutX="25.0" layoutY="202.0" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="⏰ Gérer les rendez-vous" onAction="#handleBtnGererRendezVous"/>
+            <Button fx:id="btnRendezVous" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: #374535; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📅 Mes rendez-vous">
+                <VBox.margin><Insets bottom="5.0" /></VBox.margin>
             </Button>
-            <Button fx:id="btnFichesConsultation" prefHeight="41.0" prefWidth="206.0"
-                    style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;"
-                    text="📋 Mes fiches consultation" onAction="#handleBtnFichesConsultation">
-                <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+            <Button fx:id="btnFichesConsultation" onAction="#handleBtnFichesConsultation" prefHeight="41.0" prefWidth="206.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📋 Mes fiches consultation">
+                <VBox.margin><Insets bottom="5.0" /></VBox.margin>
             </Button>
-            <Region VBox.vgrow="ALWAYS"/>
-            <Button prefHeight="40.0" prefWidth="190.0"
-                    style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-border-color: #285921; -fx-border-radius: 8; -fx-background-radius: 8;"
-                    text="🔓 Se déconnecter">
-                <font><Font size="14.0"/></font>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-border-color: #285921; -fx-border-radius: 8; -fx-background-radius: 8;" text="🔓 Se déconnecter" onAction="#handleDeconnexion">
+                <font><Font size="14.0" /></font>
             </Button>
         </VBox>
     </left>
@@ -71,24 +59,18 @@
         <VBox spacing="0" style="-fx-background-color: #F4F0EB;">
 
             <!-- TOP BAR -->
-            <HBox alignment="CENTER_LEFT" spacing="16"
-                  style="-fx-background-color: white;
-                         -fx-padding: 15 28 15 28;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 3);">
+            <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: white;                          -fx-padding: 15 28 15 28;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 3);">
                 <VBox spacing="3">
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Region prefWidth="5" prefHeight="26"
-                                style="-fx-background-color: #285921; -fx-background-radius: 3;"/>
-                        <Label text="Mes Rendez-vous"
-                               style="-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #1E3320;"/>
+                        <Region prefHeight="26" prefWidth="5" style="-fx-background-color: #285921; -fx-background-radius: 3;" />
+                        <Label style="-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #1E3320;" text="Mes Rendez-vous" />
                     </HBox>
-                    <Label text="   Gérez vos consultations et suivez vos patients"
-                           style="-fx-font-size: 12px; -fx-text-fill: #9B8E84;"/>
+                    <Label style="-fx-font-size: 12px; -fx-text-fill: #9B8E84;" text="   Gérez vos consultations et suivez vos patients" />
                 </VBox>
-                <Region HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS" />
                 <StackPane style="-fx-background-color: #EEF5EE; -fx-background-radius: 50; -fx-padding: 8;">
                     <ImageView fitHeight="46" fitWidth="46" preserveRatio="true">
-                        <image><Image url="@../images/cerveau.png"/></image>
+                        <image><Image url="@../images/cerveau.png" /></image>
                     </ImageView>
                 </StackPane>
             </HBox>
@@ -97,122 +79,87 @@
             <HBox spacing="14" style="-fx-padding: 20 26 16 26;">
 
                 <!-- Total RDV -->
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="108"
-                           style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);">
+                <StackPane prefHeight="108" style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
                     <ImageView fitHeight="108" fitWidth="250" preserveRatio="false">
-                        <image><Image url="@../images/Therapy.jpg"/></image>
+                        <image><Image url="@../images/Therapy.jpg" /></image>
                     </ImageView>
-                    <VBox style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;"
-                          alignment="CENTER" spacing="4">
-                        <Label text="📊" style="-fx-font-size: 28px;"/>
-                        <Label fx:id="totalRdvLabel" text="0"
-                               style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #285921;"/>
-                        <Label text="TOTAL RDV"
-                               style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #5A7A5C; -fx-letter-spacing: 1;"/>
+                    <VBox alignment="CENTER" spacing="4" style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;">
+                        <Label style="-fx-font-size: 28px;" text="📊" />
+                        <Label fx:id="totalRdvLabel" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="0" />
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #5A7A5C; -fx-letter-spacing: 1;" text="TOTAL RDV" />
                     </VBox>
                     <VBox alignment="BOTTOM_CENTER">
-                        <Region prefHeight="4" prefWidth="250"
-                                style="-fx-background-color: #285921; -fx-background-radius: 0 0 16 16;"/>
+                        <Region prefHeight="4" prefWidth="250" style="-fx-background-color: #285921; -fx-background-radius: 0 0 16 16;" />
                     </VBox>
                 </StackPane>
 
                 <!-- Confirmés -->
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="108"
-                           style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);">
+                <StackPane prefHeight="108" style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
                     <ImageView fitHeight="108" fitWidth="250" preserveRatio="false">
-                        <image><Image url="@../images/logo1.jpg"/></image>
+                        <image><Image url="@../images/logo1.jpg" /></image>
                     </ImageView>
-                    <VBox style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;"
-                          alignment="CENTER" spacing="4">
-                        <Label text="✅" style="-fx-font-size: 28px;"/>
-                        <Label fx:id="confirmedRdvLabel" text="0"
-                               style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
-                        <Label text="CONFIRMÉS"
-                               style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #388E3C; -fx-letter-spacing: 1;"/>
+                    <VBox alignment="CENTER" spacing="4" style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;">
+                        <Label style="-fx-font-size: 28px;" text="✅" />
+                        <Label fx:id="confirmedRdvLabel" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;" text="0" />
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #388E3C; -fx-letter-spacing: 1;" text="CONFIRMÉS" />
                     </VBox>
                     <VBox alignment="BOTTOM_CENTER">
-                        <Region prefHeight="4" prefWidth="250"
-                                style="-fx-background-color: #4CAF50; -fx-background-radius: 0 0 16 16;"/>
+                        <Region prefHeight="4" prefWidth="250" style="-fx-background-color: #4CAF50; -fx-background-radius: 0 0 16 16;" />
                     </VBox>
                 </StackPane>
 
                 <!-- En attente -->
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="108"
-                           style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);">
+                <StackPane prefHeight="108" style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
                     <ImageView fitHeight="108" fitWidth="250" preserveRatio="false">
-                        <image><Image url="@../images/pending.jpg"/></image>
+                        <image><Image url="@../images/pending.jpg" /></image>
                     </ImageView>
-                    <VBox style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;"
-                          alignment="CENTER" spacing="4">
-                        <Label text="⏰" style="-fx-font-size: 28px;"/>
-                        <Label fx:id="pendingRdvLabel" text="0"
-                               style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
-                        <Label text="EN ATTENTE"
-                               style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #1565C0; -fx-letter-spacing: 1;"/>
+                    <VBox alignment="CENTER" spacing="4" style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;">
+                        <Label style="-fx-font-size: 28px;" text="⏰" />
+                        <Label fx:id="pendingRdvLabel" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" text="0" />
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #1565C0; -fx-letter-spacing: 1;" text="EN ATTENTE" />
                     </VBox>
                     <VBox alignment="BOTTOM_CENTER">
-                        <Region prefHeight="4" prefWidth="250"
-                                style="-fx-background-color: #2196F3; -fx-background-radius: 0 0 16 16;"/>
+                        <Region prefHeight="4" prefWidth="250" style="-fx-background-color: #2196F3; -fx-background-radius: 0 0 16 16;" />
                     </VBox>
                 </StackPane>
 
                 <!-- Fiches -->
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="108"
-                           style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);">
+                <StackPane prefHeight="108" style="-fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
                     <ImageView fitHeight="108" fitWidth="250" preserveRatio="false">
-                        <image><Image url="@../images/fiches.jpg"/></image>
+                        <image><Image url="@../images/fiches.jpg" /></image>
                     </ImageView>
-                    <VBox style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;"
-                          alignment="CENTER" spacing="4">
-                        <Label text="📋" style="-fx-font-size: 28px;"/>
-                        <Label fx:id="totalFichesLabel" text="0"
-                               style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #9C27B0;"/>
-                        <Label text="FICHES CRÉÉES"
-                               style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #6A1B9A; -fx-letter-spacing: 1;"/>
+                    <VBox alignment="CENTER" spacing="4" style="-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.78)); -fx-background-radius: 16;">
+                        <Label style="-fx-font-size: 28px;" text="📋" />
+                        <Label fx:id="totalFichesLabel" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #9C27B0;" text="0" />
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #6A1B9A; -fx-letter-spacing: 1;" text="FICHES CRÉÉES" />
                     </VBox>
                     <VBox alignment="BOTTOM_CENTER">
-                        <Region prefHeight="4" prefWidth="250"
-                                style="-fx-background-color: #9C27B0; -fx-background-radius: 0 0 16 16;"/>
+                        <Region prefHeight="4" prefWidth="250" style="-fx-background-color: #9C27B0; -fx-background-radius: 0 0 16 16;" />
                     </VBox>
                 </StackPane>
 
             </HBox>
 
             <!-- SECTION LISTE RDV avec marges propres -->
-            <VBox VBox.vgrow="ALWAYS" spacing="0" style="-fx-padding: 0 26 24 26;">
+            <VBox spacing="0" style="-fx-padding: 0 26 24 26;" VBox.vgrow="ALWAYS">
 
-                <VBox VBox.vgrow="ALWAYS" spacing="0"
-                      style="-fx-background-color: white;
-                             -fx-background-radius: 18;
-                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 8, 0, 2, 2);">
+                <VBox spacing="0" style="-fx-background-color: white;                              -fx-background-radius: 18;                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 8, 0, 2, 2);" VBox.vgrow="ALWAYS">
 
                     <!-- En-tête section -->
-                    <HBox alignment="CENTER_LEFT" spacing="12"
-                          style="-fx-padding: 16 22 14 22;
-                                 -fx-border-color: transparent transparent #F0EBE5 transparent;
-                                 -fx-border-width: 0 0 1 0;">
-                        <Region prefWidth="5" prefHeight="18"
-                                style="-fx-background-color: #285921; -fx-background-radius: 3;"/>
-                        <Label text="Rendez-vous du jour"
-                               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1E3320;"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <HBox alignment="CENTER" spacing="5"
-                              style="-fx-background-color: #EEF5EE; -fx-background-radius: 12; -fx-padding: 5 12;">
-                            <Circle fill="#5DBB7A" radius="4"/>
-                            <Label text="Temps réel"
-                                   style="-fx-font-size: 10px; -fx-text-fill: #285921; -fx-font-weight: bold;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 16 22 14 22;                                  -fx-border-color: transparent transparent #F0EBE5 transparent;                                  -fx-border-width: 0 0 1 0;">
+                        <Region prefHeight="18" prefWidth="5" style="-fx-background-color: #285921; -fx-background-radius: 3;" />
+                        <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1E3320;" text="Rendez-vous du jour" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER" spacing="5" style="-fx-background-color: #EEF5EE; -fx-background-radius: 12; -fx-padding: 5 12;">
+                            <Circle fill="#5DBB7A" radius="4" />
+                            <Label style="-fx-font-size: 10px; -fx-text-fill: #285921; -fx-font-weight: bold;" text="Temps réel" />
                         </HBox>
                     </HBox>
 
                     <!-- Liste scrollable -->
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
-                                style="-fx-background-color: transparent;
-                                       -fx-border-color: transparent;
-                                       -fx-background: white;">
-                        <VBox fx:id="rendezVousContainer" spacing="12"
-                              style="-fx-background-color: transparent; -fx-padding: 14 20 20 20;">
-                            <Label text="Chargement des rendez-vous..."
-                                   style="-fx-text-fill: #aaa; -fx-font-style: italic;"/>
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;                                        -fx-border-color: transparent;                                        -fx-background: white;" VBox.vgrow="ALWAYS">
+                        <VBox fx:id="rendezVousContainer" spacing="12" style="-fx-background-color: transparent; -fx-padding: 14 20 20 20;">
+                            <Label style="-fx-text-fill: #aaa; -fx-font-style: italic;" text="Chargement des rendez-vous..." />
                         </VBox>
                     </ScrollPane>
 

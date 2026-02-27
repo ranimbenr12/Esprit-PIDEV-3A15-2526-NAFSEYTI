@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane prefHeight="700.0" prefWidth="900.0" stylesheets="@/css/login.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.nafseyti.fxmlUser.controllers.RegisterController">
+    <children>
+
+        <!-- ══ LEFT PANEL ══ -->
+        <VBox alignment="CENTER" prefHeight="700" prefWidth="350" styleClass="left-panel" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
+            <children>
+                <StackPane styleClass="logo-box">
+                    <children><Label styleClass="logo-leaf" text="🌿" textFill="#82e79d" /></children>
+                </StackPane>
+                <Label styleClass="brand-name" text="NAFSEYTI" />
+                <Label styleClass="brand-sub" text="SANTÉ MENTALE">
+                    <VBox.margin><Insets bottom="20" /></VBox.margin>
+                </Label>
+                <VBox alignment="CENTER_LEFT" spacing="14">
+                    <VBox.margin><Insets left="10" top="22" /></VBox.margin>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label styleClass="step-num-active" text="1" />
+                        <Label styleClass="step-text-active" text="Informations personnelles" />
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label styleClass="step-num" text="2" />
+                        <Label styleClass="step-text" text="Vérification email" />
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label styleClass="step-num" text="3" />
+                        <Label styleClass="step-text" text="Accès à votre espace" />
+                    </HBox>
+                </VBox>
+            </children>
+        </VBox>
+
+        <!-- ══ RIGHT PANEL ══ -->
+        <ScrollPane fitToWidth="true" prefHeight="700" prefWidth="550" styleClass="scroll-clean" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <content>
+                <VBox alignment="TOP_LEFT" styleClass="right-panel">
+                    <padding><Insets bottom="30" left="44" right="44" top="30" /></padding>
+                    <children>
+
+                        <Label styleClass="welcome-title" text="Créer un compte 🌱" />
+                        <Label styleClass="welcome-sub" text="Rejoignez la plateforme NAFSEYTI">
+                            <VBox.margin><Insets bottom="16" /></VBox.margin>
+                        </Label>
+
+                        <!-- ══ PHOTO UPLOAD ══ -->
+                        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="photo-upload-box">
+                            <VBox.margin><Insets bottom="16" /></VBox.margin>
+                            <StackPane fx:id="photoContainer" styleClass="photo-circle-wrap">
+                                <children>
+                                    <Label fx:id="photoPlaceholder" styleClass="photo-placeholder-icon" text="👤" />
+                                    <ImageView fx:id="photoPreview" fitHeight="52" fitWidth="52" preserveRatio="true" visible="false">
+                                        <clip>
+                                            <javafx.scene.shape.Circle centerX="26" centerY="26" radius="26" />
+                                        </clip>
+                                    </ImageView>
+                                </children>
+                            </StackPane>
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label styleClass="photo-title" text="Photo de profil" />
+                                <Label fx:id="photoNameLabel" styleClass="photo-sub" text="JPG, PNG — max 2 Mo" />
+                            </VBox>
+                            <Button fx:id="choosePhotoBtn" onAction="#handleChoosePhoto" styleClass="photo-choose-btn" text="📁 Choisir" />
+                        </HBox>
+
+                        <!-- Row 1 : First + Last -->
+                        <HBox spacing="14">
+                            <VBox.margin><Insets bottom="10" /></VBox.margin>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label prefWidth="61.0" styleClass="field-label" text="Prénom" />
+                                <TextField fx:id="firstnameField" maxWidth="Infinity" promptText="Enter your first name" styleClass="custom-field" />
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="Nom" />
+                                <TextField fx:id="lastnameField" maxWidth="Infinity" promptText="Enter your last name" styleClass="custom-field" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Email -->
+                        <Label styleClass="field-label" text="email" />
+                        <TextField fx:id="emailField" maxWidth="Infinity" promptText="Enter your email" styleClass="custom-field">
+                            <VBox.margin><Insets bottom="10" /></VBox.margin>
+                        </TextField>
+
+                        <!-- Row 2 : Password + Confirm -->
+                        <HBox spacing="14">
+                            <VBox.margin><Insets bottom="10" /></VBox.margin>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="Mot de passe" />
+                                <PasswordField fx:id="passwordField" maxWidth="Infinity" promptText="Minimum 8 characters" styleClass="custom-field" />
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="CONFIRMER LE MOT DE PASSE *" />
+                                <PasswordField fx:id="confirmPasswordField" maxWidth="Infinity" promptText="Re-enter password" styleClass="custom-field" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Row 3 : Phone + Address -->
+                        <HBox spacing="14">
+                            <VBox.margin><Insets bottom="10" /></VBox.margin>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="Numero téléphone" />
+                                <TextField fx:id="phoneField" maxWidth="Infinity" promptText="Optional" styleClass="custom-field" />
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="Adresse" />
+                                <TextField fx:id="addressField" maxWidth="Infinity" promptText="Optional" styleClass="custom-field" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Row 4 : Location + Rôle -->
+                        <HBox spacing="14">
+                            <VBox.margin><Insets bottom="6" /></VBox.margin>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="Ville" />
+                                <TextField fx:id="locationField" maxWidth="Infinity" promptText="Optional" styleClass="custom-field" />
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label styleClass="field-label" text="role" />
+                                <ComboBox fx:id="roleComboBox" maxWidth="Infinity" promptText="Sélectionner" styleClass="custom-field" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Error / Success -->
+                        <Label fx:id="errorLabel" styleClass="error-label" visible="false" wrapText="true">
+                            <VBox.margin><Insets bottom="2" /></VBox.margin>
+                        </Label>
+                        <Label fx:id="successLabel" styleClass="success-label" visible="false" wrapText="true">
+                            <VBox.margin><Insets bottom="2" /></VBox.margin>
+                        </Label>
+
+                        <!-- Button -->
+                        <Button fx:id="registerButton" maxWidth="Infinity" onAction="#handleRegister" styleClass="login-btn" text="REGISTER">
+                            <VBox.margin><Insets bottom="12" top="6" /></VBox.margin>
+                        </Button>
+
+                        <HBox alignment="CENTER" spacing="6">
+                            <Label styleClass="register-text" text="Already have an account?" />
+                            <Hyperlink fx:id="loginLink" onAction="#handleBackToLogin" styleClass="register-link" text="Login here" />
+                        </HBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

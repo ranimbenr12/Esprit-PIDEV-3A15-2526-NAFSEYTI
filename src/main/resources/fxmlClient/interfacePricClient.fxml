@@ -41,7 +41,6 @@
                 </StackPane>
                 <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="NAFSEYTI" />
             </VBox>
-
             <Separator style="-fx-background-color: #e0e0e0;">
                 <VBox.margin>
                     <Insets bottom="10.0" top="10.0" />
@@ -55,7 +54,7 @@
                 </VBox.margin>
             </Button>
 
-            <Button fx:id="btnRendezVous" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📅 Mes rendez-vous" onAction="#handleBtnRendezVous">
+            <Button fx:id="btnRendezVous" onAction="#handleBtnRendezVous" prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;" text="📅 Mes rendez-vous">
                 <VBox.margin>
                     <Insets bottom="5.0" />
                 </VBox.margin>
@@ -95,7 +94,7 @@
             <Region VBox.vgrow="ALWAYS" />
 
             <!-- Bouton déconnexion -->
-            <Button prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-border-color: #285921; -fx-border-radius: 8; -fx-background-radius: 8;" text="🔓 Se déconnecter">
+            <Button prefHeight="40.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-text-fill: #285921; -fx-border-color: #285921; -fx-border-radius: 8; -fx-background-radius: 8;" text="🔓 Se déconnecter" onAction="#handleDeconnexion">
                 <font>
                     <Font size="14.0" />
                 </font>
@@ -114,10 +113,20 @@
                 <!-- En-tête avec message personnalisé -->
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <VBox>
+                  <VBox prefHeight="35.0" prefWidth="426.0" />
                         <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Bonjour, Ahmed ! 👋" />
                         <Label style="-fx-font-size: 14px; -fx-text-fill: #69685c;" text="Voici un résumé de votre activité et des recommandations pour vous" />
                     </VBox>
                     <Region HBox.hgrow="ALWAYS" />
+                  <!-- Après le VBox du logo et avant le Separator -->
+                  <VBox alignment="CENTER" onMouseClicked="#handleProfil" prefWidth="96.0" spacing="8" style="-fx-background-color: rgba(55,69,53,0.08); -fx-background-radius: 12; -fx-padding: 12;">
+                      <StackPane>
+                          <Circle fill="#285921" radius="28.0" stroke="WHITE" strokeWidth="2" />
+                          <Label fx:id="sidebarAvatar" style="-fx-font-size: 24px;" text="👤" />
+                      </StackPane>
+                      <Label fx:id="sidebarNom" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #285921;" text="Mon Profil" />
+                      <Label style="-fx-font-size: 10px; -fx-text-fill: #888; -fx-font-style: italic;" text="Voir mon espace" />
+                  </VBox>
                 </HBox>
 
                 <!-- Bannières d'actions rapides -->

@@ -1,5 +1,6 @@
 package tn.esprit.nafseyti.view;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import tn.esprit.nafseyti.google.GoogleSheetsService;
+import tn.esprit.nafseyti.models.User;
 import tn.esprit.nafseyti.utils.FicheConsultationPdfExporter;
 import tn.esprit.nafseyti.utils.MyBDConnexion;
 
@@ -23,9 +26,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ListeFichesConsultationController implements Initializable {
 
@@ -34,8 +35,13 @@ public class ListeFichesConsultationController implements Initializable {
     @FXML private TextField searchField;
     @FXML private Label psychologueNameLabel;
 
-    private int psychologueId = 6;
+    private int psychologueId;
     private String medecinNomComplet = "Dr. Psychologue";
+    private User currentUser;
+
+    public void setUser(User user) {
+        this.currentUser = user;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -428,8 +434,13 @@ public class ListeFichesConsultationController implements Initializable {
     @FXML
     private void handleBtnRendezVous() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlPsychologue/PsychologueInterface.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlPsychologue/PsychologueInterface.fxml"));
             Parent root = loader.load();
+
+            PsychologueInterfaceController ctrl = loader.getController();
+            ctrl.setUser(currentUser); // ← passer le user
+
             Stage stage = (Stage) mainBorderPane.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -444,5 +455,139 @@ public class ListeFichesConsultationController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handleBtnExportSheets() {
+        // Lancer dans un thread pour ne pas bloquer l'UI
+        new Thread(() -> {
+            try {
+                // 1️⃣ Vérifier auth
+                if (!GoogleSheetsService.isAuthenticated()) {
+                    // Ouvrir navigateur pour auth
+                    String authUrl = GoogleSheetsService.generateAuthUrl();
+                    Platform.runLater(() -> {
+                        try {
+                            java.awt.Desktop.getDesktop().browse(new java.net.URI(authUrl));
+                            // Demander le code via dialog
+                            Platform.runLater(() -> demanderCodeSheets());
+                        } catch (Exception ex) { ex.printStackTrace(); }
+                    });
+                    return;
+                }
+
+                exporterVersSheets();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() ->
+                        showAlert(Alert.AlertType.ERROR, "Erreur",
+                                "❌ Impossible d'exporter : " + e.getMessage()));
+            }
+        }).start();
+    }
+
+    private void demanderCodeSheets() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Connexion Google Sheets");
+        dialog.setHeaderText("Collez le code Google reçu dans le navigateur");
+        dialog.setContentText("Code :");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(code -> {
+            new Thread(() -> {
+                try {
+                    GoogleSheetsService.authenticateWithCode(code.trim());
+                    exporterVersSheets();
+                } catch (Exception e) {
+                    Platform.runLater(() ->
+                            showAlert(Alert.AlertType.ERROR, "Erreur auth",
+                                    "❌ Code invalide : " + e.getMessage()));
+                }
+            }).start();
+        });
+    }
+
+    private void exporterVersSheets() throws Exception {
+        Connection cnx = MyBDConnexion.getInstance().getCnx();
+
+        // 1️⃣ Statistiques globales
+        int total = 0, confirmes = 0, enAttente = 0, annules = 0;
+
+        PreparedStatement pstStats = cnx.prepareStatement(
+                "SELECT statut, COUNT(*) as nb FROM reservationRendez_vous rr " +
+                        "JOIN rendez_vous rv ON rr.rendez_vous_id = rv.id " +
+                        "WHERE rr.medecin_id = ? GROUP BY rv.statut");
+        pstStats.setInt(1, psychologueId);
+        ResultSet rsStats = pstStats.executeQuery();
+        while (rsStats.next()) {
+            int nb = rsStats.getInt("nb");
+            total += nb;
+            switch (rsStats.getString("statut")) {
+                case "Confirmé" -> confirmes += nb;
+                case "En attente" -> enAttente += nb;
+                case "Annulé" -> annules += nb;
+            }
+        }
+
+        // 2️⃣ Détail des RDV
+        List<List<Object>> lignesRdv = new ArrayList<>();
+        PreparedStatement pstRdv = cnx.prepareStatement(
+                "SELECT rv.id, u.firstname, u.lastname, rv.dateRendezVous, " +
+                        "rv.heureDebut, rv.heureFin, rv.type_seance, rv.statut " +
+                        "FROM reservationRendez_vous rr " +
+                        "JOIN rendez_vous rv ON rr.rendez_vous_id = rv.id " +
+                        "JOIN users u ON rr.user_id = u.id " +
+                        "WHERE rr.medecin_id = ? ORDER BY rv.dateRendezVous DESC");
+        pstRdv.setInt(1, psychologueId);
+        ResultSet rsRdv = pstRdv.executeQuery();
+        while (rsRdv.next()) {
+            lignesRdv.add(Arrays.asList(
+                    rsRdv.getInt("id"),
+                    rsRdv.getString("firstname") + " " + rsRdv.getString("lastname"),
+                    rsRdv.getDate("dateRendezVous").toString(),
+                    rsRdv.getTime("heureDebut").toString().substring(0, 5),
+                    rsRdv.getTime("heureFin").toString().substring(0, 5),
+                    rsRdv.getString("type_seance"),
+                    rsRdv.getString("statut")
+            ));
+        }
+
+        // 3️⃣ Créer le Sheets
+        String nom = psychologueNameLabel.getText();
+        String sheetId = GoogleSheetsService.createStatistiquesSheet(
+                nom, total, confirmes, enAttente, annules, lignesRdv);
+
+        // 4️⃣ Ouvrir dans le navigateur
+        String url = "https://docs.google.com/spreadsheets/d/" + sheetId;
+        Platform.runLater(() -> {
+            try {
+                java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+                showAlert(Alert.AlertType.INFORMATION, "Export réussi",
+                        "✅ Statistiques exportées avec succès !\nOuverture dans le navigateur...");
+            } catch (Exception e) { e.printStackTrace(); }
+        });
+    }
+
+    @FXML
+    private void handleDeconnexion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlUser/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("NAFSEYTI — Connexion");
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
