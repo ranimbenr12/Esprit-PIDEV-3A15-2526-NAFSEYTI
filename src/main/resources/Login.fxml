@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20"
+      style="-fx-background-color: linear-gradient(to bottom, #6c5ce7, #a8e6cf); -fx-padding: 40;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.projet.gui.LoginController"
+      prefWidth="400" prefHeight="500">
+
+    <!-- Logo et titre -->
+    <Label text="🤖 NAFSEYTI" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+    <Label text="Plateforme de suivi psychologique" style="-fx-font-size: 14px; -fx-text-fill: #f0f0f0;"/>
+
+    <!-- Carte de connexion -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 5);"
+          prefWidth="320">
+
+        <Label text="Connexion" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+        <!-- Champ Email -->
+        <Label text="Email" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+        <TextField fx:id="txtEmail" promptText="exemple@email.com"
+                   style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;"/>
+
+        <!-- Champ Password -->
+        <Label text="Mot de passe" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+        <PasswordField fx:id="txtPassword" promptText="••••••••"
+                       style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;"/>
+
+        <!-- Bouton Connexion -->
+        <Button fx:id="btnLogin" text="Se connecter" onAction="#handleLogin"
+                style="-fx-background-color: #6c5ce7; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;"
+                prefWidth="320"/>
+
+        <!-- Lien pour créer un compte -->
+        <Label text="Pas encore de compte ?" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+
+        <!-- Message d'erreur -->
+        <Label fx:id="lblMessage" style="-fx-text-fill: red; -fx-font-size: 12px;" wrapText="true"/>
+    </VBox>
+
+    <!-- Pied de page -->
+    <Label text="© 2026 Nafseyti - Tous droits réservés" style="-fx-text-fill: #f0f0f0; -fx-font-size: 11px;"/>
+</VBox>

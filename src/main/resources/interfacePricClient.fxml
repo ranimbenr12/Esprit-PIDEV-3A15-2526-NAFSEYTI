@@ -46,6 +46,8 @@
             <Separator style="-fx-background-color: #e0e0e0;">
                 <VBox.margin><Insets bottom="10.0" top="10.0" /></VBox.margin>
             </Separator>
+            <Label fx:id="lblBienvenue" text="Bienvenue !"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #6c5ce7;"/>
 
             <!-- ✅ TOUS LES BOUTONS ONT onAction -->
             <Button fx:id="btnAccueil"
@@ -63,6 +65,15 @@
                     text="📅 Mes rendez-vous">
                 <VBox.margin><Insets bottom="5.0" /></VBox.margin>
             </Button>
+
+            <!-- ❌ BOUTON GIFT SUPPRIMÉ - IL EST MAINTENANT DANS LA PAGE SUIVI -->
+            <!-- <Button fx:id="btnGift" prefWidth="180"
+                    style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
+                    text="🎁 Récompenses" onAction="#handleBtnGift" /> -->
+
+            <!-- ❌ LABEL TOTAL POINTS SUPPRIMÉ - IL EST MAINTENANT DANS LA PAGE SUIVI -->
+            <!-- <Label fx:id="lblTotalPoints" text="🎯 0 pts"
+                   style="-fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 5 10; -fx-background-color: #e8f5e9; -fx-background-radius: 20;"/> -->
 
             <Button fx:id="btnContenu"
                     onAction="#handleBtnContenu"
@@ -102,6 +113,14 @@
                     prefHeight="40.0" prefWidth="190.0"
                     style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;"
                     text="💬 Donner mon avis">
+                <VBox.margin><Insets bottom="5.0" /></VBox.margin>
+            </Button>
+
+            <Button fx:id="btnChatbot"
+                    onAction="#handleBtnChatbot"
+                    prefHeight="40.0" prefWidth="190.0"
+                    style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8;"
+                    text="🤖 Chatbot">
                 <VBox.margin><Insets bottom="5.0" /></VBox.margin>
             </Button>
 

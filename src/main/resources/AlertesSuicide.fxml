@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.projet.gui.AlertesSuicideController"
+      spacing="20"
+      style="-fx-background-color: #f8f5f2; -fx-padding: 20;">
+
+    <!-- En-tête avec compteur -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="🚨 Alertes de sécurité"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblCompteur" text="0 alerte(s) non traitée(s)"
+               style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 5 15; -fx-background-radius: 20; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <!-- Tableau des alertes -->
+    <TableView fx:id="tableAlertes" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="colPatient" text="Patient" prefWidth="150"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="180"/>
+            <TableColumn fx:id="colMessage" text="Message à risque" prefWidth="400"/>
+            <TableColumn fx:id="colMots" text="Mots détectés" prefWidth="150"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+            <TableColumn fx:id="colAction" text="Action" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <!-- Boutons d'action - SANS le bouton Contacter -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="🔄 Actualiser" onAction="#actualiserAlertes"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+        <Button text="✅ Marquer comme traitée" onAction="#marquerTraitee"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+        <!-- ❌ Bouton "Contacter le patient" supprimé -->
+    </HBox>
+
+</VBox>

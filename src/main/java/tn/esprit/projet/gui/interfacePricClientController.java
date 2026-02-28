@@ -2,13 +2,28 @@ package tn.esprit.projet.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import tn.esprit.projet.models.User;
+import tn.esprit.projet.models.Reduction;
+import tn.esprit.projet.services.PointsService;
+import tn.esprit.projet.services.ReductionService;
+import tn.esprit.projet.gui.ChatBotController;
+import tn.esprit.projet.utils.SessionManager;
+
+import java.io.IOException;
 
 public class interfacePricClientController {
 
@@ -20,27 +35,33 @@ public class interfacePricClientController {
     @FXML private Button btnEvenements;
     @FXML private Button btnSuivi;
     @FXML private Button btnFeedback;
+    @FXML private Button btnChatbot;
+    // @FXML private Button btnGift;  // ← SUPPRIMÉ du menu principal
+    @FXML private Label lblBienvenue;
+    // @FXML private Label lblTotalPoints;  // ← SUPPRIMÉ du menu principal
 
-    private final String ACTIVE_STYLE =
-            "-fx-background-color: #374535; -fx-text-fill: white; " +
-                    "-fx-alignment: CENTER_LEFT; -fx-padding: 10; " +
-                    "-fx-font-size: 14px; -fx-background-radius: 8;";
+    private final String ACTIVE_STYLE = "-fx-background-color: #374535; -fx-text-fill: white; " +
+            "-fx-alignment: CENTER_LEFT; -fx-padding: 10; " +
+            "-fx-font-size: 14px; -fx-background-radius: 8;";
 
-    private final String INACTIVE_STYLE =
-            "-fx-background-color: transparent; -fx-text-fill: #69685c; " +
-                    "-fx-alignment: CENTER_LEFT; -fx-padding: 10; " +
-                    "-fx-font-size: 14px; -fx-background-radius: 8;";
+    private final String INACTIVE_STYLE = "-fx-background-color: transparent; -fx-text-fill: #69685c; " +
+            "-fx-alignment: CENTER_LEFT; -fx-padding: 10; " +
+            "-fx-font-size: 14px; -fx-background-radius: 8;";
+
+    private User currentUser;
+    private PointsService pointsService = new PointsService();
+    private ReductionService reductionService = new ReductionService();
 
     @FXML
     public void initialize() {
         System.out.println("✅ Interface Client chargée !");
-        // ✅ Au démarrage, Accueil est actif
         setActiveButton(btnAccueil);
     }
 
+    // ===== MÉTHODES EXISTANTES =====
     @FXML
     public void handleBtnAccueil() {
-        setActiveButton(btnAccueil); // ✅ Accueil devient vert
+        setActiveButton(btnAccueil);
         afficherEnConstruction("🏠 Accueil");
     }
 
@@ -70,9 +91,17 @@ public class interfacePricClientController {
 
     @FXML
     public void handleBtnSuivi() {
-        setActiveButton(btnSuivi); // ✅ Mon Progression devient vert
+        setActiveButton(btnSuivi);
         try {
-            Node suiviView = FXMLLoader.load(getClass().getResource("/SuiviClient.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SuiviClient.fxml"));
+            Node suiviView = loader.load();
+
+            // Passer l'utilisateur connecté au SuiviClientController
+            Object controller = loader.getController();
+            if (controller instanceof SuiviClientController) {
+                ((SuiviClientController) controller).setCurrentUser(currentUser);
+            }
+
             mainBorderPane.setCenter(suiviView);
             System.out.println("✅ SuiviClient.fxml chargé !");
         } catch (Exception e) {
@@ -88,6 +117,27 @@ public class interfacePricClientController {
     }
 
     @FXML
+    public void handleBtnChatbot() {
+        setActiveButton(btnChatbot);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChatBot.fxml"));
+            Pane chatPane = loader.load();
+
+            // Passer l'utilisateur connecté au ChatBotController
+            ChatBotController chatBotController = loader.getController();
+            if (currentUser != null) {
+                chatBotController.setCurrentUserId(currentUser.getId());
+            }
+
+            mainBorderPane.setCenter(chatPane);
+        } catch (Exception e) {
+            System.err.println("❌ Erreur chargement ChatBot: " + e.getMessage());
+            e.printStackTrace();
+            afficherEnConstruction("🤖 ChatBot");
+        }
+    }
+
+    @FXML
     public void handleDeconnexion() {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Déconnexion");
@@ -96,10 +146,17 @@ public class interfacePricClientController {
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
-                    Node loginView = FXMLLoader.load(getClass().getResource("/Login.fxml"));
-                    mainBorderPane.setCenter(loginView);
+                    // Vider la session
+                    SessionManager.getInstance().logout();
+
+                    // Retourner à l'écran de login
+                    Parent loginView = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+                    Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+                    stage.setScene(new Scene(loginView, 400, 500));
+                    stage.setTitle("NAFSEYTI - Connexion");
+                    stage.setResizable(false);
                 } catch (Exception e) {
-                    System.err.println("⚠️ Login.fxml introuvable");
+                    System.err.println("⚠️ Erreur déconnexion: " + e.getMessage());
                 }
             }
         });
@@ -117,7 +174,7 @@ public class interfacePricClientController {
     private void afficherEnConstruction(String nomPage) {
         VBox placeholder = new VBox(20);
         placeholder.setStyle("-fx-background-color: #f8f5f2;");
-        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+        placeholder.setAlignment(Pos.CENTER);
         Label icone = new Label("🚧");
         icone.setStyle("-fx-font-size: 60px;");
         Label titre = new Label(nomPage);
@@ -128,16 +185,32 @@ public class interfacePricClientController {
         mainBorderPane.setCenter(placeholder);
     }
 
-    // ✅ CORRECTION : cette méthode met le bouton cliqué en vert
-    // et remet TOUS les autres en transparent
     private void setActiveButton(Button activeBtn) {
         Button[] tousLesBoutons = {
                 btnAccueil, btnRendezVous, btnContenu,
-                btnTests, btnEvenements, btnSuivi, btnFeedback
+                btnTests, btnEvenements, btnSuivi,
+                btnFeedback, btnChatbot  // ← btnGift retiré de la liste
         };
+
         for (Button btn : tousLesBoutons) {
-            if (btn != null) btn.setStyle(INACTIVE_STYLE);
+            if (btn != null) {
+                btn.setStyle(INACTIVE_STYLE);
+            }
         }
-        if (activeBtn != null) activeBtn.setStyle(ACTIVE_STYLE);
+
+        if (activeBtn != null) {
+            activeBtn.setStyle(ACTIVE_STYLE);
+        }
     }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        if (user != null) {
+            System.out.println("✅ Client connecté: " + user.getFullName());
+            if (lblBienvenue != null) {
+                lblBienvenue.setText("👋 Bonjour " + user.getFirstname() + " !");
+            }
+        }
+    }
+
 }

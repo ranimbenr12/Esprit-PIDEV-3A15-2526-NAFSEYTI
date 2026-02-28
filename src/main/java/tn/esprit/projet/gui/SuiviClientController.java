@@ -1,384 +1,582 @@
 package tn.esprit.projet.gui;
 
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import tn.esprit.projet.models.mediaObjectif;
-import tn.esprit.projet.models.objectif;
-import tn.esprit.projet.models.suivi;
-import tn.esprit.projet.services.mediaObjectifService;
-import tn.esprit.projet.services.objectifService;
-import tn.esprit.projet.services.suiviService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import tn.esprit.projet.models.*;
+import tn.esprit.projet.services.*;
+import tn.esprit.projet.utils.SessionManager;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SuiviClientController {
 
-    @FXML private TableView<suivi>            tableSuivis;
+    @FXML private Label lblTotalPoints;
+    @FXML private Button btnRecompenses;
+
+    @FXML private TableView<suivi> tableSuivis;
     @FXML private TableColumn<suivi, Integer> colIdSuivi;
-    @FXML private TableColumn<suivi, String>  colTitreSuivi;
-    @FXML private TableColumn<suivi, String>  colDescSuivi;
+    @FXML private TableColumn<suivi, String> colTitreSuivi;
+    @FXML private TableColumn<suivi, String> colDescSuivi;
 
-    @FXML private TableView<objectif>            tableObjectifs;
+    @FXML private Label lblSuiviSelectionne;
+    @FXML private TableView<objectif> tableObjectifs;
     @FXML private TableColumn<objectif, Integer> colIdObj;
-    @FXML private TableColumn<objectif, String>  colTitreObj;
-    @FXML private TableColumn<objectif, String>  colNbFichiers;
-    @FXML private TableColumn<objectif, String>  colValide;
+    @FXML private TableColumn<objectif, String> colTitreObj;
+    @FXML private TableColumn<objectif, String> colNbFichiers;
+    @FXML private TableColumn<objectif, String> colValide;
 
-    @FXML private TableView<mediaObjectif>           tableMedias;
+    @FXML private Label lblObjectifSelectionne;
+    @FXML private Label lblFichierChoisi;
+    @FXML private ImageView imgPreview;
+    @FXML private VBox vboxPreview;
+
+    @FXML private Label lblMediasTitre;
+    @FXML private TableView<mediaObjectif> tableMedias;
     @FXML private TableColumn<mediaObjectif, String> colTypeMedia;
     @FXML private TableColumn<mediaObjectif, String> colNomFichier;
     @FXML private TableColumn<mediaObjectif, String> colDateMedia;
 
-    @FXML private Label     lblSuiviSelectionne;
-    @FXML private Label     lblObjectifSelectionne;
-    @FXML private Label     lblFichierChoisi;
-    @FXML private Label     lblMediasTitre;
-    @FXML private ImageView imgPreview;
-    @FXML private VBox      vboxPreview;
+    private User currentUser;
+    private suiviService suiviService = new suiviService();
+    private objectifService objectifService = new objectifService();
+    private mediaObjectifService mediaService = new mediaObjectifService();
+    private PointsService pointsService = new PointsService();
+    private ReductionService reductionService = new ReductionService();
 
-    private suiviService         sService = new suiviService();
-    private objectifService      oService = new objectifService();
-    private mediaObjectifService mService = new mediaObjectifService();
+    private ObservableList<suivi> listeSuivis = FXCollections.observableArrayList();
+    private ObservableList<objectif> listeObjectifs = FXCollections.observableArrayList();
+    private ObservableList<mediaObjectif> listeMedias = FXCollections.observableArrayList();
 
-    private ObservableList<suivi>         listeSuivis    = FXCollections.observableArrayList();
-    private ObservableList<objectif>      listeObjectifs = FXCollections.observableArrayList();
-    private ObservableList<mediaObjectif> listeMedias    = FXCollections.observableArrayList();
-
-    private int  idSuiviSelectionne    = 0;
-    private int  idObjectifSelectionne = 0;
-    private File fichierSelectionne    = null;
-
-    private static final String UPLOAD_DIR =
-            System.getProperty("user.home") + File.separator + "nafseyti_uploads" + File.separator;
+    private int idSuiviSelectionne = 0;
+    private int idObjectifSelectionne = 0;
+    private File fichierSelectionne = null;
 
     @FXML
     public void initialize() {
+        currentUser = SessionManager.getInstance().getCurrentUser();
+        configurerTableaux();
 
-        // ===== Colonnes Suivis =====
-        colIdSuivi.setCellValueFactory(new PropertyValueFactory<>("Idsuivi"));
-        colTitreSuivi.setCellValueFactory(new PropertyValueFactory<>("Titre"));
-        colDescSuivi.setCellValueFactory(new PropertyValueFactory<>("Description"));
-
-        // ===== Colonnes Objectifs =====
-        colIdObj.setCellValueFactory(new PropertyValueFactory<>("Idobjectif"));
-        colTitreObj.setCellValueFactory(new PropertyValueFactory<>("Titre"));
-
-        // ✅ Affiche ✅ Validé ou ❌ Non validé
-        if (colValide != null)
-            colValide.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(
-                            cellData.getValue().getvalide() ? "✅ Validé" : "❌ Non validé"
-                    )
-            );
-
-        // ✅ Nombre de fichiers déposés
-        if (colNbFichiers != null)
-            colNbFichiers.setCellValueFactory(cellData -> {
-                int nb = mService.getByObjectif(
-                        cellData.getValue().getidobjectif()
-                ).size();
-                return new SimpleStringProperty(nb == 0 ? "—" : nb + " fichier(s)");
-            });
-
-        // ===== Colonnes Médias =====
-        if (colTypeMedia != null)
-            colTypeMedia.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(detecterEmoji(cellData.getValue().gettype_media()))
-            );
-
-        if (colNomFichier != null)
-            colNomFichier.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getNomFichier())
-            );
-
-        if (colDateMedia != null)
-            colDateMedia.setCellValueFactory(cellData -> {
-                if (cellData.getValue().getdate_ajout() != null)
-                    return new SimpleStringProperty(
-                            cellData.getValue().getdate_ajout().toString()
-                    );
-                return new SimpleStringProperty("—");
-            });
-
-        // ✅ Créer le dossier upload
-        new File(UPLOAD_DIR).mkdirs();
-
-        // ✅ Charger les suivis après rendu
-        Platform.runLater(() -> afficherSuivis());
+        if (currentUser != null) {
+            mettreAJourPoints();
+            afficherSuivis();
+        }
     }
 
-    // ===================== AFFICHER SUIVIS =====================
+    // ===== MÉTHODE POUR RECEVOIR L'UTILISATEUR =====
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        if (user != null) {
+            System.out.println("✅ SuiviClient - Utilisateur connecté: " + user.getFullName());
+            mettreAJourPoints();
+            afficherSuivis();
+        }
+    }
+
+    // ===== CONFIGURATION DES TABLEAUX =====
+    private void configurerTableaux() {
+        // Tableau des suivis
+        colIdSuivi.setCellValueFactory(new PropertyValueFactory<>("idsuivi"));
+        colTitreSuivi.setCellValueFactory(new PropertyValueFactory<>("titre"));
+        colDescSuivi.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        // Tableau des objectifs
+        colIdObj.setCellValueFactory(new PropertyValueFactory<>("idobjectif"));
+        colTitreObj.setCellValueFactory(new PropertyValueFactory<>("titre"));
+
+        colNbFichiers.setCellValueFactory(cellData -> {
+            int nb = mediaService.getByObjectif(cellData.getValue().getidobjectif()).size();
+            return new javafx.beans.property.SimpleStringProperty(nb == 0 ? "—" : nb + " fichier(s)");
+        });
+
+        colValide.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().getvalide() ? "✅ Validé" : "❌ Non validé"
+                )
+        );
+
+        // Tableau des médias
+        colTypeMedia.setCellValueFactory(new PropertyValueFactory<>("type_media"));
+        colNomFichier.setCellValueFactory(cellData -> {
+            // Extraire le nom du fichier depuis le chemin
+            String chemin = cellData.getValue().getchemin_fichier();
+            if (chemin != null) {
+                File file = new File(chemin);
+                return new javafx.beans.property.SimpleStringProperty(file.getName());
+            }
+            return new javafx.beans.property.SimpleStringProperty("—");
+        });
+        colDateMedia.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getdate_ajout() != null) {
+                return new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().getdate_ajout().toLocalDateTime()
+                                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                );
+            }
+            return new javafx.beans.property.SimpleStringProperty("—");
+        });
+
+        // Lier les listes aux tableaux
+        tableSuivis.setItems(listeSuivis);
+        tableObjectifs.setItems(listeObjectifs);
+        tableMedias.setItems(listeMedias);
+    }
+
+    // ===== GESTION DES POINTS =====
+    private void mettreAJourPoints() {
+        if (currentUser != null && lblTotalPoints != null) {
+            int totalPoints = pointsService.getTotalPoints(currentUser.getId());
+            lblTotalPoints.setText("🎯 " + totalPoints + " pts");
+        }
+    }
+
+    // ===== AFFICHER LES SUIVIS =====
     private void afficherSuivis() {
-        List<suivi> result = sService.selectAll();
-        System.out.println("=== Suivis : " + result.size() + " ===");
+        if (currentUser == null) return;
+
         listeSuivis.clear();
-        listeSuivis.addAll(result);
+        listeSuivis.addAll(suiviService.selectByUserId(currentUser.getId()));
         tableSuivis.setItems(listeSuivis);
         tableSuivis.refresh();
-        System.out.println("✅ Suivis affichés !");
+        System.out.println("📊 " + listeSuivis.size() + " suivis chargés");
     }
 
-    // ===================== CLIC SUR UN SUIVI =====================
+    // ===== CHARGER LES OBJECTIFS D'UN SUIVI =====
     @FXML
     public void chargerObjectifs() {
         suivi s = tableSuivis.getSelectionModel().getSelectedItem();
         if (s != null) {
             idSuiviSelectionne = s.getidsuivi();
-            if (lblSuiviSelectionne != null)
-                lblSuiviSelectionne.setText("📌 Objectifs du suivi : " + s.gettitre());
+            lblSuiviSelectionne.setText("📌 Objectifs du suivi : " + s.gettitre());
 
-            List<objectif> objList = oService.selectBySuivi(idSuiviSelectionne);
-            System.out.println("=== Objectifs : " + objList.size() + " ===");
             listeObjectifs.clear();
-            listeObjectifs.addAll(objList);
+            listeObjectifs.addAll(objectifService.selectBySuivi(idSuiviSelectionne));
             tableObjectifs.setItems(listeObjectifs);
             tableObjectifs.refresh();
 
-            // Vider les médias
+            // Vider la sélection d'objectif
+            idObjectifSelectionne = 0;
+            lblObjectifSelectionne.setText("← Cliquez sur un objectif");
             listeMedias.clear();
-            if (tableMedias != null) tableMedias.setItems(listeMedias);
-            resetUpload();
         }
     }
 
-    // ===================== CLIC SUR UN OBJECTIF =====================
+    // ===== SÉLECTIONNER UN OBJECTIF =====
     @FXML
     public void selectionnerObjectif() {
         objectif o = tableObjectifs.getSelectionModel().getSelectedItem();
         if (o != null) {
             idObjectifSelectionne = o.getidobjectif();
+            lblObjectifSelectionne.setText("Objectif : " + o.gettitre());
 
-            if (lblObjectifSelectionne != null)
-                lblObjectifSelectionne.setText(o.gettitre());
-
-            // ✅ Charger les médias de cet objectif
+            // Charger les fichiers de cet objectif
             listeMedias.clear();
-            listeMedias.addAll(mService.getByObjectif(idObjectifSelectionne));
-            System.out.println("=== Médias : " + listeMedias.size() + " ===");
+            listeMedias.addAll(mediaService.getByObjectif(idObjectifSelectionne));
+            tableMedias.setItems(listeMedias);
+            tableMedias.refresh();
 
-            if (tableMedias != null) {
-                tableMedias.setItems(listeMedias);
-                tableMedias.refresh();
-            }
-
-            if (lblMediasTitre != null)
-                lblMediasTitre.setText("🗂️ Fichiers pour : " + o.gettitre()
-                        + " (" + listeMedias.size() + ")");
-
-            if (lblFichierChoisi != null)
-                lblFichierChoisi.setText("Aucun nouveau fichier choisi");
-
-            if (vboxPreview != null)
-                vboxPreview.setVisible(false);
+            lblMediasTitre.setText("🗂️ Fichiers pour : " + o.gettitre());
         }
     }
 
-    // ===================== CLIC SUR UN MEDIA =====================
-    @FXML
-    public void selectionnerMedia() {
-        if (tableMedias == null) return;
-        mediaObjectif m = tableMedias.getSelectionModel().getSelectedItem();
-        if (m != null && "image".equals(m.gettype_media()))
-            afficherPreview(m.getchemin_fichier());
-        else if (vboxPreview != null)
-            vboxPreview.setVisible(false);
-    }
-
-    // ===================== CHOISIR UN FICHIER =====================
+    // ===== CHOISIR UN FICHIER =====
     @FXML
     public void choisirFichier() {
         if (idObjectifSelectionne == 0) {
-            showAlert("Attention",
-                    "⚠️ Sélectionnez d'abord un objectif !",
-                    Alert.AlertType.WARNING);
+            showAlert("Attention", "Veuillez d'abord sélectionner un objectif", Alert.AlertType.WARNING);
             return;
         }
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Choisir un fichier pour valider l'objectif");
-        fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images",    "*.jpg","*.jpeg","*.png","*.gif","*.bmp"),
-                new FileChooser.ExtensionFilter("Vidéos",    "*.mp4","*.avi","*.mkv","*.mov"),
-                new FileChooser.ExtensionFilter("Documents", "*.pdf","*.doc","*.docx","*.txt"),
-                new FileChooser.ExtensionFilter("Tous",      "*.*")
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir un fichier");
+
+        // Ajouter des filtres pour les types de fichiers
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"),
+                new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif"),
+                new FileChooser.ExtensionFilter("Documents", "*.pdf", "*.docx", "*.txt"),
+                new FileChooser.ExtensionFilter("Vidéos", "*.mp4", "*.avi", "*.mov")
         );
-        Stage stage = (Stage) tableSuivis.getScene().getWindow();
-        fichierSelectionne = fc.showOpenDialog(stage);
-        if (fichierSelectionne != null) {
-            if (lblFichierChoisi != null)
-                lblFichierChoisi.setText("📎 " + fichierSelectionne.getName());
-            if (detecterType(fichierSelectionne.getName()).equals("image"))
-                afficherPreview(fichierSelectionne.getAbsolutePath());
-            else if (vboxPreview != null)
+
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            fichierSelectionne = file;
+            lblFichierChoisi.setText(file.getName());
+
+            // Prévisualisation pour les images
+            String fileName = file.getName().toLowerCase();
+            if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") ||
+                    fileName.endsWith(".png") || fileName.endsWith(".gif")) {
+                try {
+                    Image image = new Image(file.toURI().toString());
+                    imgPreview.setImage(image);
+                    vboxPreview.setVisible(true);
+                    vboxPreview.setManaged(true);
+                } catch (Exception e) {
+                    vboxPreview.setVisible(false);
+                    vboxPreview.setManaged(false);
+                }
+            } else {
                 vboxPreview.setVisible(false);
+                vboxPreview.setManaged(false);
+            }
         }
     }
 
-    // ===================== ENVOYER LE FICHIER =====================
+    // ===== UPLOADER LE FICHIER =====
     @FXML
     public void uploadFichier() {
-        if (fichierSelectionne == null) {
-            showAlert("Attention",
-                    "⚠️ Choisissez d'abord un fichier !",
-                    Alert.AlertType.WARNING);
-            return;
-        }
         if (idObjectifSelectionne == 0) {
-            showAlert("Attention",
-                    "⚠️ Sélectionnez d'abord un objectif !",
-                    Alert.AlertType.WARNING);
+            showAlert("Attention", "Veuillez d'abord sélectionner un objectif", Alert.AlertType.WARNING);
             return;
         }
+
+        if (fichierSelectionne == null) {
+            showAlert("Attention", "Veuillez d'abord choisir un fichier", Alert.AlertType.WARNING);
+            return;
+        }
+
         try {
-            // ✅ Copier le fichier dans le dossier uploads
-            String nomFichier  = System.currentTimeMillis() + "_" + fichierSelectionne.getName();
-            Path   destination = Paths.get(UPLOAD_DIR + nomFichier);
-            Files.copy(fichierSelectionne.toPath(), destination,
-                    StandardCopyOption.REPLACE_EXISTING);
+            // Créer le dossier uploads s'il n'existe pas
+            String uploadDir = "uploads";
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
 
-            System.out.println("✅ Fichier copié : " + destination);
+            // Copier le fichier
+            String fileName = System.currentTimeMillis() + "_" + fichierSelectionne.getName();
+            Path destination = Path.of(uploadDir, fileName);
+            Files.copy(fichierSelectionne.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
 
-            // ✅ Enregistrer dans la base de données
-            mediaObjectif m = new mediaObjectif();
-            m.setid_objectif(idObjectifSelectionne);
-            m.settype_media(detecterType(fichierSelectionne.getName()));
-            m.setchemin_fichier(destination.toString());
-            mService.insertOne(m);
+            // Déterminer le type de média
+            String type = "document";
+            String ext = fichierSelectionne.getName().toLowerCase();
+            if (ext.endsWith(".jpg") || ext.endsWith(".jpeg") || ext.endsWith(".png") || ext.endsWith(".gif")) {
+                type = "image";
+            } else if (ext.endsWith(".mp4") || ext.endsWith(".avi") || ext.endsWith(".mov") || ext.endsWith(".mkv")) {
+                type = "video";
+            } else if (ext.endsWith(".pdf") || ext.endsWith(".docx") || ext.endsWith(".txt")) {
+                type = "document";
+            }
 
-            System.out.println("✅ Média enregistré en BD !");
+            // Utiliser les méthodes du service
+            mediaObjectif media = new mediaObjectif();
+            media.setid_objectif(idObjectifSelectionne);
+            media.settype_media(type);
+            media.setchemin_fichier(destination.toString());
 
-            // ✅ Rafraîchir
-            selectionnerObjectif();
-            tableObjectifs.refresh();
+            mediaService.insertOne(media);
 
-            // ✅ Réinitialiser
+            // Rafraîchir la liste
+            listeMedias.clear();
+            listeMedias.addAll(mediaService.getByObjectif(idObjectifSelectionne));
+            tableMedias.setItems(listeMedias);
+            tableMedias.refresh();
+
+            // Réinitialiser
             fichierSelectionne = null;
-            if (lblFichierChoisi != null)
-                lblFichierChoisi.setText("Aucun nouveau fichier choisi");
-            if (vboxPreview != null)
-                vboxPreview.setVisible(false);
+            lblFichierChoisi.setText("Aucun fichier choisi");
+            vboxPreview.setVisible(false);
+            vboxPreview.setManaged(false);
 
-            showAlert("Succès",
-                    "✅ Fichier envoyé au psychologue !",
-                    Alert.AlertType.INFORMATION);
+            showAlert("Succès", "✅ Fichier envoyé avec succès !", Alert.AlertType.INFORMATION);
 
         } catch (IOException e) {
-            System.err.println("❌ Erreur upload : " + e.getMessage());
-            showAlert("Erreur", "❌ " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erreur", "Impossible d'uploader le fichier: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
     }
 
-    // ===================== OUVRIR UN FICHIER =====================
+    // ===== OUVRIR UN FICHIER =====
     @FXML
     public void ouvrirFichier() {
-        if (tableMedias == null) return;
-        mediaObjectif m = tableMedias.getSelectionModel().getSelectedItem();
-        if (m == null) {
-            showAlert("Attention", "⚠️ Sélectionnez un fichier !", Alert.AlertType.WARNING);
+        mediaObjectif media = tableMedias.getSelectionModel().getSelectedItem();
+        if (media == null) {
+            showAlert("Attention", "Veuillez sélectionner un fichier", Alert.AlertType.WARNING);
             return;
         }
+
         try {
-            File f = new File(m.getchemin_fichier());
-            if (f.exists())
-                Desktop.getDesktop().open(f);
-            else
-                showAlert("Erreur", "❌ Fichier introuvable !", Alert.AlertType.ERROR);
+            File file = new File(media.getchemin_fichier());
+            if (file.exists()) {
+                java.awt.Desktop.getDesktop().open(file);
+            } else {
+                showAlert("Erreur", "Fichier introuvable", Alert.AlertType.ERROR);
+            }
         } catch (IOException e) {
-            showAlert("Erreur", "❌ Impossible d'ouvrir !", Alert.AlertType.ERROR);
+            showAlert("Erreur", "Impossible d'ouvrir le fichier", Alert.AlertType.ERROR);
         }
     }
 
-    // ===================== SUPPRIMER UN FICHIER =====================
+    // ===== SUPPRIMER UN FICHIER =====
     @FXML
     public void supprimerMedia() {
-        if (tableMedias == null) return;
-        mediaObjectif m = tableMedias.getSelectionModel().getSelectedItem();
-        if (m == null) {
-            showAlert("Attention", "⚠️ Sélectionnez un fichier !", Alert.AlertType.WARNING);
+        mediaObjectif media = tableMedias.getSelectionModel().getSelectedItem();
+        if (media == null) {
+            showAlert("Attention", "Veuillez sélectionner un fichier", Alert.AlertType.WARNING);
             return;
         }
-        Alert c = new Alert(Alert.AlertType.CONFIRMATION);
-        c.setTitle("Confirmation");
-        c.setContentText("Supprimer : " + m.getNomFichier() + " ?");
-        c.showAndWait().ifPresent(r -> {
-            if (r == ButtonType.OK) {
-                // ✅ Supprimer de la BD
-                mService.deleteOne(m.getid_media());
-                // ✅ Supprimer le fichier physique
-                new File(m.getchemin_fichier()).delete();
-                // ✅ Rafraîchir
-                selectionnerObjectif();
-                tableObjectifs.refresh();
-                if (vboxPreview != null) vboxPreview.setVisible(false);
-                System.out.println("✅ Média supprimé !");
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmation");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Voulez-vous vraiment supprimer ce fichier ?");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    // Supprimer le fichier physique
+                    File file = new File(media.getchemin_fichier());
+                    if (file.exists()) {
+                        file.delete();
+                    }
+
+                    // Utiliser getid_media()
+                    mediaService.deleteOne(media.getid_media());
+
+                    // Rafraîchir la liste
+                    listeMedias.remove(media);
+                    tableMedias.refresh();
+
+                    showAlert("Succès", "✅ Fichier supprimé", Alert.AlertType.INFORMATION);
+
+                } catch (Exception e) {
+                    showAlert("Erreur", "Impossible de supprimer le fichier", Alert.AlertType.ERROR);
+                }
             }
         });
     }
 
-    // ===================== PRÉVISUALISATION =====================
-    private void afficherPreview(String path) {
-        if (imgPreview != null && vboxPreview != null) {
-            try {
-                imgPreview.setImage(new Image(new File(path).toURI().toString()));
-                vboxPreview.setVisible(true);
-            } catch (Exception e) {
-                vboxPreview.setVisible(false);
-            }
-        }
+    // ===== SÉLECTIONNER UN MÉDIA =====
+    @FXML
+    public void selectionnerMedia() {
+        // Rien à faire, la sélection est gérée par le bouton Ouvrir/Supprimer
     }
 
-    // ===================== DÉTECTER TYPE =====================
-    private String detecterType(String nom) {
-        nom = nom.toLowerCase();
-        if (nom.endsWith(".jpg") || nom.endsWith(".jpeg") ||
-                nom.endsWith(".png") || nom.endsWith(".gif")  ||
-                nom.endsWith(".bmp"))
-            return "image";
-        if (nom.endsWith(".mp4") || nom.endsWith(".avi") ||
-                nom.endsWith(".mkv") || nom.endsWith(".mov"))
-            return "video";
-        return "document";
-    }
+    // ===== BOUTON RÉCOMPENSES (AVEC LOGS DE DÉBOGAGE) =====
+    @FXML
+    public void handleBtnRecompenses() {
+        if (currentUser == null) return;
 
-    // ✅ Emoji selon le type
-    private String detecterEmoji(String type) {
-        if (type == null) return "📄";
-        switch (type) {
-            case "image":    return "🖼️ image";
-            case "video":    return "🎥 video";
-            case "document": return "📄 document";
-            default:         return "📄 " + type;
-        }
-    }
+        int totalPoints = pointsService.getTotalPoints(currentUser.getId());
 
-    // ===================== RESET UPLOAD =====================
-    private void resetUpload() {
-        idObjectifSelectionne = 0;
-        fichierSelectionne    = null;
-        if (lblObjectifSelectionne != null)
-            lblObjectifSelectionne.setText(
-                    "← Cliquez d'abord sur un objectif dans le tableau ci-dessus"
+        // Créer une nouvelle fenêtre pour la boutique
+        Stage stage = new Stage();
+        stage.setTitle("🎁 Boutique de récompenses");
+
+        VBox root = new VBox(15);
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color: white;");
+
+        // En-tête avec les points
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        Label title = new Label("🎁 Boutique de récompenses");
+        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #6c5ce7;");
+
+        Label pointsLabel = new Label("Vos points: " + totalPoints);
+        pointsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #27ae60; -fx-padding: 5 15; -fx-background-color: #e8f5e9; -fx-background-radius: 20;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        header.getChildren().addAll(title, spacer, pointsLabel);
+
+        // Liste des réductions disponibles
+        ListView<Reduction> listView = new ListView<>();
+        listView.setPrefHeight(400);
+
+        try {
+            // Récupérer TOUTES les réductions
+            ObservableList<Reduction> reductions = FXCollections.observableArrayList(
+                    reductionService.getAllReductions()
             );
-        if (lblFichierChoisi != null)
-            lblFichierChoisi.setText("Aucun fichier choisi");
-        if (vboxPreview != null)
-            vboxPreview.setVisible(false);
+            listView.setItems(reductions);
+
+            listView.setCellFactory(lv -> new ListCell<Reduction>() {
+                @Override
+                protected void updateItem(Reduction item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        HBox cellBox = new HBox(10);
+                        cellBox.setPadding(new Insets(15));
+                        cellBox.setAlignment(Pos.CENTER_LEFT);
+                        cellBox.setPrefHeight(80);
+
+                        // Partie gauche avec les infos principales
+                        VBox leftBox = new VBox(5);
+
+                        // Nom de la marque en grand
+                        Label marqueLabel = new Label(item.getNomMarque());
+                        marqueLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+                        // Description
+                        Label descLabel = new Label(item.getDescription());
+                        descLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+                        leftBox.getChildren().addAll(marqueLabel, descLabel);
+
+                        // Partie droite avec les points et pourcentage
+                        VBox rightBox = new VBox(5);
+                        rightBox.setAlignment(Pos.CENTER_RIGHT);
+
+                        // Points requis en grand
+                        Label pointsReqLabel = new Label(item.getPointsRequis() + " pts");
+                        pointsReqLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #e67e22;");
+
+                        // Pourcentage de réduction
+                        Label pourcLabel = new Label(item.getPourcentageReduction() + "% de réduction");
+                        pourcLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
+
+                        rightBox.getChildren().addAll(pointsReqLabel, pourcLabel);
+
+                        // Indicateur de disponibilité
+                        Label dispoLabel = new Label();
+                        if (totalPoints >= item.getPointsRequis()) {
+                            dispoLabel.setText("✅ DISPONIBLE");
+                            dispoLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-size: 12px; -fx-font-weight: bold;");
+                            cellBox.setStyle("-fx-background-color: #f0fff0; -fx-background-radius: 8;");
+                        } else {
+                            int manque = item.getPointsRequis() - totalPoints;
+                            dispoLabel.setText("❌ IL MANQUE " + manque + " PTS");
+                            dispoLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;");
+                            cellBox.setStyle("-fx-background-color: #fff0f0; -fx-background-radius: 8;");
+                        }
+
+                        // Organiser l'affichage
+                        HBox topRow = new HBox(10);
+                        topRow.setAlignment(Pos.CENTER_LEFT);
+                        topRow.getChildren().addAll(leftBox, new Region(), rightBox);
+                        HBox.setHgrow(topRow.getChildren().get(1), javafx.scene.layout.Priority.ALWAYS);
+
+                        VBox mainBox = new VBox(5);
+                        mainBox.getChildren().addAll(topRow, dispoLabel);
+
+                        cellBox.getChildren().add(mainBox);
+                        setGraphic(cellBox);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("❌ Erreur chargement réductions: " + e.getMessage());
+        }
+
+        // Bouton d'achat
+        Button btnAcheter = new Button("🎁 Échanger mes points");
+        btnAcheter.setStyle("-fx-background-color: #6c5ce7; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 12 25; -fx-background-radius: 8; -fx-cursor: hand;");
+        btnAcheter.setMaxWidth(200);
+
+        Label lblMessage = new Label();
+        lblMessage.setStyle("-fx-font-size: 12px;");
+
+        btnAcheter.setOnAction(e -> {
+            Reduction selected = listView.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                lblMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                lblMessage.setText("❌ Veuillez sélectionner une réduction");
+                return;
+            }
+
+            // ✅ LOGS DE DÉBOGAGE ULTRA-DÉTAILLÉS
+            int reductionId = selected.getIdReduction();
+            System.out.println("\n🔍🔍🔍 VÉRIFICATION ID 🔍🔍🔍");
+            System.out.println("   selected.getClass() = " + selected.getClass().getName());
+            System.out.println("   selected.toString() = " + selected.toString());
+            System.out.println("   selected.getIdReduction() = " + reductionId);
+            System.out.println("   selected.getNomMarque() = " + selected.getNomMarque());
+            System.out.println("   selected.getPointsRequis() = " + selected.getPointsRequis());
+            System.out.println("   selected.getPourcentageReduction() = " + selected.getPourcentageReduction());
+            System.out.println("🔍🔍🔍 FIN VÉRIFICATION 🔍🔍🔍\n");
+
+            // Vérifier que l'ID est valide
+            if (reductionId <= 0) {
+                lblMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                lblMessage.setText("❌ Erreur: ID de réduction invalide (" + reductionId + ")");
+                System.err.println("❌ ERREUR: ID de réduction = " + reductionId);
+                return;
+            }
+
+            // Afficher les détails dans la console
+            System.out.println("\n🔍 RÉDUCTION SÉLECTIONNÉE:");
+            System.out.println("   Nom: " + selected.getNomMarque());
+            System.out.println("   ID: " + reductionId);
+            System.out.println("   Points requis: " + selected.getPointsRequis());
+            System.out.println("   Pourcentage: " + selected.getPourcentageReduction() + "%");
+            System.out.println("   Vos points: " + totalPoints);
+
+            // Vérifier si l'utilisateur a assez de points
+            if (totalPoints < selected.getPointsRequis()) {
+                int pointsManquants = selected.getPointsRequis() - totalPoints;
+                lblMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                lblMessage.setText("❌ " + selected.getNomMarque() + " nécessite " + selected.getPointsRequis() +
+                        " points. Il vous manque " + pointsManquants + " points !");
+                return;
+            }
+
+            boolean success = reductionService.acheterReduction(currentUser.getId(), reductionId);
+            if (success) {
+                lblMessage.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                String code = genererCodePromo();
+                lblMessage.setText("✅ Félicitations ! Code: " + code);
+                mettreAJourPoints();
+                stage.close();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Succès");
+                alert.setHeaderText("🎉 Réduction obtenue !");
+                alert.setContentText("Votre code promo: " + code + "\n\nPrésentez ce code à " + selected.getNomMarque() + " pour bénéficier de " + selected.getPourcentageReduction() + "% de réduction.");
+                alert.showAndWait();
+            } else {
+                lblMessage.setStyle("-fx-text-fill: red;");
+                lblMessage.setText("❌ Erreur lors de l'échange");
+            }
+        });
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(btnAcheter);
+
+        root.getChildren().addAll(header, listView, buttonBox, lblMessage);
+
+        Scene scene = new Scene(root, 900, 650);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    // ===================== ALERTE =====================
+    private String genererCodePromo() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder code = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            int index = (int)(Math.random() * chars.length());
+            code.append(chars.charAt(index));
+        }
+        return "NAFSEYTI-" + code.toString();
+    }
+
+    // ===== UTILITAIRE =====
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

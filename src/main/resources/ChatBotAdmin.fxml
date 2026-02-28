@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.projet.gui.ChatBotAdminController"
+            fitToWidth="true"
+            style="-fx-background-color: #f8f5f2;">
+
+    <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: #f8f5f2;">
+
+        <!-- Titre -->
+        <Label text="🤖 Gestion du ChatBot"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+        <!-- Section Patients -->
+        <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12;">
+            <Label text="Sélectionner un patient :" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ComboBox fx:id="cmbPatients" promptText="Choisir un patient..." prefWidth="350" onAction="#chargerConversations"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblNbMessages" text="0 messages" style="-fx-text-fill: #666; -fx-font-style: italic;"/>
+            </HBox>
+        </VBox>
+
+        <!-- ✅ Tableau des conversations -->
+        <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12;">
+            <Label text="📜 Historique des conversations"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+
+            <TableView fx:id="tableConversations" prefHeight="450">
+                <columns>
+                    <TableColumn fx:id="colDate" text="Date" prefWidth="160"/>
+                    <TableColumn fx:id="colMessagePatient" text="Message du patient" prefWidth="350"/>
+                    <TableColumn fx:id="colReponseBot" text="Réponse du chatbot" prefWidth="350"/>
+                </columns>
+                <placeholder>
+                    <Label text="Sélectionnez un patient pour voir ses conversations." style="-fx-text-fill: #999;"/>
+                </placeholder>
+            </TableView>
+
+            <!-- ✅ Bouton de téléchargement -->
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="📥 Télécharger la conversation"
+                        onAction="#telechargerConversation"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-padding: 10 20;
+                               -fx-background-radius: 8; -fx-cursor: hand;"
+                        prefWidth="250"/>
+            </HBox>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

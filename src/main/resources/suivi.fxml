@@ -56,12 +56,19 @@
             <Button fx:id="btnEvenements" prefWidth="180"
                     style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
                     text="🎉 Évènements" />
+            <!-- ✅ CORRECTION ICI : Ajout de onAction pour le bouton Suivi personnel -->
             <Button fx:id="btnSuivi" prefWidth="180"
+                    onAction="#gererSuivis"
                     style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
                     text="📈 Suivi personnel" />
             <Button fx:id="btnFeedback" prefWidth="180"
                     style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
                     text="💬 Feedback" />
+            <!-- Bouton ChatBot Admin avec onAction -->
+            <Button fx:id="btnChatBot" prefWidth="180"
+                    onAction="#ouvrirChatBotAdmin"
+                    style="-fx-background-color: transparent; -fx-text-fill: #69685c; -fx-alignment: CENTER_LEFT; -fx-padding: 10; -fx-font-size: 14px;"
+                    text="🤖 ChatBot Admin" />
 
             <Region VBox.vgrow="ALWAYS" />
 
@@ -192,7 +199,7 @@
                     </Button>
                 </VBox>
 
-                <!-- ✅ CARTE SUIVI PERSONNEL -->
+                <!-- CARTE SUIVI PERSONNEL -->
                 <VBox prefWidth="250" style="-fx-background-color: rgba(255,255,255,0.7); -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="2" GridPane.rowIndex="0">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <Label style="-fx-font-size: 24px;" text="📈" />

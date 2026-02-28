@@ -17,9 +17,21 @@
           style="-fx-background-color: #f8f5f2; -fx-padding: 25;"
           fillWidth="true">
 
-        <!-- TITRE -->
-        <Label text="📈 Mon Progression"
-               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #374535;"/>
+        <!-- TITRE avec points -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="📈 Mon Progression"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #374535;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblTotalPoints" text="🎯 0 pts"
+                   style="-fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-font-size: 16px; -fx-padding: 5 15; -fx-background-color: #e8f5e9; -fx-background-radius: 20;"/>
+        </HBox>
+
+        <!-- Bouton Récompenses -->
+        <HBox alignment="CENTER_RIGHT">
+            <Button fx:id="btnRecompenses" text="🎁 Voir mes récompenses"
+                    onAction="#handleBtnRecompenses"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        </HBox>
 
         <!-- ===== SECTION 1 : MES SUIVIS ===== -->
         <VBox spacing="8"

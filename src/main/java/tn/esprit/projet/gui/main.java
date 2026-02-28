@@ -10,15 +10,12 @@ public class main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/suivi.fxml"));
-        primaryStage.setTitle("NAFSEYTI");
-        primaryStage.setScene(new Scene(root));
+        // Charger la page de login d'abord
+        Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+        primaryStage.setTitle("NAFSEYTI - Connexion");
+        primaryStage.setScene(new Scene(root, 400, 500));
+        primaryStage.setResizable(false);
         primaryStage.show();
-
-
-
-
-
     }
 
     public static void main(String[] args) {
