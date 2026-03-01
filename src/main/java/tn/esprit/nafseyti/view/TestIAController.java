@@ -42,7 +42,9 @@ public class TestIAController implements Initializable {
             "7. Vous évitez les interactions sociales ?",
             "8. Vous avez des pensées négatives fréquentes ?"
     );
-
+    //AIzaSyCXveuqymsC7wD6cUcol6MPkmK30O7hSK0
+    //AIzaSyBYNWGRkiYt3Ff2Jkgwy8bB_rOCM1vYTgw
+    //hethom zous jdod ken cle lekher mahabech yekhdem
     private final List<ToggleGroup> toggleGroups = new ArrayList<>();
 
     private static final String API_KEY = "AIzaSyAeCu_-1DWcnwX8S4Oi5seVzPjYYsCLVSQ";
