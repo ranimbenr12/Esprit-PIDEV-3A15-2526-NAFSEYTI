@@ -424,7 +424,7 @@ public class ListeFichesConsultationController implements Initializable {
             }
         }
     }
-
+    //hethy tarjaa lil acceuil
     @FXML
     private void handleBtnRendezVous() {
         try {
