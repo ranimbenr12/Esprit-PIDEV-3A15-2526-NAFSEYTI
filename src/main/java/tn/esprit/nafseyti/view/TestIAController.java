@@ -31,7 +31,7 @@ public class TestIAController implements Initializable {
     @FXML private Button     btnBack;
     @FXML private Button     btnSubmit;
 
-    // ── Data ─────────────────────────────────────────
+    // ── Data de l'ia ─────────────────────────────────────────
     private final List<String> questions = Arrays.asList(
             "1. Vous sentez-vous souvent triste ou vide ?",
             "2. Avez-vous des difficultés à dormir ?",
