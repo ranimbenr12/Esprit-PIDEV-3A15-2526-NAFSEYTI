@@ -11,7 +11,7 @@ public class interfacePrincipalController {
     // BorderPane principal du FXML
     @FXML
     private BorderPane mainBorderPane;
-
+    //
     // Méthode appelée quand on clique sur le bouton "Rendez-vous"
     @FXML
     private void handleRendezVous(ActionEvent event) {

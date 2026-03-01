@@ -34,7 +34,7 @@ public class CreateFicheConsultationController implements Initializable {
     private int rendezVousId;
     private String patientPrenom;
     private String patientNom;
-
+    //
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnCancel.setOnAction(e -> closeWindow());

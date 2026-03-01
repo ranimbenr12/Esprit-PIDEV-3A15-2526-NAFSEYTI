@@ -30,7 +30,7 @@ public class MyAppointmentsController implements Initializable {
     @FXML private Label completedRdvLabel;
     @FXML
     private Label connectedUserLabel;
-
+    //
     private int userId; // ID de l'utilisateur connecté
 
     @Override
