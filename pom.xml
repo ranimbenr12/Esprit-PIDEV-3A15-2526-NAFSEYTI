@@ -73,6 +73,12 @@
             <artifactId>javafx-web</artifactId>
             <version>21.0.1</version>
         </dependency>
+        <!-- Google Sheets API -->
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-sheets</artifactId>
+            <version>v4-rev20220927-2.0.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
