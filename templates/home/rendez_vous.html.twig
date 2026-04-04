@@ -1,0 +1,1072 @@
+{# templates/home/rendez_vous.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}NAFSEYTI — Prendre un Rendez-vous{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --navy:      #5F7161;
+  --navy-mid:  #6D8B74;
+  --navy-soft: #A6BB8D;
+  --blue-acc:  #C1D0B5;
+  --blue-light:#EFEAD8;
+  --slate:     #6B705C;
+  --slate-lt:  #A5A58D;
+  --white:     #FFFFFF;
+  --off-white: #F8F5F0;
+  --border:    #DDD3C3;
+}
+
+.rdv-page { font-family: 'Instrument Sans', sans-serif; background: var(--off-white); }
+
+/* ════ HERO ════ */
+.rdv-hero {
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+  padding: 64px 0 0;
+  border-bottom: 1px solid var(--border);
+}
+.rdv-hero-dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none; opacity: .55;
+}
+.rdv-hero-inner {
+  max-width: 1160px; margin: 0 auto; padding: 0 40px;
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+}
+.rdv-hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Syne', sans-serif; font-size: .68rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--blue-acc); background: var(--blue-light);
+  border: 1px solid rgba(59,111,232,.2);
+  padding: 5px 14px; border-radius: 100px; margin-bottom: 20px;
+}
+.rdv-hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 3.8vw, 3rem); font-weight: 800;
+  color: var(--navy); line-height: 1.12;
+  margin-bottom: 16px; letter-spacing: -.02em;
+}
+.rdv-hero-title span { color: var(--blue-acc); }
+.rdv-hero-sub {
+  font-size: .95rem; color: var(--slate);
+  line-height: 1.75; max-width: 440px; font-weight: 400;
+}
+.rdv-hero-pills { display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
+.rdv-hero-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--off-white); border: 1.5px solid var(--border);
+  border-radius: 100px; padding: 7px 14px;
+  font-size: .78rem; color: var(--navy);
+  font-family: 'Instrument Sans', sans-serif; font-weight: 500;
+}
+.rdv-hero-pill i { color: var(--blue-acc); font-size: .8rem; }
+
+/* ── Photo collage ── */
+.rdv-photo-collage { position: relative; height: 400px; padding-bottom: 32px; }
+.collage-main {
+  position: absolute; top: 0; right: 0;
+  width: 63%; height: 320px;
+  border-radius: 18px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(13,27,62,.16);
+}
+.collage-main img { width:100%; height:100%; object-fit:cover; display:block; }
+.collage-sec {
+  position: absolute; bottom: 0; left: 0;
+  width: 50%; height: 230px;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(13,27,62,.13);
+  border: 4px solid white;
+}
+.collage-sec img { width:100%; height:100%; object-fit:cover; display:block; }
+.collage-tert {
+  position: absolute; top: 44px; left: calc(50% - 56px);
+  width: 108px; height: 108px;
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 8px 24px rgba(13,27,62,.14);
+  border: 3px solid white; z-index: 3;
+}
+.collage-tert img { width:100%; height:100%; object-fit:cover; display:block; }
+.collage-stat {
+  position: absolute; top: 20px; left: 0;
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 14px 20px;
+  box-shadow: 0 8px 32px rgba(13,27,62,.1); z-index: 4; min-width: 130px;
+}
+.collage-stat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: 14px 14px 0 0; background: var(--blue-acc);
+}
+.collage-stat-num {
+  font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800;
+  color: var(--navy); line-height: 1;
+}
+.collage-stat-lbl { font-size: .7rem; color: var(--slate); margin-top: 4px; }
+.collage-badge {
+  position: absolute; bottom: 50px; right: -10px;
+  background: var(--navy); color: white;
+  border-radius: 12px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 8px 24px rgba(13,27,62,.2); z-index: 4;
+  font-family: 'Instrument Sans', sans-serif; font-size: .78rem; white-space: nowrap;
+}
+.collage-badge i { color: var(--blue-acc); font-size: 1rem; }
+
+/* ── Steps bar ── */
+.rdv-steps-bar { background: var(--navy); }
+.rdv-steps-bar-inner {
+  max-width: 1160px; margin: 0 auto; padding: 0 40px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.rdv-step-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 24px 24px 24px 0;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.rdv-step-row:first-child { padding-left: 0; }
+.rdv-step-row:last-child { border-right: none; }
+.rdv-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--blue-acc); color: white;
+  font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.rdv-step-title { font-family: 'Syne', sans-serif; font-size: .8rem; font-weight: 700; color: white; margin-bottom: 3px; }
+.rdv-step-txt { font-size: .78rem; color: rgba(255,255,255,.65); line-height: 1.5; }
+
+/* ════ TOOLBAR ════ */
+.rdv-toolbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.rdv-toolbar-inner {
+  max-width: 1160px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; gap: 24px; height: 64px;
+}
+.rdv-search { position: relative; flex: 1; max-width: 320px; }
+.rdv-search input {
+  width: 100%; padding: 9px 16px 9px 38px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: 'Instrument Sans', sans-serif; font-size: .85rem;
+  color: var(--navy); background: var(--off-white); outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.rdv-search input:focus { border-color: var(--blue-acc); box-shadow: 0 0 0 3px rgba(59,111,232,.1); background: white; }
+.rdv-search input::placeholder { color: var(--slate-lt); }
+.rdv-search i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--slate-lt); font-size: .8rem; pointer-events: none; }
+.rdv-filters { display: flex; gap: 4px; margin-left: auto; }
+.rdv-filter-btn {
+  padding: 7px 16px; border-radius: 8px;
+  border: 1.5px solid transparent; background: transparent;
+  font-family: 'Instrument Sans', sans-serif; font-size: .8rem; font-weight: 500;
+  color: var(--slate); cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.rdv-filter-btn:hover { background: var(--blue-light); color: var(--navy-mid); }
+.rdv-filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+.rdv-count-badge { font-family: 'Instrument Sans', sans-serif; font-size: .75rem; color: var(--slate); margin-left: auto; white-space: nowrap; }
+.rdv-count-badge strong { color: var(--navy); font-weight: 600; }
+
+/* ════ CONTENT ════ */
+.rdv-content { max-width: 1160px; margin: 0 auto; padding: 40px 40px 80px; }
+
+/* ════ FLASH ════ */
+.rdv-flash { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 10px; margin-bottom: 24px; font-size: .88rem; }
+.rdv-flash.success { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8; }
+.rdv-flash.error   { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; }
+
+/* ════ BOUTON MES RDV ════ */
+.btn-my-rdv {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; background: var(--white); color: var(--navy);
+  border: 1.5px solid var(--border); border-radius: 9px;
+  font-family: 'Syne', sans-serif; font-size: .78rem; font-weight: 700;
+  letter-spacing: .04em; text-decoration: none; cursor: pointer;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+}
+.btn-my-rdv:hover {
+  border-color: var(--navy); background: var(--blue-light);
+  color: var(--navy); text-decoration: none;
+  box-shadow: 0 4px 14px rgba(95,113,97,.15);
+}
+.btn-my-rdv i { color: var(--navy-mid); }
+.btn-my-rdv .rdv-badge-count {
+  background: var(--navy); color: white;
+  font-size: .65rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 100px; margin-left: 2px;
+}
+
+/* ════ PRO CARDS ════ */
+.pro-list { display: flex; flex-direction: column; gap: 16px; }
+.pro-card-h {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px;
+  display: grid; grid-template-columns: 100px 1fr auto;
+  overflow: hidden;
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+  animation: slideIn .4s ease both;
+}
+.pro-card-h:hover { border-color: var(--blue-acc); box-shadow: 0 8px 32px rgba(95,113,97,.15); transform: translateY(-2px); }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.pro-card-h:nth-child(1){animation-delay:.04s}
+.pro-card-h:nth-child(2){animation-delay:.10s}
+.pro-card-h:nth-child(3){animation-delay:.16s}
+.pro-card-h:nth-child(4){animation-delay:.22s}
+.pro-card-h:nth-child(5){animation-delay:.28s}
+.pro-card-h:nth-child(6){animation-delay:.34s}
+
+.pro-card-img { width: 100px; position: relative; flex-shrink: 0; overflow: hidden; }
+.pro-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+.pro-card-h:hover .pro-card-img img { transform: scale(1.06); }
+.pro-img-role {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 6px 4px; font-family: 'Syne', sans-serif;
+  font-size: .55rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; text-align: center;
+}
+.role-psy   { background: var(--navy); color: white; }
+.role-coach { background: var(--blue-acc); color: white; }
+
+.pro-card-info {
+  padding: 22px 28px; display: flex; flex-direction: column;
+  justify-content: center; gap: 8px;
+  border-right: 1px solid var(--border);
+}
+.pro-card-top { display: flex; align-items: center; gap: 12px; }
+.pro-card-name { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--navy); letter-spacing: -.01em; }
+.pro-card-role { font-size: .78rem; font-weight: 500; color: var(--navy-mid); background: var(--blue-light); padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+.pro-card-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+.pro-meta-chip { display: flex; align-items: center; gap: 5px; font-size: .78rem; color: var(--slate); }
+.pro-meta-chip i { color: var(--slate-lt); font-size: .72rem; }
+.pro-avail-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; display: inline-block; animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.pro-card-cta {
+  padding: 22px 28px; display: flex; flex-direction: column;
+  align-items: flex-end; justify-content: center; gap: 10px; min-width: 200px;
+}
+.btn-book {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; background: var(--navy); color: white;
+  border: none; border-radius: 8px;
+  font-family: 'Syne', sans-serif; font-size: .78rem; font-weight: 700;
+  letter-spacing: .04em; cursor: pointer;
+  transition: background .2s, transform .15s;
+  text-decoration: none; white-space: nowrap;
+}
+.btn-book:hover { background: var(--navy-mid); transform: scale(1.02); color: white; text-decoration: none; }
+.btn-profile {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Instrument Sans', sans-serif; font-size: .75rem;
+  color: var(--slate); background: none; border: none;
+  cursor: pointer; padding: 4px 0; transition: color .2s;
+}
+.btn-profile:hover { color: var(--navy); }
+
+.rdv-empty { text-align: center; padding: 80px 0; color: var(--slate); }
+.rdv-empty i { font-size: 2.5rem; color: var(--border); margin-bottom: 16px; display: block; }
+.rdv-empty p { font-size: .95rem; }
+
+/* ════ CRÉNEAUX RÉSERVÉS ════ */
+.slot-reserved {
+  opacity: .5; cursor: not-allowed !important;
+  background: var(--off-white) !important;
+  pointer-events: none;
+}
+.slot-taken {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 7px; font-size: .62rem; font-weight: 600;
+  padding: 3px 8px; border-radius: 100px;
+  background: #FEF3C7; color: #92400E;
+}
+
+/* ════ SECTION PHOTOS ════ */
+.photos-section { padding: 64px 0 80px; background: var(--white); border-top: 1px solid var(--border); }
+.photos-inner { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+.photos-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
+.photos-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Syne', sans-serif; font-size: .68rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--navy-mid); background: var(--blue-light);
+  border: 1px solid var(--border); padding: 5px 14px;
+  border-radius: 100px; margin-bottom: 12px;
+}
+.photos-title { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--navy); letter-spacing: -.02em; line-height: 1.15; }
+.photos-title span { color: var(--navy-soft); }
+.photos-sub { font-family: 'Instrument Sans', sans-serif; font-size: .88rem; color: var(--slate); line-height: 1.6; max-width: 340px; text-align: right; }
+.photos-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 240px 200px; gap: 14px; }
+.photo-cell { border-radius: 14px; overflow: hidden; position: relative; cursor: pointer; }
+.photo-cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.photo-cell:hover img { transform: scale(1.06); }
+.photo-cell.span-col { grid-column: 1; grid-row: 1 / 3; border-radius: 18px; }
+.photo-cell .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(95,113,97,.55) 0%, transparent 55%); opacity: 0; transition: opacity .3s; }
+.photo-cell:hover .overlay { opacity: 1; }
+.photo-cell .caption { position: absolute; bottom: 14px; left: 16px; right: 16px; font-family: 'Syne', sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: white; opacity: 0; transform: translateY(6px); transition: all .3s .05s; }
+.photo-cell:hover .caption { opacity: 1; transform: translateY(0); }
+.photo-cell .corner-badge { position: absolute; top: 12px; left: 12px; background: white; color: var(--navy); font-family: 'Syne', sans-serif; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 5px 11px; border-radius: 100px; border: 1px solid var(--border); }
+.photos-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 14px; }
+.photo-strip-item { border-radius: 12px; overflow: hidden; height: 130px; position: relative; cursor: pointer; }
+.photo-strip-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+.photo-strip-item:hover img { transform: scale(1.08); }
+.photo-strip-item .strip-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 12px; background: var(--navy); color: white; font-family: 'Instrument Sans', sans-serif; font-size: .72rem; font-weight: 500; opacity: 0; transform: translateY(100%); transition: all .3s; }
+.photo-strip-item:hover .strip-label { opacity: 1; transform: translateY(0); }
+.photos-cta-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 32px; }
+.photos-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 26px; background: var(--navy); color: white; border-radius: 9px; font-family: 'Syne', sans-serif; font-size: .78rem; font-weight: 700; letter-spacing: .04em; border: none; cursor: pointer; text-decoration: none; transition: background .2s; }
+.photos-cta:hover { background: var(--navy-mid); color: white; text-decoration: none; }
+.photos-cta-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 11px 26px; background: transparent; color: var(--navy); border: 1.5px solid var(--border); border-radius: 9px; font-family: 'Syne', sans-serif; font-size: .78rem; font-weight: 700; letter-spacing: .04em; cursor: pointer; text-decoration: none; transition: border-color .2s, background .2s; }
+.photos-cta-ghost:hover { border-color: var(--navy); background: var(--off-white); color: var(--navy); text-decoration: none; }
+
+/* ════ SIDE PANEL ════ */
+.panel-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(13,27,62,.45); backdrop-filter: blur(3px); z-index: 9998;
+}
+.panel-backdrop.open { display: block; }
+
+.side-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 480px;
+  background: var(--off-white); z-index: 9999;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .38s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+.side-panel.open { transform: translateX(0); }
+
+.sp-header { background: var(--navy); padding: 28px 28px 0; flex-shrink: 0; position: relative; }
+.sp-close {
+  position: absolute; top: 18px; right: 20px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.12); border: none; color: white;
+  cursor: pointer; font-size: .9rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.sp-close:hover { background: rgba(255,255,255,.22); }
+.sp-pro-row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.sp-avatar { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.2); flex-shrink: 0; }
+.sp-pro-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: white; line-height: 1.2; }
+.sp-pro-role { font-size: .75rem; color: var(--blue-acc); font-family: 'Instrument Sans', sans-serif; margin-top: 3px; }
+.sp-pro-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+.sp-meta-chip { display: flex; align-items: center; gap: 5px; font-size: .72rem; color: rgba(255,255,255,.6); font-family: 'Instrument Sans', sans-serif; }
+.sp-meta-chip i { font-size: .68rem; }
+.sp-tabs { display: flex; margin-top: 4px; }
+.sp-tab {
+  flex: 1; padding: 12px 0; background: transparent; border: none;
+  font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.45); cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.sp-tab.active { color: white; border-bottom-color: var(--blue-acc); }
+.sp-body { flex: 1; overflow-y: auto; padding: 28px; }
+.sp-body::-webkit-scrollbar { width: 4px; }
+.sp-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.sp-pane { display: none; }
+.sp-pane.active { display: block; }
+.sp-section-label { font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--slate-lt); margin-bottom: 12px; }
+.slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.slot-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .15s;
+  position: relative;
+}
+.slot-card:hover { border-color: var(--navy-mid); box-shadow: 0 4px 16px rgba(95,113,97,.15); transform: translateY(-1px); }
+.slot-card.selected { border-color: var(--navy); background: var(--blue-light); box-shadow: 0 4px 20px rgba(95,113,97,.2); }
+.slot-card.selected::after { content: '✓'; position: absolute; top: 8px; right: 10px; font-size: .7rem; font-weight: 700; color: var(--navy); }
+.slot-date { font-family: 'Syne', sans-serif; font-size: .78rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.slot-time { font-size: .72rem; color: var(--slate); font-family: 'Instrument Sans', sans-serif; display: flex; align-items: center; gap: 5px; }
+.slot-time i { font-size: .65rem; color: var(--blue-acc); }
+.slot-type-badge { display: inline-flex; align-items: center; gap: 4px; margin-top: 7px; font-size: .62rem; font-weight: 600; padding: 3px 8px; border-radius: 100px; }
+.slot-type-badge.presentiel { background: #e8f5e9; color: #2e7d32; }
+.slot-type-badge.enligne    { background: #e3f2fd; color: #1565c0; }
+.sp-no-slots { text-align: center; padding: 40px 0; color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; font-size: .88rem; }
+.sp-no-slots i { font-size: 2rem; display: block; margin-bottom: 10px; color: var(--border); }
+.selected-slot-preview {
+  background: var(--blue-light); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;
+  font-size: .8rem; color: var(--navy);
+  font-family: 'Instrument Sans', sans-serif;
+  display: flex; gap: 10px; align-items: center;
+}
+.selected-slot-preview i { color: var(--navy-mid); flex-shrink: 0; }
+.btn-confirm-sp {
+  width: 100%; padding: 14px; background: var(--navy); color: white;
+  border: none; border-radius: 12px;
+  font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700;
+  letter-spacing: .05em; cursor: pointer; margin-top: 8px;
+  transition: background .2s, transform .15s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-confirm-sp:hover { background: var(--navy-mid); transform: scale(1.01); }
+
+/* ════ POPUP MES RDV ════ */
+.popup-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(13,27,62,.5); backdrop-filter: blur(4px);
+  z-index: 10000; align-items: center; justify-content: center;
+}
+.popup-backdrop.open { display: flex; }
+.popup-box {
+  background: var(--white); border-radius: 20px;
+  width: 100%; max-width: 640px; max-height: 82vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 32px 80px rgba(13,27,62,.22);
+  animation: popIn .3s cubic-bezier(.34,1.56,.64,1);
+  overflow: hidden; margin: 20px;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.92) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.popup-header {
+  background: var(--navy); padding: 24px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.popup-header-left { display: flex; align-items: center; gap: 12px; }
+.popup-header-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--blue-acc);
+}
+.popup-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: white; }
+.popup-subtitle { font-size: .72rem; color: rgba(255,255,255,.6); margin-top: 2px; font-family: 'Instrument Sans', sans-serif; }
+.popup-close {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.12); border: none; color: white;
+  cursor: pointer; font-size: .9rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; flex-shrink: 0;
+}
+.popup-close:hover { background: rgba(255,255,255,.25); }
+.popup-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
+.popup-body::-webkit-scrollbar { width: 4px; }
+.popup-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.popup-loading {
+  text-align: center; padding: 48px 0;
+  color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; font-size: .88rem;
+}
+.popup-loading i { font-size: 1.5rem; display: block; margin-bottom: 10px; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.popup-empty {
+  text-align: center; padding: 48px 0;
+  color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif;
+}
+.popup-empty i { font-size: 2rem; color: var(--border); display: block; margin-bottom: 12px; }
+.res-list-popup { display: flex; flex-direction: column; gap: 12px; }
+.res-card-popup {
+  background: var(--off-white); border: 1.5px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  display: grid; grid-template-columns: 5px 1fr;
+  animation: fadeUp .3s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.res-stripe-popup { background: var(--navy-mid); }
+.res-body-popup {
+  padding: 16px 20px; display: flex; align-items: center;
+  gap: 14px; flex-wrap: wrap;
+}
+.res-avatar-popup {
+  width: 46px; height: 46px; border-radius: 50%;
+  object-fit: cover; border: 2px solid var(--border); flex-shrink: 0;
+}
+.res-info-popup { flex: 1; min-width: 120px; }
+.res-doctor-popup { font-family: 'Syne', sans-serif; font-size: .88rem; font-weight: 700; color: var(--navy); }
+.res-role-popup   { font-size: .72rem; color: var(--navy-mid); margin-top: 2px; }
+.res-meta-popup { display: flex; gap: 10px; flex-wrap: wrap; }
+.res-chip-popup {
+  display: flex; align-items: center; gap: 4px;
+  font-size: .74rem; color: var(--slate);
+  font-family: 'Instrument Sans', sans-serif;
+}
+.res-chip-popup i { font-size: .66rem; color: var(--slate-lt); }
+.res-status-popup {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase;
+  padding: 5px 11px; border-radius: 100px;
+  background: #FEF3C7; color: #92400E; white-space: nowrap;
+}
+.res-lock-popup {
+  display: flex; align-items: center; gap: 4px;
+  font-size: .7rem; color: var(--slate-lt);
+  font-family: 'Instrument Sans', sans-serif; white-space: nowrap;
+}
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 900px) {
+  .rdv-hero-inner { grid-template-columns: 1fr; padding-bottom: 40px; }
+  .rdv-photo-collage { display: none; }
+  .rdv-steps-bar-inner { grid-template-columns: 1fr 1fr; }
+  .rdv-toolbar-inner { gap: 12px; }
+  .rdv-filters { display: none; }
+  .pro-card-h { grid-template-columns: 90px 1fr; }
+  .pro-card-cta { display: none; }
+  .rdv-content { padding: 24px 20px 60px; }
+  .photos-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .photo-cell.span-col { grid-column: 1 / 3; grid-row: auto; height: 220px; }
+  .photos-strip { grid-template-columns: 1fr 1fr; }
+  .photos-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .photos-sub { text-align: left; }
+  .photos-inner { padding: 0 20px; }
+  .side-panel { width: 100%; }
+  .slots-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .rdv-steps-bar-inner { grid-template-columns: 1fr; }
+  .popup-box { margin: 12px; border-radius: 16px; }
+  .res-body-popup { gap: 10px; }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="rdv-page">
+
+{# ════ HERO ════ #}
+<section class="rdv-hero">
+  <div class="rdv-hero-dots"></div>
+  <div class="rdv-hero-inner">
+    <div>
+      <div class="rdv-hero-eyebrow"><i class="fas fa-calendar-check"></i> Prise de rendez-vous</div>
+      <h1 class="rdv-hero-title">Trouvez votre<br><span>expert en bien-être</span></h1>
+      <p class="rdv-hero-sub">Consultez nos psychologues et coachs de vie certifiés. Réservez une séance en quelques secondes, en toute confidentialité.</p>
+      <div class="rdv-hero-pills">
+        <div class="rdv-hero-pill"><i class="fas fa-shield-halved"></i> 100 % Anonyme</div>
+        <div class="rdv-hero-pill"><i class="fas fa-bolt"></i> Confirmation immédiate</div>
+        <div class="rdv-hero-pill"><i class="fas fa-graduation-cap"></i> Experts certifiés</div>
+      </div>
+    </div>
+    <div class="rdv-photo-collage">
+      <div class="collage-stat">
+        <div class="collage-stat-num">1 000+</div>
+        <div class="collage-stat-lbl">Étudiants accompagnés</div>
+      </div>
+      <div class="collage-main">
+        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80" alt="Séance">
+      </div>
+      <div class="collage-sec">
+        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80" alt="Bien-être">
+      </div>
+      <div class="collage-tert">
+        <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=300&q=80" alt="Consultation">
+      </div>
+      <div class="collage-badge"><i class="fas fa-star"></i> Professionnels certifiés</div>
+    </div>
+  </div>
+
+  <div class="rdv-steps-bar">
+    <div class="rdv-steps-bar-inner">
+      <div class="rdv-step-row">
+        <div class="rdv-step-num">1</div>
+        <div><div class="rdv-step-title">Choisissez</div><div class="rdv-step-txt">Parcourez la liste des professionnels</div></div>
+      </div>
+      <div class="rdv-step-row">
+        <div class="rdv-step-num">2</div>
+        <div><div class="rdv-step-title">Sélectionnez</div><div class="rdv-step-txt">Choisissez un créneau disponible</div></div>
+      </div>
+      <div class="rdv-step-row">
+        <div class="rdv-step-num">3</div>
+        <div><div class="rdv-step-title">Confirmez</div><div class="rdv-step-txt">Remplissez le formulaire et validez</div></div>
+      </div>
+      <div class="rdv-step-row">
+        <div class="rdv-step-num">4</div>
+        <div><div class="rdv-step-title">Consultez</div><div class="rdv-step-txt">Rencontrez votre expert en présentiel ou visio</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ════ TOOLBAR ════ #}
+<div class="rdv-toolbar">
+  <div class="rdv-toolbar-inner">
+    <div class="rdv-search">
+      <i class="fas fa-search"></i>
+      <input type="text" id="rdvSearch" placeholder="Rechercher un professionnel...">
+    </div>
+    <div class="rdv-filters">
+      <button class="rdv-filter-btn active" data-filter="all">Tous</button>
+      <button class="rdv-filter-btn" data-filter="psychologue">Psychologues</button>
+      <button class="rdv-filter-btn" data-filter="coach_vie">Coachs de vie</button>
+    </div>
+    <div class="rdv-count-badge" id="rdvCount">
+      <strong>{{ professionals|length }}</strong> professionnel{{ professionals|length > 1 ? 's' : '' }} disponible{{ professionals|length > 1 ? 's' : '' }}
+    </div>
+  </div>
+</div>
+
+{# ════ CONTENT ════ #}
+<div class="rdv-content">
+
+  {% for msg in app.flashes('success') %}
+    <div class="rdv-flash success"><i class="fas fa-circle-check"></i> {{ msg }}</div>
+  {% endfor %}
+  {% for msg in app.flashes('error') %}
+    <div class="rdv-flash error"><i class="fas fa-circle-exclamation"></i> {{ msg }}</div>
+  {% endfor %}
+
+  {# ── Bouton Mes réservations ── #}
+  <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+    <button class="btn-my-rdv" onclick="openReservationsPopup()">
+      <i class="fas fa-calendar-check"></i>
+      Mes rendez-vous réservés
+      <span class="rdv-badge-count" id="rdvBadgeCount">…</span>
+    </button>
+  </div>
+
+  <div class="pro-list" id="proList">
+    {% for user in professionals %}
+      {% set isCoach = (user.role == 'coach_vie') %}
+      {% set roleLabel = isCoach ? 'Coach de vie' : 'Psychologue' %}
+      {% set roleBadgeClass = isCoach ? 'role-coach' : 'role-psy' %}
+
+      <div class="pro-card-h"
+           data-role="{{ user.role }}"
+           data-name="{{ user.firstname|lower }} {{ user.lastname|lower }}">
+
+        <div class="pro-card-img">
+          {% if user.profile_photo %}
+            <img src="{{ asset('uploads/photos/' ~ user.profile_photo) }}" alt="{{ user.firstname }} {{ user.lastname }}">
+          {% else %}
+            <img src="https://ui-avatars.com/api/?name={{ user.firstname|url_encode }}+{{ user.lastname|url_encode }}&background={{ isCoach ? '6D8B74' : '5F7161' }}&color=fff&size=200" alt="{{ user.firstname }} {{ user.lastname }}">
+          {% endif %}
+          <div class="pro-img-role {{ roleBadgeClass }}">{{ roleLabel }}</div>
+        </div>
+
+        <div class="pro-card-info">
+          <div class="pro-card-top">
+            <div class="pro-card-name">{{ user.firstname }} {{ user.lastname }}</div>
+            <div class="pro-card-role">{{ roleLabel }}</div>
+          </div>
+          <div class="pro-card-meta">
+            <div class="pro-meta-chip"><span class="pro-avail-dot"></span> Disponible</div>
+            {% if user.location %}
+              <div class="pro-meta-chip"><i class="fas fa-location-dot"></i> {{ user.location }}</div>
+            {% endif %}
+            {% if user.phone_number %}
+              <div class="pro-meta-chip"><i class="fas fa-phone"></i> {{ user.phone_number }}</div>
+            {% endif %}
+            {% if user.email %}
+              <div class="pro-meta-chip"><i class="fas fa-envelope"></i> {{ user.email }}</div>
+            {% endif %}
+            <div class="pro-meta-chip">
+              <i class="fas fa-clock"></i>
+              Membre depuis {{ user.created_at ? user.created_at|date('Y') : '—' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="pro-card-cta">
+          <button class="btn-book" onclick="openPanel({{ user.id }})">
+            <i class="fas fa-calendar-plus"></i>
+            Voir les créneaux
+          </button>
+          <button class="btn-profile">
+            <i class="fas fa-eye"></i> Voir le profil
+          </button>
+        </div>
+
+      </div>
+    {% else %}
+      <div class="rdv-empty">
+        <i class="fas fa-user-slash"></i>
+        <p>Aucun professionnel disponible pour le moment.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>{# /rdv-content #}
+
+{# ════ SECTION PHOTOS ════ #}
+<section class="photos-section">
+  <div class="photos-inner">
+    <div class="photos-header">
+      <div>
+        <div class="photos-eyebrow"><i class="fas fa-images"></i> Notre espace &amp; équipe</div>
+        <h2 class="photos-title">Un cadre pensé pour<br><span>votre bien-être</span></h2>
+      </div>
+      <p class="photos-sub">Des espaces bienveillants, des professionnels à l'écoute — découvrez l'univers NAFSEYTI en images.</p>
+    </div>
+    <div class="photos-grid">
+      <div class="photo-cell span-col">
+        <img src="{{ asset('uploads/photos/banner.jpg') }}" alt="Espace consultation">
+        <div class="overlay"></div>
+        <div class="corner-badge">✦ Espace principal</div>
+        <div class="caption">Salle de consultation principale</div>
+      </div>
+      <div class="photo-cell">
+        <img src="{{ asset('uploads/photos/Therapy.jpg') }}" alt="Séance">
+        <div class="overlay"></div>
+        <div class="caption">Séance individuelle</div>
+      </div>
+      <div class="photo-cell">
+        <img src="{{ asset('uploads/photos/banner1.jpg') }}" alt="Bien-être">
+        <div class="overlay"></div>
+        <div class="caption">Atelier bien-être</div>
+      </div>
+      <div class="photo-cell">
+        <img src="{{ asset('uploads/photos/banner2.jpg') }}" alt="Méditation">
+        <div class="overlay"></div>
+        <div class="caption">Pleine conscience</div>
+      </div>
+      <div class="photo-cell">
+        <img src="{{ asset('uploads/photos/banner3.jpg') }}" alt="Groupe">
+        <div class="overlay"></div>
+        <div class="caption">Groupe de soutien</div>
+      </div>
+    </div>
+    <div class="photos-strip">
+      <div class="photo-strip-item">
+        <img src="{{ asset('uploads/photos/1.jpg') }}" alt="">
+        <div class="strip-label">Espace d'accueil</div>
+      </div>
+      <div class="photo-strip-item">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80" alt="">
+        <div class="strip-label">Visioconférence</div>
+      </div>
+      <div class="photo-strip-item">
+        <img src="{{ asset('uploads/photos/New Home Awaits at Our Loving Abode.jpg') }}" alt="">
+        <div class="strip-label">Relaxation</div>
+      </div>
+      <div class="photo-strip-item">
+        <img src="{{ asset('uploads/photos/télécharger (13).jpg') }}" alt="">
+        <div class="strip-label">Consultation en ligne</div>
+      </div>
+    </div>
+    <div class="photos-cta-row">
+      <a href="#" class="photos-cta"><i class="fas fa-images"></i> Voir la galerie complète</a>
+      <a href="#" class="photos-cta-ghost"><i class="fas fa-location-dot"></i> Visiter le campus</a>
+    </div>
+  </div>
+</section>
+
+{# ════ SIDE PANEL ════ #}
+<div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+
+<div class="side-panel" id="sidePanel">
+  <div class="sp-header">
+    <button class="sp-close" onclick="closePanel()"><i class="fas fa-times"></i></button>
+    <div class="sp-pro-row">
+      <img src="" alt="" class="sp-avatar" id="spAvatar">
+      <div>
+        <div class="sp-pro-name" id="spName">—</div>
+        <div class="sp-pro-role" id="spRole">—</div>
+        <div class="sp-pro-meta" id="spMeta"></div>
+      </div>
+    </div>
+    <div class="sp-tabs">
+      <button class="sp-tab active" onclick="switchTab('slots')">
+        <i class="fas fa-calendar-check" style="margin-right:5px;"></i>Créneaux
+      </button>
+      <button class="sp-tab" onclick="switchTab('book')">
+        <i class="fas fa-pen-to-square" style="margin-right:5px;"></i>Réserver
+      </button>
+    </div>
+  </div>
+
+  <div class="sp-body">
+    <div class="sp-pane active" id="pane-slots">
+      <div class="sp-section-label">Sélectionnez un créneau disponible</div>
+      <div class="slots-grid" id="slotsGrid"></div>
+      <div class="sp-no-slots" id="noSlots" style="display:none;">
+        <i class="fas fa-calendar-xmark"></i>
+        Aucun créneau disponible pour ce professionnel.
+      </div>
+    </div>
+
+    <div class="sp-pane" id="pane-book">
+      <div id="slotPreview" class="selected-slot-preview" style="display:none;">
+        <i class="fas fa-clock"></i>
+        <span id="slotPreviewText">—</span>
+      </div>
+      <div id="bookPrompt" style="display:none;">
+        <form action="{{ path('rdv_reserve') }}" method="post">
+          <input type="hidden" name="pro_id" id="spProId">
+          <input type="hidden" name="rdv_id" id="spRdvId">
+          <button type="submit" class="btn-confirm-sp">
+            <i class="fas fa-calendar-check"></i>
+            Réserver ce créneau
+          </button>
+        </form>
+      </div>
+      <div id="bookNoSlot" style="text-align:center;padding:40px 0;color:var(--slate-lt);font-size:.88rem;">
+        <i class="fas fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:10px;color:var(--border);"></i>
+        Veuillez d'abord sélectionner un créneau.
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ════ POPUP MES RÉSERVATIONS ════ #}
+<div class="popup-backdrop" id="popupBackdrop" onclick="closeReservationsPopup(event)">
+  <div class="popup-box" id="popupBox">
+    <div class="popup-header">
+      <div class="popup-header-left">
+        <div class="popup-header-icon"><i class="fas fa-calendar-check"></i></div>
+        <div>
+          <div class="popup-title">Mes rendez-vous</div>
+          <div class="popup-subtitle" id="popupSubtitle">Chargement…</div>
+        </div>
+      </div>
+      <button class="popup-close" onclick="closeReservationsPopup()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="popup-body" id="popupBody">
+      <div class="popup-loading"><i class="fas fa-circle-notch"></i> Chargement…</div>
+    </div>
+  </div>
+</div>
+
+</div>{# /rdv-page #}
+
+{# ════ DONNÉES JSON ════ #}
+<script>
+const SLOTS_DATA = {
+  {% for pro in professionals %}
+  "{{ pro.id }}": [
+    {% for slot in slots[pro.id] ?? [] %}
+    {
+      id:    {{ slot.id }},
+      date:  "{{ slot.dateRendezVous|date('d/m/Y') }}",
+      debut: "{{ slot.heureDebut|date('H:i') }}",
+      fin:   "{{ slot.heureFin|date('H:i') }}",
+      type:  "{{ slot.typeSeance }}",
+      statut:"{{ slot.statut }}"
+    }{{ not loop.last ? ',' : '' }}
+    {% endfor %}
+  ]{{ not loop.last ? ',' : '' }}
+  {% endfor %}
+};
+
+const PROS_DATA = {
+  {% for pro in professionals %}
+  "{{ pro.id }}": {
+    name:     "{{ pro.firstname|e('html_attr') }} {{ pro.lastname|e('html_attr') }}",
+    role:     "{{ (pro.role == 'coach_vie') ? 'Coach de vie' : 'Psychologue' }}",
+    email:    "{{ pro.email|default('')|e('html_attr') }}",
+    phone:    "{{ pro.phone_number|default('')|e('html_attr') }}",
+    location: "{{ pro.location|default('')|e('html_attr') }}",
+    avatar:   "{{ pro.profile_photo ? asset('uploads/photos/' ~ pro.profile_photo) : '' }}"
+  }{{ not loop.last ? ',' : '' }}
+  {% endfor %}
+};
+</script>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+const FALLBACK = (name, isCoach) => {
+  const c = isCoach ? '6D8B74' : '5F7161';
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${c}&color=fff&size=120`;
+};
+
+/* ══ Open panel ══ */
+function openPanel(proId) {
+  const pro = PROS_DATA[proId];
+  if (!pro) return;
+
+  const av = document.getElementById('spAvatar');
+  av.src = pro.avatar || FALLBACK(pro.name, pro.role.includes('Coach'));
+  document.getElementById('spName').textContent = pro.name;
+  document.getElementById('spRole').textContent = pro.role;
+
+  const meta = document.getElementById('spMeta');
+  meta.innerHTML = '';
+  if (pro.location) meta.innerHTML += `<span class="sp-meta-chip"><i class="fas fa-location-dot"></i>${pro.location}</span>`;
+  if (pro.phone)    meta.innerHTML += `<span class="sp-meta-chip"><i class="fas fa-phone"></i>${pro.phone}</span>`;
+  if (pro.email)    meta.innerHTML += `<span class="sp-meta-chip"><i class="fas fa-envelope"></i>${pro.email}</span>`;
+
+  document.getElementById('spProId').value = proId;
+  document.getElementById('slotPreview').style.display = 'none';
+  document.getElementById('bookPrompt').style.display  = 'none';
+  document.getElementById('bookNoSlot').style.display  = 'block';
+
+  const slots = SLOTS_DATA[proId] || [];
+  const grid  = document.getElementById('slotsGrid');
+  const none  = document.getElementById('noSlots');
+  grid.innerHTML = '';
+
+  if (slots.length === 0) {
+    none.style.display = 'block';
+  } else {
+    none.style.display = 'none';
+    slots.forEach(slot => {
+      const enLigne  = slot.type === 'en_ligne';
+      const reserved = slot.statut === 'en attente';
+      const card = document.createElement('div');
+      card.className = 'slot-card' + (reserved ? ' slot-reserved' : '');
+      card.dataset.id    = slot.id;
+      card.dataset.date  = slot.date;
+      card.dataset.debut = slot.debut;
+      card.dataset.fin   = slot.fin;
+      card.dataset.type  = slot.type;
+      card.innerHTML = `
+        <div class="slot-date">
+          <i class="fas fa-calendar" style="margin-right:5px;font-size:.65rem;color:var(--blue-acc)"></i>${slot.date}
+        </div>
+        <div class="slot-time"><i class="fas fa-clock"></i>${slot.debut} – ${slot.fin}</div>
+        <span class="slot-type-badge ${enLigne ? 'enligne' : 'presentiel'}">
+          <i class="fas fa-${enLigne ? 'video' : 'building'}"></i>
+          ${enLigne ? 'En ligne' : 'Présentiel'}
+        </span>
+        ${reserved ? '<span class="slot-taken"><i class="fas fa-lock"></i> En attente</span>' : ''}`;
+      if (!reserved) {
+        card.addEventListener('click', () => selectSlot(card));
+      }
+      grid.appendChild(card);
+    });
+  }
+
+  switchTab('slots');
+  document.getElementById('panelBackdrop').classList.add('open');
+  document.getElementById('sidePanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ══ Close panel ══ */
+function closePanel() {
+  document.getElementById('panelBackdrop').classList.remove('open');
+  document.getElementById('sidePanel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ══ Select slot ══ */
+function selectSlot(card) {
+  document.querySelectorAll('.slot-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  document.getElementById('spRdvId').value = card.dataset.id;
+
+  const typeLabel = card.dataset.type === 'en_ligne' ? 'En ligne' : 'Présentiel';
+  document.getElementById('slotPreviewText').textContent =
+    `${card.dataset.date}  •  ${card.dataset.debut} – ${card.dataset.fin}  •  ${typeLabel}`;
+  document.getElementById('slotPreview').style.display = 'flex';
+  document.getElementById('bookPrompt').style.display  = 'block';
+  document.getElementById('bookNoSlot').style.display  = 'none';
+
+  setTimeout(() => switchTab('book'), 260);
+}
+
+/* ══ Switch tabs ══ */
+function switchTab(name) {
+  document.querySelectorAll('.sp-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && name === 'slots') || (i === 1 && name === 'book'));
+  });
+  document.getElementById('pane-slots').classList.toggle('active', name === 'slots');
+  document.getElementById('pane-book').classList.toggle('active',  name === 'book');
+}
+
+/* ══ Popup Mes Réservations ══ */
+async function openReservationsPopup() {
+  document.getElementById('popupBackdrop').classList.add('open');
+  document.getElementById('popupBody').innerHTML =
+    '<div class="popup-loading"><i class="fas fa-circle-notch"></i> Chargement…</div>';
+  document.getElementById('popupSubtitle').textContent = 'Chargement…';
+  document.body.style.overflow = 'hidden';
+
+  try {
+    const res  = await fetch('{{ path("rdv_mes_reservations") }}');
+    const data = await res.json();
+
+    document.getElementById('rdvBadgeCount').textContent = data.length;
+    document.getElementById('popupSubtitle').textContent =
+      data.length + ' rendez-vous réservé' + (data.length > 1 ? 's' : '');
+
+    if (data.length === 0) {
+      document.getElementById('popupBody').innerHTML = `
+        <div class="popup-empty">
+          <i class="fas fa-calendar-xmark"></i>
+          <p>Aucun rendez-vous réservé pour le moment.</p>
+        </div>`;
+      return;
+    }
+
+    const html = data.map((r, i) => `
+      <div class="res-card-popup" style="animation-delay:${i * 0.055}s">
+        <div class="res-stripe-popup"></div>
+        <div class="res-body-popup">
+          <img class="res-avatar-popup" src="${r.doctorAvatar}" alt="${r.doctorName}">
+          <div class="res-info-popup">
+            <div class="res-doctor-popup">${r.doctorName}</div>
+            <div class="res-role-popup">${r.doctorRole}</div>
+          </div>
+          <div class="res-meta-popup">
+            <div class="res-chip-popup"><i class="fas fa-calendar"></i>${r.date}</div>
+            <div class="res-chip-popup"><i class="fas fa-clock"></i>${r.debut} – ${r.fin}</div>
+            <div class="res-chip-popup">
+              <i class="fas fa-${r.type === 'en_ligne' ? 'video' : 'building'}"></i>
+              ${r.type === 'en_ligne' ? 'En ligne' : 'Présentiel'}
+            </div>
+            <div class="res-chip-popup"><i class="fas fa-calendar-plus"></i>Réservé le ${r.reservedAt}</div>
+          </div>
+          <span class="res-status-popup"><i class="fas fa-hourglass-half"></i> En attente</span>
+          <div class="res-lock-popup"><i class="fas fa-lock"></i> Non modifiable</div>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('popupBody').innerHTML =
+      `<div class="res-list-popup">${html}</div>`;
+
+  } catch (e) {
+    document.getElementById('popupBody').innerHTML =
+      '<div class="popup-empty"><i class="fas fa-triangle-exclamation"></i><p>Erreur de chargement.</p></div>';
+  }
+}
+
+function closeReservationsPopup(e) {
+  if (e && e.target !== document.getElementById('popupBackdrop')) return;
+  document.getElementById('popupBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ══ Badge au chargement ══ */
+fetch('{{ path("rdv_mes_reservations") }}')
+  .then(r => r.json())
+  .then(d => { document.getElementById('rdvBadgeCount').textContent = d.length; })
+  .catch(() => { document.getElementById('rdvBadgeCount').textContent = '0'; });
+
+/* ══ Filter & Search ══ */
+document.querySelectorAll('.rdv-filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.rdv-filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    filterCards();
+  });
+});
+document.getElementById('rdvSearch').addEventListener('input', filterCards);
+
+function filterCards() {
+  const filter = document.querySelector('.rdv-filter-btn.active').dataset.filter;
+  const query  = document.getElementById('rdvSearch').value.toLowerCase().trim();
+  let visible  = 0;
+  document.querySelectorAll('.pro-card-h').forEach(card => {
+    const show = ((filter === 'all') || (card.dataset.role === filter))
+              && card.dataset.name.includes(query);
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('rdvCount').innerHTML =
+    `<strong>${visible}</strong> professionnel${visible > 1 ? 's' : ''} disponible${visible > 1 ? 's' : ''}`;
+}
+</script>
+{% endblock %}

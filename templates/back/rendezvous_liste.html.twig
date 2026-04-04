@@ -1,0 +1,1108 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Liste des Rendez-vous{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="icon_setting"></div>
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive"
+                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                 alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="{{ path('admin_tableau') }}">
+                            <i class="fa fa-dashboard yellow_color"></i>
+                            <span>Tableau de bord</span>
+                        </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-users blue1_color"></i><span>Utilisateurs</span></a></li>
+                    <li class="active">
+                        <a href="{{ path('admin_rendezvous') }}">
+                            <i class="fa fa-calendar orange_color"></i>
+                            <span>Rendez-vous</span>
+                        </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-book purple_color2"></i><span>Contenu psychologique</span></a></li>
+                    <li><a href="#"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i><span>Événements</span></a></li>
+                    <li><a href="#"><i class="fa fa-line-chart yellow_color"></i><span>Suivi personnel</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="logo_section">
+                            <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
+                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo"
+                                     style="width:40px;height:40px;margin-right:10px;" />
+                                <span style="font-size:20px;font-weight:bold;color:#3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle"
+                                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                                            <span class="name_user">Amri Sirine</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="profile.html">My Profile</a>
+                                            <a class="dropdown-item" href="settings.html">Settings</a>
+                                            <a class="dropdown-item" href="help.html">Help</a>
+                                            <a class="dropdown-item" href="#"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+
+                    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+                    <style>
+                        .liste-wrap {
+                            font-family: 'DM Sans', sans-serif;
+                            padding: 10px 0 50px;
+                        }
+
+                        /* ── Page header ── */
+                        .liste-header {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 28px;
+                        }
+                        .liste-header-left .page-eyebrow {
+                            font-size: 10px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #a0a090;
+                            margin-bottom: 4px;
+                        }
+                        .liste-header-left h2 {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 32px;
+                            color: #1a2e1a;
+                            margin: 0;
+                            line-height: 1.1;
+                        }
+                        .liste-header-left h2 em {
+                            color: #3c8c3c;
+                            font-style: italic;
+                        }
+
+                        /* ── Créer bouton ── */
+                        .btn-creer {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 10px;
+                            background: #1a2e1a;
+                            color: #a8dc78;
+                            padding: 13px 24px;
+                            border-radius: 50px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            text-decoration: none;
+                            transition: 0.25s;
+                            border: none;
+                            cursor: pointer;
+                            font-family: 'DM Sans', sans-serif;
+                        }
+                        .btn-creer:hover {
+                            background: #2a4e2a;
+                            color: #c8f098;
+                            transform: translateY(-2px);
+                            box-shadow: 0 8px 20px rgba(26,46,26,0.25);
+                            text-decoration: none;
+                        }
+                        .btn-creer .plus-icon {
+                            width: 22px; height: 22px;
+                            background: #a8dc78;
+                            border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            flex-shrink: 0;
+                        }
+                        .btn-creer .plus-icon svg { display: block; }
+
+                        /* ── Stats mini bar ── */
+                        .stats-bar {
+                            display: flex;
+                            gap: 14px;
+                            margin-bottom: 24px;
+                        }
+                        .stat-chip {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            background: #fffdf8;
+                            border: 1px solid #e8e2d8;
+                            border-radius: 14px;
+                            padding: 12px 18px;
+                            flex: 1;
+                        }
+                        .stat-chip-icon {
+                            width: 38px; height: 38px;
+                            border-radius: 10px;
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 16px;
+                            flex-shrink: 0;
+                        }
+                        .chip-green  { background: #e8f5e2; }
+                        .chip-orange { background: #fff0e4; }
+                        .chip-blue   { background: #e4f0ff; }
+                        .chip-red    { background: #ffe4e4; }
+                        .stat-chip-val { font-size: 22px; font-weight: 500; color: #1a2e1a; line-height: 1; }
+                        .stat-chip-lbl { font-size: 11px; color: #999; margin-top: 2px; }
+
+                        /* ── Search bar ── */
+                        .search-row {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            margin-bottom: 20px;
+                        }
+                        .search-box {
+                            flex: 1;
+                            position: relative;
+                        }
+                        .search-box input {
+                            width: 100%;
+                            padding: 11px 16px 11px 42px;
+                            border: 1px solid #e8e2d8;
+                            border-radius: 12px;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            background: #fffdf8;
+                            color: #1a2e1a;
+                            outline: none;
+                            transition: border-color 0.2s;
+                        }
+                        .search-box input:focus { border-color: #3c8c3c; }
+                        .search-icon {
+                            position: absolute;
+                            left: 14px; top: 50%;
+                            transform: translateY(-50%);
+                            color: #bbb;
+                            font-size: 13px;
+                        }
+                        .filter-select {
+                            padding: 11px 16px;
+                            border: 1px solid #e8e2d8;
+                            border-radius: 12px;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            background: #fffdf8;
+                            color: #555;
+                            outline: none;
+                            cursor: pointer;
+                        }
+
+                        /* ── Table container ── */
+                        .table-card {
+                            background: #fffdf8;
+                            border: 1px solid #e8e2d8;
+                            border-radius: 20px;
+                            overflow: hidden;
+                        }
+                        .table-card table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .table-card thead tr {
+                            background: #1a2e1a;
+                        }
+                        .table-card thead th {
+                            padding: 15px 18px;
+                            text-align: left;
+                            font-size: 10px;
+                            letter-spacing: 1.5px;
+                            text-transform: uppercase;
+                            color: #8dc96e;
+                            font-weight: 500;
+                            white-space: nowrap;
+                        }
+                        .table-card tbody tr {
+                            border-bottom: 1px solid #f0ece4;
+                            transition: background 0.2s;
+                        }
+                        .table-card tbody tr:last-child { border-bottom: none; }
+                        .table-card tbody tr:hover { background: #f5f0e8; }
+                        .table-card tbody td {
+                            padding: 14px 18px;
+                            font-size: 13px;
+                            color: #3a3a3a;
+                            vertical-align: middle;
+                        }
+
+                        /* ── Avatar initials ── */
+                        .td-avatar {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+                        .av-circle {
+                            width: 36px; height: 36px;
+                            border-radius: 10px;
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 12px; font-weight: 500;
+                            flex-shrink: 0;
+                        }
+                        .av-1 { background: #fff0e4; color: #c05a00; }
+                        .av-2 { background: #e4f0ff; color: #0050aa; }
+                        .av-3 { background: #e4fff0; color: #006640; }
+                        .av-4 { background: #f0e4ff; color: #6600aa; }
+                        .av-5 { background: #fff0f0; color: #aa0000; }
+
+                        /* ── Date pill ── */
+                        .date-pill {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 6px;
+                            background: #f0f7e8;
+                            color: #2a6a10;
+                            padding: 5px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 500;
+                        }
+
+                        /* ── Time badge ── */
+                        .time-badge {
+                            display: inline-block;
+                            background: #1a2e1a;
+                            color: #a8dc78;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            white-space: nowrap;
+                        }
+
+                        /* ── Type seance badge ── */
+                        .type-badge {
+                            display: inline-block;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 11px;
+                            font-weight: 500;
+                        }
+                        .type-individuel { background: #e4f0ff; color: #0050aa; }
+                        .type-groupe     { background: #f0e4ff; color: #6600aa; }
+                        .type-en_ligne   { background: #fff0e4; color: #c05a00; }
+                        .type-default    { background: #f0f0f0; color: #555; }
+
+                        /* ── Statut badge ── */
+                        .statut-badge {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 5px;
+                            padding: 5px 12px;
+                            border-radius: 20px;
+                            font-size: 11px;
+                            font-weight: 500;
+                        }
+                        .statut-badge .dot {
+                            width: 6px; height: 6px;
+                            border-radius: 50%;
+                        }
+                        .statut-Confirmé  { background: #e8f5e2; color: #2a6a10; }
+                        .statut-Confirmé .dot  { background: #4caf50; }
+                        .statut-En-attente { background: #fff8e4; color: #a06000; }
+                        .statut-En-attente .dot { background: #ff9800; }
+                        .statut-Pas-encore-pris    { background: #ffe4e4; color: #aa0000; }
+                        .statut-Pas-encore-pris .dot    { background: #e53935; }
+                        .statut-default   { background: #f0f0f0; color: #555; }
+                        .statut-default .dot   { background: #aaa; }
+
+                        /* ── Action buttons ── */
+                        .action-btns {
+                            display: flex;
+                            gap: 8px;
+                            align-items: center;
+                        }
+                        .btn-edit, .btn-del {
+                            width: 34px; height: 34px;
+                            border-radius: 10px;
+                            display: flex; align-items: center; justify-content: center;
+                            border: none;
+                            cursor: pointer;
+                            transition: 0.2s;
+                            text-decoration: none;
+                        }
+                        .btn-edit {
+                            background: #e8f5e2;
+                            color: #2a6a10;
+                        }
+                        .btn-edit:hover {
+                            background: #2a6a10;
+                            color: white;
+                            transform: scale(1.1);
+                        }
+                        .btn-del {
+                            background: #ffe4e4;
+                            color: #aa0000;
+                        }
+                        .btn-del:hover {
+                            background: #aa0000;
+                            color: white;
+                            transform: scale(1.1);
+                        }
+
+                        /* ── Empty state ── */
+                        .empty-state {
+                            text-align: center;
+                            padding: 60px 20px;
+                        }
+                        .empty-state svg { margin-bottom: 16px; }
+                        .empty-state p {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 18px;
+                            color: #bbb;
+                        }
+
+                        /* ── Pagination ── */
+                        .pagination-row {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            padding: 16px 20px;
+                            border-top: 1px solid #f0ece4;
+                            font-size: 12px;
+                            color: #999;
+                        }
+                        .pag-btns { display: flex; gap: 6px; }
+                        .pag-btn {
+                            width: 32px; height: 32px;
+                            border-radius: 8px;
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 12px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            color: #555;
+                            cursor: pointer;
+                            text-decoration: none;
+                            transition: 0.2s;
+                        }
+                        .pag-btn:hover, .pag-btn.active {
+                            background: #1a2e1a;
+                            color: #a8dc78;
+                            border-color: #1a2e1a;
+                        }
+
+                        /* ── Delete confirm modal ── */
+                        .modal-overlay {
+                            display: none;
+                            position: fixed;
+                            inset: 0;
+                            background: rgba(0,0,0,0.45);
+                            z-index: 9999;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .modal-overlay.active { display: flex; }
+                        .modal-box {
+                            background: #fffdf8;
+                            border-radius: 20px;
+                            padding: 36px 32px;
+                            max-width: 380px;
+                            width: 90%;
+                            text-align: center;
+                            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+                        }
+                        .modal-icon {
+                            width: 60px; height: 60px;
+                            background: #ffe4e4;
+                            border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            margin: 0 auto 16px;
+                            font-size: 24px;
+                            color: #aa0000;
+                        }
+                        .modal-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 20px;
+                            color: #1a2e1a;
+                            margin-bottom: 8px;
+                        }
+                        .modal-sub { font-size: 13px; color: #999; margin-bottom: 24px; }
+                        .modal-actions { display: flex; gap: 10px; justify-content: center; }
+                        .modal-cancel {
+                            padding: 10px 24px;
+                            border-radius: 50px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            cursor: pointer;
+                            color: #555;
+                            transition: 0.2s;
+                        }
+                        .modal-cancel:hover { background: #f0ece4; }
+                        .modal-confirm {
+                            padding: 10px 24px;
+                            border-radius: 50px;
+                            border: none;
+                            background: #aa0000;
+                            color: white;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            cursor: pointer;
+                            transition: 0.2s;
+                        }
+                        .modal-confirm:hover { background: #cc0000; }
+                        .btn-creer {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 10px;
+                            padding: 13px 24px;
+                            border-radius: 50px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            text-decoration: none;
+                            cursor: pointer;
+                            font-family: 'DM Sans', sans-serif;
+
+                            background: transparent; /* fond transparent */
+                            border: 2px solid #3c8c3c; /* bordure colorée */
+                            color: #3c8c3c; /* texte vert */
+
+                            transition: 0.25s;
+                        }
+                        .btn-creer:hover {
+                            background: rgba(60, 140, 60, 0.08);
+                            color: #2a6a10;
+                            border-color: #2a6a10;
+                            transform: translateY(-2px);
+                            text-decoration: none;
+                        }
+                        .btn-creer .plus-icon {
+                            width: 22px;
+                            height: 22px;
+                            border: 1px solid #3c8c3c;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: transparent;
+                        }
+                        /* ── Create RDV Modal ── */
+                        .modal-create-overlay {
+                            display: none;
+                            position: fixed;
+                            inset: 0;
+                            background: rgba(0,0,0,0.45);
+                            z-index: 9999;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .modal-create-overlay.active { display: flex; }
+                        .modal-create-box {
+                            background: #fffdf8;
+                            border-radius: 20px;
+                            padding: 36px 32px;
+                            max-width: 520px;
+                            width: 95%;
+                            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+                        }
+                        .modal-create-header {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 24px;
+                        }
+                        .modal-create-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 22px;
+                            color: #1a2e1a;
+                        }
+                        .modal-close-btn {
+                            width: 34px; height: 34px;
+                            border-radius: 10px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            cursor: pointer;
+                            display: flex; align-items: center; justify-content: center;
+                            color: #999;
+                            font-size: 16px;
+                            transition: 0.2s;
+                        }
+                        .modal-close-btn:hover { background: #ffe4e4; color: #aa0000; border-color: #ffcccc; }
+                        .form-group {
+                            margin-bottom: 16px;
+                        }
+                        .form-group label {
+                            display: block;
+                            font-size: 11px;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            color: #999;
+                            margin-bottom: 6px;
+                            font-weight: 500;
+                        }
+                        .form-group select,
+                        .form-group input[type="date"],
+                        .form-group input[type="time"] {
+                            width: 100%;
+                            padding: 11px 14px;
+                            border: 1px solid #e8e2d8;
+                            border-radius: 12px;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            background: #fffdf8;
+                            color: #1a2e1a;
+                            outline: none;
+                            transition: border-color 0.2s;
+                            appearance: auto;
+                        }
+                        .form-group select:focus,
+                        .form-group input:focus { border-color: #3c8c3c; }
+                        .form-row {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 14px;
+                        }
+                        .modal-form-actions {
+                            display: flex;
+                            gap: 10px;
+                            justify-content: flex-end;
+                            margin-top: 24px;
+                        }
+                        .btn-form-cancel {
+                            padding: 11px 24px;
+                            border-radius: 50px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            cursor: pointer;
+                            color: #555;
+                            transition: 0.2s;
+                        }
+                        .btn-form-cancel:hover { background: #f0ece4; }
+                        .btn-form-submit {
+                            padding: 11px 28px;
+                            border-radius: 50px;
+                            border: none;
+                            background: #1a2e1a;
+                            color: #a8dc78;
+                            font-size: 13px;
+                            font-family: 'DM Sans', sans-serif;
+                            cursor: pointer;
+                            transition: 0.2s;
+                        }
+                        .btn-form-submit:hover { background: #2a4e2a; }
+                        /* ── Erreurs de validation ── */
+                        .form-group ul {
+                            list-style: none;
+                            padding: 0;
+                            margin: 4px 0 0;
+                        }
+                        .form-group ul li {
+                            font-size: 11px;
+                            color: #aa0000;
+                            background: #ffe4e4;
+                            border-radius: 8px;
+                            padding: 5px 10px;
+                            margin-top: 4px;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                        }
+                        .form-group ul li::before {
+                            content: "⚠";
+                            font-size: 11px;
+                        }
+                    </style>
+
+                    <div class="liste-wrap">
+
+                        <!-- Header -->
+                        <div class="liste-header">
+                            <div class="liste-header-left">
+                                <div class="page-eyebrow">Nafseyti · Administration</div>
+                                <h2>Liste des <em>Rendez-vous</em></h2>
+                            </div>
+                            <button type="button" class="btn-creer" onclick="openCreateModal()">
+                                <span class="plus-icon">
+                                    <svg width="12" height="12" viewBox="0 0 12 12">
+                                        <path d="M6 2V10M2 6H10" stroke="#3c8c3c" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </span>
+                                Nouveau rendez-vous
+                            </button>
+                        </div>
+
+                        <!-- Stats mini bar -->
+                        <div class="stats-bar">
+                            <div class="stat-chip">
+                                <div class="stat-chip-icon chip-green">
+                                    <i class="fa fa-calendar" style="color:#2a6a10;"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-chip-val">{{ rendezvous|length }}</div>
+                                    <div class="stat-chip-lbl">Total</div>
+                                </div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-icon chip-orange">
+                                    <i class="fa fa-clock-o" style="color:#c05a00;"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-chip-val">
+                                        {{ rendezvous|filter(r => r.statut == 'En attente')|length }}
+                                    </div>
+                                    <div class="stat-chip-lbl">En attente</div>
+                                </div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-icon chip-blue">
+                                    <i class="fa fa-check-circle" style="color:#0050aa;"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-chip-val">
+                                        {{ rendezvous|filter(r => r.statut == 'Confirmé')|length }}
+                                    </div>
+                                    <div class="stat-chip-lbl">Confirmés</div>
+                                </div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-icon chip-red">
+                                    <i class="fa fa-times-circle" style="color:#aa0000;"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-chip-val">
+                                        {{ rendezvous|filter(r => r.statut == 'Pas encore pris')|length }}
+                                    </div>
+                                    <div class="stat-chip-lbl">Pas encore pris</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search & Filter -->
+                        <div class="search-row">
+                            <div class="search-box">
+                                <i class="fa fa-search search-icon"></i>
+                                <input type="text" id="searchInput" placeholder="Rechercher par patient, médecin, type..." onkeyup="filterTable()" />
+                            </div>
+                            <select class="filter-select" id="statutFilter" onchange="filterTable()">
+                                <option value="">Tous les statuts</option>
+                                <option value="Confirmé">Confirmé</option>
+                                <option value="En attente">En attente</option>
+                                <option value="Pas encore pris">Pas encore pris</option>
+                            </select>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="table-card">
+                            <table id="rdvTable">
+                                <thead>
+                                    <tr>
+                                       
+                                        <th>Médecin</th>
+                                        <th>Date</th>
+                                        <th>Horaire</th>
+                                        <th>Type de séance</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for rdv in rendezvous %}
+                                    {% set avatarColors = ['av-1','av-2','av-3','av-4','av-5'] %}
+                                    
+                                    <tr class="rdv-row" data-statut="{{ rdv.statut }}">
+
+
+                                        {# Médecin #}
+                                        <td>
+                                            <div class="td-avatar">
+                                                <div class="av-circle av-3">
+                                                    {{ rdv.medecin.firstname|slice(0,1) }}{{ rdv.medecin.lastname|slice(0,1) }}
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight:500;color:#1a2e1a;">
+                                                        Dr. {{ rdv.medecin.firstname }} {{ rdv.medecin.lastname }}
+                                                    </div>
+                                                    <div style="font-size:11px;color:#aaa;">Psychologue</div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {# Date #}
+                                        <td>
+                                            <span class="date-pill">
+                                                <i class="fa fa-calendar" style="font-size:11px;"></i>
+                                                {{ rdv.dateRendezVous|date('d/m/Y') }}
+                                            </span>
+                                        </td>
+
+                                        {# Horaire #}
+                                        <td>
+                                            <span class="time-badge">
+                                                {{ rdv.heureDebut|date('H:i') }} – {{ rdv.heureFin|date('H:i') }}
+                                            </span>
+                                        </td>
+
+                                        {# Type séance #}
+                                        <td>
+                                            {% if rdv.typeSeance == 'individuel' %}
+                                                <span class="type-badge type-individuel">Individuel</span>
+                                            {% elseif rdv.typeSeance == 'groupe' %}
+                                                <span class="type-badge type-groupe">Groupe</span>
+                                            {% elseif rdv.typeSeance == 'en_ligne' %}
+                                                <span class="type-badge type-en_ligne">En ligne</span>
+                                            {% else %}
+                                                <span class="type-badge type-default">{{ rdv.typeSeance ?? '—' }}</span>
+                                            {% endif %}
+                                        </td>
+
+                                        {# Statut #}
+                                        <td>
+                                            {% if rdv.statut == 'Confirmé' %}
+                                                <span class="statut-badge statut-Confirmé">
+                                                    <span class="dot"></span> Confirmé
+                                                </span>
+                                            {% elseif rdv.statut == 'En attente' %}
+                                                <span class="statut-badge statut-En-attente">
+                                                    <span class="dot"></span> En attente
+                                                </span>
+                                            {% elseif rdv.statut == 'Pas encore pris' %}
+                                                <span class="statut-badge statut-Pas-encore-pris">
+                                                    <span class="dot"></span> Pas encore pris
+                                                </span>
+                                            {% else %}
+                                                <span class="statut-badge statut-default">
+                                                    <span class="dot"></span> {{ rdv.statut ?? '—' }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+
+                                        {# Actions #}
+                                        <td>
+                                            <div class="action-btns">
+                                                <button class="btn-edit" title="Modifier"
+                                                        onclick="openEditModal({{ rdv.id }})">
+                                                    <i class="fa fa-pencil" style="font-size:13px;"></i>
+                                                </button>
+                                                <button class="btn-del" title="Supprimer"
+                                                        onclick="openDeleteModal({{ rdv.id }})">
+                                                    <i class="fa fa-trash" style="font-size:13px;"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="empty-state">
+                                                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                                    <circle cx="32" cy="32" r="30" fill="#f0f0e8" stroke="#ddd" stroke-width="1"/>
+                                                    <rect x="18" y="20" width="28" height="26" rx="4" fill="#ddd"/>
+                                                    <rect x="22" y="26" width="20" height="3" rx="1" fill="white"/>
+                                                    <rect x="22" y="32" width="14" height="3" rx="1" fill="white"/>
+                                                    <rect x="22" y="38" width="16" height="3" rx="1" fill="white"/>
+                                                </svg>
+                                                <p>Aucun rendez-vous trouvé</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% if rendezvous|length > 0 %}
+                            <div class="pagination-row">
+                                <span id="tableCount">{{ rendezvous|length }} rendez-vous au total</span>
+                                <div class="pag-btns">
+                                    <a href="#" class="pag-btn">
+                                        <i class="fa fa-chevron-left" style="font-size:10px;"></i>
+                                    </a>
+                                    <a href="#" class="pag-btn active">1</a>
+                                    <a href="#" class="pag-btn">
+                                        <i class="fa fa-chevron-right" style="font-size:10px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <!-- Delete Modal -->
+                    <div class="modal-overlay" id="deleteModal">
+                        <div class="modal-box">
+                            <div class="modal-icon">
+                                <i class="fa fa-trash"></i>
+                            </div>
+                            <div class="modal-title">Supprimer ce rendez-vous ?</div>
+                            <div class="modal-sub">Cette action est irréversible. Le rendez-vous sera définitivement supprimé.</div>
+                            <div class="modal-actions">
+                                <button class="modal-cancel" onclick="closeDeleteModal()">Annuler</button>
+                                <form id="deleteForm" method="post" style="display:inline;">
+                                    <input type="hidden" name="_token" id="deleteToken">
+                                    <button type="submit" class="modal-confirm">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Create RDV Modal -->
+                        <div class="modal-create-overlay" id="createModal">
+                            <div class="modal-create-box">
+                                <div class="modal-create-header">
+                                    <div class="modal-create-title">Nouveau rendez-vous</div>
+                                    <button class="modal-close-btn" onclick="closeCreateModal()" type="button">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+
+                                {{ form_start(createForm, {
+                                    'action': path('admin_liste_rendezvous'),
+                                    'method': 'POST',
+                                    
+                                }) }}
+
+                                    
+
+                                    <div class="form-group">
+                                        {{ form_label(createForm.medecin, 'Médecin / Psychologue') }}
+                                        {{ form_widget(createForm.medecin) }}
+                                        {{ form_errors(createForm.medecin) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_label(createForm.dateRendezVous, 'Date') }}
+                                        {{ form_widget(createForm.dateRendezVous) }}
+                                        {{ form_errors(createForm.dateRendezVous) }}
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            {{ form_label(createForm.heureDebut, 'Heure début') }}
+                                            {{ form_widget(createForm.heureDebut) }}
+                                            {{ form_errors(createForm.heureDebut) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(createForm.heureFin, 'Heure fin') }}
+                                            {{ form_widget(createForm.heureFin) }}
+                                            {{ form_errors(createForm.heureFin) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_label(createForm.typeSeance, 'Type de séance') }}
+                                        {{ form_widget(createForm.typeSeance) }}
+                                        {{ form_errors(createForm.typeSeance) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_label(createForm.statut, 'Statut') }}
+                                        {{ form_widget(createForm.statut) }}
+                                        {{ form_errors(createForm.statut) }}
+                                    </div>
+
+                                    <div class="modal-form-actions">
+                                        <button type="button" class="btn-form-cancel" onclick="closeCreateModal()">Annuler</button>
+                                        <button type="submit" class="btn-form-submit">
+                                            <i class="fa fa-check" style="margin-right:6px;"></i> Enregistrer
+                                        </button>
+                                    </div>
+
+                                {{ form_end(createForm) }}
+                            </div>
+                        </div>
+                        <!-- Edit RDV Modal -->
+                <div class="modal-create-overlay" id="editModal">
+                    <div class="modal-create-box">
+                        <div class="modal-create-header">
+                            <div class="modal-create-title">Modifier le rendez-vous</div>
+                            <button class="modal-close-btn" onclick="closeEditModal()" type="button">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        {% if editForm is defined %}
+                            {{ form_start(editForm, {
+                                'action': path('admin_rendezvous_edit', {'id': editRdvId}),
+                                'method': 'POST',
+                                
+                            }) }}
+
+                                <div class="form-group">
+                                    {{ form_label(editForm.medecin, 'Médecin / Psychologue') }}
+                                    {{ form_widget(editForm.medecin) }}
+                                    {{ form_errors(editForm.medecin) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(editForm.dateRendezVous, 'Date') }}
+                                    {{ form_widget(editForm.dateRendezVous) }}
+                                    {{ form_errors(editForm.dateRendezVous) }}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        {{ form_label(editForm.heureDebut, 'Heure début') }}
+                                        {{ form_widget(editForm.heureDebut) }}
+                                        {{ form_errors(editForm.heureDebut) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(editForm.heureFin, 'Heure fin') }}
+                                        {{ form_widget(editForm.heureFin) }}
+                                        {{ form_errors(editForm.heureFin) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(editForm.typeSeance, 'Type de séance') }}
+                                    {{ form_widget(editForm.typeSeance) }}
+                                    {{ form_errors(editForm.typeSeance) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(editForm.statut, 'Statut') }}
+                                    {{ form_widget(editForm.statut) }}
+                                    {{ form_errors(editForm.statut) }}
+                                </div>
+
+                                <div class="modal-form-actions">
+                                    <button type="button" class="btn-form-cancel" onclick="closeEditModal()">Annuler</button>
+                                    <button type="submit" class="btn-form-submit">
+                                        <i class="fa fa-check" style="margin-right:6px;"></i> Enregistrer
+                                    </button>
+                                </div>
+
+                            {{ form_end(editForm) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                    <script>
+                    function filterTable() {
+                        var search = document.getElementById('searchInput').value.toLowerCase();
+                        var statut = document.getElementById('statutFilter').value.toLowerCase();
+                        var rows = document.querySelectorAll('.rdv-row');
+                        var visible = 0;
+                        rows.forEach(function(row) {
+                            var text = row.innerText.toLowerCase();
+                            var rowStatut = row.getAttribute('data-statut') || '';
+                            var matchSearch = text.includes(search);
+                            var matchStatut = statut === '' || rowStatut === statut;
+                            if (matchSearch && matchStatut) {
+                                row.style.display = '';
+                                visible++;
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                        var countEl = document.getElementById('tableCount');
+                        if (countEl) countEl.textContent = visible + ' rendez-vous affichés';
+                    }
+
+                    // ── Delete ──
+                    function openDeleteModal(id) {
+                        document.getElementById('deleteModal').classList.add('active');
+                        document.getElementById('deleteForm').action = '/admin/rendezvous/' + id + '/delete';
+                        document.getElementById('deleteToken').value = 'delete' + id;
+                    }
+                    function closeDeleteModal() {
+                        document.getElementById('deleteModal').classList.remove('active');
+                    }
+                    document.getElementById('deleteModal').addEventListener('click', function(e) {
+                        if (e.target === this) closeDeleteModal();
+                    });
+
+                    // ── Create ──
+                    function openCreateModal() {
+                        document.getElementById('createModal').classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                    function closeCreateModal() {
+                        document.getElementById('createModal').classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    document.getElementById('createModal').addEventListener('click', function(e) {
+                        if (e.target === this) closeCreateModal();
+                    });
+
+                    // ── Edit ──
+                    function openEditModal(id) {
+                        window.location.href = '/admin/liste_rendezvous/' + id + '/edit';
+                    }
+                    function closeEditModal() {
+                        document.getElementById('editModal').classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    document.getElementById('editModal').addEventListener('click', function(e) {
+                        if (e.target === this) closeEditModal();
+                    });
+
+                    // ── Rouvrir automatiquement si erreurs de validation (création) ──
+                    {% if showCreateModal is defined and showCreateModal %}
+                        document.addEventListener('DOMContentLoaded', function() {
+                            openCreateModal();
+                        });
+                    {% endif %}
+
+                    // ── Ouvrir automatiquement la modale édition ──
+                    {% if showEditModal is defined and showEditModal %}
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('editModal').classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                        });
+                    {% endif %}
+                </script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
