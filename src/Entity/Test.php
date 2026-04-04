@@ -51,9 +51,8 @@ class Test
     private ?int $scoreMax = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tests')]
-    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id')]
-    #[Assert\NotNull(message: "Veuillez choisir un utilisateur")]
-    private ?User $user = null;
+#[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true)]
+private ?User $user = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Assert\Choice(

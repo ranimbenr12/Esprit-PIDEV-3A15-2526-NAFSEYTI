@@ -1,0 +1,161 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Détails de la question - Nafseyti{% endblock %}
+{% block question_active %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="white_shd full margin_bottom_30">
+            <div class="full graph_head">
+                <div class="heading1 margin_0">
+                    <h2>Détails de la question</h2>
+                </div>
+            </div>
+            
+            <div class="full price_table padding_infor_info">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="30%">ID</th>
+                                <td>{{ question.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Test associé</th>
+                                <td>
+                                    {% if question.test %}
+                                        <a href="{{ path('app_test_show', {'id': question.test.id}) }}" class="btn btn-link">
+                                            {{ question.test.titre }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Non associé</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Texte de la question</th>
+                                <td>
+                                    <div class="well p-3 bg-light">
+                                        {{ question.texte|nl2br }}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Type de question</th>
+                                <td>
+                                    {% set typeLabels = {
+                                        'qcm_unique': 'QCM (Choix unique)',
+                                        'qcm_multiple': 'QCM (Choix multiple)',
+                                        'texte_libre': 'Texte libre',
+                                        'likert': 'Échelle de Likert',
+                                        'numerique': 'Numérique'
+                                    } %}
+                                    <span class="badge badge-info">{{ typeLabels[question.typeQuestion]|default(question.typeQuestion) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Réponses possibles</th>
+                                <td>
+                                    {% if question.reponsesPossibles %}
+                                        <div class="well p-3 bg-light">
+                                            {% set reponses = question.reponsesPossibles|split(',') %}
+                                            <ul>
+                                                {% for reponse in reponses %}
+                                                    <li>{{ reponse|trim }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">Non spécifié (texte libre ou numérique)</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Points</th>
+                                <td>{{ question.points }}</td>
+                            </tr>
+                            <tr>
+                                <th>Ordre d'affichage</th>
+                                <td>{{ question.ordre ?: 'Non défini' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Question obligatoire</th>
+                                <td>
+                                    {% if question.obligatoire %}
+                                        <span class="badge bg-warning">Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Non</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Statut</th>
+                                <td>
+                                    {% if question.status == 'actif' %}
+                                        <span class="badge bg-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactif</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Date de création</th>
+                                <td>{{ question.createdAt|date('d/m/Y H:i:s') }}</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="mt-3">
+                            <a href="{{ path('app_question_index') }}" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Retour à la liste
+                            </a>
+                            <a href="{{ path('app_question_edit', {'id': question.id}) }}" class="btn btn-warning">
+                                <i class="fa fa-edit"></i> Modifier
+                            </a>
+                            {% if question.test %}
+                                <a href="{{ path('app_test_show', {'id': question.test.id}) }}" class="btn btn-info">
+                                    <i class="fa fa-check-square"></i> Voir le test associé
+                                </a>
+                            {% endif %}
+                            <button type="button" 
+                                    class="btn btn-danger" 
+                                    onclick="deleteQuestion({{ question.id }})">
+                                <i class="fa fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                        
+                        <form id="delete-form-{{ question.id }}" 
+                              method="post" 
+                              action="{{ path('app_question_delete', {'id': question.id}) }}" 
+                              style="display: none;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ question.id) }}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+function deleteQuestion(id) {
+    Swal.fire({
+        title: 'Confirmation',
+        text: 'Êtes-vous sûr de vouloir supprimer cette question ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, supprimer',
+        cancelButtonText: 'Annuler'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

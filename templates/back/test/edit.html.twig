@@ -1,0 +1,108 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Modifier le test - {{ test.titre }}{% endblock %}
+{% block test_active %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white_shd full margin_bottom_30">
+            <div class="full graph_head">
+                <div class="heading1 margin_0">
+                    <h2>Modifier le test : {{ test.titre }}</h2>
+                </div>
+            </div>
+            
+            <div class="full price_table padding_infor_info">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.titre, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.titre) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                                {{ form_errors(form.description) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.categorie, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.categorie, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.categorie) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.niveau, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.niveau, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.niveau) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.duree, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.duree) }}
+                                <small class="form-text text-muted">Durée en minutes</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.scoreMax, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.scoreMax, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.scoreMax) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row mb-3">
+                            {{ form_label(form.status, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.status) }}
+                            </div>
+                        </div>
+                        
+                        {# Informations système - Gestion du cas où user est null #}
+                        <div class="alert alert-info mt-3">
+                            <strong>Informations :</strong><br>
+                            {% if test.user %}
+                                Créé par : {{ test.user.email }}<br>
+                            {% else %}
+                                Créé par : <span class="text-muted">Non assigné</span><br>
+                            {% endif %}
+                            Créé le : {{ test.createdAt|date('d/m/Y H:i') }}<br>
+                            Dernière modification : {{ test.updatedAt|date('d/m/Y H:i') }}
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-sm-9 offset-sm-3">
+                                <a href="{{ path('app_test_show', {'id': test.id}) }}" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Annuler
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Enregistrer les modifications
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

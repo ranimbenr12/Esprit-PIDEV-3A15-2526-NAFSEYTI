@@ -1,0 +1,186 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Détails du test - {{ test.titre }}{% endblock %}
+{% block test_active %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="white_shd full margin_bottom_30">
+            <div class="full graph_head">
+                <div class="heading1 margin_0">
+                    <h2>Détails du test : {{ test.titre }}</h2>
+                </div>
+            </div>
+            
+            <div class="full price_table padding_infor_info">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="30%">ID</th>
+                                <td>{{ test.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Titre</th>
+                                <td><strong>{{ test.titre }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ test.description ?: 'Aucune description' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Catégorie</th>
+                                <td><span class="badge badge-info">{{ test.categorie|capitalize }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Niveau</th>
+                                <td>{{ test.niveau|capitalize }}</td>
+                            </tr>
+                            <tr>
+                                <th>Durée</th>
+                                <td>{{ test.duree ? test.duree ~ ' minutes' : 'Non spécifiée' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Score maximum</th>
+                                <td>{{ test.scoreMax ? test.scoreMax : 'Non spécifié' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Statut</th>
+                                <td>
+                                    {% if test.status == 'actif' %}
+                                        <span class="badge bg-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactif</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Créé par</th>
+                                <td>
+                                    {% if test.user %}
+                                        {{ test.user.email }}
+                                    {% else %}
+                                        <span class="text-muted">Non assigné</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Créé le</th>
+                                <td>{{ test.createdAt|date('d/m/Y H:i:s') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Modifié le</th>
+                                <td>{{ test.updatedAt|date('d/m/Y H:i:s') }}</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="mt-3">
+                            <a href="{{ path('app_test_index') }}" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Retour à la liste
+                            </a>
+                            <a href="{{ path('app_test_edit', {'id': test.id}) }}" class="btn btn-warning">
+                                <i class="fa fa-edit"></i> Modifier
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-danger" 
+                                    onclick="deleteTest({{ test.id }}, '{{ test.titre }}')">
+                                <i class="fa fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                        
+                        <form id="delete-form-{{ test.id }}" 
+                              method="post" 
+                              action="{{ path('app_test_delete', {'id': test.id}) }}" 
+                              style="display: none;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ test.id) }}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="white_shd full margin_bottom_30">
+            <div class="full graph_head">
+                <div class="heading1 margin_0">
+                    <h2>Questions ({{ test.questions|length }})</h2>
+                </div>
+            </div>
+            
+            <div class="full price_table padding_infor_info">
+                {% if test.questions is empty %}
+                    <div class="alert alert-info text-center">
+                        <i class="fa fa-info-circle"></i> Aucune question associée à ce test.
+                    </div>
+                {% else %}
+                    <div class="list-group">
+                        {% for question in test.questions|sort((a, b) => a.ordre <=> b.ordre) %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Q{{ loop.index }}</strong>
+                                        <p class="mb-0 small">{{ question.texte|slice(0, 80) }}...</p>
+                                        <small class="text-muted">
+                                            <i class="fa fa-tag"></i> 
+                                            {% set typeLabels = {
+                                                'qcm_unique': 'QCM Unique',
+                                                'qcm_multiple': 'QCM Multiple',
+                                                'texte_libre': 'Texte libre',
+                                                'likert': 'Échelle Likert',
+                                                'numerique': 'Numérique'
+                                            } %}
+                                            {{ typeLabels[question.typeQuestion]|default(question.typeQuestion) }}
+                                            | <i class="fa fa-star"></i> {{ question.points }} pts
+                                        </small>
+                                    </div>
+                                    <div class="btn-group">
+                                        <a href="{{ path('app_question_show', {'id': question.id}) }}" 
+                                           class="btn btn-sm btn-info" title="Voir">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_question_edit', {'id': question.id}) }}" 
+                                           class="btn btn-sm btn-warning" title="Modifier">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <a href="{{ path('app_question_new_with_test', {'testId': test.id}) }}" 
+                       class="btn btn-success btn-block">
+                        <i class="fa fa-plus"></i> Ajouter une question
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+function deleteTest(id, titre) {
+    Swal.fire({
+        title: 'Confirmation',
+        text: `Êtes-vous sûr de vouloir supprimer le test "${titre}" ?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, supprimer',
+        cancelButtonText: 'Annuler'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

@@ -9,16 +9,20 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/test')]
-final class TestController extends AbstractController
+class TestController extends AbstractController
 {
-    #[Route(name: 'app_test_index', methods: ['GET'])]
+    #[Route('/', name: 'app_test_index', methods: ['GET'])]
     public function index(TestRepository $testRepository): Response
     {
-        return $this->render('test/index.html.twig', [
-            'tests' => $testRepository->findAll(),
+        $tests = $testRepository->findAll();
+        
+        // MODIFIER ICI - Ajouter 'back/'
+        return $this->render('back/test/index.html.twig', [
+            'tests' => $tests,
         ]);
     }
 
@@ -26,6 +30,12 @@ final class TestController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $test = new Test();
+        $user = $this->getUser();
+        $test->setCreatedAt(new \DateTime());
+        $test->setUpdatedAt(new \DateTime());
+        $test->setUser($user);
+        $test->setStatus('actif');
+        
         $form = $this->createForm(TestType::class, $test);
         $form->handleRequest($request);
 
@@ -33,19 +43,22 @@ final class TestController extends AbstractController
             $entityManager->persist($test);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Le test a été créé avec succès !');
+            return $this->redirectToRoute('app_test_index');
         }
 
-        return $this->render('test/new.html.twig', [
+        // MODIFIER ICI - Ajouter 'back/'
+        return $this->render('back/test/new.html.twig', [
+            'form' => $form->createView(),
             'test' => $test,
-            'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_test_show', methods: ['GET'])]
     public function show(Test $test): Response
     {
-        return $this->render('test/show.html.twig', [
+        // MODIFIER ICI - Ajouter 'back/'
+        return $this->render('back/test/show.html.twig', [
             'test' => $test,
         ]);
     }
@@ -57,25 +70,33 @@ final class TestController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $test->setUpdatedAt(new \DateTime());
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Le test a été modifié avec succès !');
+            return $this->redirectToRoute('app_test_index');
         }
 
-        return $this->render('test/edit.html.twig', [
+        // MODIFIER ICI - Ajouter 'back/'
+        return $this->render('back/test/edit.html.twig', [
+            'form' => $form->createView(),
             'test' => $test,
-            'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_test_delete', methods: ['POST'])]
     public function delete(Request $request, Test $test, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$test->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($test);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$test->getId(), $request->request->get('_token'))) {
+            if ($test->getQuestions()->count() > 0) {
+                $this->addFlash('warning', 'Ce test contient des questions. Veuillez d\'abord supprimer les questions associées.');
+            } else {
+                $entityManager->remove($test);
+                $entityManager->flush();
+                $this->addFlash('success', 'Le test a été supprimé avec succès !');
+            }
         }
 
-        return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_test_index');
     }
 }
