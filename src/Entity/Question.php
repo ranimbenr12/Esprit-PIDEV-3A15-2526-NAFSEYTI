@@ -212,4 +212,48 @@ public function getReponsesPossiblesArray(): array
             $this->createdAt = new \DateTime();
         }
     }
+    #[ORM\Column(name: 'bareme', type: 'json', nullable: true)]
+private ?array $bareme = null;
+
+public function getBareme(): ?array
+{
+    if ($this->bareme) {
+        return $this->bareme;
+    }
+    
+    // Barème par défaut basé sur le type de question
+    if ($this->typeQuestion === 'vrai_faux') {
+        return ['Vrai' => $this->points, 'Faux' => 0];
+    }
+    
+    return [];
+}
+
+public function setBareme(?array $bareme): self
+{
+    $this->bareme = $bareme;
+    return $this;
+}
+
+/**
+ * Calcule le score pour une réponse donnée
+ */
+public function calculateScore(string $reponse): int
+{
+    $bareme = $this->getBareme();
+    
+    // Si un barème spécifique existe pour cette réponse
+    if (isset($bareme[$reponse])) {
+        return (int)$bareme[$reponse];
+    }
+    
+    // Pour les QCM, vérifier si la réponse est dans les options
+    $options = $this->getReponsesPossiblesArray();
+    if (in_array($reponse, $options)) {
+        // Par défaut, donner tous les points si la réponse est valide
+        return $this->points;
+    }
+    
+    return 0;
+}
 }

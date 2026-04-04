@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ReponsesScoreRepository;
 
 #[ORM\Entity(repositoryClass: ReponsesScoreRepository::class)]
-#[ORM\Table(name: 'reponses_scores')]
+#[ORM\Table(name: 'reponses_score')]
 class ReponsesScore
 {
     #[ORM\Id]
@@ -14,25 +14,51 @@ class ReponsesScore
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    // ✅ inversedBy: 'reponses' correspond à la collection $reponses dans Question
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(targetEntity: Test::class)]
+    #[ORM\JoinColumn(name: 'test_id', referencedColumnName: 'id')]
+    private ?Test $test = null;
+
     #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'reponses')]
-    #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'question_id', referencedColumnName: 'id')]
     private ?Question $question = null;
 
-    #[ORM\Column(name: 'lettre_reponse', type: 'string', length: 10)]
-    private ?string $lettreReponse = null;
+    #[ORM\Column(name: 'reponse', type: 'text', nullable: true)]
+    private ?string $reponse = null;
 
-    #[ORM\Column(name: 'points', type: 'integer')]
-    private ?int $points = 0;
+    #[ORM\Column(name: 'score', type: 'integer', nullable: true)]
+    private ?int $score = null;
 
+    #[ORM\Column(name: 'session_id', type: 'string', length: 255, nullable: true)]
+    private ?string $sessionId = null;
+
+    #[ORM\Column(name: 'created_at', type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
+
+    // Getters et Setters
     public function getId(): ?int { return $this->id; }
-
+    
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): self { $this->user = $user; return $this; }
+    
+    public function getTest(): ?Test { return $this->test; }
+    public function setTest(?Test $test): self { $this->test = $test; return $this; }
+    
     public function getQuestion(): ?Question { return $this->question; }
     public function setQuestion(?Question $question): self { $this->question = $question; return $this; }
-
-    public function getLettreReponse(): ?string { return $this->lettreReponse; }
-    public function setLettreReponse(string $lettreReponse): self { $this->lettreReponse = $lettreReponse; return $this; }
-
-    public function getPoints(): ?int { return $this->points; }
-    public function setPoints(int $points): self { $this->points = $points; return $this; }
+    
+    public function getReponse(): ?string { return $this->reponse; }
+    public function setReponse(?string $reponse): self { $this->reponse = $reponse; return $this; }
+    
+    public function getScore(): ?int { return $this->score; }
+    public function setScore(?int $score): self { $this->score = $score; return $this; }
+    
+    public function getSessionId(): ?string { return $this->sessionId; }
+    public function setSessionId(?string $sessionId): self { $this->sessionId = $sessionId; return $this; }
+    
+    public function getCreatedAt(): ?\DateTimeInterface { return $this->createdAt; }
+    public function setCreatedAt(\DateTimeInterface $createdAt): self { $this->createdAt = $createdAt; return $this; }
 }

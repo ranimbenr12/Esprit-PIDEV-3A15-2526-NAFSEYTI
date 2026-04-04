@@ -41,7 +41,7 @@ class FrontTestController extends AbstractController
         
         // Trier par ordre
         usort($questions, function($a, $b) {
-            return $a->getOrdre() <=> $b->getOrdre();
+            return ($a->getOrdre() ?? 999) <=> ($b->getOrdre() ?? 999);
         });
         
         return $this->render('front/tests/show.html.twig', [
@@ -60,28 +60,44 @@ class FrontTestController extends AbstractController
         $totalScore = 0;
         $maxScore = 0;
         $reponsesData = [];
+        $detailsByCategory = [];
         
         foreach ($questions as $question) {
             $maxScore += $question->getPoints();
             $reponseValue = $request->request->get('reponse_' . $question->getId());
             
             if ($reponseValue !== null && $reponseValue !== '') {
+                $score = 0;
+                
                 // Traiter la réponse selon le type de question
                 if (is_array($reponseValue)) {
-                    // Pour les choix multiples
-                    $reponseValue = implode(', ', $reponseValue);
+                    // Pour les choix multiples, additionner les scores de chaque option
+                    $reponseText = implode(', ', $reponseValue);
+                    foreach ($reponseValue as $val) {
+                        $score += $this->calculateScoreForResponse($question, $val);
+                    }
+                } else {
+                    $reponseText = $reponseValue;
+                    $score = $this->calculateScoreForResponse($question, $reponseValue);
                 }
                 
-                // Calculer le score (à personnaliser selon votre logique)
-                // Pour l'instant, on donne les points si une réponse est fournie
-                $score = $question->getPoints();
                 $totalScore += $score;
                 
                 $reponsesData[] = [
                     'question' => $question,
-                    'reponse' => $reponseValue,
-                    'score' => $score
+                    'reponse' => $reponseText,
+                    'score' => $score,
+                    'points_max' => $question->getPoints()
                 ];
+                
+                // Catégoriser pour analyse détaillée
+                $category = $this->getQuestionCategory($question);
+                if (!isset($detailsByCategory[$category])) {
+                    $detailsByCategory[$category] = ['score' => 0, 'max' => 0, 'questions' => []];
+                }
+                $detailsByCategory[$category]['score'] += $score;
+                $detailsByCategory[$category]['max'] += $question->getPoints();
+                $detailsByCategory[$category]['questions'][] = $question;
             }
         }
         
@@ -89,10 +105,7 @@ class FrontTestController extends AbstractController
         $percentage = $maxScore > 0 ? round(($totalScore / $maxScore) * 100) : 0;
         
         // Trouver l'interprétation selon le score
-        $interpretation = $this->findInterpretation($test, $percentage);
-        
-        // Sauvegarder les réponses (optionnel)
-        // Vous pouvez créer une entité SessionTest pour sauvegarder les résultats
+        $interpretation = $this->findInterpretation($test, $percentage, $totalScore, $maxScore);
         
         // Stocker en session pour l'affichage des résultats
         $session = $request->getSession();
@@ -102,7 +115,8 @@ class FrontTestController extends AbstractController
             'totalScore' => $totalScore,
             'maxScore' => $maxScore,
             'interpretation' => $interpretation,
-            'reponses' => $reponsesData
+            'reponses' => $reponsesData,
+            'detailsByCategory' => $detailsByCategory
         ]);
         
         return $this->redirectToRoute('front_test_result', ['id' => $test->getId()]);
@@ -124,22 +138,109 @@ class FrontTestController extends AbstractController
             'totalScore' => $result['totalScore'],
             'maxScore' => $result['maxScore'],
             'interpretation' => $result['interpretation'],
-            'reponses' => $result['reponses']
+            'reponses' => $result['reponses'],
+            'detailsByCategory' => $result['detailsByCategory'] ?? []
         ]);
     }
     
-    private function findInterpretation(Test $test, int $percentage): ?string
+    /**
+     * Calcule le score pour une réponse donnée selon le barème de la question
+     */
+    private function calculateScoreForResponse($question, string $reponse): int
     {
-        // À implémenter selon votre logique d'interprétation
-        // Pour l'instant, retourne un message basé sur le pourcentage
-        if ($percentage >= 80) {
-            return "Excellent résultat ! Vous avez un très bon niveau dans ce domaine.";
-        } elseif ($percentage >= 60) {
-            return "Bon résultat ! Continuez vos efforts pour vous améliorer.";
-        } elseif ($percentage >= 40) {
-            return "Résultat moyen. Certains points méritent votre attention.";
+        // Récupérer le barème de la question
+        $bareme = $question->getBareme();
+        
+        // Si un barème spécifique existe pour cette réponse
+        if ($bareme && isset($bareme[$reponse])) {
+            return (int)$bareme[$reponse];
+        }
+        
+        // Pour les questions Vrai/Faux
+        if ($question->getTypeQuestion() === 'vrai_faux') {
+            if ($reponse === 'Vrai') {
+                return $question->getPoints();
+            }
+            return 0;
+        }
+        
+        // Pour les QCM, vérifier si la réponse est dans les options
+        $options = $question->getReponsesPossiblesArray();
+        if (in_array($reponse, $options)) {
+            // Par défaut, donner tous les points si la réponse est valide
+            return $question->getPoints();
+        }
+        
+        // Pour les questions texte libre, donner tous les points si une réponse est fournie
+        if ($question->getTypeQuestion() === 'texte_libre' && !empty($reponse)) {
+            return $question->getPoints();
+        }
+        
+        return 0;
+    }
+    
+    /**
+     * Détermine la catégorie d'une question pour l'analyse
+     */
+    private function getQuestionCategory($question): string
+    {
+        $texte = strtolower($question->getTexte());
+        
+        if (strpos($texte, 'stress') !== false || strpos($texte, 'calme') !== false || strpos($texte, 'pression') !== false) {
+            return 'Gestion du stress';
+        } elseif (strpos($texte, 'seul') !== false || strpos($texte, 'foule') !== false || strpos($texte, 'soirée') !== false) {
+            return 'Sociabilité';
+        } elseif (strpos($texte, 'sentiment') !== false || strpos($texte, 'triste') !== false || strpos($texte, 'émotion') !== false) {
+            return 'Empathie';
+        } elseif (strpos($texte, 'présent') !== false || strpos($texte, 'avenir') !== false) {
+            return 'Orientation temporelle';
+        } elseif (strpos($texte, 'concentrer') !== false || strpos($texte, 'attention') !== false) {
+            return 'Concentration';
+        } elseif (strpos($texte, 'sommeil') !== false || strpos($texte, 'dormir') !== false) {
+            return 'Qualité du sommeil';
         } else {
-            return "Ce résultat mérite une attention particulière. N'hésitez pas à consulter nos ressources d'accompagnement.";
+            return 'Personnalité';
+        }
+    }
+    
+    /**
+     * Trouve l'interprétation basée sur le pourcentage et le score
+     */
+    private function findInterpretation(Test $test, int $percentage, int $totalScore, int $maxScore): array
+    {
+        // Interprétations basées sur le pourcentage
+        if ($percentage >= 80) {
+            return [
+                'title' => '🌟 Excellent résultat !',
+                'description' => 'Vous avez un très bon profil psychologique. Votre équilibre émotionnel est remarquable et vous gérez bien les situations.',
+                'advice' => 'Continuez à prendre soin de votre santé mentale. Partagez vos stratégies avec les autres et restez attentif à votre bien-être.',
+                'color' => 'success',
+                'icon' => 'fa-star'
+            ];
+        } elseif ($percentage >= 60) {
+            return [
+                'title' => '👍 Bon résultat',
+                'description' => 'Vous êtes sur la bonne voie. La plupart des aspects sont bien gérés, mais quelques points méritent votre attention.',
+                'advice' => 'Identifiez les domaines où vous pouvez vous améliorer et travaillez-les progressivement. Consultez nos ressources gratuites.',
+                'color' => 'info',
+                'icon' => 'fa-thumbs-up'
+            ];
+        } elseif ($percentage >= 40) {
+            return [
+                'title' => '📊 Résultat moyen',
+                'description' => 'Certains aspects de votre bien-être méritent une attention particulière. Des efforts ciblés pourraient faire la différence.',
+                'advice' => 'Nous vous recommandons de consulter nos articles sur le bien-être et de participer à nos ateliers de gestion du stress.',
+                'color' => 'warning',
+                'icon' => 'fa-chart-line'
+            ];
+        } else {
+            return [
+                'title' => '🌱 Potentiel d\'amélioration',
+                'description' => 'Ce résultat identifie des axes de développement importants. Ne vous inquiétez pas, c\'est le point de départ pour progresser.',
+                'advice' => 'Nous vous encourageons vivement à prendre rendez-vous avec un de nos psychologues pour un accompagnement personnalisé et bienveillant.',
+                'color' => 'danger',
+                'icon' => 'fa-seedling'
+            ];
         }
     }
 }
