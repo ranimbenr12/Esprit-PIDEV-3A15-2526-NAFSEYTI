@@ -23,14 +23,13 @@
                             <div class="col-sm-9">
                                 {{ form_widget(form.test, {'attr': {'class': 'form-control'}}) }}
                                 {{ form_errors(form.test) }}
-                                <small class="form-text text-muted">Sélectionnez le test auquel cette question appartient</small>
                             </div>
                         </div>
                         
                         <div class="form-group row mb-3">
                             {{ form_label(form.texte, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
                             <div class="col-sm-9">
-                                {{ form_widget(form.texte, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Entrez votre question ici...'}}) }}
+                                {{ form_widget(form.texte, {'attr': {'class': 'form-control', 'rows': 4}}) }}
                                 {{ form_errors(form.texte) }}
                             </div>
                         </div>
@@ -38,37 +37,48 @@
                         <div class="form-group row mb-3">
                             {{ form_label(form.typeQuestion, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
                             <div class="col-sm-9">
-                                {{ form_widget(form.typeQuestion, {'attr': {'class': 'form-control', 'id': 'typeQuestion'}}) }}
+                                {{ form_widget(form.typeQuestion, {'attr': {'class': 'form-control', 'id': 'question_type'}}) }}
                                 {{ form_errors(form.typeQuestion) }}
                             </div>
                         </div>
                         
-                        <div class="form-group row mb-3" id="reponsesPossiblesGroup">
+                        <!-- Zone pour les options QCM (visible uniquement pour QCM) -->
+                        <div class="form-group row mb-3" id="qcmOptionsGroup" style="display: none;">
                             {{ form_label(form.reponsesPossibles, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
                             <div class="col-sm-9">
-                                {{ form_widget(form.reponsesPossibles, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Option 1, Option 2, Option 3'}}) }}
+                                {{ form_widget(form.reponsesPossibles, {'attr': {'class': 'form-control', 'rows': 3, 'id': 'question_reponses'}}) }}
                                 {{ form_errors(form.reponsesPossibles) }}
-                                <small class="form-text text-muted" id="reponsesHelp">
-                                    Pour les QCM, séparez les options par des virgules. Ex: "Option 1, Option 2, Option 3"
+                                <small class="form-text text-muted">
+                                    <i class="fa fa-info-circle"></i> 
+                                    Séparez chaque option par une virgule. Exemple: "Option 1, Option 2, Option 3"
                                 </small>
+                            </div>
+                        </div>
+                        
+                        <!-- Message d'aide dynamique -->
+                        <div class="form-group row mb-3">
+                            <div class="col-sm-9 offset-sm-3">
+                                <div id="helpMessage" class="alert alert-info" style="display: none;">
+                                    <i class="fa fa-lightbulb-o"></i> 
+                                    <span id="helpText"></span>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="form-group row mb-3">
                             {{ form_label(form.points, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
                             <div class="col-sm-9">
-                                {{ form_widget(form.points, {'attr': {'class': 'form-control', 'min': 1, 'max': 100}}) }}
+                                {{ form_widget(form.points, {'attr': {'class': 'form-control'}}) }}
                                 {{ form_errors(form.points) }}
-                                <small class="form-text text-muted">Valeur en points pour cette question (1-100)</small>
                             </div>
                         </div>
                         
                         <div class="form-group row mb-3">
                             {{ form_label(form.ordre, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
                             <div class="col-sm-9">
-                                {{ form_widget(form.ordre, {'attr': {'class': 'form-control', 'placeholder': '1'}}) }}
+                                {{ form_widget(form.ordre, {'attr': {'class': 'form-control'}}) }}
                                 {{ form_errors(form.ordre) }}
-                                <small class="form-text text-muted">Position de la question dans le test (ordre croissant)</small>
+                                <small class="form-text text-muted">Laissez vide pour mettre automatiquement à la fin</small>
                             </div>
                         </div>
                         
@@ -113,29 +123,73 @@
 {{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const typeQuestionSelect = document.getElementById('typeQuestion');
-    const reponsesPossiblesGroup = document.getElementById('reponsesPossiblesGroup');
-    const reponsesPossiblesField = document.querySelector('#question_reponsesPossibles');
-    const reponsesHelp = document.getElementById('reponsesHelp');
+    const typeSelect = document.getElementById('question_type');
+    const qcmOptionsGroup = document.getElementById('qcmOptionsGroup');
+    const reponsesField = document.getElementById('question_reponses');
+    const helpMessage = document.getElementById('helpMessage');
+    const helpText = document.getElementById('helpText');
     
-    function toggleReponsesPossibles() {
-        const typeValue = typeQuestionSelect.value;
-        const isQCM = typeValue && (typeValue.includes('qcm'));
+    // Messages d'aide par type de question
+    const helpMessages = {
+        'texte_libre': {
+            text: ' Les utilisateurs pourront répondre par un texte libre. Aucune option à configurer.',
+            showQcmOptions: false,
+            required: false
+        },
+        'numerique': {
+            text: ' Les utilisateurs devront saisir un nombre. Aucune option à configurer.',
+            showQcmOptions: false,
+            required: false
+        },
+        'qcm_unique': {
+            text: ' Les utilisateurs pourront sélectionner UNE SEULE option parmi celles que vous allez définir ci-dessous.',
+            showQcmOptions: true,
+            required: true
+        },
+        'qcm_multiple': {
+            text: ' Les utilisateurs pourront sélectionner PLUSIEURS options parmi celles que vous allez définir ci-dessous.',
+            showQcmOptions: true,
+            required: true
+        },
+      
+    };
+    
+    function updateForm() {
+        const selectedType = typeSelect.value;
+        const config = helpMessages[selectedType];
         
-        if (isQCM) {
-            reponsesPossiblesGroup.style.display = 'flex';
-            reponsesPossiblesField.setAttribute('required', 'required');
-            reponsesHelp.innerHTML = '<span class="text-danger">* Obligatoire pour les QCM</span>';
+        if (config) {
+            // Afficher le message d'aide
+            helpMessage.style.display = 'block';
+            helpText.innerHTML = config.text;
+            
+            // Gérer l'affichage des options QCM
+            if (config.showQcmOptions) {
+                qcmOptionsGroup.style.display = 'flex';
+                reponsesField.setAttribute('required', 'required');
+                reponsesField.placeholder = 'Exemple: Très satisfait, Satisfait, Neutre, Insatisfait, Très insatisfait';
+            } else {
+                qcmOptionsGroup.style.display = 'none';
+                reponsesField.removeAttribute('required');
+                reponsesField.value = '';
+                
+                // Pour l'échelle de Likert, pré-remplir automatiquement
+                if (selectedType === 'likert') {
+                    reponsesField.value = '1 - Pas du tout d\'accord, 2 - Pas d\'accord, 3 - Neutre, 4 - D\'accord, 5 - Tout à fait d\'accord';
+                    reponsesField.readOnly = true;
+                } else {
+                    reponsesField.readOnly = false;
+                }
+            }
         } else {
-            reponsesPossiblesGroup.style.display = 'flex';
-            reponsesPossiblesField.removeAttribute('required');
-            reponsesHelp.innerHTML = 'Pour les QCM, séparez les options par des virgules. Ex: "Option 1, Option 2, Option 3"';
+            helpMessage.style.display = 'none';
+            qcmOptionsGroup.style.display = 'none';
         }
     }
     
-    if (typeQuestionSelect) {
-        typeQuestionSelect.addEventListener('change', toggleReponsesPossibles);
-        toggleReponsesPossibles();
+    if (typeSelect) {
+        typeSelect.addEventListener('change', updateForm);
+        updateForm(); // Appeler au chargement
     }
 });
 </script>

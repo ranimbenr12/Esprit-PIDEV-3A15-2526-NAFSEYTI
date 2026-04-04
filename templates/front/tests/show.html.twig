@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Passer le test - {{ test.titre }}{% endblock %}
+{% block nav_tests_active %}active{% endblock %}
+
+{% block body %}
+<section class="hero-section" style="min-height: 30vh; padding: 40px 60px;">
+    <div class="hero-content" style="text-align: center;">
+        <div class="hero-tag" style="justify-content: center;">Test psychologique</div>
+        <h1 class="hero-title" style="font-size: clamp(1.8rem, 4vw, 2.5rem);">
+            {{ test.titre }}
+        </h1>
+        <p class="hero-subtitle" style="max-width: 700px; margin: 0 auto;">
+            {{ test.description }}
+        </p>
+        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
+            <span><i class="fas fa-clock"></i> Durée: {{ test.duree ? test.duree ~ ' minutes' : 'Non spécifiée' }}</span>
+            <span><i class="fas fa-question-circle"></i> {{ questions|length }} questions</span>
+        </div>
+    </div>
+</section>
+
+<section class="donations-section" style="padding-top: 0;">
+    <div class="container-custom">
+        <div class="donate-grid" style="grid-template-columns: 1fr;">
+            <div class="donate-form-side" style="padding: 40px;">
+                <form method="post" action="{{ path('front_test_submit', {'id': test.id}) }}" id="testForm">
+                    {% for question in questions %}
+                        <div class="question-item" style="margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--beige-mid);">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text-dark);">
+                                    Question {{ loop.index }}
+                                    {% if question.obligatoire %}
+                                        <span style="color: #e74c3c; font-size: 0.9rem;">*</span>
+                                    {% endif %}
+                                </h3>
+                                <span style="background: var(--green-pale); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                                    {{ question.points }} point{{ question.points > 1 ? 's' : '' }}
+                                </span>
+                            </div>
+                            
+                            <p style="font-size: 1rem; color: var(--text-mid); margin-bottom: 20px; line-height: 1.6;">
+                                {{ question.texte }}
+                            </p>
+                            
+                            {# ============================================ #}
+                            {# 1. TEXTE LIBRE - Textarea                    #}
+                            {# ============================================ #}
+                            {% if question.typeQuestion == 'texte_libre' %}
+                                <textarea 
+                                    name="reponse_{{ question.id }}" 
+                                    class="form-input-custom" 
+                                    rows="4"
+                                    {% if question.obligatoire %}required{% endif %}
+                                    placeholder="Saisissez votre réponse ici..."></textarea>
+                            
+                            {# ============================================ #}
+                            {# 2. VRAI/FAUX - Boutons radio                 #}
+                            {# ============================================ #}
+                            {% elseif question.typeQuestion == 'vrai_faux' %}
+                                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input 
+                                            type="radio" 
+                                            name="reponse_{{ question.id }}" 
+                                            value="Vrai"
+                                            {% if question.obligatoire %}required{% endif %}
+                                            style="width: 18px; height: 18px;">
+                                        <span style="font-size: 1rem;">✅ Vrai</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input 
+                                            type="radio" 
+                                            name="reponse_{{ question.id }}" 
+                                            value="Faux"
+                                            {% if question.obligatoire %}required{% endif %}
+                                            style="width: 18px; height: 18px;">
+                                        <span style="font-size: 1rem;">❌ Faux</span>
+                                    </label>
+                                </div>
+                            
+                            {# ============================================ #}
+                            {# 3. QCM (Choix unique) - Boutons radio        #}
+                            {# ============================================ #}
+                            {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    {% set options = question.reponsesPossiblesArray %}
+                                    {% if options is empty %}
+                                        <p style="color: orange; font-style: italic;">Aucune option disponible pour cette question.</p>
+                                    {% else %}
+                                        {% for option in options %}
+                                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                                <input 
+                                                    type="radio" 
+                                                    name="reponse_{{ question.id }}" 
+                                                    value="{{ option }}"
+                                                    {% if question.obligatoire %}required{% endif %}
+                                                    style="width: 18px; height: 18px;">
+                                                <span>{{ option }}</span>
+                                            </label>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            
+                            {# ============================================ #}
+                            {# 4. AUTRES TYPES - Champ texte par défaut     #}
+                            {# ============================================ #}
+                            {% else %}
+                                <input 
+                                    type="text" 
+                                    name="reponse_{{ question.id }}" 
+                                    class="form-input-custom"
+                                    {% if question.obligatoire %}required{% endif %}
+                                    placeholder="Saisissez votre réponse">
+                            {% endif %}
+                            
+                            <div class="help-message" style="margin-top: 10px; font-size: 0.75rem; color: var(--green-sage);">
+                                <i class="fas fa-info-circle"></i> 
+                                {% if question.typeQuestion == 'texte_libre' %}
+                                    Saisissez votre réponse en texte libre
+                                {% elseif question.typeQuestion == 'vrai_faux' %}
+                                    Sélectionnez Vrai ou Faux
+                                {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
+                                    Sélectionnez une seule option
+                                {% else %}
+                                    Saisissez votre réponse
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                        <a href="{{ path('front_test_list') }}" class="btn-ghost">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="submit-btn" style="width: auto; padding: 15px 40px;">
+                            <i class="fas fa-check"></i> Valider mes réponses
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.question-item {
+    transition: all 0.3s ease;
+}
+.question-item:hover {
+    background: rgba(168, 198, 143, 0.05);
+    padding-left: 15px;
+    margin-left: -15px;
+    padding-right: 15px;
+    margin-right: -15px;
+    border-radius: 8px;
+}
+input[type="radio"]:checked, input[type="checkbox"]:checked {
+    accent-color: var(--green-mid);
+}
+.form-input-custom {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 8px;
+    padding: 12px 16px;
+    width: 100%;
+}
+.form-input-custom:focus {
+    border-color: var(--green-sage);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(122, 160, 91, 0.1);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('testForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let allValid = true;
+            const requiredRadios = form.querySelectorAll('input[type="radio"][required]');
+            const radioGroups = new Set();
+            
+            requiredRadios.forEach(radio => {
+                radioGroups.add(radio.name);
+            });
+            
+            radioGroups.forEach(groupName => {
+                const checked = form.querySelector(`input[name="${groupName}"]:checked`);
+                if (!checked) {
+                    allValid = false;
+                    const container = form.querySelector(`input[name="${groupName}"]`).closest('.question-item');
+                    if (container) container.style.borderLeft = '3px solid #e74c3c';
+                }
+            });
+            
+            const requiredTexts = form.querySelectorAll('textarea[required]');
+            requiredTexts.forEach(field => {
+                if (field.value.trim() === '') {
+                    allValid = false;
+                    field.style.borderColor = '#e74c3c';
+                    field.closest('.question-item').style.borderLeft = '3px solid #e74c3c';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+            
+            if (!allValid) {
+                e.preventDefault();
+                alert('Veuillez répondre à toutes les questions obligatoires.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
