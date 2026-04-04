@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ReponsesScore{% endblock %}
+
+{% block body %}
+    <h1>Create new ReponsesScore</h1>
+
+    {{ include('reponses_score/_form.html.twig') }}
+
+    <a href="{{ path('app_reponses_score_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+        }
+        .sidebar a {
+            color: #adb5bd;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+            color: white;
+        }
+        .topbar {
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <div class="col-md-2 sidebar p-3">
+            <h4 class="text-white">Admin</h4>
+            <hr>
+
+            <a href="{{ path('app_test_index') }}">Tests</a>
+            <a href="{{ path('app_question_index') }}">Questions</a>
+            <a href="{{ path('app_reponses_score_index') }}">Réponses</a>
+            <a href="#">Utilisateurs</a>
+            <a href="#">Suivis</a>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="col-md-10">
+
+            <!-- TOPBAR -->
+            <div class="topbar d-flex justify-content-between">
+                <h5>Dashboard</h5>
+                <span>Bienvenue Admin</span>
+            </div>
+
+            <!-- PAGE CONTENT -->
+            <div class="p-4">
+                {% block body %}{% endblock %}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
