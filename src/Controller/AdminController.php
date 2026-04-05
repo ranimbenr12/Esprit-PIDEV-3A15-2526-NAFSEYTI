@@ -15,6 +15,8 @@ use App\Form\RendezVousType;
 use App\Entity\FicheConsultation;
 use App\Form\FicheConsultationType;
 use App\Repository\FicheConsultationRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class AdminController extends AbstractController
 {
@@ -44,7 +46,6 @@ class AdminController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         $rendezvous = $repository->findAllOrderedByDate();
-
         $newRdv = new RendezVou();
         $createForm = $this->createForm(RendezVousType::class, $newRdv);
         $createForm->handleRequest($request);
@@ -182,14 +183,64 @@ public function edit_fiche(
     ]);
 }
 
-// ── Supprimer fiche ──
-#[Route('/admin/fiches/{id}/delete', name: 'admin_fiche_delete', methods: ['POST'])]
-public function deleteFiche(
-    FicheConsultation $fiche,
-    EntityManagerInterface $em
-): Response {
-    $em->remove($fiche);
-    $em->flush();
-    return $this->redirectToRoute('admin_fiches');
-}
+    // ── Supprimer fiche ──
+    #[Route('/admin/fiches/{id}/delete', name: 'admin_fiche_delete', methods: ['POST'])]
+    public function deleteFiche(
+        FicheConsultation $fiche,
+        EntityManagerInterface $em
+    ): Response {
+        $em->remove($fiche);
+        $em->flush();
+        return $this->redirectToRoute('admin_fiches');
+    }
+    // Dans AdminController.php, ajoute cette route :
+
+    #[Route('/admin/liste_rendezvous/search', name: 'admin_rendezvous_search', methods: ['GET'])]
+    public function searchRendezVous(
+        Request $request,
+        RendezVouRepository $repository
+    ): Response {
+        $search = $request->query->get('search', '');
+        $statut = $request->query->get('statut', '');
+
+        $rendezvous = $repository->searchByCriteria($search, $statut);
+
+        return $this->render('back/_rendezvous_rows.html.twig', [
+            'rendezvous' => $rendezvous,
+        ]);
+    }
+    #[Route('/admin/fiches/{id}/pdf', name: 'admin_fiche_pdf', methods: ['GET'])]
+    public function downloadFichePdf(
+        int $id,
+        FicheConsultationRepository $repository
+    ): Response {
+        $fiche = $repository->find($id);
+        if (!$fiche) {
+            throw $this->createNotFoundException('Fiche introuvable');
+        }
+
+        $html = $this->renderView('back/fiche_pdf.html.twig', [
+            'fiche' => $fiche,
+        ]);
+
+        $options = new Options();
+        $options->set('defaultFont', 'DejaVu Sans');
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $filename = 'fiche-consultation-' . $fiche->getId() . '.pdf';
+
+        return new Response(
+            $dompdf->output(),
+            200,
+            [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]
+        );
+    }
 }

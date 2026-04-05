@@ -3,37 +3,49 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FicheConsultationRepository;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: FicheConsultationRepository::class)]
 #[ORM\Table(name: 'fiche_consultation')]
 class FicheConsultation
 {
-    #[ORM\Id]
+     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    // ✅ Relation ManyToOne vers RendezVou (clé étrangère réelle)
     #[ORM\ManyToOne(targetEntity: RendezVou::class)]
-    #[ORM\JoinColumn(name: 'rendez_vous_id', referencedColumnName: 'id', unique: true, nullable: true, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(
+        name: 'rendez_vous_id',
+        referencedColumnName: 'id',
+        unique: true,
+        nullable: false,
+        onDelete: 'CASCADE'
+    )]
+    #[Assert\NotNull(message: "Le rendez-vous est obligatoire.")]
     private ?RendezVou $rendezVous = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: false)]
+    #[Assert\NotBlank(message: "Les notes sont obligatoires.")]
     private ?string $notes = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: false)]
+    #[Assert\NotBlank(message: "Le problème principal est obligatoire.")]
     private ?string $probleme_principal = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: false)]
+    #[Assert\NotBlank(message: "Le diagnostic est obligatoire.")]
     private ?string $diagnostic = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: false)]
+    #[Assert\NotBlank(message: "Les recommandations sont obligatoires.")]
     private ?string $recommandations = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: false)]
+    #[Assert\NotBlank(message: "Le traitement est obligatoire.")]
     private ?string $traitement = null;
 
     #[ORM\Column(type: 'datetime', nullable: false)]
+    #[Assert\NotNull(message: "La date de création est obligatoire.")]
     private ?\DateTimeInterface $created_at = null;
 
     // GETTERS / SETTERS

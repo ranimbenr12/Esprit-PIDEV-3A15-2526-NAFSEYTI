@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DejaVu Sans', sans-serif;
+    background: #ffffff;
+    color: #1a2e1a;
+    font-size: 11px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #2D5016;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-top {
+    padding: 22px 36px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-circle {
+    width: 44px;
+    height: 44px;
+    background: #4A7C2F;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(168,198,143,0.4);
+  }
+  .logo-inner {
+    width: 20px;
+    height: 20px;
+    background: #A8C68F;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+  }
+  .header-logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    letter-spacing: 3px;
+  }
+  .header-logo-text span { color: #A8C68F; }
+  .header-logo-sub {
+    font-size: 8px;
+    color: rgba(168,198,143,0.7);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .header-badge {
+    background: #4A7C2F;
+    color: #D4E6C3;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .header-id {
+    font-size: 18px;
+    font-weight: bold;
+    color: #A8C68F;
+    letter-spacing: 2px;
+  }
+
+  /* ── GRADIENT BAR ── */
+  .gradient-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #A8C68F, #4A7C2F, #2D5016);
+  }
+
+  /* ── HERO BAND ── */
+  .hero-band {
+    background: #F0F7E8;
+    padding: 18px 36px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 2px solid #C8E6C9;
+  }
+  .hero-icon-wrap {
+    width: 52px;
+    height: 52px;
+    background: #4A7C2F;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  /* SVG stethoscope drawn with CSS shapes */
+  .stethoscope-svg {
+    width: 28px;
+    height: 28px;
+  }
+  .hero-text-main {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2D5016;
+    letter-spacing: 1px;
+  }
+  .hero-text-main em {
+    color: #4A7C2F;
+    font-style: italic;
+  }
+  .hero-text-sub {
+    font-size: 9px;
+    color: #6B9E5A;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .hero-stamp {
+    margin-left: auto;
+    border: 2px solid #4A7C2F;
+    color: #4A7C2F;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 4px;
+    transform: rotate(-3deg);
+    opacity: 0.7;
+  }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: table;
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #C8E6C9;
+  }
+  .info-grid-row {
+    display: table-row;
+  }
+  .info-cell {
+    display: table-cell;
+    padding: 14px 20px;
+    border-right: 1px solid #E8F5E2;
+    width: 25%;
+    vertical-align: top;
+  }
+  .info-cell:last-child { border-right: none; }
+  .info-cell-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #6B9E5A;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .label-dot {
+    width: 5px;
+    height: 5px;
+    background: #4A7C2F;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .info-cell-value {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2D5016;
+    line-height: 1.4;
+  }
+
+  /* ── BODY ── */
+  .body-wrap {
+    padding: 20px 36px 16px;
+    background: #FAFDF7;
+  }
+
+  /* ── SECTION BLOCK ── */
+  .section-block {
+    margin-bottom: 14px;
+    border: 1px solid #C8E6C9;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .section-head {
+    background: #2D5016;
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-icon-box {
+    width: 24px;
+    height: 24px;
+    background: #4A7C2F;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: #A8C68F;
+    text-align: center;
+    line-height: 24px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 9px;
+    font-weight: bold;
+    color: #A8C68F;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .section-title-accent {
+    color: #D4E6C3;
+    font-size: 8px;
+    margin-left: auto;
+    letter-spacing: 1px;
+  }
+  .section-body {
+    background: #ffffff;
+    padding: 14px 16px;
+    font-size: 11px;
+    color: #3a5a3a;
+    line-height: 1.9;
+    min-height: 44px;
+    border-left: 3px solid #A8C68F;
+  }
+  .section-body.empty {
+    color: #aaa;
+    font-style: italic;
+  }
+
+  /* ── TWO COLUMNS ── */
+  .two-col {
+    display: table;
+    width: 100%;
+    margin-bottom: 14px;
+    border-spacing: 14px 0;
+  }
+  .two-col-cell {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+  }
+  .two-col-cell .section-block {
+    margin-bottom: 0;
+  }
+
+  /* ── SECTION ICONS SVG ── */
+  .icon-problem { background: #C62828 !important; }
+  .icon-diag    { background: #1565C0 !important; }
+  .icon-traitement { background: #4A7C2F !important; }
+  .icon-reco    { background: #E65100 !important; }
+  .icon-notes   { background: #6A1B9A !important; }
+
+  /* ── MEDICAL CROSS decoration ── */
+  .medical-decoration {
+    position: absolute;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.08;
+  }
+  .cross-h { position: absolute; width: 60px; height: 18px; background: white; border-radius: 4px; top: 21px; left: 0; }
+  .cross-v { position: absolute; width: 18px; height: 60px; background: white; border-radius: 4px; top: 0; left: 21px; }
+
+  /* ── SIGNATURE / FOOTER ── */
+  .signature-row {
+    display: table;
+    width: 100%;
+    padding: 0 36px;
+    margin-bottom: 16px;
+  }
+  .sig-cell {
+    display: table-cell;
+    width: 33%;
+    padding: 14px 16px;
+    vertical-align: top;
+  }
+  .sig-label {
+    font-size: 8px;
+    color: #6B9E5A;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .sig-line {
+    border-bottom: 1px solid #C8E6C9;
+    height: 28px;
+    margin-bottom: 4px;
+  }
+  .sig-sublabel {
+    font-size: 8px;
+    color: #aaa;
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  .footer-gradient {
+    height: 3px;
+    background: linear-gradient(90deg, #2D5016, #4A7C2F, #A8C68F);
+  }
+  .footer-band {
+    background: #2D5016;
+    padding: 14px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-left {
+    font-size: 8px;
+    color: rgba(168,198,143,0.7);
+    letter-spacing: 1px;
+  }
+  .footer-center {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .footer-chip {
+    background: rgba(74,124,47,0.4);
+    color: #A8C68F;
+    font-size: 7px;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+  }
+  .footer-right {
+    font-size: 8px;
+    color: rgba(168,198,143,0.5);
+  }
+</style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div style="position:relative;">
+      <!-- Medical cross decoration -->
+      <div class="medical-decoration">
+        <div style="position:relative;width:60px;height:60px;">
+          <div class="cross-h"></div>
+          <div class="cross-v"></div>
+        </div>
+      </div>
+
+      <div class="header-top">
+        <div class="header-logo-wrap">
+          <div class="logo-circle">
+            <div class="logo-inner"></div>
+          </div>
+          <div>
+            <div class="header-logo-text">NAFSEY<span>TI</span></div>
+            <div class="header-logo-sub">Bien-être psychologique</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-badge">Fiche de Consultation Médicale</div>
+          <div class="header-id">#FC-{{ '%04d'|format(fiche.id) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="gradient-bar"></div>
+
+  <!-- HERO BAND -->
+  <div class="hero-band">
+    <div class="hero-icon-wrap">
+      <!-- Stethoscope SVG icon -->
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="7" r="3" stroke="#A8C68F" stroke-width="2" fill="none"/>
+        <path d="M11 7 Q7 7 7 12 Q7 18 13 20 Q17 21.5 17 25" stroke="#A8C68F" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="17" cy="25" r="2" fill="#A8C68F"/>
+        <path d="M17 7 Q21 7 21 12 Q21 18 17 20" stroke="#A8C68F" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="7" cy="7" r="1.5" fill="#A8C68F"/>
+        <circle cx="21" cy="7" r="1.5" fill="#A8C68F"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hero-text-main">Fiche de <em>Consultation</em></div>
+      <div class="hero-text-sub">Document confidentiel — usage médical exclusif</div>
+    </div>
+    <div class="hero-stamp">Confidentiel</div>
+  </div>
+
+  <!-- INFO GRID -->
+  <div class="info-grid">
+    <div class="info-grid-row">
+      <div class="info-cell">
+        <div class="info-cell-label"><span class="label-dot"></span> Médecin traitant</div>
+        <div class="info-cell-value">
+          {% if fiche.rendezVous and fiche.rendezVous.medecin %}
+            Dr. {{ fiche.rendezVous.medecin.firstname }} {{ fiche.rendezVous.medecin.lastname }}
+          {% else %}—{% endif %}
+        </div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label"><span class="label-dot"></span> Date du rendez-vous</div>
+        <div class="info-cell-value">
+          {% if fiche.rendezVous %}
+            {{ fiche.rendezVous.dateRendezVous|date('d/m/Y') }}
+          {% else %}—{% endif %}
+        </div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label"><span class="label-dot"></span> Horaire</div>
+        <div class="info-cell-value">
+          {% if fiche.rendezVous %}
+            {{ fiche.rendezVous.heureDebut|date('H:i') }} – {{ fiche.rendezVous.heureFin|date('H:i') }}
+          {% else %}—{% endif %}
+        </div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label"><span class="label-dot"></span> Créée le</div>
+        <div class="info-cell-value">{{ fiche.createdAt|date('d/m/Y') }}<br>
+          <span style="font-size:10px;font-weight:normal;color:#6B9E5A;">à {{ fiche.createdAt|date('H:i') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body-wrap">
+
+    <!-- Problème principal -->
+    <div class="section-block">
+      <div class="section-head">
+        <div class="section-icon-box icon-problem">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <circle cx="6" cy="6" r="5" stroke="#ffcdd2" stroke-width="1.5"/>
+            <path d="M6 4v3M6 8.5v.5" stroke="#ffcdd2" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="section-title">Problème principal</div>
+        <div class="section-title-accent">Motif de consultation</div>
+      </div>
+      <div class="section-body {% if not fiche.problemePrincipal %}empty{% endif %}">
+        {{ fiche.problemePrincipal ?? 'Non renseigné' }}
+      </div>
+    </div>
+
+    <!-- Diagnostic + Traitement côte à côte -->
+    <div class="two-col">
+      <div class="two-col-cell" style="padding-right:7px;">
+        <div class="section-block">
+          <div class="section-head">
+            <div class="section-icon-box icon-diag" style="font-size:9px;font-weight:bold;color:#bbdefb;">Dx</div>
+            <div class="section-title">Diagnostic</div>
+          </div>
+          <div class="section-body {% if not fiche.diagnostic %}empty{% endif %}">
+            {{ fiche.diagnostic ?? 'Non renseigné' }}
+          </div>
+        </div>
+      </div>
+      <div class="two-col-cell" style="padding-left:7px;">
+        <div class="section-block">
+          <div class="section-head">
+            <div class="section-icon-box icon-traitement" style="font-size:9px;font-weight:bold;color:#c8e6c9;">Rx</div>
+            <div class="section-title">Traitement prescrit</div>
+          </div>
+          <div class="section-body {% if not fiche.traitement %}empty{% endif %}">
+            {{ fiche.traitement ?? 'Non renseigné' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommandations -->
+    <div class="section-block">
+      <div class="section-head">
+        <div class="section-icon-box icon-reco">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 3h8M2 6h6M2 9h4" stroke="#ffe0b2" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="section-title">Recommandations</div>
+        <div class="section-title-accent">Conseils au patient</div>
+      </div>
+      <div class="section-body {% if not fiche.recommandations %}empty{% endif %}">
+        {{ fiche.recommandations ?? 'Non renseigné' }}
+      </div>
+    </div>
+
+    <!-- Notes complémentaires -->
+    <div class="section-block">
+      <div class="section-head">
+        <div class="section-icon-box icon-notes">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <rect x="2" y="1" width="8" height="10" rx="1.5" stroke="#e1bee7" stroke-width="1.5" fill="none"/>
+            <path d="M4 4h4M4 6.5h3" stroke="#e1bee7" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="section-title">Notes complémentaires</div>
+        <div class="section-title-accent">Observations du praticien</div>
+      </div>
+      <div class="section-body {% if not fiche.notes %}empty{% endif %}">
+        {{ fiche.notes ?? 'Non renseigné' }}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIGNATURE ROW -->
+  <div style="padding: 0 36px 16px; background:#FAFDF7;">
+    <div style="display:table;width:100%;border-top:1px dashed #C8E6C9;padding-top:14px;">
+      <div style="display:table-cell;width:33%;padding-right:20px;vertical-align:top;">
+        <div style="font-size:8px;color:#6B9E5A;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Signature du médecin</div>
+        <div style="border-bottom:1px solid #C8E6C9;height:30px;margin-bottom:4px;"></div>
+        <div style="font-size:8px;color:#aaa;text-align:center;">Dr. {% if fiche.rendezVous and fiche.rendezVous.medecin %}{{ fiche.rendezVous.medecin.firstname }} {{ fiche.rendezVous.medecin.lastname }}{% endif %}</div>
+      </div>
+      <div style="display:table-cell;width:33%;padding:0 10px;vertical-align:top;">
+        <div style="font-size:8px;color:#6B9E5A;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Cachet du service</div>
+        <div style="border-bottom:1px solid #C8E6C9;height:30px;margin-bottom:4px;"></div>
+        <div style="font-size:8px;color:#aaa;text-align:center;">NAFSEYTI — Tunisie</div>
+      </div>
+      <div style="display:table-cell;width:33%;padding-left:20px;vertical-align:top;">
+        <div style="font-size:8px;color:#6B9E5A;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Prochain rendez-vous</div>
+        <div style="border-bottom:1px solid #C8E6C9;height:30px;margin-bottom:4px;"></div>
+        <div style="font-size:8px;color:#aaa;text-align:center;">Date à définir</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-gradient"></div>
+  <div class="footer-band">
+    <div class="footer-left">
+      NAFSEYTI · Bien-être Psychologique · Tunis, Tunisie · contact@nafseyti.tn
+    </div>
+    <div class="footer-center">
+      <div class="footer-chip">Document officiel</div>
+      <div class="footer-chip">Usage médical</div>
+    </div>
+    <div class="footer-right">Généré le {{ "now"|date('d/m/Y à H:i') }}</div>
+  </div>
+
+</body>
+</html>

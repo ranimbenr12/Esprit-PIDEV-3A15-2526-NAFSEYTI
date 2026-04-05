@@ -906,10 +906,10 @@
                                 {{ form_start(createForm, {
                                     'action': path('admin_liste_rendezvous'),
                                     'method': 'POST',
-                                    
+                                    'attr': {'novalidate': 'novalidate'}
                                 }) }}
 
-                                    
+                                    {{ form_errors(createForm) }}
 
                                     <div class="form-group">
                                         {{ form_label(createForm.medecin, 'Médecin / Psychologue') }}
@@ -969,11 +969,12 @@
                         </div>
 
                         {% if editForm is defined %}
-                            {{ form_start(editForm, {
+                           {{ form_start(editForm, {
                                 'action': path('admin_rendezvous_edit', {'id': editRdvId}),
                                 'method': 'POST',
-                                
+                                'attr': {'novalidate': 'novalidate'}
                             }) }}
+                            {{ form_errors(createForm) }}
 
                                 <div class="form-group">
                                     {{ form_label(editForm.medecin, 'Médecin / Psychologue') }}
@@ -1025,25 +1026,31 @@
                 </div>
 
                     <script>
+                    let ajaxTimer = null;
+
                     function filterTable() {
-                        var search = document.getElementById('searchInput').value.toLowerCase();
-                        var statut = document.getElementById('statutFilter').value.toLowerCase();
-                        var rows = document.querySelectorAll('.rdv-row');
-                        var visible = 0;
-                        rows.forEach(function(row) {
-                            var text = row.innerText.toLowerCase();
-                            var rowStatut = row.getAttribute('data-statut') || '';
-                            var matchSearch = text.includes(search);
-                            var matchStatut = statut === '' || rowStatut === statut;
-                            if (matchSearch && matchStatut) {
-                                row.style.display = '';
-                                visible++;
-                            } else {
-                                row.style.display = 'none';
-                            }
-                        });
-                        var countEl = document.getElementById('tableCount');
-                        if (countEl) countEl.textContent = visible + ' rendez-vous affichés';
+                        const search = document.getElementById('searchInput').value;
+                        const statut = document.getElementById('statutFilter').value;
+
+                        // Debounce : attend 300ms après la dernière frappe
+                        clearTimeout(ajaxTimer);
+                        ajaxTimer = setTimeout(function () {
+                            const params = new URLSearchParams({ search: search, statut: statut });
+
+                            fetch('/admin/liste_rendezvous/search?' + params.toString(), {
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            })
+                            .then(response => response.text())
+                            .then(html => {
+                                document.querySelector('#rdvTable tbody').innerHTML = html;
+
+                                // Mettre à jour le compteur
+                                const visible = document.querySelectorAll('.rdv-row').length;
+                                const countEl = document.getElementById('tableCount');
+                                if (countEl) countEl.textContent = visible + ' rendez-vous affichés';
+                            })
+                            .catch(err => console.error('Erreur Ajax:', err));
+                        }, 300);
                     }
 
                     // ── Delete ──

@@ -99,15 +99,108 @@
                     .search-box input:focus { border-color:var(--fc-mid); }
                     .search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#bbb; font-size:13px; }
 
-                    /* Table */
-                    .table-card { background:var(--fc-bg); border:1px solid var(--fc-border); border-radius:20px; overflow:hidden; }
-                    .table-card table { width:100%; border-collapse:collapse; }
-                    .table-card thead tr { background:var(--fc-dark); }
-                    .table-card thead th { padding:15px 18px; text-align:left; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--fc-accent); font-weight:500; white-space:nowrap; }
-                    .table-card tbody tr { border-bottom:1px solid var(--fc-border); transition:background 0.2s; }
-                    .table-card tbody tr:last-child { border-bottom:none; }
-                    .table-card tbody tr:hover { background:#eef0fb; }
-                    .table-card tbody td { padding:14px 18px; font-size:13px; color:#3a3a5a; vertical-align:middle; }
+                    /* ================= TABLE ================= */
+                    .table-card {
+                        background: var(--fc-bg);
+                        border: 1px solid var(--fc-border);
+                        border-radius: 20px;
+                        overflow-x: auto;
+                        overflow-y: hidden;
+                    }
+
+                    .table-card table {
+                        width: 100%;
+                        min-width: 1400px;
+                        border-collapse: collapse;
+                        table-layout: fixed;
+                    }
+
+                    /* Header */
+                    .table-card thead tr {
+                        background: var(--fc-dark);
+                    }
+
+                    .table-card thead th {
+                        padding: 15px 18px;
+                        text-align: left;
+                        font-size: 10px;
+                        letter-spacing: 1.5px;
+                        text-transform: uppercase;
+                        color: var(--fc-accent);
+                        font-weight: 500;
+                        white-space: nowrap;
+                    }
+
+                    /* Body */
+                    .table-card tbody tr {
+                        border-bottom: 1px solid var(--fc-border);
+                        transition: background 0.2s;
+                    }
+
+                    .table-card tbody tr:hover {
+                        background: #eef0fb;
+                    }
+
+                    .table-card tbody td {
+                        padding: 14px 18px;
+                        font-size: 13px;
+                        color: #3a3a5a;
+                        vertical-align: top;
+                    }
+
+                    /* Fixed column widths */
+                    .table-card th:nth-child(1),
+                    .table-card td:nth-child(1) {
+                        width: 180px;
+                    }
+
+                    .table-card th:nth-child(2),
+                    .table-card td:nth-child(2),
+                    .table-card th:nth-child(3),
+                    .table-card td:nth-child(3),
+                    .table-card th:nth-child(4),
+                    .table-card td:nth-child(4),
+                    .table-card th:nth-child(5),
+                    .table-card td:nth-child(5),
+                    .table-card th:nth-child(6),
+                    .table-card td:nth-child(6) {
+                        width: 180px;
+                    }
+
+                    .table-card th:nth-child(7),
+                    .table-card td:nth-child(7) {
+                        width: 150px;
+                    }
+
+                    .table-card th:nth-child(8),
+                    .table-card td:nth-child(8) {
+                        width: 100px;
+                        text-align: center;
+                    }
+
+                    /* Text cells */
+                    .text-truncate-cell {
+                        max-height: 90px;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        word-break: break-word;
+                        white-space: normal;
+                        line-height: 1.5;
+                        font-size: 12px;
+                        color: #666;
+                        padding-right: 5px;
+                    }
+
+                    /* Scrollbar */
+                    .text-truncate-cell::-webkit-scrollbar {
+                        width: 5px;
+                    }
+
+                    .text-truncate-cell::-webkit-scrollbar-thumb {
+                        background: #c8cce5;
+                        border-radius: 10px;
+                    }
+    
 
                     /* Badges */
                     .date-pill { display:inline-flex; align-items:center; gap:6px; background:var(--fc-light); color:var(--fc-mid); padding:5px 12px; border-radius:20px; font-size:12px; font-weight:500; }
@@ -175,6 +268,18 @@
                     .form-group ul { list-style:none; padding:0; margin:4px 0 0; }
                     .form-group ul li { font-size:11px; color:#aa0000; background:#ffe4e4; border-radius:8px; padding:5px 10px; margin-top:4px; display:flex; align-items:center; gap:5px; }
                     .form-group ul li::before { content:"⚠"; font-size:11px; }
+                    .btn-pdf {
+                        width: 34px; height: 34px; border-radius: 10px;
+                        display: flex; align-items: center; justify-content: center;
+                        border: none; cursor: pointer; transition: 0.2s;
+                        background: #fff3e0; color: #e65100;
+                        text-decoration: none;
+                    }
+                    .btn-pdf:hover {
+                        background: #e65100; color: white;
+                        transform: scale(1.1);
+                        text-decoration: none;
+                    }
                 </style>
 
                 <div class="fc-wrap">
@@ -228,7 +333,9 @@
                     </div>
 
                     <!-- Table -->
-                    <div class="table-card">
+                            <div class="table-card">
+                <div style="overflow-x:auto;">
+                        
                         <table id="ficheTable">
                             <thead>
                                 <tr>
@@ -267,16 +374,22 @@
                                             {{ fiche.createdAt|date('d/m/Y H:i') }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="btn-edit" title="Modifier" onclick="openEditModal({{ fiche.id }})">
-                                                <i class="fa fa-pencil" style="font-size:13px;"></i>
-                                            </button>
-                                            <button class="btn-del" title="Supprimer" onclick="openDeleteModal({{ fiche.id }})">
-                                                <i class="fa fa-trash" style="font-size:13px;"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+                                   
+                                        <td>
+                                            <div class="action-btns">
+                                                <button class="btn-edit" title="Modifier" onclick="openEditModal({{ fiche.id }})">
+                                                    <i class="fa fa-pencil" style="font-size:13px;"></i>
+                                                </button>
+                                                <a href="{{ path('admin_fiche_pdf', {'id': fiche.id}) }}"
+                                                class="btn-pdf" title="Télécharger PDF" target="_blank">
+                                                    <i class="fa fa-file-pdf-o" style="font-size:13px;"></i>
+                                                </a>
+                                                <button class="btn-del" title="Supprimer" onclick="openDeleteModal({{ fiche.id }})">
+                                                    <i class="fa fa-trash" style="font-size:13px;"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                   
                                 </tr>
                                 {% else %}
                                 <tr>
@@ -296,6 +409,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        </div>
 
                         {% if fiches|length > 0 %}
                         <div class="pagination-row">
@@ -333,7 +447,8 @@
                             <div class="modal-create-title">Nouvelle fiche de consultation</div>
                             <button class="modal-close-btn" onclick="closeCreateModal()" type="button"><i class="fa fa-times"></i></button>
                         </div>
-                        {{ form_start(createForm, {'action': path('admin_fiches'), 'method': 'POST'}) }}
+                        {{ form_start(createForm, {'action': path('admin_fiches'), 'method': 'POST','attr': {'novalidate': 'novalidate'}}) }}
+                        {{ form_errors(createForm) }}
                             <div class="form-group">
                                 {{ form_label(createForm.rendezVous) }}
                                 {{ form_widget(createForm.rendezVous) }}
@@ -380,7 +495,8 @@
                             <button class="modal-close-btn" onclick="closeEditModal()" type="button"><i class="fa fa-times"></i></button>
                         </div>
                         {% if editForm is defined %}
-                            {{ form_start(editForm, {'action': path('admin_fiche_edit', {'id': editFicheId}), 'method': 'POST'}) }}
+                            {{ form_start(editForm, {'action': path('admin_fiche_edit', {'id': editFicheId}), 'method': 'POST','attr': {'novalidate': 'novalidate'}}) }}
+                             {{ form_errors(createForm) }}
                                 <div class="form-group">
                                     {{ form_label(editForm.rendezVous) }}
                                     {{ form_widget(editForm.rendezVous) }}

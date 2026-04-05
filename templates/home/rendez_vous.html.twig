@@ -9,23 +9,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500&display=swap');
 
 :root {
-  --navy:      #5F7161;
-  --navy-mid:  #6D8B74;
+  --navy: #4a331e;
+  --navy-mid: #050a45;
   --navy-soft: #A6BB8D;
-  --blue-acc:  #C1D0B5;
-  --blue-light:#EFEAD8;
-  --slate:     #6B705C;
-  --slate-lt:  #A5A58D;
-  --white:     #FFFFFF;
-  --off-white: #F8F5F0;
-  --border:    #DDD3C3;
+  --blue-acc: #C1D0B5;
+  --blue-light: #EFEAD8;
+  --slate: #6B705C;
+  --slate-lt: #A5A58D;
+  --white: #FFFFFF;
+  --off-white: #FAF8F3;
+  --border: #DDD3C3;
+
+  --gradient-main: linear-gradient(135deg, #5F7161 0%, #6D8B74 100%);
+  --shadow-soft: 0 8px 30px rgba(95, 113, 97, 0.12);
+  --shadow-hover: 0 12px 40px rgba(95, 113, 97, 0.18);
 }
 
 .rdv-page { font-family: 'Instrument Sans', sans-serif; background: var(--off-white); }
 
 /* ════ HERO ════ */
 .rdv-hero {
-  background: var(--white);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f5f0 100%);
   position: relative;
   overflow: hidden;
   padding: 64px 0 0;
@@ -615,6 +619,7 @@
     </div>
   </div>
 </div>
+
 
 {# ════ CONTENT ════ #}
 <div class="rdv-content">

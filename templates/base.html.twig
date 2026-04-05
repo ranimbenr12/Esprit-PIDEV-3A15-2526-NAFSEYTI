@@ -1275,14 +1275,20 @@
     <div class="navbar-wrap">
         <div class="navbar-inner">
             <ul class="nav-links">
-                <li><a href="{{ path('app_home') }}" class="active">Accueil</a></li>
+                <li><a href="{{ path('app_home') }}" {{ app.request.attributes.get('_route') == 'app_home' ? 'class="active"' }}>Accueil</a></li>
                 <li><a href="#">Contenu Psychologique</a></li>
                 <li><a href="#">Tests</a></li>
-                <li><a href="{{ path('rdv_index') }}">Rendez-vous</a></li>
+                <li><a href="{{ path('rdv_index') }}" {{ app.request.attributes.get('_route') == 'rdv_index' ? 'class="active"' }}>Rendez-vous</a></li>
                 <li><a href="#">Evenements</a></li>
                 <li><a href="#">Suivi Personnel</a></li>
             </ul>
-            <a href="#!" class="nav-cta nav-links a">Se connecter</a>
+            {% if app.request.attributes.get('_route') == 'rdv_index' %}
+    <a href="#" class="nav-cta nav-links a" onclick="openReservationsPopup(); return false;">
+         Réservez votre séance 📝
+    </a>
+{% else %}
+    <a href="#!" class="nav-cta nav-links a">Se connecter</a>
+{% endif %}
         </div>
     </div>
 

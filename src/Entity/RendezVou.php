@@ -96,7 +96,7 @@ class RendezVou
         return $this->dateRendezVous;
     }
 
-    public function setDateRendezVous(\DateTimeInterface $dateRendezVous): self
+    public function setDateRendezVous(?\DateTimeInterface $dateRendezVous): self
     {
         $this->dateRendezVous = $dateRendezVous;
         return $this;
@@ -107,7 +107,7 @@ class RendezVou
         return $this->heureDebut;
     }
 
-    public function setHeureDebut(\DateTimeInterface $heureDebut): self
+    public function setHeureDebut(?\DateTimeInterface $heureDebut): self
     {
         $this->heureDebut = $heureDebut;
         return $this;
@@ -118,7 +118,7 @@ class RendezVou
         return $this->heureFin;
     }
 
-    public function setHeureFin(\DateTimeInterface $heureFin): self
+    public function setHeureFin(?\DateTimeInterface $heureFin): self
     {
         $this->heureFin = $heureFin;
         return $this;

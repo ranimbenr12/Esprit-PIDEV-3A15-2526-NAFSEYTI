@@ -143,11 +143,11 @@ public function mesReservations(
                 continue;
             }
 
-            $isCoach  = $medecin->getRole() === 'coach_vie';
-            $avatar   = $medecin->getProfilePhoto()
-                ? '/uploads/photos/' . $medecin->getProfilePhoto()
+            $isCoach = $medecin->getRole() === 'coach_vie';
+            $avatar  = $medecin->getProfile_photo()
+                ? '/uploads/photos/' . $medecin->getProfile_photo()
                 : 'https://ui-avatars.com/api/?name=' . urlencode($medecin->getFirstname() . ' ' . $medecin->getLastname())
-                  . '&background=' . ($isCoach ? '6D8B74' : '5F7161') . '&color=fff&size=100';
+                . '&background=' . ($isCoach ? '6D8B74' : '5F7161') . '&color=fff&size=100';
 
            $data[] = [
             'doctorName'   => $medecin->getFirstname() . ' ' . $medecin->getLastname(),
