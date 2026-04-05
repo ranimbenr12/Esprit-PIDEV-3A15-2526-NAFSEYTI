@@ -95,8 +95,8 @@ class Test
     #[ORM\Column(type: 'datetime', nullable: false)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'test')]
-    private Collection $questions;
+  #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'test', cascade: ["remove"])]
+private Collection $questions;
 
     public function __construct()
     {

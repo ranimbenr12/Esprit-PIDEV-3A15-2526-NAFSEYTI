@@ -20,7 +20,6 @@ class TestController extends AbstractController
     {
         $tests = $testRepository->findAll();
         
-        // MODIFIER ICI - Ajouter 'back/'
         return $this->render('back/test/index.html.twig', [
             'tests' => $tests,
         ]);
@@ -47,7 +46,6 @@ class TestController extends AbstractController
             return $this->redirectToRoute('app_test_index');
         }
 
-        // MODIFIER ICI - Ajouter 'back/'
         return $this->render('back/test/new.html.twig', [
             'form' => $form->createView(),
             'test' => $test,
@@ -57,7 +55,6 @@ class TestController extends AbstractController
     #[Route('/{id}', name: 'app_test_show', methods: ['GET'])]
     public function show(Test $test): Response
     {
-        // MODIFIER ICI - Ajouter 'back/'
         return $this->render('back/test/show.html.twig', [
             'test' => $test,
         ]);
@@ -77,7 +74,6 @@ class TestController extends AbstractController
             return $this->redirectToRoute('app_test_index');
         }
 
-        // MODIFIER ICI - Ajouter 'back/'
         return $this->render('back/test/edit.html.twig', [
             'form' => $form->createView(),
             'test' => $test,
@@ -88,13 +84,10 @@ class TestController extends AbstractController
     public function delete(Request $request, Test $test, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$test->getId(), $request->request->get('_token'))) {
-            if ($test->getQuestions()->count() > 0) {
-                $this->addFlash('warning', 'Ce test contient des questions. Veuillez d\'abord supprimer les questions associées.');
-            } else {
-                $entityManager->remove($test);
-                $entityManager->flush();
-                $this->addFlash('success', 'Le test a été supprimé avec succès !');
-            }
+            // Suppression directe - les questions seront supprimées automatiquement grâce à cascade={"remove"}
+            $entityManager->remove($test);
+            $entityManager->flush();
+            $this->addFlash('success', 'Le test a été supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_test_index');

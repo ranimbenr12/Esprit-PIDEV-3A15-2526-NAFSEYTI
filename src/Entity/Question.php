@@ -64,9 +64,8 @@ class Question
     #[ORM\Column(name: 'created_at', type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: ReponsesScore::class)]
-    private Collection $reponses;
-
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: ReponsesScore::class, cascade: ["remove"])]
+private Collection $reponses;
     // SUPPRIMEZ ou COMMENTEZ ces lignes si elles existent :
     // #[ORM\Column(name: 'bareme', type: 'json', nullable: true)]
     // private ?array $bareme = null;

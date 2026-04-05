@@ -25,7 +25,6 @@ class QuestionController extends AbstractController
         ]);
     }
 
-    // AJOUTEZ CETTE ROUTE MANQUANTE
     #[Route('/test/{testId}/new', name: 'app_question_new_with_test', methods: ['GET', 'POST'])]
     public function newWithTest(Request $request, EntityManagerInterface $entityManager, int $testId): Response
     {
@@ -47,7 +46,6 @@ class QuestionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Validation supplémentaire pour les QCM
             if (strpos($question->getTypeQuestion(), 'qcm') !== false && empty($question->getReponsesPossibles())) {
                 $this->addFlash('error', 'Pour les questions QCM, vous devez spécifier les réponses possibles.');
                 return $this->render('back/question/new.html.twig', [
@@ -82,7 +80,6 @@ class QuestionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Validation supplémentaire pour les QCM
             if (strpos($question->getTypeQuestion(), 'qcm') !== false && empty($question->getReponsesPossibles())) {
                 $this->addFlash('error', 'Pour les questions QCM, vous devez spécifier les réponses possibles.');
                 return $this->render('back/question/new.html.twig', [
@@ -132,17 +129,14 @@ class QuestionController extends AbstractController
     public function delete(Request $request, Question $question, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$question->getId(), $request->request->get('_token'))) {
-            if ($question->getReponses()->count() > 0) {
-                $this->addFlash('warning', 'Cette question a déjà des réponses. Impossible de la supprimer.');
-            } else {
-                $testId = $question->getTest() ? $question->getTest()->getId() : null;
-                $entityManager->remove($question);
-                $entityManager->flush();
-                $this->addFlash('success', 'La question a été supprimée avec succès !');
-                
-                if ($testId) {
-                    return $this->redirectToRoute('app_test_show', ['id' => $testId]);
-                }
+            $testId = $question->getTest() ? $question->getTest()->getId() : null;
+            // Suppression directe - les réponses seront supprimées automatiquement grâce à cascade={"remove"}
+            $entityManager->remove($question);
+            $entityManager->flush();
+            $this->addFlash('success', 'La question a été supprimée avec succès !');
+            
+            if ($testId) {
+                return $this->redirectToRoute('app_test_show', ['id' => $testId]);
             }
         }
 
