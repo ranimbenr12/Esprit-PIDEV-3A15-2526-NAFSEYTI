@@ -182,6 +182,7 @@ public function edit_fiche(
         'showEditModal' => true,
     ]);
     //////////////////////////////////////////
+    ////////////////////////////////////////
 }
 
     // ── Supprimer fiche ──
