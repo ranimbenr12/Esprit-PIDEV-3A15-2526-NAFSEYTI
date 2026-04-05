@@ -46,15 +46,12 @@
 .badge-oui{background:var(--amber-pale);color:var(--amber);border:1px solid #f6d860;}
 .badge-non{background:var(--cream-mid);color:var(--ink-soft);}
 
-/* Réponses list */
 .reponses-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
 .reponses-list li{display:flex;align-items:center;gap:9px;font-size:.875rem;color:var(--ink);}
 .reponses-list li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green-sage);flex-shrink:0;}
 
-/* Question text block */
 .q-block{background:var(--cream);border-left:3px solid var(--green-sage);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 18px;font-size:.95rem;color:var(--ink);line-height:1.6;}
 
-/* Footer actions */
 .card-actions{padding:20px 24px;border-top:1px solid var(--cream-mid);display:flex;gap:10px;flex-wrap:wrap;}
 .btn-primary-nt{display:inline-flex;align-items:center;gap:7px;background:var(--green-deep);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:10px 20px;border-radius:var(--radius-sm);border:none;text-decoration:none;cursor:pointer;transition:var(--tr);}
 .btn-primary-nt:hover{background:var(--green-mid);color:var(--cream);text-decoration:none;transform:translateY(-1px);}
@@ -190,8 +187,6 @@
     <input type="hidden" name="_token" value="{{ csrf_token('delete'~question.id) }}">
 </form>
 
-{% block javascripts %}
-{{ parent() }}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function deleteQuestion(id) {
@@ -207,5 +202,4 @@ function deleteQuestion(id) {
     }).then(function(r){ if(r.isConfirmed) document.getElementById('delete-form-'+id).submit(); });
 }
 </script>
-{% endblock %}
 {% endblock %}

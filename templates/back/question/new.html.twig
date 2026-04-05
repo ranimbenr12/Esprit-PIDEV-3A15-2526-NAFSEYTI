@@ -1,197 +1,237 @@
 {% extends 'back/admin_base.html.twig' %}
 
-{% block title %}Créer une nouvelle question - Nafseyti{% endblock %}
+{% block title %}Nouvelle question — Nafseyti{% endblock %}
 {% block question_active %}active{% endblock %}
 
 {% block admin_content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="white_shd full margin_bottom_30">
-            <div class="full graph_head">
-                <div class="heading1 margin_0">
-                    <h2>Créer une nouvelle question</h2>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+    --green-deep:#1a3d2b;--green-mid:#2d6a4f;--green-sage:#52b788;--green-light:#95d5b2;
+    --green-pale:#d8f3dc;--cream:#faf6f0;--cream-mid:#f0e9de;--cream-dark:#e0d5c5;
+    --sand:#c9b99a;--ink:#1a2e1f;--ink-mid:#3d5a45;--ink-soft:#7a9482;--white:#fff;
+    --red-soft:#c0392b;--red-pale:#fdf0ee;--amber:#b7791f;--amber-pale:#fef9ee;
+    --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
+    --shadow-md:0 2px 8px rgba(26,61,43,.08),0 8px 24px rgba(26,61,43,.09);
+    --tr:.2s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;}
+.nt{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--cream);min-height:100vh;padding:32px 28px 48px;animation:pf .4s ease both;}
+@keyframes pf{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.nt-breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-size:.8rem;color:var(--ink-soft);}
+.nt-breadcrumb a{color:var(--green-mid);text-decoration:none;font-weight:500;}
+.nt-breadcrumb a:hover{color:var(--green-deep);}
+.nt-breadcrumb span{opacity:.5;}
+.nt-header{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--cream-dark);}
+.nt-eyebrow{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-sage);margin-bottom:4px;}
+.nt-title{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--green-deep);margin:0;}
+.nt-title em{font-style:italic;color:var(--green-sage);}
+
+.form-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden;max-width:780px;}
+.form-card-head{padding:18px 28px;border-bottom:1px solid var(--cream-mid);display:flex;align-items:center;gap:10px;background:var(--cream);}
+.form-card-head .icon{width:34px;height:34px;border-radius:8px;background:var(--green-pale);color:var(--green-mid);display:flex;align-items:center;justify-content:center;}
+.form-card-head h3{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--green-deep);margin:0;}
+.form-body{padding:28px;}
+.field-group{margin-bottom:22px;}
+.field-label{display:block;font-size:.8rem;font-weight:600;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.field-label .req{color:var(--green-sage);margin-left:2px;}
+.field-hint{font-size:.75rem;color:var(--ink-soft);margin-top:5px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:600px){.field-row{grid-template-columns:1fr;}}
+
+.field-group input[type=text],
+.field-group input[type=number],
+.field-group select,
+.field-group textarea{width:100% !important;padding:11px 14px !important;border:1.5px solid #e0d5c5 !important;border-radius:8px !important;font-family:'DM Sans',sans-serif !important;font-size:.875rem !important;color:#1a2e1f !important;background:#ffffff !important;transition:.2s cubic-bezier(.4,0,.2,1);outline:none !important;box-shadow:none !important;}
+.field-group input[type=text]:focus,
+.field-group input[type=number]:focus,
+.field-group select:focus,
+.field-group textarea:focus{border-color:#52b788 !important;background:#ffffff !important;box-shadow:0 0 0 3px rgba(82,183,136,.15) !important;}
+.field-group select{appearance:none !important;color:#1a2e1f !important;background-color:#ffffff !important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9482' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;}
+.field-group .form-error{font-size:.75rem;color:var(--red-soft);margin-top:4px;display:block;}
+.field-group select option{color:#1a2e1f !important;background:#ffffff !important;font-size:.875rem !important;}
+.field-group select option:disabled{color:#7a9482 !important;}
+/* Force Symfony form select widgets too */
+select.form-control, select[name]{color:#1a2e1f !important;background:#ffffff !important;}
+select.form-control option, select[name] option{color:#1a2e1f !important;background:#ffffff !important;}
+
+.help-box{display:none;background:var(--green-pale);border:1px solid var(--green-light);border-radius:var(--radius-sm);padding:13px 16px;font-size:.82rem;color:var(--ink-mid);gap:10px;align-items:flex-start;margin-top:8px;}
+.help-box.visible{display:flex;}
+.help-box svg{flex-shrink:0;color:var(--green-sage);}
+
+.checkbox-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.checkbox-wrap input[type=checkbox]{width:18px;height:18px;accent-color:var(--green-mid);cursor:pointer;}
+.checkbox-wrap label{font-size:.875rem;color:var(--ink-mid);cursor:pointer;margin:0;}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:28px 0 22px;}
+.section-divider span{font-size:.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--cream-dark);}
+
+.form-footer{padding:20px 28px;border-top:1px solid var(--cream-mid);background:var(--cream);display:flex;gap:10px;align-items:center;}
+.btn-submit{display:inline-flex;align-items:center;gap:8px;background:var(--green-deep);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:11px 24px;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:var(--tr);}
+.btn-submit:hover{background:var(--green-mid);transform:translateY(-1px);}
+.btn-cancel{display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--ink-mid);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;padding:11px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--cream-dark);text-decoration:none;transition:var(--tr);}
+.btn-cancel:hover{border-color:var(--green-sage);color:var(--green-deep);text-decoration:none;}
+</style>
+
+<div class="nt">
+    <div class="nt-breadcrumb">
+        <a href="{{ path('app_question_index') }}">Questions</a>
+        <span>/</span>
+        <span>Nouvelle question</span>
+    </div>
+    <div class="nt-header">
+        <div class="nt-eyebrow">Création</div>
+        <h1 class="nt-title">Nouvelle <em>question</em></h1>
+    </div>
+
+    <div class="form-card">
+        <div class="form-card-head">
+            <div class="icon">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h3>Contenu de la question</h3>
+        </div>
+
+        {{ form_start(form, {'attr': {'id': 'questionForm', 'novalidate': 'novalidate'}}) }}
+        <div class="form-body">
+
+            <div class="field-group">
+                <label class="field-label">Test associé <span class="req">*</span></label>
+                {{ form_widget(form.test) }}
+                {{ form_errors(form.test) }}
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">Texte de la question <span class="req">*</span></label>
+                {{ form_widget(form.texte, {'attr': {'rows': 3, 'placeholder': 'Ex : Comment gérez-vous le stress au travail ?'}}) }}
+                {{ form_errors(form.texte) }}
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">Type de question <span class="req">*</span></label>
+                {{ form_widget(form.typeQuestion, {'attr': {'id': 'question_type'}}) }}
+                {{ form_errors(form.typeQuestion) }}
+                <div class="help-box" id="helpBox">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span id="helpText"></span>
                 </div>
             </div>
-            
-            <div class="full price_table padding_infor_info">
-                <div class="row">
-                    <div class="col-lg-8 mx-auto">
-                        {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id': 'questionForm'}}) }}
-                        
-                        <div class="form-group row mb-3">
-                            {{ form_label(form.test, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.test, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.test) }}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row mb-3">
-                            {{ form_label(form.texte, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.texte, {'attr': {'class': 'form-control', 'rows': 4}}) }}
-                                {{ form_errors(form.texte) }}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row mb-3">
-                            {{ form_label(form.typeQuestion, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.typeQuestion, {'attr': {'class': 'form-control', 'id': 'question_type'}}) }}
-                                {{ form_errors(form.typeQuestion) }}
-                            </div>
-                        </div>
-                        
-                        <!-- Zone pour les options QCM (visible uniquement pour QCM) -->
-                        <div class="form-group row mb-3" id="qcmOptionsGroup" style="display: none;">
-                            {{ form_label(form.reponsesPossibles, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.reponsesPossibles, {'attr': {'class': 'form-control', 'rows': 3, 'id': 'question_reponses'}}) }}
-                                {{ form_errors(form.reponsesPossibles) }}
-                                <small class="form-text text-muted">
-                                    <i class="fa fa-info-circle"></i> 
-                                    Séparez chaque option par une virgule. Exemple: "Option 1, Option 2, Option 3"
-                                </small>
-                            </div>
-                        </div>
-                        
-                        <!-- Message d'aide dynamique -->
-                        <div class="form-group row mb-3">
-                            <div class="col-sm-9 offset-sm-3">
-                                <div id="helpMessage" class="alert alert-info" style="display: none;">
-                                    <i class="fa fa-lightbulb-o"></i> 
-                                    <span id="helpText"></span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row mb-3">
-                            {{ form_label(form.points, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.points, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.points) }}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row mb-3">
-                            {{ form_label(form.ordre, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.ordre, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.ordre) }}
-                                <small class="form-text text-muted">Laissez vide pour mettre automatiquement à la fin</small>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row mb-3">
-                            <div class="col-sm-9 offset-sm-3">
-                                <div class="custom-control custom-checkbox">
-                                    {{ form_widget(form.obligatoire, {'attr': {'class': 'custom-control-input'}}) }}
-                                    {{ form_label(form.obligatoire, null, {'label_attr': {'class': 'custom-control-label'}}) }}
-                                </div>
-                                {{ form_errors(form.obligatoire) }}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row mb-3">
-                            {{ form_label(form.status, null, {'label_attr': {'class': 'col-sm-3 col-form-label'}}) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.status) }}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group row">
-                            <div class="col-sm-9 offset-sm-3">
-                                <a href="{{ path('app_question_index') }}" class="btn btn-secondary">
-                                    <i class="fa fa-arrow-left"></i> Annuler
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> Créer la question
-                                </button>
-                            </div>
-                        </div>
-                        
-                        {{ form_end(form) }}
+
+            <div class="field-group" id="qcmOptionsGroup" style="display:none;">
+                <label class="field-label">Réponses possibles <span class="req">*</span></label>
+                {{ form_widget(form.reponsesPossibles, {'attr': {'rows': 3, 'id': 'question_reponses', 'placeholder': 'Séparez les options par | — ex : Jamais|Parfois|Souvent|Toujours'}}) }}
+                {{ form_errors(form.reponsesPossibles) }}
+                <span class="field-hint">Séparez chaque option par le symbole <strong>|</strong></span>
+            </div>
+
+            <div class="section-divider"><span>Paramètres</span></div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Points</label>
+                    {{ form_widget(form.points) }}
+                    {{ form_errors(form.points) }}
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Ordre d'affichage</label>
+                    {{ form_widget(form.ordre, {'attr': {'placeholder': 'Auto'}}) }}
+                    <span class="field-hint">Laisser vide = ajouté en dernier</span>
+                    {{ form_errors(form.ordre) }}
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Statut</label>
+                    {{ form_widget(form.status) }}
+                    {{ form_errors(form.status) }}
+                </div>
+                <div class="field-group" style="display:flex;align-items:flex-end;padding-bottom:2px;">
+                    <div class="checkbox-wrap">
+                        {{ form_widget(form.obligatoire) }}
+                        {{ form_label(form.obligatoire) }}
                     </div>
                 </div>
             </div>
+
         </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn-submit">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Créer la question
+            </button>
+            <a href="{{ path('app_question_index') }}" class="btn-cancel">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Annuler
+            </a>
+        </div>
+        {{ form_end(form) }}
     </div>
 </div>
 
-{% block javascripts %}
-{{ parent() }}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const typeSelect = document.getElementById('question_type');
-    const qcmOptionsGroup = document.getElementById('qcmOptionsGroup');
-    const reponsesField = document.getElementById('question_reponses');
-    const helpMessage = document.getElementById('helpMessage');
-    const helpText = document.getElementById('helpText');
-    
-    // Messages d'aide par type de question
-    const helpMessages = {
-        'texte_libre': {
-            text: ' Les utilisateurs pourront répondre par un texte libre. Aucune option à configurer.',
-            showQcmOptions: false,
-            required: false
-        },
-        'numerique': {
-            text: ' Les utilisateurs devront saisir un nombre. Aucune option à configurer.',
-            showQcmOptions: false,
-            required: false
-        },
-        'qcm_unique': {
-            text: ' Les utilisateurs pourront sélectionner UNE SEULE option parmi celles que vous allez définir ci-dessous.',
-            showQcmOptions: true,
-            required: true
-        },
-        'qcm_multiple': {
-            text: ' Les utilisateurs pourront sélectionner PLUSIEURS options parmi celles que vous allez définir ci-dessous.',
-            showQcmOptions: true,
-            required: true
-        },
-      
-    };
-    
-    function updateForm() {
-        const selectedType = typeSelect.value;
-        const config = helpMessages[selectedType];
-        
-        if (config) {
-            // Afficher le message d'aide
-            helpMessage.style.display = 'block';
-            helpText.innerHTML = config.text;
-            
-            // Gérer l'affichage des options QCM
-            if (config.showQcmOptions) {
-                qcmOptionsGroup.style.display = 'flex';
-                reponsesField.setAttribute('required', 'required');
-                reponsesField.placeholder = 'Exemple: Très satisfait, Satisfait, Neutre, Insatisfait, Très insatisfait';
-            } else {
-                qcmOptionsGroup.style.display = 'none';
-                reponsesField.removeAttribute('required');
-                reponsesField.value = '';
-                
-                // Pour l'échelle de Likert, pré-remplir automatiquement
-                if (selectedType === 'likert') {
-                    reponsesField.value = '1 - Pas du tout d\'accord, 2 - Pas d\'accord, 3 - Neutre, 4 - D\'accord, 5 - Tout à fait d\'accord';
-                    reponsesField.readOnly = true;
+(function() {
+    function initQcm() {
+        var form = document.getElementById('questionForm');
+        if (!form) { setTimeout(initQcm, 50); return; }
+
+        // Chercher le select de type dans le formulaire — tous les ids possibles
+        var typeSelect = form.querySelector('select[id="question_type"]')
+                      || form.querySelector('select[id$="typeQuestion"]')
+                      || form.querySelector('select[id$="type_question"]')
+                      || form.querySelector('select[name*="typeQuestion"]')
+                      || form.querySelector('select[name*="type_question"]');
+
+        var qcmGroup      = document.getElementById('qcmOptionsGroup');
+        var reponsesField = form.querySelector('textarea[id$="reponsesPossibles"]')
+                         || form.querySelector('textarea[id$="reponses_possibles"]')
+                         || form.querySelector('textarea[name*="reponsesPossibles"]');
+
+        if (!typeSelect || !qcmGroup) { setTimeout(initQcm, 50); return; }
+
+        console.log('[QCM] OK - select id=' + typeSelect.id + ' valeur=' + typeSelect.value);
+
+        var helps = {
+            'qcm_unique':   { text: "Sélectionnez une seule réponse parmi les options ci-dessous.", qcm: true },
+            'qcm_multiple': { text: "Plusieurs réponses possibles parmi les options ci-dessous.", qcm: true },
+            'texte_libre':  { text: "Réponse libre, aucune option à configurer.", qcm: false },
+            'numerique':    { text: "Valeur numérique, aucune option à configurer.", qcm: false }
+        };
+
+        function update() {
+            var v   = typeSelect.value;
+            var cfg = helps[v];
+            var helpBox  = document.getElementById('helpBox');
+            var helpText = document.getElementById('helpText');
+            if (cfg) {
+                if (helpText) helpText.textContent = cfg.text;
+                if (helpBox)  helpBox.classList.add('visible');
+                if (cfg.qcm) {
+                    qcmGroup.style.display = 'block';
+                    if (reponsesField) reponsesField.setAttribute('required', 'required');
                 } else {
-                    reponsesField.readOnly = false;
+                    qcmGroup.style.display = 'none';
+                    if (reponsesField) reponsesField.removeAttribute('required');
                 }
+            } else {
+                if (helpBox) helpBox.classList.remove('visible');
+                qcmGroup.style.display = 'none';
             }
-        } else {
-            helpMessage.style.display = 'none';
-            qcmOptionsGroup.style.display = 'none';
         }
+
+        typeSelect.addEventListener('change', update);
+        update();
     }
-    
-    if (typeSelect) {
-        typeSelect.addEventListener('change', updateForm);
-        updateForm(); // Appeler au chargement
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initQcm);
+    } else {
+        initQcm();
     }
-});
+    window.addEventListener('load', initQcm);
+})();
 </script>
-{% endblock %}
 {% endblock %}
