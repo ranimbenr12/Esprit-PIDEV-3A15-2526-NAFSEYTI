@@ -1,0 +1,312 @@
+{% extends 'base.html.twig' %}
+{% block title %}Psychologue — Suivis{% endblock %}
+
+{% block body %}
+<style>
+/* Cacher la navbar sur les pages psychologue */
+.navbar-wrap { display: none !important; }
+
+:root{--green-deep:#2D5016;--green-mid:#4A7C2F;--green-sage:#7BA05B;--green-light:#A8C68F;--green-pale:#D4E6C3;--beige-light:#EDE3D0;--beige-cream:#F7F2E8;--beige-white:#FDFAF5;--text-dark:#1A2E0A;--text-mid:#3D5C28;}
+
+.psy-hero{background:linear-gradient(135deg,var(--green-deep),var(--green-mid));padding:70px 60px 50px;position:relative;overflow:hidden;}
+.psy-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:rgba(168,198,143,.1);}
+.psy-hero h1{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--beige-cream);font-weight:400;position:relative;}
+.psy-hero h1 em{font-style:italic;color:var(--green-light);}
+.psy-hero p{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(237,227,208,.75);margin-top:10px;position:relative;}
+
+.psy-page{background:var(--beige-white);min-height:60vh;padding:60px;}
+
+/* Barre outils */
+.toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:32px;}
+.btn-add{background:var(--green-mid);color:white;border:none;padding:12px 28px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;border-radius:4px;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:8px;}
+.btn-add:hover{background:var(--green-deep);transform:translateY(-2px);}
+.search-wrap{display:flex;align-items:center;gap:0;border:1px solid var(--beige-light);border-radius:4px;overflow:hidden;background:white;}
+.search-wrap i{padding:0 14px;color:var(--green-sage);}
+.search-wrap input{border:none;outline:none;padding:10px 0;font-size:.88rem;color:var(--text-dark);background:transparent;width:260px;}
+.search-wrap button{background:none;border:none;padding:0 12px;color:#aaa;cursor:pointer;font-size:.9rem;}
+.search-wrap button:hover{color:var(--green-mid);}
+
+/* Table */
+.table-wrap{background:white;border:1px solid var(--beige-light);border-radius:8px;overflow:hidden;}
+.table-head{padding:20px 28px;border-bottom:1px solid var(--beige-light);display:flex;align-items:center;gap:10px;}
+.table-head h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text-dark);font-weight:600;margin:0;}
+.table-head span{background:var(--green-pale);color:var(--green-deep);font-size:.7rem;padding:3px 10px;border-radius:100px;letter-spacing:1px;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--beige-cream);padding:12px 16px;font-size:.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-mid);font-weight:600;text-align:left;border-bottom:1px solid var(--beige-light);}
+tbody td{padding:14px 16px;font-size:.88rem;color:var(--text-dark);border-bottom:1px solid var(--beige-light);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--beige-cream);}
+.badge-type{display:inline-block;background:var(--green-pale);color:var(--green-deep);font-size:.65rem;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:100px;}
+.badge-obj{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:100px;}
+.badge-obj.full{background:#FEE2E2;color:#991B1B;}
+.badge-obj.ok{background:var(--green-pale);color:var(--green-deep);}
+
+/* Actions */
+.btn-action{padding:7px 14px;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;border-radius:4px;border:none;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:5px;transition:all .2s;margin:2px;}
+.btn-edit{background:var(--beige-light);color:var(--text-mid);}
+.btn-edit:hover{background:var(--beige-mid,#D9C4A0);}
+.btn-obj{background:var(--green-pale);color:var(--green-deep);}
+.btn-obj:hover{background:var(--green-light);}
+.btn-del{background:#FEE2E2;color:#991B1B;}
+.btn-del:hover{background:#FECACA;}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,46,10,.6);z-index:9999;align-items:center;justify-content:center;}
+.modal-overlay.active{display:flex;}
+.modal-box{background:white;border-radius:12px;padding:40px;width:100%;max-width:520px;position:relative;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-box h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text-dark);margin-bottom:24px;}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.4rem;color:#999;cursor:pointer;}
+.form-field{margin-bottom:16px;}
+.form-field label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--green-mid);margin-bottom:7px;font-weight:600;}
+.form-field input,.form-field textarea,.form-field select{width:100%;border:1px solid var(--beige-light);background:var(--beige-cream);padding:11px 15px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text-dark);border-radius:4px;outline:none;transition:border-color .3s;}
+.form-field input:focus,.form-field textarea:focus,.form-field select:focus{border-color:var(--green-sage);background:white;}
+.form-field .err{color:#dc3545;font-size:.75rem;margin-top:4px;display:none;}
+.modal-btns{display:flex;gap:12px;justify-content:flex-end;margin-top:22px;}
+.btn-cancel{background:var(--beige-light);color:var(--text-mid);border:none;padding:11px 22px;border-radius:4px;cursor:pointer;font-size:.82rem;font-weight:600;}
+.btn-save{background:var(--green-mid);color:white;border:none;padding:11px 26px;border-radius:4px;cursor:pointer;font-size:.82rem;font-weight:600;transition:background .2s;}
+.btn-save:hover{background:var(--green-deep);}
+
+/* Confirm */
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(26,46,10,.6);z-index:99999;align-items:center;justify-content:center;}
+.confirm-overlay.active{display:flex;}
+.confirm-box{background:white;border-radius:12px;padding:36px;max-width:400px;width:100%;text-align:center;}
+.confirm-box i{font-size:2.5rem;color:#EF4444;margin-bottom:16px;display:block;}
+.confirm-box h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text-dark);margin-bottom:8px;}
+.confirm-box p{font-size:.87rem;color:#6B7D5A;margin-bottom:22px;}
+.confirm-btns{display:flex;gap:12px;justify-content:center;}
+.btn-confirm-cancel{background:var(--beige-light);color:var(--text-mid);border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-weight:600;}
+.btn-confirm-del{background:#EF4444;color:white;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-weight:600;}
+
+.toast-msg{position:fixed;bottom:30px;right:30px;background:var(--green-deep);color:var(--beige-cream);padding:14px 24px;border-radius:8px;font-size:.88rem;z-index:99999;display:none;}
+.empty{text-align:center;padding:60px;color:#6B7D5A;}
+.empty i{font-size:3.5rem;color:var(--green-pale);margin-bottom:16px;display:block;}
+</style>
+
+<!-- Hero -->
+<section class="psy-hero">
+    <h1>Espace <em>Psychologue</em></h1>
+    <p>Gérez les suivis et objectifs de vos patients.</p>
+</section>
+
+<!-- Page -->
+<section class="psy-page">
+    <div class="toolbar">
+        <div>
+            <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:3px;color:var(--green-sage);margin-bottom:6px;">Gestion</div>
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--text-dark);font-weight:400;">
+                Suivis personnels <em style="font-style:italic;color:var(--green-mid);">({{ suivis|length }})</em>
+            </h2>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher…" oninput="filterTable(this.value)">
+                <button onclick="document.getElementById('searchInput').value='';filterTable('');" title="Effacer"><i class="fas fa-times"></i></button>
+            </div>
+            <button class="btn-add" onclick="openModal()">
+                <i class="fas fa-plus"></i> Nouveau suivi
+            </button>
+        </div>
+    </div>
+
+    {% if suivis|length == 0 %}
+    <div class="empty">
+        <i class="fas fa-seedling"></i>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text-mid);">Aucun suivi</h3>
+        <p>Créez le premier suivi pour un patient.</p>
+    </div>
+    {% else %}
+    <div class="table-wrap">
+        <div class="table-head">
+            <h3>Liste des suivis</h3>
+            <span>{{ suivis|length }} entrée(s)</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th><th>Titre</th><th>Description</th><th>Type</th><th>Utilisateur</th><th>Objectifs</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for suivi in suivis %}
+                {% set nb = nbObjectifs[suivi.idsuivi] ?? 0 %}
+                <tr id="row-{{ suivi.idsuivi }}">
+                    <td>{{ suivi.idsuivi }}</td>
+                    <td><strong>{{ suivi.titre }}</strong></td>
+                    <td>{{ suivi.description|default('')|slice(0,60) }}{% if suivi.description|length > 60 %}…{% endif %}</td>
+                    <td><span class="badge-type">{{ suivi.typeSuivi }}</span></td>
+                    <td>{{ suivi.idutilisateur }}</td>
+                    <td>
+                        <span class="badge-obj {{ nb >= 3 ? 'full' : 'ok' }}">
+                            <i class="fas fa-tasks"></i> {{ nb }}/3
+                            {% if nb >= 3 %}<i class="fas fa-lock" title="Limite atteinte"></i>{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="editSuivi({{ suivi.idsuivi }})"><i class="fas fa-pen"></i> Modifier</button>
+                        <a href="{{ path('psy_objectif_index', {idSuivi: suivi.idsuivi}) }}" class="btn-action btn-obj"><i class="fas fa-tasks"></i> Objectifs</a>
+                        <button class="btn-action btn-del" onclick="confirmDel({{ suivi.idsuivi }})"><i class="fas fa-trash"></i> Supprimer</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</section>
+
+<!-- Modal Ajouter/Modifier -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <h2 id="modalTitle">Nouveau suivi</h2>
+        <input type="hidden" id="suiviId" value="0">
+        <div class="form-field">
+            <label>Titre *</label>
+            <input type="text" id="fTitre" placeholder="Ex : Gestion du stress">
+            <div class="err" id="err_titre"></div>
+        </div>
+        <div class="form-field">
+            <label>Description</label>
+            <textarea id="fDesc" rows="3" placeholder="Description du suivi…"></textarea>
+            <div class="err" id="err_description"></div>
+        </div>
+        <div class="form-field">
+            <label>Type</label>
+            <select id="fType">
+                <option value="Psychologique">🧠 Psychologique</option>
+                <option value="Académique">📚 Académique</option>
+                <option value="Social">🤝 Social</option>
+                <option value="Comportemental">🎯 Comportemental</option>
+            </select>
+            <div class="err" id="err_type_suivi"></div>
+        </div>
+        <div class="form-field">
+            <label>ID Utilisateur</label>
+            <input type="number" id="fUser" value="1">
+        </div>
+        <div class="form-field">
+            <label>ID Psychologue</label>
+            <input type="number" id="fPsy" value="1">
+        </div>
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+            <button class="btn-save" onclick="saveSuivi()">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm suppression -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Supprimer ce suivi ?</h3>
+        <p>Tous les objectifs associés seront également supprimés.</p>
+        <div class="confirm-btns">
+            <button class="btn-confirm-cancel" onclick="closeConfirm()">Annuler</button>
+            <button class="btn-confirm-del" id="btnConfirmDel">Supprimer</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-msg" id="toast"></div>
+
+<script>
+var deleteId = null;
+
+function openModal() {
+    document.getElementById('modalTitle').textContent = 'Nouveau suivi';
+    document.getElementById('suiviId').value = '0';
+    document.getElementById('fTitre').value = '';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fType').value = 'Psychologique';
+    document.getElementById('fUser').value = '1';
+    document.getElementById('fPsy').value = '1';
+    clearErrors();
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+function editSuivi(id) {
+    fetch('/psychologue/suivis/' + id + '/json')
+        .then(r => r.json())
+        .then(d => {
+            document.getElementById('modalTitle').textContent = 'Modifier le suivi';
+            document.getElementById('suiviId').value = d.id;
+            document.getElementById('fTitre').value = d.titre;
+            document.getElementById('fDesc').value = d.description || '';
+            document.getElementById('fType').value = d.type_suivi;
+            document.getElementById('fUser').value = d.idutilisateur;
+            document.getElementById('fPsy').value = d.idpsychologue;
+            clearErrors();
+            document.getElementById('modalOverlay').classList.add('active');
+        });
+}
+
+function saveSuivi() {
+    clearErrors();
+    var id = document.getElementById('suiviId').value;
+    var url = parseInt(id) > 0 ? '/psychologue/suivis/' + id + '/edit' : '/psychologue/suivis/new';
+    var body = new URLSearchParams({
+        titre: document.getElementById('fTitre').value,
+        description: document.getElementById('fDesc').value,
+        type_suivi: document.getElementById('fType').value,
+        idutilisateur: document.getElementById('fUser').value,
+        idpsychologue: document.getElementById('fPsy').value,
+    });
+    fetch(url, { method: 'POST', body })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) { closeModal(); showToast('Suivi enregistré !'); setTimeout(() => location.reload(), 800); }
+            else if (data.errors) { showErrors(data.errors); }
+            else { alert('Erreur : ' + (data.error || 'Inconnue')); }
+        });
+}
+
+function confirmDel(id) {
+    deleteId = id;
+    document.getElementById('confirmOverlay').classList.add('active');
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('active'); deleteId = null; }
+
+document.getElementById('btnConfirmDel').addEventListener('click', function() {
+    if (!deleteId) return;
+    fetch('/psychologue/suivis/' + deleteId + '/delete', { method: 'POST' })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) { var row = document.getElementById('row-' + deleteId); if (row) row.remove(); closeConfirm(); showToast('Suivi supprimé.'); }
+            else { alert('Erreur : ' + d.error); }
+        });
+});
+
+document.getElementById('confirmOverlay').addEventListener('click', e => { if (e.target === document.getElementById('confirmOverlay')) closeConfirm(); });
+document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
+
+function clearErrors() {
+    ['titre','description','type_suivi'].forEach(f => {
+        var el = document.getElementById('err_' + f);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+    });
+}
+function showErrors(errors) {
+    Object.keys(errors).forEach(f => {
+        var el = document.getElementById('err_' + f);
+        if (el) { el.textContent = errors[f]; el.style.display = 'block'; }
+        if (f === 'global') alert(errors[f]);
+    });
+}
+function filterTable(val) {
+    var q = val.toLowerCase().trim();
+    document.querySelectorAll('#tableBody tr[id^="row-"]').forEach(row => {
+        row.style.display = (!q || row.innerText.toLowerCase().includes(q)) ? '' : 'none';
+    });
+}
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,400 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Objectifs - {{ suivi.titre }}{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+        
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive" src="{{ asset('back/images/logo/logo_icon1.png') }}" alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+                <ul class="list-unstyled components">
+                    <li><a href="{{ path('back_dashboard') }}"><i class="fa fa-dashboard yellow_color"></i> Tableau de bord</a></li>
+                    <li><a href="#"><i class="fa fa-users blue1_color"></i> Utilisateurs</a></li>
+                    <li><a href="#"><i class="fa fa-calendar orange_color"></i> Rendez-vous</a></li>
+                    <li><a href="#"><i class="fa fa-book purple_color2"></i> Contenu psychologique</a></li>
+                    <li><a href="#"><i class="fa fa-check-square green_color"></i> Tests</a></li>
+                    <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i> Événements</a></li>
+                    <li><a href="{{ path('back_suivi_index') }}"><i class="fa fa-line-chart yellow_color"></i> Suivi personnel</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <div class="logo_section">
+                            <a href="{{ path('back_dashboard') }}" style="display: flex; align-items: center; text-decoration: none;">
+                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width: 40px; margin-right: 10px;" />
+                                <span style="font-size: 20px; color: #3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="#" />
+                                            <span class="name_user">Amri Sirine</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Mon Profil</a>
+                                            <a class="dropdown-item" href="#">Paramètres</a>
+                                            <a class="dropdown-item" href="#">Déconnexion</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="midde_cont">
+                <div class="container-fluid">
+                    
+                    <div class="row column_title">
+                        <div class="col-md-12">
+                            <div class="page_title">
+                                <h2><i class="fa fa-tasks"></i> Objectifs : {{ suivi.titre }}</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bouton Retour et Ajouter + Recherche -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <a href="{{ path('back_suivi_index') }}" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Retour aux suivis
+                            </a>
+                            <button type="button" class="btn btn-success" onclick="resetObjectifForm(); $('#modalObjectif').modal('show');">
+                                <i class="fa fa-plus"></i> Nouvel objectif
+                            </button>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background:#3c943c;color:white;padding:6px 12px;border-radius:4px 0 0 4px;">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                <input type="text" id="searchObjectif" class="form-control" placeholder="Rechercher par titre, description, statut…" oninput="filterObjectifs(this.value)">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" onclick="document.getElementById('searchObjectif').value=''; filterObjectifs('');" title="Effacer">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages flash -->
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    <!-- Liste des objectifs -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="white_shd full">
+                                <div class="full graph_head">
+                                    <h2>Liste des objectifs</h2>
+                                </div>
+                                <div class="table_section">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Titre</th>
+                                                    <th>Description</th>
+                                                    <th>Date échéance</th>
+                                                    <th>Statut</th>
+                                                    <th>Document client</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="objectifTableBody">
+                                                {% for objectif in objectifs %}
+                                                <tr id="objectif-row-{{ objectif.idobjectif }}">
+                                                    <td>{{ objectif.idobjectif }}</td>
+                                                    <td>{{ objectif.titre }}</td>
+                                                    <td>{{ objectif.description|default('')|slice(0, 50) }}</td>
+                                                    <td>{{ objectif.dateEcheance ? objectif.dateEcheance|date('d/m/Y') : 'Non définie' }}</td>
+                                                    <td>
+                                                        {% if objectif.valide %}
+                                                            <span class="badge badge-success">✅ Validé</span>
+                                                        {% else %}
+                                                            <span class="badge badge-warning">⏳ En cours</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if objectif.medias|length > 0 %}
+                                                            {% set media = objectif.medias|first %}
+                                                            {% set isAbsolute = media.cheminFichier starts with 'C:' or media.cheminFichier starts with '/' %}
+                                                            {% if isAbsolute %}
+                                                                <span class="text-muted" style="font-size:.8rem;" title="{{ media.nomFichier }}">
+                                                                    <i class="fa fa-file-o"></i> {{ media.nomFichier|slice(0,15) }}
+                                                                    <small class="text-danger">(ancien fichier)</small>
+                                                                </span>
+                                                            {% elseif media.typeMedia == 'image' %}
+                                                                <a href="/{{ media.cheminFichier }}" target="_blank">
+                                                                    <img src="/{{ media.cheminFichier }}"
+                                                                         style="width:60px;height:45px;object-fit:cover;border-radius:4px;border:1px solid #dee2e6;"
+                                                                         title="{{ media.nomFichier }}">
+                                                                </a>
+                                                            {% elseif media.typeMedia == 'video' %}
+                                                                <a href="/{{ media.cheminFichier }}" target="_blank"
+                                                                   class="btn btn-info btn-sm">
+                                                                    <i class="fa fa-play-circle"></i> Vidéo
+                                                                </a>
+                                                            {% else %}
+                                                                <a href="/{{ media.cheminFichier }}" target="_blank"
+                                                                   class="btn btn-default btn-sm">
+                                                                    <i class="fa fa-file-pdf-o"></i> {{ media.nomFichier|slice(0,15) }}
+                                                                </a>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="text-muted" style="font-size:.8rem;">
+                                                                <i class="fa fa-clock-o"></i> En attente
+                                                            </span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
+                                                            <button class="btn btn-warning btn-sm" onclick="editObjectif({{ objectif.idobjectif }})" title="Modifier">
+                                                                <i class="fa fa-edit"></i> Modifier
+                                                            </button>
+                                                            {% if not objectif.valide %}
+                                                            <button class="btn btn-success btn-sm" onclick="validateObjectif({{ objectif.idobjectif }})" title="Valider">
+                                                                <i class="fa fa-check"></i> Valider
+                                                            </button>
+                                                            {% endif %}
+                                                            <button class="btn btn-danger btn-sm" onclick="deleteObjectif({{ objectif.idobjectif }})" title="Supprimer">
+                                                                <i class="fa fa-trash"></i> Supprimer
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr id="emptyObjRow">
+                                                    <td colspan="7" class="text-center">
+                                                        <div class="alert alert-info mb-0">
+                                                            Aucun objectif trouvé pour ce suivi. Cliquez sur "Nouvel objectif" pour en ajouter.
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Formulaire Objectif -->
+<div class="modal fade" id="modalObjectif" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalObjectifTitle">
+                    <i class="fa fa-plus-circle"></i> Ajouter un objectif
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="objectifForm" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="objectifId" name="id" value="0">
+                    
+                    <div class="form-group">
+                        <label>Titre *</label>
+                        <input type="text" class="form-control" id="objTitre" name="titre" required>
+                        <span id="err_titre" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="objDescription" name="description" rows="3"></textarea>
+                        <span id="err_description" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date d'échéance</label>
+                        <input type="date" class="form-control" id="objDateEcheance" name="date_echeance">
+                        <span id="err_date_echeance" class="text-danger small" style="display:none;"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="saveObjectif()">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.badge-success { background-color: #28a745; color: white; padding: 5px 10px; border-radius: 15px; }
+.badge-warning { background-color: #ffc107; color: #333; padding: 5px 10px; border-radius: 15px; }
+.btn-group-sm .btn { margin: 2px; padding: 5px 10px; }
+.table th, .table td { vertical-align: middle; }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function resetObjectifForm() {
+    document.getElementById('modalObjectifTitle').innerHTML = '<i class="fa fa-plus-circle"></i> Ajouter un objectif';
+    document.getElementById('objectifId').value = '0';
+    document.getElementById('objTitre').value = '';
+    document.getElementById('objDescription').value = '';
+    document.getElementById('objDateEcheance').value = '';
+    ['titre','description','date_echeance'].forEach(function(f) {
+        var el = document.getElementById('err_' + f);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+        var input = document.getElementById('obj' + f.charAt(0).toUpperCase() + f.slice(1).replace('_echeance','Echeance'));
+        if (input) input.classList.remove('is-invalid');
+    });
+}
+
+function saveObjectif() {
+    var id      = document.getElementById('objectifId').value;
+    var titre   = document.getElementById('objTitre').value;
+    var desc    = document.getElementById('objDescription').value;
+    var date    = document.getElementById('objDateEcheance').value;
+    var idSuivi = {{ suivi.idsuivi }};
+
+    // Effacer erreurs précédentes
+    ['titre','description','date_echeance'].forEach(function(f) {
+        var el = document.getElementById('err_' + f);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+    });
+    document.getElementById('objTitre').classList.remove('is-invalid');
+    document.getElementById('objDescription').classList.remove('is-invalid');
+    document.getElementById('objDateEcheance').classList.remove('is-invalid');
+
+    var url = (parseInt(id) > 0)
+        ? '/back/objectif/' + id + '/edit'
+        : '/back/objectif/new/' + idSuivi;
+
+    var body = 'titre=' + encodeURIComponent(titre)
+             + '&description=' + encodeURIComponent(desc)
+             + '&date_echeance=' + encodeURIComponent(date);
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            location.reload();
+        } else if (data.errors) {
+            // Afficher les erreurs sous les champs
+            var fieldMap = { titre: 'objTitre', description: 'objDescription', date_echeance: 'objDateEcheance' };
+            Object.keys(data.errors).forEach(function(field) {
+                var span = document.getElementById('err_' + field);
+                if (span) { span.textContent = data.errors[field]; span.style.display = 'block'; }
+                var input = document.getElementById(fieldMap[field]);
+                if (input) input.classList.add('is-invalid');
+                if (field === 'global') alert(data.errors[field]);
+            });
+        } else {
+            alert('Erreur : ' + (data.error || 'Une erreur est survenue'));
+        }
+    })
+    .catch(function(err) { alert('Erreur réseau : ' + err); });
+}
+
+function editObjectif(id) {
+    fetch('/back/objectif/' + id + '/json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            document.getElementById('modalObjectifTitle').innerHTML = '<i class="fa fa-edit"></i> Modifier l\'objectif';
+            document.getElementById('objectifId').value = data.id;
+            document.getElementById('objTitre').value = data.titre;
+            document.getElementById('objDescription').value = data.description || '';
+            document.getElementById('objDateEcheance').value = data.date_echeance || '';
+            $('#modalObjectif').modal('show');
+        });
+}
+
+function deleteObjectif(id) {
+    if (!confirm('Supprimer cet objectif ?')) return;
+    fetch('/back/objectif/' + id + '/delete', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                var row = document.getElementById('objectif-row-' + id);
+                if (row) row.remove();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+}
+
+function validateObjectif(id) {
+    if (!confirm('Valider cet objectif ?')) return;
+    fetch('/back/objectif/' + id + '/validate', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) { location.reload(); }
+            else { alert('Erreur : ' + data.error); }
+        });
+}
+
+function filterObjectifs(val) {
+    var q = val.toLowerCase().trim();
+    var rows = document.querySelectorAll('#objectifTableBody tr[id^="objectif-row-"]');
+    var visible = 0;
+    rows.forEach(function(row) {
+        var text = row.innerText.toLowerCase();
+        var show = !q || text.indexOf(q) !== -1;
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    var empty = document.getElementById('emptyObjRow');
+    if (empty) empty.style.display = visible === 0 ? '' : 'none';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,405 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Gestion des suivis - Nafseyti{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+        
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive" src="{{ asset('back/images/logo/logo_icon1.png') }}" alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+                <ul class="list-unstyled components">
+                    <li><a href="{{ path('back_dashboard') }}"><i class="fa fa-dashboard yellow_color"></i> Tableau de bord</a></li>
+                    <li><a href="#"><i class="fa fa-users blue1_color"></i> Utilisateurs</a></li>
+                    <li><a href="#"><i class="fa fa-calendar orange_color"></i> Rendez-vous</a></li>
+                    <li><a href="#"><i class="fa fa-book purple_color2"></i> Contenu psychologique</a></li>
+                    <li><a href="#"><i class="fa fa-check-square green_color"></i> Tests</a></li>
+                    <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i> Événements</a></li>
+                    <li class="active"><a href="{{ path('back_suivi_index') }}"><i class="fa fa-line-chart yellow_color"></i> Suivi personnel</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <div class="logo_section">
+                            <a href="{{ path('back_dashboard') }}" style="display: flex; align-items: center; text-decoration: none;">
+                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width: 40px; margin-right: 10px;" />
+                                <span style="font-size: 20px; color: #3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="#" />
+                                            <span class="name_user">Amri Sirine</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Mon Profil</a>
+                                            <a class="dropdown-item" href="#">Paramètres</a>
+                                            <a class="dropdown-item" href="#">Déconnexion</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="midde_cont">
+                <div class="container-fluid">
+                    
+                    <div class="row column_title">
+                        <div class="col-md-12">
+                            <div class="page_title">
+                                <h2><i class="fa fa-line-chart"></i> Gestion des suivis personnels</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages flash -->
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    <!-- Bouton Ajouter + Recherche -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalSuivi" onclick="resetForm()">
+                                <i class="fa fa-plus"></i> Nouveau suivi
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background:#3c943c;color:white;padding:6px 12px;border-radius:4px 0 0 4px;">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                <input type="text" id="searchSuivi" class="form-control" placeholder="Rechercher par titre, type, description…" oninput="filterSuivis(this.value)">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" onclick="document.getElementById('searchSuivi').value=''; filterSuivis('');" title="Effacer">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tableau des suivis -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="white_shd full">
+                                <div class="full graph_head">
+                                    <h2>Liste des suivis</h2>
+                                </div>
+                                <div class="table_section">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Titre</th>
+                                                    <th>Description</th>
+                                                    <th>Type</th>
+                                                    <th>Utilisateur</th>
+                                                    <th>Psychologue</th>
+                                                    <th width="180">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="suiviTableBody">
+                                                {% for suivi in suivis %}
+                                                <tr id="row-{{ suivi.idsuivi }}">
+                                                    <td>{{ suivi.idsuivi }}</td>
+                                                    <td>{{ suivi.titre }}</td>
+                                                    <td>{{ suivi.description|default('')|slice(0, 50) }}{% if suivi.description|length > 50 %}...{% endif %}</td>
+                                                    <td>
+                                                        <span class="badge badge-info">{{ suivi.typeSuivi }}</span>
+                                                    </td>
+                                                    <td>{{ suivi.idutilisateur }}</td>
+                                                    <td>{{ suivi.idpsychologue }}</td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
+                                                            <button class="btn btn-warning btn-sm" onclick="editSuivi({{ suivi.idsuivi }})" title="Modifier">
+                                                                <i class="fa fa-edit"></i> Modifier
+                                                            </button>
+                                                            <button class="btn btn-info btn-sm" onclick="viewObjectifs({{ suivi.idsuivi }})" title="Voir objectifs">
+                                                                <i class="fa fa-tasks"></i> Objectifs
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm" onclick="deleteSuivi({{ suivi.idsuivi }})" title="Supprimer">
+                                                                <i class="fa fa-trash"></i> Supprimer
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr id="emptyRow">
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Formulaire Suivi (Ajouter/Modifier) -->
+<div class="modal fade" id="modalSuivi" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Ajouter un suivi</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="suiviForm" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="suiviId" name="id" value="0">
+                    
+                    <div class="form-group">
+                        <label>Titre *</label>
+                        <input type="text" class="form-control" id="titre" name="titre" required>
+                        <span id="err_titre" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        <span id="err_description" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Type de suivi</label>
+                        <select class="form-control" id="type_suivi" name="type_suivi">
+                            <option value="Psychologique">🧠 Psychologique</option>
+                            <option value="Académique">📚 Académique</option>
+                            <option value="Social">🤝 Social</option>
+                            <option value="Comportemental">🎯 Comportemental</option>
+                        </select>
+                        <span id="err_type_suivi" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Utilisateur</label>
+                        <input type="number" class="form-control" id="idutilisateur" name="idutilisateur" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>ID Psychologue</label>
+                        <input type="number" class="form-control" id="idpsychologue" name="idpsychologue" value="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Reset formulaire
+function resetForm() {
+    document.getElementById('modalTitle').innerHTML = 'Ajouter un suivi';
+    document.getElementById('suiviId').value = '0';
+    document.getElementById('titre').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('type_suivi').value = 'Psychologique';
+    document.getElementById('idutilisateur').value = '1';
+    document.getElementById('idpsychologue').value = '1';
+    clearErrors(['titre', 'description', 'type_suivi']);
+}
+
+// Modifier un suivi
+function editSuivi(id) {
+    // Charger les données du suivi
+    fetch('/back/suivi/' + id + '/show')
+        .then(response => response.text())
+        .then(html => {
+            // Extraire les données du HTML (méthode simple)
+            // Alternative: faire une requête AJAX qui retourne du JSON
+            loadSuiviData(id);
+        });
+}
+
+function loadSuiviData(id) {
+    // Récupérer les données via une requête AJAX
+    fetch('/back/suivi/' + id + '/json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('modalTitle').innerHTML = 'Modifier le suivi';
+            document.getElementById('suiviId').value = data.id;
+            document.getElementById('titre').value = data.titre;
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('type_suivi').value = data.type_suivi;
+            document.getElementById('idutilisateur').value = data.idutilisateur;
+            document.getElementById('idpsychologue').value = data.idpsychologue;
+            $('#modalSuivi').modal('show');
+        })
+        .catch(error => {
+            // Si pas de JSON, utiliser l'ID
+            document.getElementById('modalTitle').innerHTML = 'Modifier le suivi';
+            document.getElementById('suiviId').value = id;
+            $('#modalSuivi').modal('show');
+        });
+}
+
+// Voir les objectifs d'un suivi
+function viewObjectifs(id) {
+    window.location.href = '/back/objectif/suivi/' + id;
+}
+
+// Supprimer un suivi
+function deleteSuivi(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce suivi ? Cette action est irréversible.')) {
+        fetch('/back/suivi/' + id + '/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({_token: '{{ csrf_token("delete") }}'})
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la suppression: ' + error.message);
+        });
+    }
+}
+
+// Soumission du formulaire (Ajouter/Modifier)
+document.getElementById('suiviForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Effacer les erreurs précédentes
+    clearErrors(['titre', 'description', 'type_suivi']);
+
+    var id = document.getElementById('suiviId').value;
+    var url = id > 0 ? '/back/suivi/' + id + '/edit' : '/back/suivi/new';
+
+    var formData = new FormData(this);
+    var data = {};
+    formData.forEach(function(value, key) { data[key] = value; });
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            location.reload();
+        } else if (data.errors) {
+            showErrors(data.errors);
+        } else {
+            alert('Erreur : ' + (data.error || 'Une erreur est survenue'));
+        }
+    })
+    .catch(function(err) { alert('Erreur : ' + err); });
+});
+
+function clearErrors(fields) {
+    fields.forEach(function(f) {
+        var el = document.getElementById('err_' + f);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+        var input = document.getElementById(f) || document.querySelector('[name="' + f + '"]');
+        if (input) input.classList.remove('is-invalid');
+    });
+}
+
+function showErrors(errors) {
+    Object.keys(errors).forEach(function(field) {
+        var el = document.getElementById('err_' + field);
+        if (el) { el.textContent = errors[field]; el.style.display = 'block'; }
+        var input = document.getElementById(field) || document.querySelector('[name="' + field + '"]');
+        if (input) input.classList.add('is-invalid');
+        if (field === 'global') { alert(errors[field]); }
+    });
+}
+</script>
+
+<script>
+function filterSuivis(val) {
+    var q = val.toLowerCase().trim();
+    var rows = document.querySelectorAll('#suiviTableBody tr[id^="row-"]');
+    var visible = 0;
+    rows.forEach(function(row) {
+        var text = row.innerText.toLowerCase();
+        var show = !q || text.indexOf(q) !== -1;
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    var empty = document.getElementById('emptyRow');
+    if (empty) empty.style.display = visible === 0 ? '' : 'none';
+}
+</script>
+
+<style>
+.btn-group-sm .btn {
+    margin: 2px;
+    padding: 5px 10px;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+</style>
+{% endblock %}

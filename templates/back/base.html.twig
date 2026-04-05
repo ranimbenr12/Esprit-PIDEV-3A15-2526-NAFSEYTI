@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{% block title %}Dashboard - NAFSEYTI{% endblock %}</title>
+
+    <link rel="icon" href="{{ asset('back/images/fevicon.png') }}" type="image/png" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ asset('back/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/responsive.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/colors.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/bootstrap-select.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/custom.css') }}" />
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- DataTables pour les tableaux améliorés -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    
+    <style>
+        /* Styles personnalisés pour la gestion des suivis */
+        .modal-xl {
+            max-width: 1140px;
+        }
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-valide {
+            background: #28a74520;
+            color: #28a745;
+        }
+        .status-en-cours {
+            background: #ffc10720;
+            color: #ffc107;
+        }
+        .status-bloque {
+            background: #dc354520;
+            color: #dc3545;
+        }
+        .media-item {
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .media-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: #3c943c;
+            transform: translateX(5px);
+        }
+        .btn-action-sm {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            margin: 0 2px;
+        }
+    </style>
+    
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body class="dashboard dashboard_1">
+    {% block body %}{% endblock %}
+
+    <!-- JS -->
+    <script src="{{ asset('back/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('back/js/popper.min.js') }}"></script>
+    <script src="{{ asset('back/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('back/js/bootstrap-select.js') }}"></script>
+    <script src="{{ asset('back/js/perfect-scrollbar.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        // Sidebar toggle
+        $(document).ready(function() {
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar').toggleClass('active');
+            });
+            try { new PerfectScrollbar('#sidebar'); } catch(e) {}
+        });
+
+        function confirmDelete(message) {
+            return confirm(message || 'Êtes-vous sûr de vouloir supprimer cet élément ?');
+        }
+    </script>
+    
+    {% block javascripts %}{% endblock %}
+</body>
+</html>
