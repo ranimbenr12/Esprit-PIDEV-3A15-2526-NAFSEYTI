@@ -10,18 +10,64 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/test')]
 class TestController extends AbstractController
 {
     #[Route('/', name: 'app_test_index', methods: ['GET'])]
-    public function index(TestRepository $testRepository): Response
+    public function index(Request $request, TestRepository $testRepository): Response
     {
-        $tests = $testRepository->findAll();
-        
+        // Récupération des paramètres de recherche / filtre / tri
+        $search    = $request->query->get('search', '');
+        $status    = $request->query->get('status', '');
+        $categorie = $request->query->get('categorie', '');
+        $sort      = $request->query->get('sort', 'id');
+        $order     = $request->query->get('order', 'ASC');
+
+        // Colonnes autorisées pour le tri (sécurité)
+        $allowedSorts = ['id', 'titre', 'categorie', 'niveau', 'duree', 'status'];
+        if (!in_array($sort, $allowedSorts, true)) {
+            $sort = 'id';
+        }
+        $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
+
+        // Construction de la requête dynamique
+        $qb = $testRepository->createQueryBuilder('t');
+
+        if ($search !== '') {
+            $qb->andWhere('t.titre LIKE :search OR t.description LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($status !== '') {
+            $qb->andWhere('t.status = :status')
+               ->setParameter('status', $status);
+        }
+
+        if ($categorie !== '') {
+            $qb->andWhere('t.categorie = :categorie')
+               ->setParameter('categorie', $categorie);
+        }
+
+        $qb->orderBy('t.' . $sort, $order);
+
+        $tests = $qb->getQuery()->getResult();
+
+        // Statistiques globales (pas filtrées)
+        $totalTests    = $testRepository->count([]);
+        $testsActifs   = $testRepository->count(['status' => 'actif']);
+        $testsInactifs = $testRepository->count(['status' => 'inactif']);
+
         return $this->render('back/test/index.html.twig', [
-            'tests' => $tests,
+            'tests'         => $tests,
+            'totalTests'    => $totalTests,
+            'testsActifs'   => $testsActifs,
+            'testsInactifs' => $testsInactifs,
+            'search'        => $search,
+            'status'        => $status,
+            'categorie'     => $categorie,
+            'sort'          => $sort,
+            'order'         => $order,
         ]);
     }
 
@@ -29,12 +75,11 @@ class TestController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $test = new Test();
-        $user = $this->getUser();
         $test->setCreatedAt(new \DateTime());
         $test->setUpdatedAt(new \DateTime());
-        $test->setUser($user);
+        $test->setUser($this->getUser());
         $test->setStatus('actif');
-        
+
         $form = $this->createForm(TestType::class, $test);
         $form->handleRequest($request);
 
@@ -52,7 +97,7 @@ class TestController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_test_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_test_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Test $test): Response
     {
         return $this->render('back/test/show.html.twig', [
@@ -60,7 +105,7 @@ class TestController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_test_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_test_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Test $test, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TestType::class, $test);
@@ -80,11 +125,10 @@ class TestController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_test_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_test_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Test $test, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$test->getId(), $request->request->get('_token'))) {
-            // Suppression directe - les questions seront supprimées automatiquement grâce à cascade={"remove"}
+        if ($this->isCsrfTokenValid('delete' . $test->getId(), $request->request->get('_token'))) {
             $entityManager->remove($test);
             $entityManager->flush();
             $this->addFlash('success', 'Le test a été supprimé avec succès !');

@@ -16,12 +16,46 @@ use Symfony\Component\Routing\Annotation\Route;
 class QuestionController extends AbstractController
 {
     #[Route('/', name: 'app_question_index', methods: ['GET'])]
-    public function index(QuestionRepository $questionRepository): Response
+    public function index(QuestionRepository $questionRepository, Request $request): Response
     {
-        $questions = $questionRepository->findBy([], ['createdAt' => 'DESC']);
+        // Version avec recherche (optionnelle - ajoute les paramètres si tu veux la recherche)
+        $search = $request->query->get('search', '');
+        $type = $request->query->get('type', '');
+        $status = $request->query->get('status', '');
+        
+        if (!empty($search) || !empty($type) || !empty($status)) {
+            $qb = $questionRepository->createQueryBuilder('q')
+                ->leftJoin('q.test', 't')
+                ->addSelect('t');
+            
+            if (!empty($search)) {
+                $qb->andWhere('q.texte LIKE :search')
+                   ->setParameter('search', '%' . $search . '%');
+            }
+            
+            if (!empty($type)) {
+                $qb->andWhere('q.typeQuestion = :type')
+                   ->setParameter('type', $type);
+            }
+            
+            if (!empty($status)) {
+                $qb->andWhere('q.status = :status')
+                   ->setParameter('status', $status);
+            }
+            
+            $questions = $qb->orderBy('q.createdAt', 'DESC')
+                            ->getQuery()
+                            ->getResult();
+        } else {
+            // Version sans recherche (originale)
+            $questions = $questionRepository->findBy([], ['createdAt' => 'DESC']);
+        }
         
         return $this->render('back/question/index.html.twig', [
             'questions' => $questions,
+            'search' => $search,
+            'type' => $type,
+            'status' => $status,
         ]);
     }
 
@@ -130,7 +164,6 @@ class QuestionController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$question->getId(), $request->request->get('_token'))) {
             $testId = $question->getTest() ? $question->getTest()->getId() : null;
-            // Suppression directe - les réponses seront supprimées automatiquement grâce à cascade={"remove"}
             $entityManager->remove($question);
             $entityManager->flush();
             $this->addFlash('success', 'La question a été supprimée avec succès !');
