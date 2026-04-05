@@ -31,17 +31,22 @@
                     </div>
                 </div>
                 
-                <!-- Interprétation -->
+                <!-- Interprétation - Version corrigée pour tableau -->
                 <div style="margin-bottom: 40px; padding: 30px; background: var(--beige-cream); border-radius: 12px; border-left: 4px solid var(--green-sage);">
                     <h3 style="font-family: 'Playfair Display', serif; color: var(--text-dark); margin-bottom: 15px;">
-                        <i class="fas fa-chart-line"></i> Interprétation
+                        <i class="fas {{ interpretation.icon|default('fa-chart-line') }}"></i> {{ interpretation.title|default('Interprétation') }}
                     </h3>
                     <p style="font-size: 1rem; line-height: 1.8; color: var(--text-mid);">
-                        {{ interpretation }}
+                        {{ interpretation.description|default(interpretation) }}
                     </p>
+                    {% if interpretation.advice is defined %}
+                        <div class="alert alert-info mt-3" style="background: var(--green-pale); border: none; border-radius: 8px;">
+                            <i class="fas fa-lightbulb"></i> <strong>Conseil :</strong> {{ interpretation.advice }}
+                        </div>
+                    {% endif %}
                 </div>
                 
-                <!-- Détail des réponses (optionnel) -->
+                <!-- Détail des réponses -->
                 <details style="margin-bottom: 30px;">
                     <summary style="cursor: pointer; padding: 15px; background: var(--beige-light); border-radius: 8px; font-weight: 500;">
                         <i class="fas fa-list"></i> Voir le détail de mes réponses
@@ -53,6 +58,8 @@
                                 <p style="margin: 10px 0 5px 0;">{{ reponse.question.texte }}</p>
                                 <div style="background: var(--beige-cream); padding: 10px; border-radius: 8px;">
                                     <strong>Votre réponse:</strong> {{ reponse.reponse }}
+                                    <br>
+                                    <strong>Points obtenus:</strong> {{ reponse.score }} / {{ reponse.points_max }}
                                 </div>
                             </div>
                         {% endfor %}

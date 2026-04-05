@@ -67,6 +67,10 @@ class Question
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: ReponsesScore::class)]
     private Collection $reponses;
 
+    // SUPPRIMEZ ou COMMENTEZ ces lignes si elles existent :
+    // #[ORM\Column(name: 'bareme', type: 'json', nullable: true)]
+    // private ?array $bareme = null;
+
     public function __construct()
     {
         $this->reponses = new ArrayCollection();
@@ -75,36 +79,27 @@ class Question
 
     /**
      * Retourne un tableau des réponses possibles
-     * Supporte les séparateurs: | (pipe) ou , (virgule)
      */
-   /**
- * Retourne un tableau des réponses possibles
- * Supporte les séparateurs: | (pipe) ou , (virgule)
- * Gère automatiquement les types spéciaux
- */
-public function getReponsesPossiblesArray(): array
-{
-    // Pour les questions vrai/faux, retourner les options par défaut
-    if ($this->typeQuestion === 'vrai_faux') {
-        return ['Vrai', 'Faux'];
+    public function getReponsesPossiblesArray(): array
+    {
+        // Pour les questions vrai/faux
+        if ($this->typeQuestion === 'vrai_faux') {
+            return ['Vrai', 'Faux'];
+        }
+        
+        if (empty($this->reponsesPossibles)) {
+            return [];
+        }
+        
+        // Détecter le séparateur (| ou ,)
+        if (strpos($this->reponsesPossibles, '|') !== false) {
+            $reponses = array_map('trim', explode('|', $this->reponsesPossibles));
+        } else {
+            $reponses = array_map('trim', explode(',', $this->reponsesPossibles));
+        }
+        
+        return array_filter($reponses);
     }
-    
-    
-    
-    // Pour les QCM, utiliser les valeurs de la base
-    if (empty($this->reponsesPossibles)) {
-        return [];
-    }
-    
-    // Détecter le séparateur (| ou ,)
-    if (strpos($this->reponsesPossibles, '|') !== false) {
-        $reponses = array_map('trim', explode('|', $this->reponsesPossibles));
-    } else {
-        $reponses = array_map('trim', explode(',', $this->reponsesPossibles));
-    }
-    
-    return array_filter($reponses);
-}
 
     /**
      * Retourne le type de champ à afficher
@@ -150,18 +145,19 @@ public function getReponsesPossiblesArray(): array
     public function setTexte(string $texte): self { $this->texte = $texte; return $this; }
 
     public function getTypeQuestion(): ?string { return $this->typeQuestion; }
-   public function setTypeQuestion(?string $typeQuestion): self 
-{ 
-    // Normaliser les types
-    if ($typeQuestion === 'qcm') {
-        $typeQuestion = 'qcm_unique';
+    public function setTypeQuestion(?string $typeQuestion): self 
+    { 
+        // Normaliser les types
+        if ($typeQuestion === 'qcm') {
+            $typeQuestion = 'qcm_unique';
+        }
+        if ($typeQuestion === 'vrai/faux') {
+            $typeQuestion = 'vrai_faux';
+        }
+        $this->typeQuestion = $typeQuestion; 
+        return $this; 
     }
-    if ($typeQuestion === 'vrai/faux') {
-        $typeQuestion = 'vrai_faux';
-    }
-    $this->typeQuestion = $typeQuestion; 
-    return $this; 
-}
+
     public function getReponsesPossibles(): ?string { return $this->reponsesPossibles; }
     public function setReponsesPossibles(?string $reponsesPossibles): self 
     { 
@@ -212,48 +208,4 @@ public function getReponsesPossiblesArray(): array
             $this->createdAt = new \DateTime();
         }
     }
-    #[ORM\Column(name: 'bareme', type: 'json', nullable: true)]
-private ?array $bareme = null;
-
-public function getBareme(): ?array
-{
-    if ($this->bareme) {
-        return $this->bareme;
-    }
-    
-    // Barème par défaut basé sur le type de question
-    if ($this->typeQuestion === 'vrai_faux') {
-        return ['Vrai' => $this->points, 'Faux' => 0];
-    }
-    
-    return [];
-}
-
-public function setBareme(?array $bareme): self
-{
-    $this->bareme = $bareme;
-    return $this;
-}
-
-/**
- * Calcule le score pour une réponse donnée
- */
-public function calculateScore(string $reponse): int
-{
-    $bareme = $this->getBareme();
-    
-    // Si un barème spécifique existe pour cette réponse
-    if (isset($bareme[$reponse])) {
-        return (int)$bareme[$reponse];
-    }
-    
-    // Pour les QCM, vérifier si la réponse est dans les options
-    $options = $this->getReponsesPossiblesArray();
-    if (in_array($reponse, $options)) {
-        // Par défaut, donner tous les points si la réponse est valide
-        return $this->points;
-    }
-    
-    return 0;
-}
 }

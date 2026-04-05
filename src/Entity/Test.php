@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 #[ORM\Table(name: 'tests')]
+#[ORM\HasLifecycleCallbacks]
 class Test
 {
     #[ORM\Id]
@@ -25,34 +26,61 @@ class Test
         minMessage: "Le titre doit contenir au moins {{ limit }} caractères",
         maxMessage: "Le titre ne doit pas dépasser {{ limit }} caractères"
     )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z0-9\s\p{L}'-]+$/u",
+        message: "Le titre ne peut contenir que des lettres, chiffres, espaces, apostrophes et tirets"
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\NotBlank(message: "La description est obligatoire")]
     #[Assert\Length(
+        min: 10,
         max: 1000,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères",
         maxMessage: "La description ne doit pas dépasser {{ limit }} caractères"
     )]
     private ?string $description = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Assert\NotBlank(message: "La catégorie est obligatoire")]
+    #[Assert\Choice(
+        choices: ["personnalite", "intelligence", "competences", "aptitudes", "comportement", "autre"],
+        message: "Veuillez choisir une catégorie valide"
+    )]
     private ?string $categorie = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Assert\NotBlank(message: "Le niveau est obligatoire")]
+    #[Assert\Choice(
+        choices: ["debutant", "intermediaire", "avance", "expert"],
+        message: "Veuillez choisir un niveau valide"
+    )]
     private ?string $niveau = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Positive(message: "La durée doit être un nombre positif")]
+    #[Assert\LessThanOrEqual(
+        value: 360,
+        message: "La durée ne peut pas dépasser {{ compared_value }} minutes (6 heures)"
+    )]
+    #[Assert\GreaterThanOrEqual(
+        value: 1,
+        message: "La durée doit être d'au moins {{ compared_value }} minute"
+    )]
     private ?int $duree = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Assert\Positive(message: "Le score doit être un nombre positif")]
+    #[Assert\Positive(message: "Le score maximum doit être un nombre positif")]
+    #[Assert\LessThanOrEqual(
+        value: 1000,
+        message: "Le score maximum ne peut pas dépasser {{ compared_value }}"
+    )]
     private ?int $scoreMax = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tests')]
-#[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true)]
-private ?User $user = null;
+    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true)]
+    private ?User $user = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Assert\Choice(
@@ -62,11 +90,9 @@ private ?User $user = null;
     private ?string $status = null;
 
     #[ORM\Column(type: 'datetime', nullable: false)]
-    #[Assert\NotNull(message: "La date de création est obligatoire")]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: false)]
-    #[Assert\NotNull(message: "La date de modification est obligatoire")]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'test')]
@@ -76,7 +102,6 @@ private ?User $user = null;
     {
         $this->questions = new ArrayCollection();
     }
-
     public function getId(): ?int { return $this->id; }
 
     public function getTitre(): ?string { return $this->titre; }

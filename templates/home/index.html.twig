@@ -1,0 +1,168 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NAFSEYTI — Soutien Psychologique & Bien-être{% endblock %}
+{% block nav_home_active %}active{% endblock %}
+
+{% block body %}
+
+<!-- ═══ HERO ═══ -->
+<section class="hero-section">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-organic-shape"></div>
+    <div class="hero-organic-shape-2"></div>
+    <div class="hero-content">
+        <div class="row-flex" style="gap: 80px;">
+            <div class="col-half">
+                <div class="hero-tag">Plateforme de soutien psychologique universitaire</div>
+                <h1 class="hero-title">
+                    NAFSEYTI, votre espace<br>
+                    de <em>bien-être mental</em> académique
+                </h1>
+                <p class="hero-subtitle">
+                   Une plateforme innovante dédiée aux étudiants, enseignants et universités tunisiennes.
+                   Soutien immédiat, prévention, accompagnement personnalisé et anonymat garanti.
+                </p>
+                <div class="hero-actions">
+                    <a href="{{ path('front_test_list') }}" class="btn-primary-custom">Commencer les tests</a>
+                    <a href="#!" class="btn-ghost">Découvrir la plateforme</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Étudiants accompagnés</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support disponible</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Anonymat sécurisé</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-half" style="position:relative;">
+                <img src="{{ asset('img/Anasayfa.jpg') }}" alt="Soutien psychologique" 
+                     style="width:100%;border-radius:2px;display:block;object-fit:cover;height:500px;">
+                <div style="position:absolute;bottom:-24px;left:-24px;background:var(--beige-cream);padding:24px 28px;border-left:3px solid var(--green-sage);max-width:260px;box-shadow:0 20px 60px rgba(45,80,22,0.2);">
+                    <i class="fas fa-brain" style="color:var(--green-sage);font-size:1.4rem;margin-bottom:12px;display:block;"></i>
+                    <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-mid);font-style:italic;line-height:1.6;font-weight:300;">"La santé mentale est le fondement de tout bien-être."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ SERVICES ═══ -->
+<section class="services-section">
+    <div class="container-custom">
+        <div class="row-flex" style="align-items:flex-end;margin-bottom:0;">
+            <div class="col-half">
+                <div class="section-eyebrow">Ce que nous faisons</div>
+                <h2 class="section-title-new">
+                    Nos <em>solutions</em><br>
+                    pour l'université
+                </h2>
+            </div>
+            <div class="col-half">
+                <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#6B7D5A;line-height:1.8;font-weight:300;">
+                    Nous créons des programmes qui répondent aux besoins urgents tout en favorisant 
+                    des solutions durables pour un changement profond et durable.
+                </p>
+            </div>
+        </div>
+        <div class="services-grid" style="margin-top:48px;">
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-brain"></i></div>
+                <h3 class="service-name">Soutien Psychologique</h3>
+                <p class="service-desc">Accompagnement individuel et de groupe pour traverser les épreuves de la vie avec résilience et sérénité.</p>
+                <a href="#!" class="service-link">En savoir plus →</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
+                <h3 class="service-name">Santé Mentale</h3>
+                <p class="service-desc">Prévention, sensibilisation et accès aux soins de santé mentale pour les populations les plus vulnérables.</p>
+                <a href="#!" class="service-link">En savoir plus →</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-hands-holding-child"></i></div>
+                <h3 class="service-name">Aide Sociale</h3>
+                <p class="service-desc">Soutien aux enfants et familles en difficulté, pour un filet de sécurité solide et bienveillant.</p>
+                <a href="#!" class="service-link">En savoir plus →</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-seedling"></i></div>
+                <h3 class="service-name">Développement Personnel</h3>
+                <p class="service-desc">Ateliers et formations pour cultiver la confiance en soi, la pleine conscience et le bien-être au quotidien.</p>
+                <a href="#!" class="service-link">En savoir plus →</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3 class="service-name">Éducation & Sensibilisation</h3>
+                <p class="service-desc">Programmes éducatifs pour briser les tabous autour de la santé mentale dans les écoles et communautés.</p>
+                <a href="#!" class="service-link">En savoir plus →</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-house-heart"></i></div>
+                <h3 class="service-name">Hébergement d'Urgence</h3>
+                <p class="service-desc">Solutions d'accueil et d'accompagnement pour les personnes en situation de détresse aiguë.</p>
+                <a href="#!" class="service-link">En savoir plus →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ TESTS SECTION ═══ -->
+<section class="donations-section">
+    <div class="container-custom">
+        <div style="text-align:center;margin-bottom:0;">
+            <div class="section-eyebrow" style="justify-content:center;">Tests Psychologiques</div>
+            <h2 class="section-title-new" style="max-width:700px;margin:0 auto;">
+                Évaluez votre <em>bien-être</em> avec nos tests
+            </h2>
+        </div>
+        <div class="donation-cards">
+            <div class="donation-card">
+                <span class="donation-category">Personnalité</span>
+                <img src="{{ asset('img/student-support.jpg') }}" alt="Test personnalité" class="donation-img">
+                <h3 class="donation-title">Découvrez votre profil</h3>
+                <p class="donation-desc">Un test pour mieux vous connaître et comprendre vos forces et axes d'amélioration.</p>
+                <a href="{{ path('front_test_list') }}" class="donate-btn">Commencer</a>
+            </div>
+            <div class="donation-card">
+                <span class="donation-category">Bien-être</span>
+                <img src="{{ asset('img/teacher-support.jpg') }}" alt="Bien-être" class="donation-img">
+                <h3 class="donation-title">Évaluez votre stress</h3>
+                <p class="donation-desc">Identifiez votre niveau de stress et obtenez des conseils personnalisés.</p>
+                <a href="{{ path('front_test_list') }}" class="donate-btn">Commencer</a>
+            </div>
+            <div class="donation-card">
+                <span class="donation-category">Orientation</span>
+                <img src="{{ asset('img/university-support.jpg') }}" alt="Orientation" class="donation-img">
+                <h3 class="donation-title">Test d'orientation</h3>
+                <p class="donation-desc">Découvrez les domaines qui correspondent le mieux à votre personnalité.</p>
+                <a href="{{ path('front_test_list') }}" class="donate-btn">Commencer</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CTA BANNER ═══ -->
+<section class="cta-banner">
+    <div class="cta-content">
+        <h2>
+            Notre plateforme est toujours ouverte pour <em>vous accompagner</em>
+        </h2>
+        <p>
+            NAFSEYTI accompagne les étudiants, les enseignants et les universités
+            en offrant un espace sécurisé, anonyme et accessible pour le bien-être
+            psychologique et la réussite académique.
+        </p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+            <a href="{{ path('front_test_list') }}" class="btn-primary-custom">Découvrir les tests</a>
+            <a href="#!" class="btn-ghost">Prendre rendez-vous</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
