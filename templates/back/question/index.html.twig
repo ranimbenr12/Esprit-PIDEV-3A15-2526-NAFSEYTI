@@ -1,124 +1,209 @@
 {% extends 'back/admin_base.html.twig' %}
 
-{% block title %}Gestion des Questions - Nafseyti{% endblock %}
+{% block title %}Questions — Nafseyti{% endblock %}
 {% block question_active %}active{% endblock %}
 
 {% block admin_content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="white_shd full margin_bottom_30">
-            <div class="full graph_head">
-                <div class="heading1 margin_0 d-flex justify-content-between align-items-center flex-wrap">
-                    <h2>Liste des questions</h2>
-                    <a href="{{ path('app_question_new') }}" class="btn btn-success">
-                        <i class="fa fa-plus"></i> Nouvelle question
-                    </a>
-                </div>
-            </div>
-            
-            <div class="full price_table padding_infor_info">
-                <div class="row">
-                    <div class="col-lg-12">
-                        
-                        {# Barre de recherche #}
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <form method="get" action="{{ path('app_question_index') }}" class="form-inline">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <input type="text" name="search" class="form-control" 
-                                                   placeholder="🔍 Rechercher une question..." 
-                                                   value="{{ search }}" style="width: 100%;">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <select name="type" class="form-control" style="width: 100%;">
-                                                <option value="">Tous les types</option>
-                                                <option value="qcm_unique" {{ type == 'qcm_unique' ? 'selected' : '' }}>QCM</option>
-                                                <option value="vrai_faux" {{ type == 'vrai_faux' ? 'selected' : '' }}>Vrai/Faux</option>
-                                                <option value="texte_libre" {{ type == 'texte_libre' ? 'selected' : '' }}>Texte libre</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <select name="status" class="form-control" style="width: 100%;">
-                                                <option value="">Tous statuts</option>
-                                                <option value="actif" {{ status == 'actif' ? 'selected' : '' }}>Actif</option>
-                                                <option value="inactif" {{ status == 'inactif' ? 'selected' : '' }}>Inactif</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                                <i class="fa fa-search"></i> Filtrer
-                                            </button>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a href="{{ path('app_question_index') }}" class="btn btn-secondary" style="width: 100%;">
-                                                <i class="fa fa-refresh"></i> Réinitialiser
-                                            </a>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        
-                        <div class="table-responsive-sm">
-                            {% if questions is empty %}
-                                <div class="alert alert-info text-center">
-                                    <i class="fa fa-info-circle"></i> Aucune question trouvée.
-                                    <a href="{{ path('app_question_new') }}">Créer la première question</a>
-                                </div>
-                            {% else %}
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Test</th>
-                                            <th>Question</th>
-                                            <th>Type</th>
-                                            <th>Points</th>
-                                            <th>Statut</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for question in questions %}
-                                        <tr>
-                                            <td><span class="badge badge-primary">{{ question.test.titre }}</span></td>
-                                            <td>{{ question.texte|slice(0, 60) }}{{ question.texte|length > 60 ? '...' : '' }}</td>
-                                            <td><span class="badge badge-info">{{ question.typeQuestion }}</span></td>
-                                            <td>{{ question.points }}</td>
-                                            <td>
-                                                {% if question.status == 'actif' %}
-                                                    <span class="badge bg-success">Actif</span>
-                                                {% else %}
-                                                    <span class="badge bg-danger">Inactif</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ path('app_question_show', {'id': question.id}) }}" class="btn btn-sm btn-info">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                    <a href="{{ path('app_question_edit', {'id': question.id}) }}" class="btn btn-sm btn-warning">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-                                                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteQuestion({{ question.id }})">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                                <form id="delete-form-{{ question.id }}" method="post" action="{{ path('app_question_delete', {'id': question.id}) }}" style="display: none;">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ question.id) }}">
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+    --green-deep:#1a3d2b;--green-mid:#2d6a4f;--green-sage:#52b788;--green-light:#95d5b2;
+    --green-pale:#d8f3dc;--cream:#faf6f0;--cream-mid:#f0e9de;--cream-dark:#e0d5c5;
+    --sand:#c9b99a;--ink:#1a2e1f;--ink-mid:#3d5a45;--ink-soft:#7a9482;--white:#fff;
+    --red-soft:#c0392b;--red-pale:#fdf0ee;--amber:#b7791f;--amber-pale:#fef9ee;
+    --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
+    --shadow-sm:0 1px 3px rgba(26,61,43,.06),0 4px 12px rgba(26,61,43,.07);
+    --shadow-md:0 2px 8px rgba(26,61,43,.08),0 8px 24px rgba(26,61,43,.09);
+    --tr:.2s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;}
+.nt{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--cream);min-height:100vh;padding:32px 28px 48px;animation:pf .4s ease both;}
+@keyframes pf{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.nt-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--cream-dark);}
+.nt-eyebrow{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-sage);margin-bottom:4px;}
+.nt-title{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--green-deep);margin:0;line-height:1.15;}
+.nt-title em{font-style:italic;color:var(--green-sage);}
+
+.btn-create{display:inline-flex;align-items:center;gap:8px;background:var(--green-deep);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:11px 22px;border-radius:var(--radius-md);border:none;text-decoration:none;letter-spacing:.2px;transition:var(--tr);box-shadow:0 2px 8px rgba(26,61,43,.25);}
+.btn-create:hover{background:var(--green-mid);color:var(--cream);text-decoration:none;transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,61,43,.3);}
+
+/* Search panel */
+.search-panel{background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius-md);padding:18px 22px;margin-bottom:20px;box-shadow:var(--shadow-sm);}
+.search-form{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.search-field{flex:1;min-width:200px;position:relative;}
+.search-field svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-soft);pointer-events:none;}
+.search-field input{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.875rem;color:var(--ink);background:var(--cream);transition:var(--tr);outline:none;}
+.search-field input:focus{border-color:var(--green-sage);background:var(--white);box-shadow:0 0 0 3px rgba(82,183,136,.15);}
+.filter-sel{padding:10px 34px 10px 14px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.875rem;color:var(--ink);background:var(--cream);min-width:150px;outline:none;cursor:pointer;transition:var(--tr);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9482' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.filter-sel:focus{border-color:var(--green-sage);}
+.btn-filter{padding:10px 18px;background:var(--green-mid);color:var(--white);border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:var(--tr);white-space:nowrap;}
+.btn-filter:hover{background:var(--green-deep);transform:translateY(-1px);}
+.btn-reset{padding:10px 14px;background:transparent;color:var(--ink-soft);border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:var(--tr);white-space:nowrap;}
+.btn-reset:hover{border-color:var(--green-sage);color:var(--green-mid);text-decoration:none;}
+
+/* Table */
+.tbl-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden;}
+.tbl-card table{width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif;font-size:.875rem;}
+.tbl-card thead tr{background:linear-gradient(135deg,var(--green-deep) 0%,var(--green-mid) 100%);}
+.tbl-card thead th{padding:14px 18px;font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:var(--green-pale);white-space:nowrap;border:none;}
+.tbl-card tbody tr{border-bottom:1px solid var(--cream-mid);transition:background var(--tr);}
+.tbl-card tbody tr:last-child{border-bottom:none;}
+.tbl-card tbody tr:hover{background:var(--cream);}
+.tbl-card tbody td{padding:14px 18px;color:var(--ink);vertical-align:middle;}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;font-size:.73rem;font-weight:600;white-space:nowrap;}
+.badge-test{background:var(--green-pale);color:var(--green-deep);}
+.badge-type{background:var(--cream-mid);color:var(--ink-mid);}
+.badge-actif{background:var(--green-pale);color:var(--green-deep);border:1px solid var(--green-light);}
+.badge-inact{background:var(--cream-mid);color:var(--sand);border:1px solid var(--cream-dark);}
+
+.actions{display:flex;gap:6px;align-items:center;}
+.btn-act{width:32px;height:32px;border-radius:7px;border:1.5px solid var(--cream-dark);background:var(--white);color:var(--ink-soft);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;transition:var(--tr);}
+.btn-act:hover{text-decoration:none;transform:translateY(-2px);}
+.btn-act.view:hover{background:var(--green-pale);color:var(--green-deep);border-color:var(--green-light);}
+.btn-act.edit:hover{background:var(--amber-pale);color:var(--amber);border-color:#f6d860;}
+.btn-act.del:hover{background:var(--red-pale);color:var(--red-soft);border-color:#f5a99c;}
+
+.empty-state{padding:64px 24px;text-align:center;}
+.empty-circle{width:64px;height:64px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--green-sage);}
+.empty-state h4{font-family:'DM Serif Display',serif;color:var(--green-deep);font-size:1.1rem;margin-bottom:6px;}
+.empty-state p{color:var(--ink-soft);font-size:.875rem;margin-bottom:18px;}
+
+.result-info{margin-top:14px;font-size:.8rem;color:var(--ink-soft);display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--green-pale);border-radius:var(--radius-sm);border:1px solid var(--green-light);width:fit-content;}
+.result-info strong{color:var(--green-deep);font-weight:700;}
+
+.q-text strong{color:var(--green-deep);font-weight:600;display:block;margin-bottom:2px;}
+.q-text small{color:var(--ink-soft);font-size:.78rem;}
+</style>
+
+<div class="nt">
+    <div class="nt-header">
+        <div>
+            <div class="nt-eyebrow">Administration</div>
+            <h1 class="nt-title">Gestion des <em>Questions</em></h1>
         </div>
+        <a href="{{ path('app_question_new') }}" class="btn-create">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nouvelle question
+        </a>
     </div>
+
+    <div class="search-panel">
+        <form method="get" action="{{ path('app_question_index') }}" id="searchForm" class="search-form">
+            <div class="search-field">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="search" id="searchInput" placeholder="Rechercher une question..." value="{{ search }}">
+            </div>
+            <select name="type" class="filter-sel">
+                <option value="">Tous les types</option>
+                <option value="qcm_unique"  {{ type == 'qcm_unique'  ? 'selected' : '' }}>QCM Unique</option>
+                <option value="qcm_multiple" {{ type == 'qcm_multiple' ? 'selected' : '' }}>QCM Multiple</option>
+                <option value="vrai_faux"   {{ type == 'vrai_faux'   ? 'selected' : '' }}>Vrai / Faux</option>
+                <option value="texte_libre" {{ type == 'texte_libre' ? 'selected' : '' }}>Texte libre</option>
+            </select>
+            <select name="status" class="filter-sel">
+                <option value="">Tous les statuts</option>
+                <option value="actif"   {{ status == 'actif'   ? 'selected' : '' }}>Actif</option>
+                <option value="inactif" {{ status == 'inactif' ? 'selected' : '' }}>Inactif</option>
+            </select>
+            <button type="submit" class="btn-filter">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filtrer
+            </button>
+            {% if search or type or status %}
+                <a href="{{ path('app_question_index') }}" class="btn-reset">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Réinitialiser
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="tbl-card">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:200px">Test associé</th>
+                    <th>Question</th>
+                    <th style="width:140px">Type</th>
+                    <th style="width:80px">Points</th>
+                    <th style="width:100px">Statut</th>
+                    <th style="width:110px;text-align:center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if questions is empty %}
+                    <tr><td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-circle">
+                                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            </div>
+                            <h4>Aucune question trouvée</h4>
+                            <p>Créez votre première question ou modifiez les filtres.</p>
+                            <a href="{{ path('app_question_new') }}" class="btn-create" style="margin:0 auto;">Créer une question</a>
+                        </div>
+                    </td></tr>
+                {% else %}
+                    {% for question in questions %}
+                    <tr>
+                        <td>
+                            {% if question.test %}
+                                <a href="{{ path('app_test_show', {'id': question.test.id}) }}"
+                                   style="text-decoration:none;">
+                                    <span class="badge badge-test">{{ question.test.titre|slice(0,28) }}{% if question.test.titre|length > 28 %}…{% endif %}</span>
+                                </a>
+                            {% else %}
+                                <span style="color:var(--ink-soft);font-size:.8rem;">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="q-text">
+                            <strong>{{ question.texte|slice(0,70) }}{% if question.texte|length > 70 %}…{% endif %}</strong>
+                            {% if question.reponsesPossibles %}
+                                <small>{{ question.reponsesPossibles|replace({'|': ' · '})|slice(0,60) }}…</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set typeLabels = {'qcm_unique':'QCM Unique','qcm_multiple':'QCM Multiple','texte_libre':'Texte libre','likert':'Likert','numerique':'Numérique','vrai_faux':'Vrai / Faux'} %}
+                            <span class="badge badge-type">{{ typeLabels[question.typeQuestion]|default(question.typeQuestion) }}</span>
+                        </td>
+                        <td style="color:var(--ink-mid);font-weight:600;">{{ question.points }}</td>
+                        <td>
+                            {% if question.status == 'actif' %}
+                                <span class="badge badge-actif"><svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Actif</span>
+                            {% else %}
+                                <span class="badge badge-inact"><svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions" style="justify-content:center;">
+                                <a href="{{ path('app_question_show', {'id': question.id}) }}" class="btn-act view" title="Voir">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </a>
+                                <a href="{{ path('app_question_edit', {'id': question.id}) }}" class="btn-act edit" title="Modifier">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </a>
+                                <button type="button" class="btn-act del" title="Supprimer" onclick="deleteQuestion({{ question.id }})">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                                </button>
+                            </div>
+                            <form id="delete-form-{{ question.id }}" method="post" action="{{ path('app_question_delete', {'id': question.id}) }}" style="display:none;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete'~question.id) }}">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if search or type or status %}
+        <div class="result-info">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <strong>{{ questions|length }}</strong> résultat{{ questions|length > 1 ? 's' : '' }} trouvé{{ questions|length > 1 ? 's' : '' }}
+        </div>
+    {% endif %}
 </div>
 
 {% block javascripts %}
@@ -126,20 +211,20 @@
 <script>
 function deleteQuestion(id) {
     Swal.fire({
-        title: 'Confirmation',
-        text: 'Êtes-vous sûr de vouloir supprimer cette question ?',
+        title: 'Supprimer cette question ?',
+        text: 'Cette action est irréversible.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Oui, supprimer',
+        confirmButtonColor: '#c0392b',
+        cancelButtonColor: '#2d6a4f',
+        confirmButtonText: 'Supprimer',
         cancelButtonText: 'Annuler'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('delete-form-' + id).submit();
-        }
-    });
+    }).then(function(r){ if(r.isConfirmed) document.getElementById('delete-form-'+id).submit(); });
 }
+var t=null;
+document.getElementById('searchInput')?.addEventListener('keyup',function(){
+    clearTimeout(t);t=setTimeout(function(){document.getElementById('searchForm').submit();},500);
+});
 </script>
 {% endblock %}
 {% endblock %}
