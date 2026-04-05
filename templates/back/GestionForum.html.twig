@@ -1,0 +1,439 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Gestion des Forums{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="icon_setting"></div>
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive"
+                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                 alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+                <ul class="list-unstyled components">
+                    <li><a href="{{ path('admin_dashboard') }}"><i class="fa fa-dashboard yellow_color"></i><span>Tableau de bord</span></a></li>
+                    <li><a href="#"><i class="fa fa-users blue1_color"></i><span>Utilisateurs</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar orange_color"></i><span>Rendez-vous</span></a></li>
+                    <li><a href="{{ path('admin_contenu_psy') }}"><i class="fa fa-book purple_color2"></i><span>Contenu psychologique</span></a></li>
+                    <li><a href="#"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i><span>Événements</span></a></li>
+                    <li><a href="#"><i class="fa fa-line-chart yellow_color"></i><span>Suivi personnel</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <div class="logo_section">
+                            <a href="#" style="display:flex;align-items:center;text-decoration:none;">
+                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width:40px;height:40px;margin-right:10px;" />
+                                <span style="font-size:20px;font-weight:bold;color:#3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                                            <span class="name_user">Amri Sirine</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Mon profil</a>
+                                            <a class="dropdown-item" href="#">Paramètres</a>
+                                            <a class="dropdown-item" href="#">Aide</a>
+                                            <a class="dropdown-item" href="#"><span>Déconnexion</span> <i class="fa fa-sign-out"></i></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+
+                    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+                    <style>
+                        .forum-wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0 40px; }
+
+                        .forum-hero {
+                            background: linear-gradient(135deg, #667eea, #764ba2);
+                            border-radius: 24px;
+                            padding: 44px 48px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 28px;
+                            overflow: hidden;
+                            position: relative;
+                        }
+                        .forum-hero::before {
+                            content: '';
+                            position: absolute;
+                            width: 320px; height: 320px;
+                            border-radius: 50%;
+                            background: rgba(255,255,255,0.1);
+                            right: -60px; top: -80px;
+                        }
+                        .forum-hero::after {
+                            content: '';
+                            position: absolute;
+                            width: 200px; height: 200px;
+                            border-radius: 50%;
+                            background: rgba(255,255,255,0.05);
+                            right: 120px; bottom: -80px;
+                        }
+                        .hero-left { flex: 1; z-index: 1; }
+                        .hero-eyebrow {
+                            font-size: 11px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: rgba(255,255,255,0.7);
+                            margin-bottom: 10px;
+                        }
+                        .hero-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 42px;
+                            color: white;
+                            line-height: 1.1;
+                            margin-bottom: 14px;
+                        }
+                        .hero-title em { color: #c8b8ff; font-style: italic; }
+                        .hero-sub {
+                            font-size: 14px;
+                            color: rgba(255,255,255,0.7);
+                            max-width: 340px;
+                            line-height: 1.6;
+                        }
+
+                        .add-btn {
+                            background: white;
+                            color: #667eea;
+                            border: none;
+                            padding: 12px 28px;
+                            border-radius: 40px;
+                            font-weight: 600;
+                            transition: 0.3s;
+                            cursor: pointer;
+                        }
+                        .add-btn:hover { transform: scale(1.05); background: #03034b; }
+
+                        .table-container {
+                            background: white;
+                            border-radius: 24px;
+                            padding: 25px;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                        }
+                        .forum-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .forum-table th {
+                            text-align: left;
+                            padding: 15px 10px;
+                            background: #f8f6ff;
+                            color: #5a3ab0;
+                            font-weight: 600;
+                            border-bottom: 2px solid #e8e4ff;
+                        }
+                        .forum-table td {
+                            padding: 15px 10px;
+                            border-bottom: 1px solid #eee;
+                            color: #444;
+                        }
+                        .forum-table tr:hover { background: #faf8ff; }
+                        .status-active {
+                            background: #e8f5e8;
+                            color: #2a6a10;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            display: inline-block;
+                        }
+                        .status-inactive {
+                            background: #ffe8e8;
+                            color: #c05050;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            display: inline-block;
+                        }
+                        .action-btn {
+                            padding: 6px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            margin: 0 3px;
+                            border: none;
+                            cursor: pointer;
+                            transition: 0.2s;
+                        }
+                        .edit-btn { background: #4facfe; color: white; }
+                        .delete-btn { background: #f5576c; color: white; }
+                        .action-btn:hover { opacity: 0.8; transform: scale(1.02); }
+
+                        .modal-custom {
+                            display: none;
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0,0,0,0.5);
+                            z-index: 1000;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .modal-content-custom {
+                            background: white;
+                            border-radius: 24px;
+                            padding: 30px;
+                            max-width: 500px;
+                            width: 90%;
+                        }
+                        .form-group { margin-bottom: 20px; }
+                        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
+                        .form-group input, .form-group textarea, .form-group select {
+                            width: 100%;
+                            padding: 12px;
+                            border: 1px solid #ddd;
+                            border-radius: 12px;
+                            font-family: inherit;
+                        }
+                        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+                        .btn-save { background: #667eea; color: white; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; }
+                        .btn-cancel { background: #ccc; color: #333; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; }
+                    </style>
+
+                    <div class="forum-wrap">
+
+                        <!-- Hero -->
+                        <div class="forum-hero">
+                            <div class="hero-left">
+                                <div class="hero-eyebrow">Nafseyti · Gestion</div>
+                                <div class="hero-title">Gestion des<br><em>Forums</em></div>
+                                <div class="hero-sub">Créez, modifiez et gérez tous les forums de discussion.</div>
+                            </div>
+                            
+                        </div>
+<div class="hero-right" style="display: flex; justify-content: flex-end;">
+    <button type="button" class="add-btn" onclick="openAddModal()">
+        <i class="fa fa-plus"></i> Nouveau forum
+    </button>
+</div>
+                        <!-- Messages flash -->
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success" style="background:#e8f5e8;color:#2a6a10;padding:12px 20px;border-radius:12px;margin-bottom:20px;">
+                                <i class="fa fa-check-circle"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger" style="background:#ffe8e8;color:#c05050;padding:12px 20px;border-radius:12px;margin-bottom:20px;">
+                                <i class="fa fa-exclamation-circle"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Tableau des forums -->
+                        <div class="table-container">
+                            <table class="forum-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom du forum</th>
+                                        <th>Description</th>
+                                        <th>Date création</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for forum in forums %}
+                                    <tr>
+                                        <td>{{ forum.id_forum }}</td>
+                                        <td><strong>{{ forum.nom_forum }}</strong></td>
+                                        <td>{{ forum.description|slice(0, 60) }}{% if forum.description|length > 60 %}...{% endif %}</td>
+                                        <td>{{ forum.date_creation ? forum.date_creation|date('d/m/Y') : '-' }}</td>
+                                        <td>
+                                            {% if forum.statut == 'actif' %}
+                                                <span class="status-active"><i class="fa fa-check-circle"></i> Actif</span>
+                                            {% else %}
+                                                <span class="status-inactive"><i class="fa fa-ban"></i> Inactif</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="action-btn edit-btn" onclick='openEditModal({{ forum.id_forum }}, "{{ forum.nom_forum|escape('js') }}", "{{ forum.description|escape('js') }}", "{{ forum.statut }}")'>
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <form method="POST" action="{{ path('admin_forum_delete', {'id': forum.id_forum}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce forum ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete_forum' ~ forum.id_forum) }}">
+                                                <button type="submit" class="action-btn delete-btn">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="6" style="text-align:center; padding:40px;">Aucun forum trouvé</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div><!-- /forum-wrap -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AJOUT -->
+<div id="addModal" class="modal-custom">
+    <div class="modal-content-custom">
+        <h3 style="margin-bottom:20px;"><i class="fa fa-plus-circle" style="color:#667eea;"></i> Nouveau forum</h3>
+        <form method="POST" action="{{ path('admin_forum_add') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('add_forum') }}">
+            <div class="form-group">
+                <label>Nom du forum</label>
+                <input type="text" name="nom_forum" required placeholder="Ex: Bien-être quotidien">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="3" placeholder="Décrivez le sujet du forum..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Statut</label>
+                <select name="statut">
+                    <option value="actif">Actif</option>
+                    <option value="inactif">Inactif</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeAddModal()">Annuler</button>
+                <button type="submit" class="btn-save">Créer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL MODIFICATION -->
+<div id="editModal" class="modal-custom">
+    <div class="modal-content-custom">
+        <h3 style="margin-bottom:20px;"><i class="fa fa-edit" style="color:#4facfe;"></i> Modifier le forum</h3>
+        <form id="editForm" method="POST">
+            <div class="form-group">
+                <label>Nom du forum</label>
+                <input type="text" id="edit_nom" name="nom_forum" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="edit_description" name="description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Statut</label>
+                <select id="edit_statut" name="statut">
+                    <option value="actif">Actif</option>
+                    <option value="inactif">Inactif</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Annuler</button>
+                <button type="submit" class="btn-save">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // MODAL AJOUT
+    function openAddModal() { 
+        document.getElementById('addModal').style.display = 'flex';
+    }
+    
+    function closeAddModal() { 
+        document.getElementById('addModal').style.display = 'none'; 
+    }
+
+    // MODAL MODIFICATION
+    function openEditModal(id, nom, description, statut) {
+        document.getElementById('edit_nom').value = nom;
+        document.getElementById('edit_description').value = description;
+        document.getElementById('edit_statut').value = statut;
+        
+        // Reconstruire l'URL avec l'ID
+        var actionUrl = "/admin/forum/edit/" + id;
+        document.getElementById('editForm').action = actionUrl;
+        
+        // Ajouter ou mettre à jour le token CSRF
+        var form = document.getElementById('editForm');
+        var oldToken = form.querySelector('input[name="_token"]');
+        if (oldToken) {
+            form.removeChild(oldToken);
+        }
+        
+        // Créer le token avec l'ID spécifique
+        var tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = '_token';
+        // Utiliser un token générique qui sera vérifié côté serveur
+        tokenInput.value = '{{ csrf_token("edit_forum") }}'.replace('edit_forum', 'edit_forum' + id);
+        form.appendChild(tokenInput);
+        
+        document.getElementById('editModal').style.display = 'flex';
+    }
+    
+    function closeEditModal() { 
+        document.getElementById('editModal').style.display = 'none'; 
+    }
+
+    // Fermer les modals en cliquant en dehors
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-custom')) {
+            event.target.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

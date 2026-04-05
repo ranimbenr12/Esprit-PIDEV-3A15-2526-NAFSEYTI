@@ -1,0 +1,580 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Gestion des Posts - Contenu psychologique{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="icon_setting"></div>
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive"
+                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                 alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+                <ul class="list-unstyled components">
+                    <li><a href="{{ path('admin_dashboard') }}"><i class="fa fa-dashboard yellow_color"></i><span>Tableau de bord</span></a></li>
+                    <li><a href="#"><i class="fa fa-users blue1_color"></i><span>Utilisateurs</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar orange_color"></i><span>Rendez-vous</span></a></li>
+                    <li><a href="{{ path('admin_contenu_psy') }}"><i class="fa fa-book purple_color2"></i><span>Contenu psychologique</span></a></li>
+                    <li><a href="#"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i><span>Événements</span></a></li>
+                    <li><a href="#"><i class="fa fa-line-chart yellow_color"></i><span>Suivi personnel</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <div class="logo_section">
+                            <a href="#" style="display:flex;align-items:center;text-decoration:none;">
+                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width:40px;height:40px;margin-right:10px;" />
+                                <span style="font-size:20px;font-weight:bold;color:#3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                                            <span class="name_user">Amri Sirine</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Mon profil</a>
+                                            <a class="dropdown-item" href="#">Paramètres</a>
+                                            <a class="dropdown-item" href="#">Aide</a>
+                                            <a class="dropdown-item" href="#"><span>Déconnexion</span> <i class="fa fa-sign-out"></i></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+
+                    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+                    <style>
+                        .posts-wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0 40px; }
+
+                        .posts-hero {
+                            background: linear-gradient(135deg, #f093fb, #f5576c);
+                            border-radius: 24px;
+                            padding: 44px 48px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 28px;
+                            overflow: hidden;
+                            position: relative;
+                        }
+                        .posts-hero::before {
+                            content: '';
+                            position: absolute;
+                            width: 320px; height: 320px;
+                            border-radius: 50%;
+                            background: rgba(255,255,255,0.1);
+                            right: -60px; top: -80px;
+                        }
+                        .posts-hero::after {
+                            content: '';
+                            position: absolute;
+                            width: 200px; height: 200px;
+                            border-radius: 50%;
+                            background: rgba(255,255,255,0.05);
+                            right: 120px; bottom: -80px;
+                        }
+                        .hero-left { flex: 1; z-index: 1; }
+                        .hero-eyebrow {
+                            font-size: 11px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: rgba(255,255,255,0.7);
+                            margin-bottom: 10px;
+                        }
+                        .hero-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 42px;
+                            color: white;
+                            line-height: 1.1;
+                            margin-bottom: 14px;
+                        }
+                        .hero-title em { color: #ffd4e8; font-style: italic; }
+                        .hero-sub {
+                            font-size: 14px;
+                            color: rgba(255,255,255,0.7);
+                            max-width: 340px;
+                            line-height: 1.6;
+                        }
+
+                        .add-btn {
+                            background: white;
+                            color: #f5576c;
+                            border: none;
+                            padding: 12px 28px;
+                            border-radius: 40px;
+                            font-weight: 600;
+                            transition: 0.3s;
+                            cursor: pointer;
+                        }
+                        .add-btn:hover { transform: scale(1.05); background: #480311; }
+
+                        .table-container {
+                            background: white;
+                            border-radius: 24px;
+                            padding: 25px;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                        }
+                        .posts-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .posts-table th {
+                            text-align: left;
+                            padding: 15px 10px;
+                            background: #fff5f7;
+                            color: #c0506a;
+                            font-weight: 600;
+                            border-bottom: 2px solid #ffe0e8;
+                        }
+                        .posts-table td {
+                            padding: 15px 10px;
+                            border-bottom: 1px solid #eee;
+                            color: #444;
+                        }
+                        .posts-table tr:hover { background: #fffafb; }
+                        .badge-publie {
+                            background: #e8f5e8;
+                            color: #2a6a10;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            display: inline-block;
+                        }
+                        .badge-brouillon {
+                            background: #fff3e0;
+                            color: #c97e00;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            display: inline-block;
+                        }
+                        .badge-theme {
+                            background: #e8e4ff;
+                            color: #5a3ab0;
+                            padding: 4px 12px;
+                            border-radius: 20px;
+                            font-size: 11px;
+                            font-weight: 500;
+                            display: inline-block;
+                        }
+                        .action-btn {
+                            padding: 8px 12px;
+                            border-radius: 20px;
+                            font-size: 14px;
+                            margin: 0 3px;
+                            border: none;
+                            cursor: pointer;
+                            transition: 0.2s;
+                            background: transparent;
+                        }
+                        .view-btn { background: #4facfe; color: white; }
+                        .edit-btn { background: #ffc107; color: #333; }
+                        .delete-btn { background: #f5576c; color: white; }
+                        .action-btn:hover { opacity: 0.8; transform: scale(1.05); }
+
+                        .modal-custom {
+                            display: none;
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0,0,0,0.5);
+                            z-index: 1000;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .modal-content-custom {
+                            background: white;
+                            border-radius: 24px;
+                            padding: 30px;
+                            max-width: 600px;
+                            width: 90%;
+                            max-height: 80vh;
+                            overflow-y: auto;
+                        }
+                        .form-group { margin-bottom: 20px; }
+                        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
+                        .form-group input, .form-group textarea, .form-group select {
+                            width: 100%;
+                            padding: 12px;
+                            border: 1px solid #ddd;
+                            border-radius: 12px;
+                            font-family: inherit;
+                        }
+                        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+                        .btn-save { background: #f5576c; color: white; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; }
+                        .btn-cancel { background: #ccc; color: #333; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; }
+
+                        .like-dislike {
+                            display: flex;
+                            gap: 15px;
+                        }
+                        .like { color: #f5576c; }
+                        .dislike { color: #999; }
+                    </style>
+                    
+
+                    <div class="posts-wrap">
+
+                        <!-- Hero -->
+                        <div class="posts-hero">
+                            <div class="hero-left">
+                                <div class="hero-eyebrow">Nafseyti · Gestion</div>
+                                <div class="hero-title">Gestion des<br><em>Posts</em></div>
+                                <div class="hero-sub">Créez, modifiez et gérez tous les messages publiés.</div>
+                            </div>
+                           
+                        </div>
+<div class="hero-right" style="text-align: right;">
+    <button type="button" class="add-btn" onclick="openAddModal()">
+        <i class="fa fa-plus"></i> Nouveau post
+    </button>
+</div>
+                        <!-- Messages flash -->
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success" style="background:#e8f5e8;color:#2a6a10;padding:12px 20px;border-radius:12px;margin-bottom:20px;">
+                                <i class="fa fa-check-circle"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger" style="background:#ffe8e8;color:#c05050;padding:12px 20px;border-radius:12px;margin-bottom:20px;">
+                                <i class="fa fa-exclamation-circle"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Tableau des posts -->
+                        <div class="table-container">
+                            <table class="posts-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Titre</th>
+                                        <th>Thème</th>
+                                        <th>Statut</th>
+                                        <th>Likes/Dislikes</th>
+                                        <th>Date création</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for post in posts %}
+                                    <tr>
+                                        <td>{{ post.id_post }}</td>
+                                        <td>
+                                            <strong>{{ post.titre|slice(0, 50) }}</strong>
+                                            {% if post.contenu|length > 60 %}
+                                                <br><small class="text-muted">{{ post.contenu|slice(0, 60) }}...</small>
+                                            {% else %}
+                                                <br><small class="text-muted">{{ post.contenu }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if post.theme %}
+                                                <span class="badge-theme"><i class="fa fa-tag"></i> {{ post.theme }}</span>
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if post.statut == 'publié' or post.statut == 'publie' or post.statut == 'published' %}
+                                                <span class="badge-publie"><i class="fa fa-check-circle"></i> Publié</span>
+                                            {% elseif post.statut == 'brouillon' or post.statut == 'draft' %}
+                                                <span class="badge-brouillon"><i class="fa fa-edit"></i> Brouillon</span>
+                                            {% else %}
+                                                <span class="badge-brouillon">{{ post.statut ?: '—' }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="like-dislike">
+                                                <span class="like"><i class="fa fa-heart"></i> {{ post.like_count ?: 0 }}</span>
+                                                <span class="dislike"><i class="fa fa-thumbs-down"></i> {{ post.dislike_count ?: 0 }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if post.date_creation %}
+                                                {{ post.date_creation|date('d/m/Y') }}
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="action-btn view-btn" onclick='openViewModal({{ post.id_post }}, "{{ post.titre|escape('js') }}", "{{ post.contenu|escape('js') }}", "{{ post.theme|escape('js') }}", "{{ post.statut|escape('js') }}", "{{ post.date_creation ? post.date_creation|date('d/m/Y H:i') : '-' }}", {{ post.like_count ?: 0 }}, {{ post.dislike_count ?: 0 }})' title="Voir">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                            <button type="button" class="action-btn edit-btn" onclick='openEditModal({{ post.id_post }}, "{{ post.titre|escape('js') }}", "{{ post.contenu|escape('js') }}", "{{ post.theme|escape('js') }}", "{{ post.statut|escape('js') }}", {{ post.forum_id ?: 'null' }})' title="Modifier">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <form method="POST" action="{{ path('admin_post_delete', {'id': post.id_post}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id_post) }}">
+                                                <button type="submit" class="action-btn delete-btn" title="Supprimer">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7" style="text-align:center; padding:40px;">
+                                            <i class="fa fa-inbox" style="font-size:48px; color:#ddd;"></i>
+                                            <p style="margin-top:10px;">Aucun post trouvé</p>
+                                            <button type="button" class="add-btn" onclick="openAddModal()" style="margin-top:10px;">
+                                                <i class="fa fa-plus"></i> Créer le premier post
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div><!-- /posts-wrap -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AJOUT -->
+<div id="addModal" class="modal-custom">
+    <div class="modal-content-custom">
+        <h3 style="margin-bottom:20px;"><i class="fa fa-plus-circle" style="color:#f5576c;"></i> Nouveau post</h3>
+        <form method="POST" action="{{ path('admin_post_add') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('add_post') }}">
+            <div class="form-group">
+                <label>Titre *</label>
+                <input type="text" name="titre" required placeholder="Entrez le titre du post">
+            </div>
+            <div class="form-group">
+                <label>Thème</label>
+                <select name="theme">
+                    <option value="">Sélectionner un thème</option>
+                    <option value="Anxiété">Anxiété</option>
+                    <option value="Dépression">Dépression</option>
+                    <option value="Stress">Stress</option>
+                    <option value="Confiance en soi">Confiance en soi</option>
+                    <option value="Relations">Relations</option>
+                    <option value="Bien-être">Bien-être</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Statut</label>
+                <select name="statut">
+                    <option value="publié">Publié</option>
+                    <option value="brouillon">Brouillon</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Contenu *</label>
+                <textarea name="contenu" rows="6" required placeholder="Écrivez le contenu du post ici..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Forum associé (ID)</label>
+                <input type="number" name="forum_id" placeholder="ID du forum">
+                <small class="text-muted">Laissez vide si non assigné</small>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeAddModal()">Annuler</button>
+                <button type="submit" class="btn-save">Créer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL VISUALISATION -->
+<div id="viewModal" class="modal-custom">
+    <div class="modal-content-custom" style="max-width: 700px;">
+        <h3 style="margin-bottom:20px;"><i class="fa fa-eye" style="color:#4facfe;"></i> Détails du post</h3>
+        <div class="form-group">
+            <label>Titre</label>
+            <p id="view_titre" style="padding:10px; background:#f5f5f5; border-radius:8px;"></p>
+        </div>
+        <div class="form-group">
+            <label>Thème</label>
+            <p id="view_theme" style="padding:10px; background:#f5f5f5; border-radius:8px;"></p>
+        </div>
+        <div class="form-group">
+            <label>Statut</label>
+            <p id="view_statut" style="padding:10px; background:#f5f5f5; border-radius:8px;"></p>
+        </div>
+        <div class="form-group">
+            <label>Date création</label>
+            <p id="view_date" style="padding:10px; background:#f5f5f5; border-radius:8px;"></p>
+        </div>
+        <div class="form-group">
+            <label>Likes / Dislikes</label>
+            <p id="view_likes" style="padding:10px; background:#f5f5f5; border-radius:8px;"></p>
+        </div>
+        <div class="form-group">
+            <label>Contenu</label>
+            <div id="view_contenu" style="padding:15px; background:#f9f5ef; border-radius:12px; max-height:300px; overflow-y:auto;"></div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn-cancel" onclick="closeViewModal()">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MODIFICATION - Version simplifiée -->
+<div id="editModal" class="modal-custom">
+    <div class="modal-content-custom">
+        <h3 style="margin-bottom:20px;"><i class="fa fa-edit" style="color:#ffc107;"></i> Modifier le post</h3>
+        <form id="editForm" method="POST">
+            <div class="form-group">
+                <label>Titre *</label>
+                <input type="text" id="edit_titre" name="titre" required>
+            </div>
+            <div class="form-group">
+                <label>Thème</label>
+                <select id="edit_theme" name="theme">
+                    <option value="">Sélectionner un thème</option>
+                    <option value="Anxiété">Anxiété</option>
+                    <option value="Dépression">Dépression</option>
+                    <option value="Stress">Stress</option>
+                    <option value="Confiance en soi">Confiance en soi</option>
+                    <option value="Relations">Relations</option>
+                    <option value="Bien-être">Bien-être</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Statut</label>
+                <select id="edit_statut" name="statut">
+                    <option value="publié">Publié</option>
+                    <option value="brouillon">Brouillon</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Contenu *</label>
+                <textarea id="edit_contenu" name="contenu" rows="6" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Forum associé (ID)</label>
+                <input type="number" id="edit_forum_id" name="forum_id" placeholder="ID du forum">
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Annuler</button>
+                <button type="submit" class="btn-save">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // MODAL AJOUT
+    function openAddModal() { 
+        document.getElementById('addModal').style.display = 'flex';
+    }
+    
+    function closeAddModal() { 
+        document.getElementById('addModal').style.display = 'none'; 
+    }
+
+    // MODAL VISUALISATION
+    function openViewModal(id, titre, contenu, theme, statut, date, likes, dislikes) {
+        document.getElementById('view_titre').innerHTML = titre;
+        document.getElementById('view_contenu').innerHTML = contenu.replace(/\n/g, '<br>');
+        document.getElementById('view_theme').innerHTML = theme || 'Non défini';
+        document.getElementById('view_statut').innerHTML = statut || 'Non défini';
+        document.getElementById('view_date').innerHTML = date;
+        document.getElementById('view_likes').innerHTML = '<i class="fa fa-heart" style="color:#f5576c;"></i> ' + likes + ' &nbsp;&nbsp; <i class="fa fa-thumbs-down" style="color:#999;"></i> ' + dislikes;
+        document.getElementById('viewModal').style.display = 'flex';
+    }
+    
+    function closeViewModal() { 
+        document.getElementById('viewModal').style.display = 'none'; 
+    }
+
+    // MODAL MODIFICATION - Version simplifiée sans token dynamique
+    function openEditModal(id, titre, contenu, theme, statut, forum_id) {
+        document.getElementById('edit_titre').value = titre;
+        document.getElementById('edit_contenu').value = contenu;
+        document.getElementById('edit_theme').value = theme || '';
+        document.getElementById('edit_statut').value = statut || 'publié';
+        document.getElementById('edit_forum_id').value = forum_id || '';
+        
+        // Construire l'URL avec l'ID
+        var actionUrl = "/admin/post/edit/" + id;
+        document.getElementById('editForm').action = actionUrl;
+        
+        // Ajouter le token CSRF manuellement
+        var form = document.getElementById('editForm');
+        var oldToken = form.querySelector('input[name="_token"]');
+        if (oldToken) {
+            form.removeChild(oldToken);
+        }
+        
+        // Créer un token simple (sans vérification côté serveur pour l'instant)
+        var tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = '_token';
+        tokenInput.value = 'temp_token_' + id;
+        form.appendChild(tokenInput);
+        
+        document.getElementById('editModal').style.display = 'flex';
+    }
+    
+    function closeEditModal() { 
+        document.getElementById('editModal').style.display = 'none'; 
+    }
+
+    // Fermer les modals en cliquant en dehors
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-custom')) {
+            event.target.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

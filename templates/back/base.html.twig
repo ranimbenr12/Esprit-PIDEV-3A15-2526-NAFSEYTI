@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <!-- site metas -->
+    <title>{% block title %}Dashboard{% endblock %}</title>
+
+    <!-- site icon -->
+    <link rel="icon" href="{{ asset('back/images/fevicon.png') }}" type="image/png" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ asset('back/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/responsive.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/colors.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/bootstrap-select.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('back/css/custom.css') }}" />
+
+</head>
+
+<body class="dashboard dashboard_1">
+
+    {% block body %}{% endblock %}
+
+    <!-- JS -->
+    <script src="{{ asset('back/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('back/js/popper.min.js') }}"></script>
+    <script src="{{ asset('back/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('back/js/animate.js') }}"></script>
+    <script src="{{ asset('back/js/bootstrap-select.js') }}"></script>
+    <script src="{{ asset('back/js/owl.carousel.js') }}"></script>
+    <script src="{{ asset('back/js/Chart.min.js') }}"></script>
+    <script src="{{ asset('back/js/Chart.bundle.min.js') }}"></script>
+    <script src="{{ asset('back/js/utils.js') }}"></script>
+    <script src="{{ asset('back/js/analyser.js') }}"></script>
+    <script src="{{ asset('back/js/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('back/js/chart_custom_style1.js') }}"></script>
+    <script src="{{ asset('back/js/custom.js') }}"></script>
+
+    <script>
+        var ps = new PerfectScrollbar('#sidebar');
+    </script>
+
+</body>
+</html>

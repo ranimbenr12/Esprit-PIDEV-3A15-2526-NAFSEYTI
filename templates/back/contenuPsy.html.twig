@@ -1,0 +1,434 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Contenu psychologique{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="icon_setting"></div>
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive"
+                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                 alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+                <ul class="list-unstyled components">
+                    <li><a href="{{ path('admin_dashboard') }}"><i class="fa fa-dashboard yellow_color"></i><span>Tableau de bord</span></a></li>
+                    <li><a href="#"><i class="fa fa-users blue1_color"></i><span>Utilisateurs</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar orange_color"></i><span>Rendez-vous</span></a></li>
+                    <li class="active"><a href="#"><i class="fa fa-book purple_color2"></i><span>Contenu psychologique</span></a></li>
+                    <li><a href="#"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
+                    <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i><span>Événements</span></a></li>
+                    <li><a href="#"><i class="fa fa-line-chart yellow_color"></i><span>Suivi personnel</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <div class="logo_section">
+                            <a href="#" style="display:flex;align-items:center;text-decoration:none;">
+                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width:40px;height:40px;margin-right:10px;" />
+                                <span style="font-size:20px;font-weight:bold;color:#3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                                            <span class="name_user">Amri Sirine</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Mon profil</a>
+                                            <a class="dropdown-item" href="#">Paramètres</a>
+                                            <a class="dropdown-item" href="#">Aide</a>
+                                            <a class="dropdown-item" href="#"><span>Déconnexion</span> <i class="fa fa-sign-out"></i></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+
+                    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+                    <style>
+                        .psy-wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0 40px; }
+
+                        .psy-hero {
+                            background: #1a2e1a;
+                            border-radius: 24px;
+                            padding: 44px 48px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 28px;
+                            overflow: hidden;
+                            position: relative;
+                        }
+                        .psy-hero::before {
+                            content: '';
+                            position: absolute;
+                            width: 320px; height: 320px;
+                            border-radius: 50%;
+                            background: #443e1b;
+                            right: -60px; top: -80px;
+                        }
+                        .psy-hero::after {
+                            content: '';
+                            position: absolute;
+                            width: 200px; height: 200px;
+                            border-radius: 50%;
+                            background: rgba(180,220,130,0.05);
+                            right: 120px; bottom: -80px;
+                        }
+                        .hero-left { flex: 1; z-index: 1; }
+                        .hero-eyebrow {
+                            font-size: 11px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #8dc96e;
+                            margin-bottom: 10px;
+                        }
+                        .hero-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 42px;
+                            color: #f5f0e8;
+                            line-height: 1.1;
+                            margin-bottom: 14px;
+                        }
+                        .hero-title em { color: #a8dc78; font-style: italic; }
+                        .hero-sub {
+                            font-size: 14px;
+                            color: rgba(245,240,232,0.55);
+                            max-width: 340px;
+                            line-height: 1.6;
+                        }
+
+                        /* Styles des cartes de gestion */
+                        .gestion-card {
+                            background: white;
+                            border-radius: 20px;
+                            padding: 35px 25px;
+                            text-align: center;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                            transition: all 0.3s ease;
+                            margin-bottom: 25px;
+                            cursor: pointer;
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .gestion-card:hover {
+                            transform: translateY(-10px);
+                            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                        }
+                        .gestion-icon {
+                            width: 90px;
+                            height: 90px;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin: 0 auto 20px;
+                            font-size: 40px;
+                            color: white;
+                        }
+                        .gestion-title {
+                            font-size: 22px;
+                            font-weight: bold;
+                            color: #333;
+                            margin: 15px 0 10px;
+                            font-family: 'DM Serif Display', serif;
+                        }
+                        .gestion-stats {
+                            font-size: 36px;
+                            font-weight: bold;
+                            color: #1a2e1a;
+                            margin: 10px 0;
+                        }
+                        .gestion-desc {
+                            font-size: 13px;
+                            color: #888;
+                            margin-top: 10px;
+                        }
+                        .gestion-btn {
+                            margin-top: 20px;
+                            padding: 8px 25px;
+                            border-radius: 25px;
+                            border: none;
+                            font-size: 14px;
+                            font-weight: 500;
+                            transition: all 0.3s;
+                            text-decoration: none;
+                            display: inline-block;
+                        }
+                        .btn-forum { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+                        .btn-post { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+                        .btn-comment { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+                        .gestion-btn:hover { opacity: 0.85; transform: scale(1.05); color: white; }
+
+                        .forum-card .gestion-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
+                        .post-card .gestion-icon { background: linear-gradient(135deg, #f093fb, #f5576c); }
+                        .comment-card .gestion-icon { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+                        .psy-label {
+                            font-size: 10px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #888;
+                            margin-bottom: 16px;
+                            margin-top: 8px;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+                        .psy-label::after {
+                            content: '';
+                            flex: 1;
+                            height: 1px;
+                            background: #e5e0d8;
+                        }
+
+                        .activity-grid {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 18px;
+                            margin-bottom: 28px;
+                        }
+                        .activity-card {
+                            border-radius: 20px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            padding: 20px;
+                            text-align: center;
+                            transition: 0.25s;
+                        }
+                        .activity-card:hover { background: #f5f0e8; transform: translateY(-4px); }
+                        .activity-number {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 48px;
+                            color: #1a2e1a;
+                            margin-bottom: 10px;
+                        }
+                        .activity-label {
+                            font-size: 13px;
+                            color: #666;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                        }
+                        .activity-icon {
+                            font-size: 32px;
+                            margin-bottom: 12px;
+                        }
+
+                        .psy-quote {
+                            background: #1a2e1a;
+                            border-radius: 20px;
+                            padding: 32px 40px;
+                            display: flex;
+                            align-items: center;
+                            gap: 24px;
+                        }
+                        .quote-mark {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 80px;
+                            color: #a8dc78;
+                            line-height: 0.6;
+                            flex-shrink: 0;
+                            opacity: 0.6;
+                        }
+                        .quote-text {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 20px;
+                            color: #f5f0e8;
+                            font-style: italic;
+                            line-height: 1.5;
+                        }
+                        .quote-author {
+                            font-size: 12px;
+                            color: #8dc96e;
+                            margin-top: 10px;
+                            letter-spacing: 1px;
+                        }
+                        
+                        /* Centrage des cartes */
+                        .centered-cards {
+                            display: flex;
+                            justify-content: center;
+                            align-items: stretch;
+                        }
+                    </style>
+
+                    <div class="psy-wrap">
+
+                        <!-- Hero -->
+                        <div class="psy-hero">
+                            <div class="hero-left">
+                                <div class="hero-eyebrow">Nafseyti · Soutien psychologique</div>
+                                <div class="hero-title">Gestion du<br><em>contenu psychologique</em></div>
+                                <div class="hero-sub">Administrez les forums, posts et commentaires de votre plateforme.</div>
+                            </div>
+                            <div class="hero-right">
+                                <svg width="220" height="160" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="110" cy="70" r="45" fill="#2a3e2a" stroke="#3a5a3a" stroke-width="1"/>
+                                    <path d="M85 60 Q95 45 110 50 Q125 45 135 60" stroke="#a8dc78" stroke-width="2.5" fill="none"/>
+                                    <circle cx="95" cy="65" r="4" fill="#a8dc78"/>
+                                    <circle cx="125" cy="65" r="4" fill="#a8dc78"/>
+                                    <path d="M100 75 Q110 85 120 75" stroke="#a8dc78" stroke-width="2" fill="none"/>
+                                    <path d="M75 85 L85 95 L100 85" stroke="#8dc96e" stroke-width="1.5" fill="none"/>
+                                    <path d="M145 85 L135 95 L120 85" stroke="#8dc96e" stroke-width="1.5" fill="none"/>
+                                    <rect x="155" y="30" width="50" height="40" rx="4" fill="#c8a86e"/>
+                                    <rect x="155" y="30" width="25" height="40" rx="4" fill="#d8b87e"/>
+                                    <line x1="180" y1="35" x2="195" y2="35" stroke="#8a6a3a" stroke-width="1"/>
+                                    <line x1="180" y1="42" x2="200" y2="42" stroke="#8a6a3a" stroke-width="1"/>
+                                    <line x1="180" y1="49" x2="192" y2="49" stroke="#8a6a3a" stroke-width="1"/>
+                                    <path d="M35 95 C25 85 20 75 30 68 C40 61 50 70 55 75 C60 70 70 61 80 68 C90 75 85 85 75 95 C65 105 55 100 55 100 C55 100 45 105 35 95Z" fill="#ff6a6a" opacity="0.8"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- 3 Cartes de gestion centrées -->
+                        <div class="row centered-cards">
+                            <!-- Carte Gestion des Forums -->
+                            <div class="col-md-4">
+                                <div class="gestion-card forum-card" onclick="window.location.href=#">
+                                    <div class="gestion-icon">
+                                        <i class="fa fa-comments"></i>
+                                    </div>
+                                    <div class="gestion-title">Gestion des Forums</div>
+                                
+                                    <div class="gestion-desc">
+                                        <i class="fa fa-users"></i> Espaces de discussion actifs
+                                    </div>
+                                    <a href="{{ path('admin_forum_list') }}" class="gestion-btn btn-forum">
+                                        Gérer <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Carte Gestion des Posts -->
+                            <div class="col-md-4">
+                                <div class="gestion-card post-card" onclick="window.location.href=#">
+                                    <div class="gestion-icon">
+                                        <i class="fa fa-file-text"></i>
+                                    </div>
+                                    <div class="gestion-title">Gestion des Posts</div>
+                                    
+                                    <div class="gestion-desc">
+                                        <i class="fa fa-commenting"></i> Messages publiés
+                                    </div>
+                                    <a href="{{ path('admin_post_list')}}" class="gestion-btn btn-post">
+                                        Gérer <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Carte Gestion des Commentaires -->
+                            <div class="col-md-4">
+                                <div class="gestion-card comment-card" onclick="window.location.href=#">
+                                    <div class="gestion-icon">
+                                        <i class="fa fa-commenting"></i>
+                                    </div>
+                                    <div class="gestion-title">Gestion des Commentaires</div>
+                                
+                                    <div class="gestion-desc">
+                                        <i class="fa fa-heart"></i> Interactions membres
+                                    </div>
+                                    <a href="{{ path('admin_comment_list')}}" class="gestion-btn btn-comment">
+                                        Gérer <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistiques d'activité -->
+                        <div class="psy-label">Aperçu de l'activité</div>
+                        <div class="activity-grid">
+                            <div class="activity-card">
+                                <div class="activity-icon">📝</div>
+                                <div class="activity-number">{{ posts|length }}</div>
+                                <div class="activity-label">Posts publiés</div>
+                                <div style="font-size:11px;color:#aaa;margin-top:8px;">Total des messages</div>
+                            </div>
+                            <div class="activity-card">
+                                <div class="activity-icon">💬</div>
+                                <div class="activity-number">{{ commentaires|length }}</div>
+                                <div class="activity-label">Commentaires</div>
+                                <div style="font-size:11px;color:#aaa;margin-top:8px;">
+                                    {% if posts|length > 0 %}
+                                        {{ ((commentaires|length / posts|length) * 100)|round }} réactions/post
+                                    {% else %}
+                                        0 réactions/post
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="activity-card">
+                                <div class="activity-icon">👥</div>
+                                <div class="activity-number">{{ forums|length }}</div>
+                                <div class="activity-label">Forums actifs</div>
+                                <div style="font-size:11px;color:#aaa;margin-top:8px;">Espaces de discussion</div>
+                            </div>
+                        </div>
+
+                        <!-- Citation footer -->
+                        <div class="psy-quote">
+                            <div class="quote-mark">&ldquo;</div>
+                            <div>
+                                <div class="quote-text">Partager ses émotions, c'est déjà commencer à les apaiser.</div>
+                                <div class="quote-author">&mdash; Nafseyti · Contenu psychologique</div>
+                            </div>
+                        </div>
+
+                    </div><!-- /psy-wrap -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
