@@ -181,6 +181,7 @@ public function edit_fiche(
         'editFicheId'   => $id,
         'showEditModal' => true,
     ]);
+    //////////////////////////////////////////
 }
 
     // ── Supprimer fiche ──

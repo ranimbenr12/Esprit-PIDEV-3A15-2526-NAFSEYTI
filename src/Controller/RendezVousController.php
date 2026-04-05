@@ -116,7 +116,7 @@ public function reserve(
     $this->addFlash('success', 'Rendez-vous réservé avec succès !');
     return $this->redirectToRoute('rdv_index');
 }
-
+    /////////////////////////////
 #[Route('/mes-reservations', name: 'mes_reservations', methods: ['GET'])]
 public function mesReservations(
     EntityManagerInterface $em,
