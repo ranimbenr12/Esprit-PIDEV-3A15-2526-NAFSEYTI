@@ -1,0 +1,374 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ forum.nom_forum }} - Forum de discussion{% endblock %}
+
+{% block body %}
+<style>
+    .forum-header {
+        background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+        padding: 60px 0;
+        color: white;
+        margin-bottom: 40px;
+    }
+    .forum-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    .forum-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    .post-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        transition: transform 0.3s;
+    }
+    .post-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .post-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+    }
+    .post-meta {
+        font-size: 0.8rem;
+        color: var(--green-sage);
+        margin-bottom: 15px;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .post-content {
+        color: var(--text-mid);
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+    .post-actions {
+        display: flex;
+        gap: 15px;
+        padding-top: 15px;
+        border-top: 1px solid var(--beige-light);
+    }
+    .like-btn, .comment-toggle {
+        background: none;
+        border: none;
+        color: var(--green-mid);
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: color 0.3s;
+    }
+    .like-btn:hover, .comment-toggle:hover {
+        color: var(--green-deep);
+    }
+    .comments-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--beige-light);
+        display: none;
+    }
+    .comments-section.show {
+        display: block;
+    }
+    .comment-card {
+        background: var(--beige-cream);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    .comment-meta {
+        font-size: 0.75rem;
+        color: var(--green-sage);
+        margin-bottom: 8px;
+    }
+    .comment-content {
+        color: var(--text-mid);
+        line-height: 1.6;
+    }
+    .comment-form {
+        margin-top: 20px;
+        padding: 20px;
+        background: var(--beige-white);
+        border-radius: 12px;
+    }
+    .btn-submit {
+        background: var(--green-mid);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .btn-submit:hover {
+        background: var(--green-deep);
+    }
+    .btn-primary {
+        background: var(--green-mid);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    .btn-primary:hover {
+        background: var(--green-deep);
+        transform: translateY(-2px);
+    }
+    .modal-custom {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content-custom {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-family: inherit;
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--green-mid);
+        text-decoration: none;
+        margin-bottom: 20px;
+        transition: color 0.3s;
+    }
+    .back-link:hover {
+        color: var(--green-deep);
+    }
+    .alert {
+        padding: 12px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    .alert-success {
+        background: #e8f5e8;
+        color: #2a6a10;
+    }
+    .alert-error {
+        background: #ffe8e8;
+        color: #c05050;
+    }
+</style>
+
+<div class="forum-header">
+    <div class="container-custom">
+        <a href="{{ path('contenu_psychologique') }}" class="back-link" style="color: white;">
+            <i class="fas fa-arrow-left"></i> Retour aux forums
+        </a>
+        <h1><i class="fas fa-comments"></i> {{ forum.nom_forum }}</h1>
+        <p>{{ forum.description }}</p>
+        <div style="margin-top: 20px; display: flex; gap: 20px;">
+            <span><i class="fas fa-file-alt"></i> {{ posts|length }} discussions</span>
+            <span><i class="fas fa-comment"></i> 
+                {% set totalComments = 0 %}
+                {% for post in posts %}
+                    {% for commentaire in commentaires %}
+                        {% if commentaire.id_post == post.id_post %}
+                            {% set totalComments = totalComments + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                {{ totalComments }} réponses
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container-custom" style="padding: 0 20px 60px;">
+    <!-- Messages flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> {{ message }}
+        </div>
+    {% endfor %}
+
+    <!-- Bouton Nouveau Post -->
+    <div style="text-align: right; margin-bottom: 30px;">
+        <button class="btn-primary" onclick="openAddPostModal()">
+            <i class="fas fa-plus"></i> Nouvelle discussion
+        </button>
+    </div>
+
+    <!-- Liste des posts -->
+    {% for post in posts %}
+    <div class="post-card" id="post-{{ post.id_post }}">
+        <h2 class="post-title">{{ post.titre }}</h2>
+        <div class="post-meta">
+            <span><i class="far fa-calendar-alt"></i> {{ post.date_creation ? post.date_creation|date('d/m/Y à H:i') : 'Date inconnue' }}</span>
+            <span><i class="fas fa-heart"></i> <span id="likes-{{ post.id_post }}">{{ post.like_count|default(0) }}</span> likes</span>
+            <span><i class="fas fa-comment"></i> 
+                {% set nbComments = 0 %}
+                {% for commentaire in commentaires %}
+                    {% if commentaire.id_post == post.id_post %}
+                        {% set nbComments = nbComments + 1 %}
+                    {% endif %}
+                {% endfor %}
+                {{ nbComments }} commentaires
+            </span>
+        </div>
+        <div class="post-content">
+            {{ post.contenu|nl2br }}
+        </div>
+        <div class="post-actions">
+            <button class="like-btn" onclick="likePost({{ post.id_post }})">
+                <i class="fas fa-heart"></i> J'aime
+            </button>
+            <button class="comment-toggle" onclick="toggleComments({{ post.id_post }})">
+                <i class="fas fa-comment"></i> Commentaires
+            </button>
+        </div>
+
+        <!-- Section commentaires -->
+        <div class="comments-section" id="comments-{{ post.id_post }}">
+            {% for commentaire in commentaires %}
+                {% if commentaire.id_post == post.id_post %}
+                <div class="comment-card">
+                    <div class="comment-meta">
+                        <i class="fas fa-user"></i> Membre · {{ commentaire.date_commentaire ? commentaire.date_commentaire|date('d/m/Y H:i') : 'Date inconnue' }}
+                    </div>
+                    <div class="comment-content">
+                        {{ commentaire.contenu|nl2br }}
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Formulaire de commentaire -->
+            <div class="comment-form">
+                <form method="POST">
+                    <input type="hidden" name="action" value="add_comment">
+                    <input type="hidden" name="post_id" value="{{ post.id_post }}">
+                    <div class="form-group">
+                        <label>Votre commentaire</label>
+                        <textarea name="contenu" rows="3" required placeholder="Partagez votre pensée..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Publier
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 60px; background: white; border-radius: 16px;">
+        <i class="fas fa-comments" style="font-size: 64px; color: var(--green-pale); margin-bottom: 20px;"></i>
+        <h3 style="color: var(--text-dark);">Aucune discussion pour le moment</h3>
+        <p style="color: var(--text-mid); margin: 20px 0;">Soyez le premier à lancer une conversation !</p>
+        <button class="btn-primary" onclick="openAddPostModal()">
+            <i class="fas fa-plus"></i> Créer une discussion
+        </button>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal Ajout de Post -->
+<div id="addPostModal" class="modal-custom">
+    <div class="modal-content-custom">
+        <h3 style="margin-bottom: 20px;"><i class="fas fa-plus-circle" style="color: var(--green-mid);"></i> Nouvelle discussion</h3>
+        <form method="POST">
+            <input type="hidden" name="action" value="add_post">
+            <div class="form-group">
+                <label>Titre *</label>
+                <input type="text" name="titre" required placeholder="Titre de votre discussion">
+            </div>
+            <div class="form-group">
+                <label>Statut</label>
+                <select name="statut">
+                    <option value="publié">Publié</option>
+                    <option value="brouillon">Brouillon</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Contenu *</label>
+                <textarea name="contenu" rows="6" required placeholder="Décrivez votre sujet..."></textarea>
+            </div>
+            <div class="modal-buttons" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn-cancel" onclick="closeAddPostModal()" style="background: #ccc; color: #333; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Annuler</button>
+                <button type="submit" class="btn-save" style="background: var(--green-mid); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Publier</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Modal functions
+    function openAddPostModal() {
+        document.getElementById('addPostModal').style.display = 'flex';
+    }
+    
+    function closeAddPostModal() {
+        document.getElementById('addPostModal').style.display = 'none';
+    }
+    
+    // Toggle comments section
+    function toggleComments(postId) {
+        const commentsDiv = document.getElementById('comments-' + postId);
+        commentsDiv.classList.toggle('show');
+    }
+    
+    // Like functionality
+    function likePost(postId) {
+        fetch('/post/' + postId + '/like', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('likes-' + postId).innerText = data.likes;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-custom')) {
+            event.target.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,328 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contenu Psychologique - Forum de Soutien{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<div class="hero-section" style="min-height: 60vh; padding: 80px 60px;">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-organic-shape"></div>
+    <div class="hero-organic-shape-2"></div>
+    
+    <div class="hero-content">
+        <div class="hero-tag">
+            <i class="fas fa-leaf"></i> Espace de partage
+        </div>
+        <h1 class="hero-title">
+            Contenu <em>Psychologique</em><br>
+            et Forum de Soutien
+        </h1>
+        <div class="hero-subtitle">
+            Un espace bienveillant pour échanger, partager et grandir ensemble.
+            Vos mots sont précieux, votre voix compte.
+        </div>
+        <div class="hero-actions">
+            <a href="#forums" class="btn-primary-custom">
+                <i class="fas fa-comments"></i> Explorer les forums
+            </a>
+            <a href="#resources" class="btn-ghost">
+                <i class="fas fa-book-open"></i> Ressources
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ forums|length }}+</div>
+                <div class="stat-label">Forums actifs</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ posts|length }}+</div>
+                <div class="stat-label">Discussions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ commentaires|length }}+</div>
+                <div class="stat-label">Échanges</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Forums Section -->
+<div id="forums" class="services-section" style="background: var(--beige-white);">
+    <div class="container-custom">
+        <div class="section-eyebrow">
+            Communauté bienveillante
+        </div>
+        <h2 class="section-title-new">
+            Nos <em>Forums de Discussion</em>
+        </h2>
+        <p style="font-size: 1.1rem; color: var(--text-mid); max-width: 700px; margin-bottom: 60px;">
+            Rejoignez nos espaces d'échange thématiques, animés par des modérateurs attentifs.
+            Chaque forum est un lieu de parole libre et respectueux.
+        </p>
+
+        <div class="services-grid" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; background: transparent;">
+            {% for forum in forums %}
+            <div class="service-card" style="border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                <div class="service-icon" style="background: var(--green-pale);">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="service-name">{{ forum.nom_forum }}</h3>
+                <p class="service-desc">{{ forum.description|slice(0, 120) }}{% if forum.description|length > 120 %}...{% endif %}</p>
+                
+                <div style="margin: 20px 0; display: flex; gap: 20px; font-size: 0.8rem; color: var(--green-mid);">
+                    <span><i class="fas fa-file-alt"></i> 
+                        {% set nbPosts = 0 %}
+                        {% for post in posts %}
+                            {% if post.forum_id == forum.id_forum %}
+                                {% set nbPosts = nbPosts + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ nbPosts }} discussions
+                    </span>
+                    <span><i class="fas fa-comment"></i> 
+                        {% set commentCount = 0 %}
+                        {% for post in posts %}
+                            {% if post.forum_id == forum.id_forum %}
+                                {% for commentaire in commentaires %}
+                                    {% if commentaire.id_post == post.id_post %}
+                                        {% set commentCount = commentCount + 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ commentCount }} réponses
+                    </span>
+                </div>
+                
+                <div class="progress-wrap" style="margin-bottom: 20px;">
+                    <div class="progress-labels">
+                        <span>Activité</span>
+                        <span>
+                            {% set nbPosts = 0 %}
+                            {% for post in posts %}
+                                {% if post.forum_id == forum.id_forum %}
+                                    {% set nbPosts = nbPosts + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ nbPosts }} posts
+                        </span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        {% set nbPosts = 0 %}
+                        {% for post in posts %}
+                            {% if post.forum_id == forum.id_forum %}
+                                {% set nbPosts = nbPosts + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set pourcentage = nbPosts * 10 %}
+                        {% if pourcentage > 100 %}{% set pourcentage = 100 %}{% endif %}
+                        <div class="progress-fill" style="width: {{ pourcentage }}%; background: linear-gradient(90deg, var(--green-mid), var(--green-sage));"></div>
+                    </div>
+                </div>
+                
+                <a href="{{ path('forum_show', {'id': forum.id_forum}) }}" class="service-link">
+                    Participer <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            {% else %}
+            <div class="service-card" style="text-align: center;">
+                <div class="service-icon" style="margin: 0 auto 20px;">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3 class="service-name">Bientôt disponible</h3>
+                <p class="service-desc">De nouveaux forums seront bientôt ouverts. Revenez nous voir !</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Derniers Posts Section -->
+<div class="features-section" style="background: var(--beige-cream);">
+    <div class="container-custom">
+        <div class="section-eyebrow">
+            Actualités des forums
+        </div>
+        <h2 class="section-title-new">
+            Derniers <em>échanges</em>
+        </h2>
+        
+        <div class="events-grid" style="margin-top: 40px;">
+            {% for post in posts|slice(0, 6) %}
+            <div class="event-card" style="border-radius: 12px;">
+                <div class="event-body">
+                    <div class="event-meta">
+                        <span><i class="far fa-calendar-alt"></i> {{ post.date_creation ? post.date_creation|date('d/m/Y') : 'Date inconnue' }}</span>
+                        <span><i class="far fa-folder"></i> 
+                            {% set forumName = '' %}
+                            {% for forum in forums %}
+                                {% if forum.id_forum == post.forum_id %}
+                                    {% set forumName = forum.nom_forum %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if forumName %}
+                                {{ forumName }}
+                            else
+                                Forum #{{ post.forum_id }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <a href="#" class="event-name">{{ post.titre|slice(0, 60) }}</a>
+                    <p class="event-desc">{{ post.contenu|striptags|slice(0, 100) }}...</p>
+                    <div style="margin-top: 20px; display: flex; gap: 15px; font-size: 0.75rem; color: var(--green-mid);">
+                        <span><i class="fas fa-heart"></i> {{ post.like_count|default(0) }}</span>
+                        <span><i class="fas fa-comment"></i> 
+                            {% set nbComments = 0 %}
+                            {% for commentaire in commentaires %}
+                                {% if commentaire.id_post == post.id_post %}
+                                    {% set nbComments = nbComments + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ nbComments }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="event-card" style="text-align: center; padding: 40px;">
+                <i class="fas fa-comments" style="font-size: 48px; color: var(--green-pale);"></i>
+                <p style="margin-top: 20px;">Aucun post pour le moment. Soyez le premier à partager !</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Ressources Section -->
+<div id="resources" class="donations-section" style="background: var(--beige-white);">
+    <div class="container-custom">
+        <div class="section-eyebrow">
+            Ressources
+        </div>
+        <h2 class="section-title-new">
+            Articles & <em>Bien-être</em>
+        </h2>
+        <p style="margin-bottom: 50px;">Des ressources pour vous accompagner dans votre cheminement personnel</p>
+        
+        <div class="donation-cards" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="donation-card">
+                <div class="donation-category">Article</div>
+                <h3 class="donation-title">Gérer son stress étudiant</h3>
+                <p class="donation-desc">Des techniques simples et efficaces pour réduire l'anxiété pendant les examens.</p>
+                <a href="#" class="donate-btn" style="background: var(--green-sage);">Lire l'article</a>
+            </div>
+            <div class="donation-card">
+                <div class="donation-category">Guide</div>
+                <h3 class="donation-title">La pleine conscience</h3>
+                <p class="donation-desc">Introduction à la méditation et aux exercices de respiration.</p>
+                <a href="#" class="donate-btn" style="background: var(--green-sage);">Télécharger</a>
+            </div>
+            <div class="donation-card">
+                <div class="donation-category">Podcast</div>
+                <h3 class="donation-title">Parler pour guérir</h3>
+                <p class="donation-desc">Témoignages et conseils de psychologues sur l'importance de la parole.</p>
+                <a href="#" class="donate-btn" style="background: var(--green-sage);">Écouter</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Citation / Vidéo Banner -->
+<div class="video-banner">
+    <div class="video-inner">
+        <button class="play-btn" onclick="showMotivation()">
+            <i class="fas fa-play"></i>
+        </button>
+        <div class="video-quote">
+            " La santé mentale n'est pas une destination, mais un processus. 
+            C'est la façon dont vous conduisez, pas où vous allez. "
+        </div>
+    </div>
+</div>
+
+<!-- Témoignages -->
+<div class="testimonials-section" style="background: var(--beige-cream);">
+    <div class="container-custom">
+        <div class="section-eyebrow">
+            Témoignages
+        </div>
+        <h2 class="section-title-new">
+            Ce que notre <em>communauté</em> dit
+        </h2>
+        
+        <div class="testimonial-cards">
+            <div class="testimonial-card">
+                <span class="quote-mark">"</span>
+                <p class="testimonial-text">Grâce à ce forum, j'ai trouvé du soutien dans des moments difficiles. Merci à toute l'équipe !</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-author">
+                    <div>
+                        <div class="author-name">Sarah M.</div>
+                        <div class="author-title">Étudiante</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <span class="quote-mark">"</span>
+                <p class="testimonial-text">Un espace bienveillant où l'on se sent écouté sans jugement. Je recommande vivement !</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-author">
+                    <div>
+                        <div class="author-name">Ahmed K.</div>
+                        <div class="author-title">Enseignant</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <span class="quote-mark">"</span>
+                <p class="testimonial-text">Les ressources partagées m'ont énormément aidé à mieux comprendre mes émotions.</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-author">
+                    <div>
+                        <div class="author-name">Leila B.</div>
+                        <div class="author-title">Psychologue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter -->
+<div class="newsletter-section">
+    <div class="container-custom">
+        <h2>Restez <em>connecté(e)</em></h2>
+        <p>Recevez nos conseils bien-être et nos actualités chaque semaine</p>
+        <form class="newsletter-form" method="POST">
+            <input type="email" class="newsletter-input" placeholder="Votre adresse email" required>
+            <button type="submit" class="newsletter-btn">S'abonner</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showMotivation() {
+        alert("💚 Prenez soin de vous. Chaque jour est une nouvelle opportunité de grandir. 💚");
+    }
+</script>
+
+<style>
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+    .event-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .progress-fill {
+        transition: width 1s ease-in-out;
+    }
+</style>
+{% endblock %}

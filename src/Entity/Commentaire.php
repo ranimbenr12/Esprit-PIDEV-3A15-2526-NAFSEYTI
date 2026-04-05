@@ -3,9 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 use App\Repository\CommentaireRepository;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
@@ -13,7 +10,7 @@ use App\Repository\CommentaireRepository;
 class Commentaire
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column(type: 'integer')]
     private ?int $id_commentaire = null;
 
@@ -69,5 +66,4 @@ class Commentaire
         $this->id_post = $id_post;
         return $this;
     }
-
 }
