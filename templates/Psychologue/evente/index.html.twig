@@ -1,0 +1,1696 @@
+﻿{# templates/Psychologue/evente/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Événements & Ateliers - NAFSEYTI{% endblock %}
+
+{% block navbar %}
+<div class="navbar-wrap">
+    <div class="navbar-inner">
+        <ul class="nav-links">
+            <li><a href="{{ path('psycho_dashboard') }}">Accueil</a></li>
+            <li><a href="#">Contenu Psychologique</a></li>
+            <li><a href="#">Tests</a></li>
+            <li><a href="#">Rendez-vous</a></li>
+            <li><a href="{{ path('psycho_events_index') }}" class="active">Evenements</a></li>
+            <li><a href="#">Suivi Personnel</a></li>
+        </ul>
+        <a href="#!" class="nav-cta nav-links a">Se connecter</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+
+<style>
+    :root {
+        --primary-green: #285921;
+        --primary-green-light: #3d7e33;
+        --secondary-beige: #c9b99b;
+        --background-light: #f8f5f2;
+        --text-dark: #5a6c5a;
+        --text-light: #69685c;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);
+        font-family: 'Segoe UI', 'Georgia', serif;
+        min-height: 100vh;
+    }
+
+    /* Page Container */
+    .events-page {
+        min-height: 100vh;
+        padding: 30px;
+    }
+
+    /* Psychology-themed Header */
+    .psychology-header {
+        background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(245,241,237,0.98));
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(40, 89, 33, 0.1);
+        border: 1px solid rgba(40, 89, 33, 0.2);
+    }
+
+    .header-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary-green);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        box-shadow: 0 4px 12px rgba(40, 89, 33, 0.3);
+    }
+
+    /* Search and Filter Bar */
+    .search-sort-bar {
+        background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(245,241,237,0.95));
+        border-radius: 20px;
+        padding: 18px;
+        border: 1.5px solid rgba(40, 89, 33, 0.25);
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(40, 89, 33, 0.1);
+    }
+
+    .search-input {
+        background: white;
+        border: 2px solid rgba(40, 89, 33, 0.3);
+        border-radius: 15px;
+        padding: 14px 18px;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(40, 89, 33, 0.1);
+        outline: none;
+    }
+
+    .filter-btn {
+        padding: 14px 22px;
+        border-radius: 15px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .filter-btn-primary {
+        background: #7ec8a3;
+        color: #000;
+        box-shadow: 0 3px 8px rgba(126, 200, 163, 0.4);
+        transition: all 0.2s ease;
+    }
+
+    .filter-btn-primary:hover {
+        background: #5fb88b;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(126, 200, 163, 0.6);
+    }
+
+    .filter-btn-primary:active {
+        transform: translateY(0);
+    }
+
+    /* Sort dropdown menu styling */
+    #sortMenu .sort-item {
+        transition: background 0.15s ease;
+        color: #000;
+    }
+
+    #sortMenu .sort-item.active-sort {
+        background: #7ec8a3 !important;
+        color: #000;
+        font-weight: bold;
+    }
+
+    .filter-btn-secondary {
+        background: var(--secondary-beige);
+        color: #000;
+    }
+
+    .filter-btn-secondary:hover {
+        background: #b8a888;
+        transform: translateY(-2px);
+    }
+
+    .event-count-badge {
+        background: rgba(40, 89, 33, 0.1);
+        border-radius: 25px;
+        padding: 10px 18px;
+        font-weight: bold;
+        border: 1.5px solid rgba(40, 89, 33, 0.3);
+        color: var(--primary-green);
+    }
+
+    /* Event Card */
+    .event-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(245,241,237,0.98));
+        border-radius: 22px;
+        border: 1.5px solid rgba(40, 89, 33, 0.2);
+        transition: all 0.3s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+    .event-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(40, 89, 33, 0.4);
+        box-shadow: 0 12px 24px rgba(40, 89, 33, 0.15);
+    }
+
+    /* Calendar Box */
+    .calendar-box {
+        background: linear-gradient(135deg, #ffffff, #f5f1ed);
+        border: 2px solid rgba(40, 89, 33, 0.35);
+        border-radius: 15px;
+        width: 90px;
+        text-align: center;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(40, 89, 33, 0.1);
+    }
+
+    .calendar-month {
+        background: #2e6a28;
+        color: white;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 6px 0;
+        text-transform: uppercase;
+    }
+
+    .calendar-day {
+        font-size: 34px;
+        font-weight: bold;
+        color: var(--primary-green);
+        padding: 10px 0;
+    }
+
+    /* Badges */
+    .badge-new {
+        background: #7ec8a3;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    .badge-activities {
+        background: var(--secondary-beige);
+        color: white;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 5px 12px;
+        border-radius: 15px;
+    }
+
+    /* Planification Card */
+    .plan-card {
+        background: linear-gradient(90deg, rgba(168, 230, 207, 0.12), rgba(245, 241, 237, 0.2));
+        padding: 14px 18px;
+        border-radius: 15px;
+        border: 1.5px solid rgba(40, 89, 33, 0.2);
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .plan-card:hover {
+        background: rgba(168, 230, 207, 0.2);
+        transform: translateX(4px);
+    }
+
+    .plan-number {
+        width: 34px;
+        height: 34px;
+        background: #2e6a28;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    /* Buttons */
+    .btn-participate {
+        background: var(--primary-green);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        border: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-participate:hover:not(:disabled) {
+        background: var(--primary-green-light);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 89, 33, 0.4);
+    }
+
+    .btn-participate:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .btn-participate-full {
+        background: #b22222;
+    }
+
+    .btn-participate-registered {
+        background: #4CAF50;
+    }
+
+    .btn-admin {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: bold;
+        color: white;
+        border: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: #2196F3;
+    }
+
+    .btn-edit:hover {
+        background: #1976D2;
+    }
+
+    .btn-delete {
+        background: #f44336;
+    }
+
+    .btn-delete:hover {
+        background: #d32f2f;
+    }
+
+    .btn-favorite {
+        background: transparent;
+        border: none;
+        font-size: 26px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 5px;
+    }
+
+    .btn-favorite:hover {
+        transform: scale(1.1);
+    }
+
+    /* Empty State */
+    .empty-state {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(245,241,237,0.95));
+        border-radius: 25px;
+        border: 2px solid rgba(40, 89, 33, 0.25);
+        padding: 70px;
+        text-align: center;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .event-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+</style>
+
+<div class="events-page">
+    <div class="container-fluid">
+        
+        <!-- Header -->
+        <div class="psychology-header">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="header-icon">Ψ</div>
+                    <div>
+                        <h1 class="display-5 fw-bold" style="color: var(--primary-green);">Événements & Planifications</h1>
+                        <p class="text-muted fst-italic">🌱 Cultivez votre bien-être mental et épanouissement personnel</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary" style="background: #4A90E2; border-radius: 20px;" data-bs-toggle="modal" data-bs-target="#aiAssistantModal">
+                        🤖 Assistant IA
+                    </button>
+                    <div class="position-relative">
+                        <button type="button" class="btn btn-link position-relative" id="notificationBell" style="font-size: 24px; text-decoration: none;" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                            🔔
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationBadge" style="display: none;">0</span>
+                        </button>
+                    </div>
+                    <button type="button" class="btn" style="background: #4CAF50; color: white; border-radius: 12px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                        ➕ Ajouter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="search-sort-bar">
+            <div class="row align-items-center g-3">
+                <div class="col-md-5">
+                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Recherchez votre atelier de bien-être...">
+                </div>
+                <div class="col-md-auto">
+                    <div class="custom-sort-wrap" style="position:relative;">
+                        <button id="sortBtn" class="filter-btn filter-btn-primary" type="button">
+                            ✨ Trier par ▾
+                        </button>
+                        <div id="sortMenu" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:9999;background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);padding:6px;min-width:210px;">
+                            <div class="sort-item active-sort" data-sort="date"       style="padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13px;">📅 Par Date (Récent)</div>
+                            <div class="sort-item"            data-sort="title"      style="padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13px;">📚 Par Titre (A → Z)</div>
+                            <div class="sort-item"            data-sort="activities" style="padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13px;">🎯 Par Activités</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto">
+                    <button id="favoritesBtn" class="filter-btn filter-btn-secondary">💛 Mes Favoris</button>
+                </div>
+                <div class="col-md-auto ms-auto">
+                    <span class="event-count-badge" id="eventCount">🎯 {{ totalCount }} événement{{ totalCount > 1 ? 's' : '' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Container -->
+        <div id="eventsContainer">
+            {% if events is empty %}
+                <div class="empty-state">
+                    <div style="font-size: 72px;">🌸</div>
+                    <h3 class="mt-3" style="color: #285921;">Aucun événement trouvé</h3>
+                    <p class="text-muted">🌱 Commencez par créer votre premier événement</p>
+                </div>
+            {% else %}
+                {% for event in events %}
+                    <div class="event-card" data-event-id="{{ event.id }}"
+                         data-title="{{ event.title|lower }}"
+                         data-date="{{ event.eventDate ? event.eventDate|date('Y-m-d') : '0000-00-00' }}"
+                         data-activities="{{ event.planifications|length }}">
+                        <div class="row g-0">
+                            {% if event.eventDate %}
+                                <div class="col-auto p-3">
+                                    <div class="calendar-box">
+                                        <div class="calendar-month">{{ event.eventDate|date('M')|upper }}</div>
+                                        <div class="calendar-day">{{ event.eventDate|date('d') }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="col">
+                                <div class="p-4">
+                                    <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <h3 class="h4 mb-0" style="color: #285921; font-weight: bold;">{{ event.title }}</h3>
+                                            {% if event.isNew %}
+                                                <span class="badge-new">NOUVEAU</span>
+                                            {% endif %}
+                                            {% if event.planifications is not empty %}
+                                                <span class="badge-activities">🎯 {{ event.planifications|length }} activité{{ event.planifications|length > 1 ? 's' : '' }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            {% if event.currentParticipants >= event.maxParticipants %}
+                                                <button class="btn-participate btn-participate-full" disabled>Complet</button>
+                                            {% else %}
+                                                <button class="btn-participate" onclick="processParticipation({{ event.id }}, this)">🎯 S'inscrire</button>
+                                            {% endif %}
+                                            <button class="btn-admin btn-edit" onclick="openEditModal({{ event.id }})">✏️ Modifier</button>
+                                            <button class="btn-admin btn-delete" onclick="deleteEvent({{ event.id }})">🗑️ Supprimer</button>
+                                            <button class="btn-admin" onclick="openQrModal({{ event.id }})" style="background:#285921;">📍 QR Code</button>
+                                            <button class="btn-favorite" onclick="toggleFavorite({{ event.id }})" id="favoriteBtn-{{ event.id }}">🤍</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {% if event.location %}
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span>📍</span>
+                                                <span style="font-size: 14px; font-weight: 600; color: #5a6c7d;">{{ event.location }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if event.createdAt %}
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span>🕐</span>
+                                                <span style="font-size: 12px; color: #95a5a6; font-style: italic;">Créé le {{ event.createdAt|date('d/m/Y H:i') }}</span>
+                                            </div>
+                                        {% endif %}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span>👥</span>
+                                            {% set ratio = event.currentParticipants / event.maxParticipants %}
+                                            <span class="{% if ratio >= 1 %}text-danger{% elseif ratio >= 0.8 %}text-warning{% else %}text-success{% endif %} fw-bold">
+                                                {{ event.currentParticipants }} / {{ event.maxParticipants }} participants
+                                            </span>
+                                        </div>
+                                        <div class="progress mt-2" style="height: 8px;">
+                                            <div class="progress-bar" style="background: #285921; width: {{ (event.currentParticipants / event.maxParticipants) * 100 }}%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    {% if event.planifications is not empty %}
+                                        <hr class="my-3" style="background: linear-gradient(90deg, transparent, rgba(40, 89, 33, 0.25), transparent); height: 2px;">
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <span style="font-size: 16px;">🌱</span>
+                                            <span style="font-size: 16px; font-weight: bold; color: #285921;">Programme de l'atelier</span>
+                                        </div>
+                                        {% for plan in event.planifications %}
+                                            <div class="plan-card d-flex align-items-center gap-3">
+                                                <div class="plan-number">{{ loop.index }}</div>
+                                                <div class="flex-grow-1">
+                                                    <div style="font-size: 13px; color: #5a6c5a; font-weight: 600;">{{ plan.description }}</div>
+                                                    <div class="d-flex align-items-center gap-1 mt-1">
+                                                        <span>⏰</span>
+                                                        <span style="font-size: 12px; color: #7a8c7a; font-weight: 700;">{{ plan.duree }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if event.link %}
+                                <div class="col-auto p-3">
+                                    <img src="{{ event.link }}" alt="{{ event.title }}" style="width: 190px; height: 190px; object-fit: cover; border-radius: 22px; box-shadow: 0 4px 12px rgba(40, 89, 33, 0.2);" onerror="this.style.display='none'">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Create Event Modal -->
+<div class="modal fade" id="createEventModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius: 20px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #285921, #3d7e33); color: white; border-radius: 20px 20px 0 0;">
+                <h5 class="modal-title">➕ Créer un nouvel atelier</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background: #F5F1E6;">
+
+                <style>
+                    .cf-label { font-weight: bold; color: #5c715a; }
+                    .cf-input {
+                        width: 100%; padding: 10px; border-radius: 5px;
+                        border: 1px solid #d2e0cf; transition: all 0.3s ease;
+                        background: white;
+                    }
+                    .cf-input:focus { border-color: #285921; outline: none; box-shadow: 0 0 0 3px rgba(40,89,33,0.1); }
+                    .cf-input.cf-valid   { border: 2px solid green; }
+                    .cf-input.cf-invalid { border: 2px solid red; }
+                    .cf-input.cf-warning { border: 2px solid orange; }
+                    .cf-input.cf-suggestion { border: 2px solid #4CAF50; background: #f0f7f0; }
+                    .cf-btn-correct {
+                        background: #2196F3; color: white; font-weight: bold;
+                        padding: 9px 12px; border-radius: 5px; font-size: 12px;
+                        border: none; cursor: pointer; white-space: nowrap; width: 100%;
+                        transition: all 0.3s;
+                    }
+                    .cf-btn-correct:hover:not(:disabled) { background: #1976D2; }
+                    .cf-btn-correct:disabled { opacity: 0.5; cursor: not-allowed; }
+                    .cf-spinner {
+                        width: 22px; height: 22px; border: 3px solid #eee;
+                        border-top: 3px solid #285921; border-radius: 50%;
+                        animation: cf-spin 1s linear infinite; display: inline-block;
+                    }
+                    @keyframes cf-spin { to { transform: rotate(360deg); } }
+                    .cf-plan-section { background: #fcfaf7; padding: 15px; border-radius: 10px; border: 1px solid #d2e0cf; }
+                </style>
+
+                <!-- Title -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="cf-label">Titre *</label></div>
+                    <div class="col-md-7"><input type="text" id="cf-title" class="cf-input" placeholder="Ex: Atelier sur l'égoïsme"></div>
+                    <div class="col-md-2"><button type="button" id="cf-btnCorrectTitle" class="cf-btn-correct" disabled>🔍 Corriger</button></div>
+                </div>
+
+                <!-- Loading + Generate -->
+                <div class="row mb-3">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9 d-flex align-items-center gap-2">
+                        <div id="cf-loading" class="cf-spinner" style="display:none!important;"></div>
+                        <button type="button" id="cf-btnGenerate" class="btn w-100" style="background:#7f9a7d;color:white;font-weight:bold;border-radius:5px;">✨ Générer la planification</button>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="cf-label">Lieu *</label></div>
+                    <div class="col-md-9"><input type="text" id="cf-location" class="cf-input" placeholder="Ex: Salle de méditation, Paris"></div>
+                </div>
+
+                <!-- Date + Max participants -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="cf-label">Date *</label></div>
+                    <div class="col-md-3"><input type="date" id="cf-date" class="cf-input"></div>
+                    <div class="col-md-3"><label class="cf-label">Participants max *</label></div>
+                    <div class="col-md-3"><input type="number" id="cf-maxPart" class="cf-input" value="30" placeholder="Ex: 20"></div>
+                </div>
+
+                <!-- Image URL -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="cf-label">Image URL</label></div>
+                    <div class="col-md-9"><input type="text" id="cf-link" class="cf-input" placeholder="URL de l'image"></div>
+                </div>
+
+                <!-- Planification section -->
+                <div class="cf-plan-section mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <label style="font-size:15px;font-weight:bold;color:#5c715a;">� Planification de l'atelier</label>
+                        <span id="cf-suggestionLabel" style="display:none;color:#4CAF50;font-style:italic;font-weight:bold;">(Suggestion IA)</span>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-md-3"><label class="cf-label">Description</label></div>
+                        <div class="col-md-7"><input type="text" id="cf-planDesc" class="cf-input" placeholder="Ex: Séance de méditation guidée"></div>
+                        <div class="col-md-2"><button type="button" id="cf-btnCorrectDesc" class="cf-btn-correct" disabled>🔍 Corriger</button></div>
+                    </div>
+
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-md-3"><label class="cf-label">Durée</label></div>
+                        <div class="col-md-9"><input type="text" id="cf-planDuree" class="cf-input" placeholder="Ex: 2 heures"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-2">
+                        <button type="button" id="cf-btnAccept" class="btn btn-success btn-sm" style="display:none;">✓ Accepter la suggestion</button>
+                        <button type="button" id="cf-btnReject" class="btn btn-danger btn-sm" style="display:none;">✗ Rejeter</button>
+                    </div>
+                </div>
+
+                <!-- Error summary -->
+                <div id="cf-errorBox" class="alert alert-danger" style="display:none;border-radius:10px;"></div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-3 justify-content-center mt-3">
+                    <button type="button" id="cf-btnSave" class="btn" style="background:#7f9a7d;color:white;font-weight:bold;padding:12px 30px;border-radius:8px;">💾 Sauvegarder</button>
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background:#b7c9b5;color:white;font-weight:bold;padding:12px 30px;border-radius:8px;">✖ Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Correction Dialog (shared) -->
+<div id="cf-correctionDialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;justify-content:center;align-items:center;">
+    <div style="background:white;border-radius:15px;padding:25px;max-width:480px;width:90%;">
+        <h5 class="mb-3">Proposition de correction</h5>
+        <div class="mb-3">
+            <label class="fw-bold">📝 Texte original :</label>
+            <div id="cf-origText" class="p-2 mt-1" style="background:#fff0f0;border-radius:8px;"></div>
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold">✅ Texte corrigé :</label>
+            <div id="cf-corrText" class="p-2 mt-1" style="background:#f0fff0;border-radius:8px;color:#4CAF50;font-weight:bold;"></div>
+        </div>
+        <div class="d-flex gap-3 justify-content-end">
+            <button id="cf-acceptCorr" class="btn btn-success">✓ Accepter</button>
+            <button id="cf-rejectCorr" class="btn btn-secondary">✗ Garder l'original</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Event Modal -->
+<div class="modal fade" id="editEventModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius: 20px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; border-radius: 20px 20px 0 0;">
+                <h5 class="modal-title">✏️ Modifier l'événement</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background: #F5F1E6;">
+
+                <style>
+                    .ef-label { font-weight: bold; color: #5c715a; }
+                    .ef-input {
+                        width: 100%; padding: 10px; border-radius: 5px;
+                        border: 1px solid #d2e0cf; transition: all 0.3s ease; background: white;
+                    }
+                    .ef-input:focus { border-color: #285921; outline: none; box-shadow: 0 0 0 3px rgba(40,89,33,0.1); }
+                    .ef-input.ef-valid   { border: 2px solid green; }
+                    .ef-input.ef-invalid { border: 2px solid red; }
+                    .ef-input.ef-warning { border: 2px solid orange; }
+                    .ef-plan-section { background: #fcfaf7; padding: 15px; border-radius: 10px; border: 1px solid #d2e0cf; }
+                </style>
+
+                <input type="hidden" id="ef-id">
+                <input type="hidden" id="ef-planId">
+
+                <!-- Title -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="ef-label">Titre *</label></div>
+                    <div class="col-md-9"><input type="text" id="ef-title" class="ef-input" placeholder="Ex: Atelier sur l'égoïsme"></div>
+                </div>
+
+                <!-- Location -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="ef-label">Lieu *</label></div>
+                    <div class="col-md-9"><input type="text" id="ef-location" class="ef-input" placeholder="Ex: Salle de méditation"></div>
+                </div>
+
+                <!-- Date + Max -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="ef-label">Date *</label></div>
+                    <div class="col-md-3"><input type="date" id="ef-date" class="ef-input"></div>
+                    <div class="col-md-3"><label class="ef-label">Participants max *</label></div>
+                    <div class="col-md-3"><input type="number" id="ef-maxPart" class="ef-input" placeholder="Ex: 20"></div>
+                </div>
+
+                <!-- Image URL -->
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="ef-label">Image URL</label></div>
+                    <div class="col-md-9"><input type="text" id="ef-link" class="ef-input" placeholder="URL de l'image"></div>
+                </div>
+
+                <!-- Planification -->
+                <div class="ef-plan-section mb-3">
+                    <label style="font-size:15px;font-weight:bold;color:#5c715a;" class="mb-3 d-block">📋 Planification</label>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-md-3"><label class="ef-label">Description</label></div>
+                        <div class="col-md-9"><input type="text" id="ef-planDesc" class="ef-input" placeholder="Ex: Séance de méditation guidée"></div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-md-3"><label class="ef-label">Durée</label></div>
+                        <div class="col-md-9"><input type="text" id="ef-planDuree" class="ef-input" placeholder="Ex: 2 heures"></div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0" style="font-size:12px;">💡 Laissez les deux champs vides pour supprimer la planification.</p>
+                </div>
+
+                <!-- Error box -->
+                <div id="ef-errorBox" class="alert alert-danger" style="display:none;border-radius:10px;"></div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-3 justify-content-center mt-3">
+                    <button type="button" id="ef-btnSave" class="btn" style="background:#2196F3;color:white;font-weight:bold;padding:12px 30px;border-radius:8px;">💾 Mettre à jour</button>
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background:#b22222;color:white;font-weight:bold;padding:12px 30px;border-radius:8px;">✖ Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Assistant Modal -->
+<div class="modal fade" id="aiAssistantModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 20px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #4A90E2, #357ABD); color: white; border-radius: 20px 20px 0 0;">
+                <h5 class="modal-title">🤖 Assistant Événementiel</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="chatMessages" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                    <div class="text-muted text-center">Posez-moi une question sur les événements !</div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="chatInput" class="form-control" placeholder="Votre question..." style="border-radius: 10px 0 0 10px;">
+                    <button class="btn" id="sendChatBtn" style="background: #4A90E2; color: white; border-radius: 0 10px 10px 0;">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications Modal -->
+<div class="modal fade" id="notificationsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius:20px;overflow:hidden;">
+            <div class="modal-header" style="background:linear-gradient(135deg,#285921,#3d7e33);color:white;border:none;">
+                <div class="d-flex align-items-center gap-3">
+                    <span style="font-size:22px;">🔔</span>
+                    <div>
+                        <h5 class="modal-title mb-0">Notifications de participations</h5>
+                        <small style="opacity:.8;">Nouvelles inscriptions à vos événements</small>
+                    </div>
+                    <span id="nm-unreadBadge" class="badge rounded-pill" style="background:#4CAF50;font-size:13px;padding:5px 12px;">0</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" style="background:#f9f7f4;">
+
+                <!-- Toolbar -->
+                <div class="d-flex align-items-center gap-2 p-3 border-bottom" style="background:white;">
+                    <div style="display:flex;align-items:center;background:#f5f5f5;border-radius:20px;padding:6px 14px;flex:1;">
+                        <span style="color:#8b9a8b;margin-right:6px;">🔍</span>
+                        <input type="text" id="nm-search" placeholder="Rechercher..." style="border:none;outline:none;background:transparent;font-size:13px;width:100%;">
+                    </div>
+                    <button id="nm-markAll" class="btn btn-sm" style="background:#374535;color:white;border-radius:20px;font-size:12px;white-space:nowrap;">✅ Tout marquer lu</button>
+                    <button id="nm-refresh" class="btn btn-sm" style="background:#4CAF50;color:white;border-radius:20px;font-size:12px;">🔄</button>
+                </div>
+
+                <!-- Table -->
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;background:white;">
+                        <thead>
+                            <tr style="background:#f0ede5;">
+                                <th style="padding:10px 15px;text-align:left;font-size:12px;font-weight:bold;color:#285921;border-bottom:2px solid #e0d9cc;">Message</th>
+                                <th style="padding:10px 15px;text-align:left;font-size:12px;font-weight:bold;color:#285921;border-bottom:2px solid #e0d9cc;width:130px;">Date</th>
+                                <th style="padding:10px 15px;text-align:left;font-size:12px;font-weight:bold;color:#285921;border-bottom:2px solid #e0d9cc;width:100px;">Statut</th>
+                                <th style="padding:10px 15px;text-align:left;font-size:12px;font-weight:bold;color:#285921;border-bottom:2px solid #e0d9cc;width:120px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nm-tbody">
+                            <tr><td colspan="4" style="text-align:center;padding:30px;color:#8b9a8b;">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Detail Modal -->
+<div class="modal fade" id="nm-detailModal" tabindex="-1" style="z-index:10060;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:500px;">
+        <div class="modal-content" style="border-radius:15px;overflow:hidden;border:1px solid #d4c9b8;">
+            <div id="nm-detailBody" style="background:#f9f7f4;">
+                <div style="text-align:center;padding:40px;color:#8b9a8b;">Chargement...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header" style="background: #f44336; color: white; border: none;">
+                <h5 class="modal-title">🗑️ Confirmer la suppression</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div style="font-size: 48px; margin-bottom: 12px;">⚠️</div>
+                <p style="font-size: 15px; color: #333;">Êtes-vous sûr de vouloir supprimer cet événement ?</p>
+                <p class="text-muted" style="font-size: 13px;">Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer justify-content-center border-0 pb-4">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="background: #e0e0e0; color: #333; border-radius: 10px; padding: 10px 28px; font-weight: bold;">Annuler</button>
+                <button type="button" id="confirmDeleteBtn" class="btn" style="background: #f44336; color: white; border-radius: 10px; padding: 10px 28px; font-weight: bold;">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal fade" id="qrCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #285921, #3d7e33); color: white; border: none;">
+                <h5 class="modal-title">📍 QR Code — Localisation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div id="qrLoading" style="font-size: 14px; color: #888; margin-bottom: 12px;">⏳ Génération du QR code...</div>
+                <div id="qrContent" style="display:none;">
+                    <h6 id="qrTitle" style="color:#285921; font-weight:bold; margin-bottom:4px;"></h6>
+                    <p id="qrLocation" style="font-size:13px; color:#69685c; margin-bottom:16px;"></p>
+                    <img id="qrImage" src="" alt="QR Code" style="width:220px; height:220px; border-radius:12px; border:2px solid #e0d9cc;">
+                    <div class="mt-3">
+                        <a id="qrMapsLink" href="#" target="_blank" class="btn btn-sm" style="background:#285921; color:white; border-radius:20px; padding:8px 20px; text-decoration:none; font-size:13px;">
+                            🗺️ Ouvrir dans Google Maps
+                        </a>
+                    </div>
+                </div>
+                <div id="qrError" style="display:none; color:#f44336; font-size:13px;">❌ Impossible de charger le QR code.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let likedEventIds = new Set();
+    let currentUserId = {{ app.user ? app.user.id : 0 }};
+
+    // ==================== NOTIFICATIONS MODAL ====================
+
+    let nmAllNotifs = [];
+    let nmLastUnread = 0;
+    let nmSound = null;
+
+    // Create notification sound using Web Audio API
+    function nmPlaySound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.setValueAtTime(660, ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.4);
+        } catch(e) {}
+    }
+
+    function nmUpdateBadge(unread) {
+        const badge = document.getElementById('notificationBadge');
+        if (unread > 0) {
+            badge.textContent = unread;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+        const modalBadge = document.getElementById('nm-unreadBadge');
+        if (modalBadge) modalBadge.textContent = unread + ' non lu' + (unread !== 1 ? 's' : '');
+    }
+
+    function nmLoad(silent) {
+        fetch('{{ path('psycho_notifications_list') }}')
+            .then(r => r.json())
+            .then(data => {
+                const unread = data.unread || 0;
+                // Play sound if new notifications arrived
+                if (!silent && unread > nmLastUnread) nmPlaySound();
+                nmLastUnread = unread;
+                nmAllNotifs  = data.notifications || [];
+                nmUpdateBadge(unread);
+                nmRender(nmAllNotifs);
+            }).catch(() => {});
+    }
+
+    function nmRender(rows) {
+        const search   = (document.getElementById('nm-search')?.value || '').toLowerCase();
+        const tbody    = document.getElementById('nm-tbody');
+        if (!tbody) return;
+        const filtered = rows.filter(n => !search || n.message.toLowerCase().includes(search));
+
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:#8b9a8b;">Aucune notification</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(n => {
+            const isUnread = !parseInt(n.is_read);
+            const d        = new Date(n.created_at);
+            const dateStr  = d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'});
+            const timeStr  = d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+            const status   = isUnread
+                ? '<span style="color:#285921;font-weight:bold;font-size:11px;">🆕 Non lu</span>'
+                : '<span style="color:#aaa;font-size:11px;">✅ Lu</span>';
+            return `<tr style="border-bottom:1px solid #f5f0ea;background:${isUnread ? '#f0fff4' : 'white'};">
+                <td style="padding:10px 15px;font-size:12px;font-weight:${isUnread ? 'bold' : 'normal'};color:#2c3e50;">${nmEsc(n.message)}</td>
+                <td style="padding:10px 15px;font-size:11px;color:#8b9a8b;white-space:nowrap;">${dateStr}<br>${timeStr}</td>
+                <td style="padding:10px 15px;">${status}</td>
+                <td style="padding:10px 15px;">
+                    <button class="nm-detail-btn" data-id="${n.id}" style="background:#374535;border:none;color:white;font-size:11px;font-weight:bold;padding:5px 12px;border-radius:8px;cursor:pointer;">👤 Voir détails</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    document.getElementById('nm-search')?.addEventListener('input', () => nmRender(nmAllNotifs));
+    document.getElementById('nm-refresh')?.addEventListener('click', () => nmLoad(false));
+    document.getElementById('nm-markAll')?.addEventListener('click', () => {
+        fetch('{{ path('psycho_notifications_mark_all') }}', {method:'POST'})
+            .then(() => nmLoad(true))
+            .catch(() => {});
+    });
+
+    // Detail view
+    document.getElementById('nm-tbody')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.nm-detail-btn');
+        if (!btn) return;
+        const id = btn.dataset.id;
+
+        document.getElementById('nm-detailBody').innerHTML = '<div style="text-align:center;padding:40px;color:#8b9a8b;">⏳ Chargement...</div>';
+        new bootstrap.Modal(document.getElementById('nm-detailModal')).show();
+
+        fetch(`/psycho/notifications/${id}/detail`)
+            .then(r => r.json())
+            .then(d => {
+                if (d.error) {
+                    document.getElementById('nm-detailBody').innerHTML = '<div style="padding:30px;text-align:center;color:red;">Introuvable.</div>';
+                    return;
+                }
+
+                const pDate    = new Date(d.participation_date);
+                const dateStr  = pDate.toLocaleDateString('fr-FR', {day:'2-digit', month:'long', year:'numeric'});
+                const timeStr  = pDate.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+                const eDate    = d.event_date ? new Date(d.event_date).toLocaleDateString('fr-FR', {day:'2-digit', month:'long', year:'numeric'}) : '—';
+                const ratio    = d.max_participants > 0 ? Math.round(d.current_participants / d.max_participants * 100) : 0;
+                const initials = (d.firstname||'?').charAt(0).toUpperCase() + (d.lastname||'?').charAt(0).toUpperCase();
+                const sColor   = d.participation_status === 'confirmed' ? '#4CAF50' : '#FF9800';
+                const sText    = d.participation_status === 'confirmed' ? 'Confirmée' : 'En attente';
+                const mailSubj = encodeURIComponent('Votre inscription - ' + (d.event_title||''));
+                const mailBody = encodeURIComponent('Bonjour ' + (d.firstname||'') + ',\n\nNous confirmons votre inscription à l\'événement : ' + (d.event_title||'') + '\n\nCordialement,\nL\'équipe NAFSEYTI');
+
+                document.getElementById('nm-detailBody').innerHTML = `
+                <div style="background:linear-gradient(to right,#285921,#3d7e33);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span style="font-size:22px;">📌</span>
+                        <div style="color:white;font-weight:bold;font-size:15px;">Détails de la participation
+                            <div style="font-size:11px;opacity:.8;">${dateStr} à ${timeStr}</div>
+                        </div>
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;">&times;</button>
+                </div>
+                <div style="padding:16px;background:#f9f7f4;">
+
+                    <!-- Participant info -->
+                    <div style="background:white;border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+                        <div style="font-size:11px;font-weight:bold;color:#285921;text-transform:uppercase;margin-bottom:10px;letter-spacing:.5px;">👤 Informations du participant</div>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <div style="width:52px;height:52px;border-radius:50%;background:#285921;border:2px solid #4CAF50;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:18px;flex-shrink:0;">${initials}</div>
+                            <div style="flex:1;">
+                                <div style="font-weight:bold;color:#285921;font-size:15px;">${nmEsc((d.firstname||'') + ' ' + (d.lastname||''))}</div>
+                                <div style="font-size:12px;color:#5a6c5a;margin-top:2px;">
+                                    <span style="background:#e8f0e8;color:#285921;font-size:10px;font-weight:bold;padding:2px 8px;border-radius:10px;">${nmEsc(d.user_role||'')}</span>
+                                </div>
+                                <div style="font-size:12px;color:#5a6c5a;margin-top:4px;">📧 ${nmEsc(d.email||'—')}</div>
+                                <div style="font-size:12px;color:#5a6c5a;">📱 ${nmEsc(d.phone_number||'Non renseigné')}</div>
+                                ${d.address ? `<div style="font-size:12px;color:#5a6c5a;">🏠 ${nmEsc(d.address)}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event info -->
+                    <div style="background:white;border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+                        <div style="font-size:11px;font-weight:bold;color:#285921;text-transform:uppercase;margin-bottom:10px;letter-spacing:.5px;">🎯 Événement</div>
+                        <div style="font-weight:bold;color:#285921;font-size:14px;margin-bottom:6px;">${nmEsc(d.event_title||'')}</div>
+                        <div style="font-size:12px;color:#5a6c5a;margin-bottom:2px;">📍 ${nmEsc(d.location||'—')}</div>
+                        <div style="font-size:12px;color:#5a6c5a;margin-bottom:8px;">📅 ${eDate}</div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="flex:1;height:8px;background:#e0e0e0;border-radius:8px;overflow:hidden;">
+                                <div style="height:100%;width:${ratio}%;background:#4CAF50;border-radius:8px;"></div>
+                            </div>
+                            <span style="font-size:11px;font-weight:bold;color:#285921;">${d.current_participants}/${d.max_participants} places</span>
+                        </div>
+                    </div>
+
+                    <!-- Participation status -->
+                    <div style="background:white;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+                        <div style="font-size:11px;font-weight:bold;color:#285921;text-transform:uppercase;margin-bottom:8px;letter-spacing:.5px;">✅ Statut de l'inscription</div>
+                        <div style="font-size:12px;color:#5a6c5a;margin-bottom:4px;">Inscrit le : ${dateStr} à ${timeStr}</div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <span style="width:10px;height:10px;border-radius:50%;background:${sColor};display:inline-block;"></span>
+                            <span style="font-size:13px;font-weight:bold;color:${sColor};">${sText}</span>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+                        <button onclick="nmSendEmail(${d.id}, this)" style="background:linear-gradient(135deg,#2196F3,#1976D2);border:none;color:white;font-weight:bold;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:13px;">📧 Envoyer confirmation</button>
+                        <a href="mailto:${nmEsc(d.email||'')}?subject=${mailSubj}&body=${mailBody}" style="background:linear-gradient(135deg,#374535,#2a3328);color:white;font-weight:bold;padding:9px 18px;border-radius:20px;text-decoration:none;font-size:13px;display:inline-flex;align-items:center;">✉️ Écrire un email</a>
+                        <button type="button" data-bs-dismiss="modal" style="background:#b7c9b5;border:none;color:white;font-weight:bold;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:13px;">← Retour</button>
+                    </div>
+                </div>`;
+
+                // Refresh list to mark as read
+                nmLoad(true);
+            })
+            .catch(() => {
+                document.getElementById('nm-detailBody').innerHTML = '<div style="padding:30px;text-align:center;color:red;">Erreur lors du chargement.</div>';
+            });
+    });
+
+    window.nmSendEmail = function(notifId, btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Envoi...';
+        fetch(`/psycho/notifications/${notifId}/send-email`, {method:'POST'})
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    btn.textContent = '✅ Email envoyé !';
+                    btn.style.background = 'linear-gradient(135deg,#4CAF50,#45a049)';
+                } else {
+                    btn.textContent = '❌ Erreur';
+                    btn.disabled = false;
+                }
+            })
+            .catch(() => { btn.textContent = '❌ Erreur réseau'; btn.disabled = false; });
+    };
+
+    function nmEsc(str) {
+        return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Load notifications when modal opens
+    document.getElementById('notificationsModal')?.addEventListener('show.bs.modal', () => nmLoad(true));
+
+    // Clear badge when modal is closed (mark all read)
+    document.getElementById('notificationsModal')?.addEventListener('hidden.bs.modal', () => {
+        fetch('{{ path('psycho_notifications_mark_all') }}', {method:'POST'})
+            .then(() => {
+                nmLastUnread = 0;
+                nmUpdateBadge(0);
+            }).catch(() => {});
+    });
+
+    // Poll every 15 seconds for new notifications
+    nmLoad(true);
+    setInterval(() => nmLoad(false), 15000);
+
+    // Load favorites from localStorage
+    const savedLikes = localStorage.getItem('likedEvents');
+    if (savedLikes) {
+        likedEventIds = new Set(JSON.parse(savedLikes));
+        // Update favorite buttons
+        likedEventIds.forEach(id => {
+            const btn = document.getElementById(`favoriteBtn-${id}`);
+            if (btn) btn.innerHTML = '💛';
+        });
+    }
+
+    function toggleFavorite(eventId) {
+        if (likedEventIds.has(eventId)) {
+            likedEventIds.delete(eventId);
+            document.getElementById(`favoriteBtn-${eventId}`).innerHTML = '🤍';
+        } else {
+            likedEventIds.add(eventId);
+            document.getElementById(`favoriteBtn-${eventId}`).innerHTML = '💛';
+        }
+        localStorage.setItem('likedEvents', JSON.stringify([...likedEventIds]));
+    }
+
+    async function processParticipation(eventId, btnElement) {
+        btnElement.disabled = true;
+        btnElement.innerHTML = '⏳ Traitement...';
+        
+        try {
+            const response = await fetch('/psycho/events/participate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ eventId: eventId })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                btnElement.innerHTML = '✅ Inscrit !';
+                btnElement.classList.add('btn-participate-registered');
+                showNotification('Inscription réussie !', 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                btnElement.innerHTML = '🎯 S\'inscrire';
+                btnElement.disabled = false;
+                showNotification(data.message || 'Erreur', 'error');
+            }
+        } catch (error) {
+            btnElement.innerHTML = '🎯 S\'inscrire';
+            btnElement.disabled = false;
+            showNotification('Erreur réseau', 'error');
+        }
+    }
+
+    let pendingDeleteId = null;
+
+    function deleteEvent(eventId) {
+        pendingDeleteId = eventId;
+        new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+        if (!pendingDeleteId) return;
+        const btn = document.getElementById('confirmDeleteBtn');
+        btn.disabled = true;
+        btn.textContent = 'Suppression...';
+
+        try {
+            const response = await fetch(`/psycho/evente/api/events/${pendingDeleteId}`, {
+                method: 'DELETE',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide();
+                showNotification('Événement supprimé', 'success');
+                setTimeout(() => location.reload(), 800);
+            } else {
+                showNotification('Erreur lors de la suppression', 'error');
+            }
+        } catch (error) {
+            showNotification('Erreur réseau', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Supprimer';
+            pendingDeleteId = null;
+        }
+    });
+
+    async function openEditModal(eventId) {
+        try {
+            // Load event data
+            const evRes   = await fetch(`/psycho/evente/api/events/${eventId}`);
+            const event   = await evRes.json();
+
+            // Load planification
+            const planRes = await fetch(`/psycho/evente/api/planifications/by-event/${eventId}`);
+            const plans   = await planRes.json();
+            const plan    = plans.length ? plans[0] : null;
+
+            // Fill hidden ids
+            document.getElementById('ef-id').value     = event.id;
+            document.getElementById('ef-planId').value = plan ? (plan.id_planification ?? '') : '';
+
+            // Fill fields
+            document.getElementById('ef-title').value    = event.title || '';
+            document.getElementById('ef-location').value = event.location || '';
+            document.getElementById('ef-date').value     = event.event_date ? event.event_date.substring(0,10) : '';
+            document.getElementById('ef-maxPart').value  = event.max_participants || '';
+            document.getElementById('ef-link').value     = event.link || '';
+            document.getElementById('ef-planDesc').value = plan ? plan.description : '';
+            document.getElementById('ef-planDuree').value= plan ? plan.duree : '';
+
+            // Reset validation states
+            ['ef-title','ef-location','ef-date','ef-maxPart','ef-planDesc','ef-planDuree'].forEach(id => {
+                document.getElementById(id).classList.remove('ef-valid','ef-invalid','ef-warning');
+            });
+            document.getElementById('ef-errorBox').style.display = 'none';
+
+            new bootstrap.Modal(document.getElementById('editEventModal')).show();
+        } catch (error) {
+            showNotification('Erreur de chargement', 'error');
+        }
+    }
+
+    // ── Edit modal validation ──────────────────────────────────────────────
+
+    function efSetState(id, state) {
+        const el = document.getElementById(id);
+        el.classList.remove('ef-valid','ef-invalid','ef-warning');
+        if (state) el.classList.add('ef-' + state);
+    }
+    function efValidateTitle() {
+        const v = document.getElementById('ef-title').value.trim();
+        if (!v)           { efSetState('ef-title','invalid'); return false; }
+        if (v.length < 3) { efSetState('ef-title','warning'); return false; }
+        efSetState('ef-title','valid'); return true;
+    }
+    function efValidateLocation() {
+        const v = document.getElementById('ef-location').value.trim();
+        if (!v || v.length < 3) { efSetState('ef-location', v ? 'warning' : 'invalid'); return false; }
+        efSetState('ef-location','valid'); return true;
+    }
+    function efValidateDate() {
+        const v = document.getElementById('ef-date').value;
+        efSetState('ef-date', v ? 'valid' : 'invalid'); return !!v;
+    }
+    function efValidateMax() {
+        const v = parseInt(document.getElementById('ef-maxPart').value);
+        const ok = !isNaN(v) && v > 0;
+        efSetState('ef-maxPart', ok ? 'valid' : 'invalid'); return ok;
+    }
+    function efValidatePlan() {
+        const desc  = document.getElementById('ef-planDesc').value.trim();
+        const duree = document.getElementById('ef-planDuree').value.trim();
+        if (!desc && !duree) { efSetState('ef-planDesc',null); efSetState('ef-planDuree',null); return true; }
+        if (desc && !duree)  { efSetState('ef-planDuree','invalid'); efSetState('ef-planDesc','valid'); return false; }
+        if (!desc && duree)  { efSetState('ef-planDesc','invalid'); efSetState('ef-planDuree','valid'); return false; }
+        if (desc.length < 4) { efSetState('ef-planDesc','warning'); return false; }
+        efSetState('ef-planDesc','valid'); efSetState('ef-planDuree','valid'); return true;
+    }
+    function efValidateAll() {
+        let ok = true;
+        if (!efValidateTitle())    ok = false;
+        if (!efValidateLocation()) ok = false;
+        if (!efValidateDate())     ok = false;
+        if (!efValidateMax())      ok = false;
+        if (!efValidatePlan())     ok = false;
+        return ok;
+    }
+
+    document.getElementById('ef-title').addEventListener('input', efValidateTitle);
+    document.getElementById('ef-location').addEventListener('input', efValidateLocation);
+    document.getElementById('ef-date').addEventListener('change', efValidateDate);
+    document.getElementById('ef-maxPart').addEventListener('input', efValidateMax);
+    document.getElementById('ef-planDesc').addEventListener('input', efValidatePlan);
+    document.getElementById('ef-planDuree').addEventListener('input', efValidatePlan);
+
+    document.getElementById('ef-btnSave').addEventListener('click', async () => {
+        const errorBox = document.getElementById('ef-errorBox');
+        errorBox.style.display = 'none';
+        if (!efValidateAll()) {
+            errorBox.textContent = 'Veuillez corriger les champs en erreur.';
+            errorBox.style.display = 'block';
+            return;
+        }
+
+        const btn = document.getElementById('ef-btnSave');
+        btn.disabled = true;
+        btn.textContent = '⏳ Mise à jour...';
+
+        const eventId  = document.getElementById('ef-id').value;
+        const planId   = document.getElementById('ef-planId').value;
+        const planDesc = document.getElementById('ef-planDesc').value.trim();
+        const planDuree= document.getElementById('ef-planDuree').value.trim();
+
+        try {
+            // Update event
+            const evRes = await fetch(`/psycho/evente/api/events/${eventId}`, {
+                method: 'PUT',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    title:           document.getElementById('ef-title').value.trim(),
+                    location:        document.getElementById('ef-location').value.trim(),
+                    event_date:      document.getElementById('ef-date').value,
+                    link:            document.getElementById('ef-link').value.trim(),
+                    max_participants: parseInt(document.getElementById('ef-maxPart').value)
+                })
+            });
+            const evResult = await evRes.json();
+            if (!evResult.success) { showNotification('Erreur lors de la mise à jour', 'error'); return; }
+
+            // Handle planification
+            if (!planDesc && !planDuree) {
+                if (planId) await fetch(`/psycho/evente/api/planifications/${planId}`, { method: 'DELETE' });
+            } else if (planDesc && planDuree) {
+                if (planId) {
+                    await fetch(`/psycho/evente/api/planifications/${planId}`, {
+                        method: 'PUT', headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({ description: planDesc, duree: planDuree })
+                    });
+                } else {
+                    await fetch('/psycho/evente/api/planifications', {
+                        method: 'POST', headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({ idEvent: parseInt(eventId), description: planDesc, duree: planDuree })
+                    });
+                }
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('editEventModal')).hide();
+            showNotification('Événement mis à jour !', 'success');
+            setTimeout(() => location.reload(), 1000);
+
+        } catch(e) {
+            showNotification('Erreur réseau', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '💾 Mettre à jour';
+        }
+    });
+
+    function showNotification(message, type) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${type === 'success' ? '#4CAF50' : '#f44336'};color:white;padding:12px 24px;border-radius:25px;z-index:10000;`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // QR Code modal
+    async function openQrModal(eventId) {
+        document.getElementById('qrLoading').style.display = 'block';
+        document.getElementById('qrContent').style.display = 'none';
+        document.getElementById('qrError').style.display   = 'none';
+        new bootstrap.Modal(document.getElementById('qrCodeModal')).show();
+
+        try {
+            const res  = await fetch(`/psycho/evente/qrcode/${eventId}`);
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+
+            document.getElementById('qrTitle').textContent    = data.title;
+            document.getElementById('qrLocation').textContent = '📍 ' + data.location;
+            document.getElementById('qrImage').src            = data.qrCode;
+            document.getElementById('qrMapsLink').href        = data.mapsUrl;
+
+            document.getElementById('qrLoading').style.display = 'none';
+            document.getElementById('qrContent').style.display = 'block';
+        } catch (e) {
+            document.getElementById('qrLoading').style.display = 'none';
+            document.getElementById('qrError').style.display   = 'block';
+        }
+    }
+
+    // Search functionality
+    document.getElementById('searchInput')?.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const cards = document.querySelectorAll('.event-card');
+        cards.forEach(card => {
+            const title = card.querySelector('h3')?.innerText.toLowerCase() || '';
+            const location = card.querySelector('.fa-location-dot')?.parentElement?.innerText.toLowerCase() || '';
+            card.style.display = title.includes(searchTerm) || location.includes(searchTerm) ? '' : 'none';
+        });
+    });
+
+    // Sort functionality — custom dropdown (no Bootstrap interference)
+    const sortLabels = {
+        title:      '📚 Par Titre (A → Z)',
+        date:       '📅 Par Date (Récent)',
+        activities: '🎯 Par Activités'
+    };
+
+    // Toggle menu open/close
+    const sortBtn  = document.getElementById('sortBtn');
+    const sortMenu = document.getElementById('sortMenu');
+
+    sortBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = sortMenu.style.display === 'block';
+        sortMenu.style.display = isOpen ? 'none' : 'block';
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', () => { sortMenu.style.display = 'none'; });
+
+    // Sort item click
+    sortMenu.addEventListener('click', (e) => {
+        const item = e.target.closest('.sort-item');
+        if (!item) return;
+        const sort = item.getAttribute('data-sort');
+
+        // Reorder cards
+        const container = document.getElementById('eventsContainer');
+        const cards = [...container.querySelectorAll('.event-card')];
+        cards.sort((a, b) => {
+            if (sort === 'title')      return (a.dataset.title || '').localeCompare(b.dataset.title || '', 'fr');
+            if (sort === 'date')       return (b.dataset.date  || '').localeCompare(a.dataset.date  || '');
+            if (sort === 'activities') return parseInt(b.dataset.activities || 0) - parseInt(a.dataset.activities || 0);
+            return 0;
+        });
+        cards.forEach(card => container.appendChild(card));
+
+        // Update button label
+        sortBtn.textContent = sortLabels[sort] + ' ▾';
+
+        // Highlight active item
+        sortMenu.querySelectorAll('.sort-item').forEach(el => {
+            el.classList.toggle('active-sort', el.getAttribute('data-sort') === sort);
+        });
+
+        sortMenu.style.display = 'none';
+    });
+
+    // Hover styles for sort items
+    sortMenu.querySelectorAll('.sort-item').forEach(el => {
+        el.addEventListener('mouseenter', () => { if (!el.classList.contains('active-sort')) el.style.background = '#e8f5ee'; });
+        el.addEventListener('mouseleave', () => { if (!el.classList.contains('active-sort')) el.style.background = ''; });
+    });
+
+    // Favorites filter
+    document.getElementById('favoritesBtn')?.addEventListener('click', () => {
+        const cards = document.querySelectorAll('.event-card');
+        let hasFavorites = false;
+        cards.forEach(card => {
+            const eventId = parseInt(card.getAttribute('data-event-id'));
+            if (likedEventIds.has(eventId)) {
+                card.style.display = '';
+                hasFavorites = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        if (!hasFavorites) {
+            document.getElementById('eventsContainer').innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 72px;">💛</div>
+                    <h3 class="mt-3" style="color: #285921;">Aucun événement dans vos favoris</h3>
+                    <p class="text-muted">💫 Ajoutez des ateliers à vos favoris pour les retrouver facilement</p>
+                </div>
+            `;
+        }
+    });
+
+    // ==================== CREATE MODAL LOGIC ====================
+
+    const localCorrections = {
+        'jalousi':'jalousie','jalousiee':'jalousie','jalouzi':'jalousie',
+        'egoisme':'égoïsme','egoisne':'égoïsme','égoisme':'égoïsme','igoisme':'égoïsme',
+        'narsicism':'narcissisme','narsissisme':'narcissisme','narcisisme':'narcissisme',
+        'confience':'confiance','confiancee':'confiance',
+        'etre':'être','pres':'près','tres':'très','deja':'déjà','voila':'voilà',
+        'evenement':'événement','evenment':'événement','conference':'conférence',
+        'atelie':'atelier','meditation':'méditation'
+    };
+
+    let cfCorrCallback = null;
+
+    function cfSetState(el, state) {
+        el.classList.remove('cf-valid','cf-invalid','cf-warning');
+        if (state) el.classList.add('cf-' + state);
+    }
+    function cfValidateTitle() {
+        const v = document.getElementById('cf-title').value.trim();
+        if (!v)           { cfSetState(document.getElementById('cf-title'), 'invalid'); return false; }
+        if (v.length < 3) { cfSetState(document.getElementById('cf-title'), 'warning'); return false; }
+        cfSetState(document.getElementById('cf-title'), 'valid'); return true;
+    }
+    function cfValidateLocation() {
+        const v = document.getElementById('cf-location').value.trim();
+        if (!v || v.length < 3) { cfSetState(document.getElementById('cf-location'), v ? 'warning' : 'invalid'); return false; }
+        cfSetState(document.getElementById('cf-location'), 'valid'); return true;
+    }
+    function cfValidateDate() {
+        const v = document.getElementById('cf-date').value;
+        cfSetState(document.getElementById('cf-date'), v ? 'valid' : 'invalid');
+        return !!v;
+    }
+    function cfValidateMax() {
+        const v = parseInt(document.getElementById('cf-maxPart').value);
+        const ok = !isNaN(v) && v > 0;
+        cfSetState(document.getElementById('cf-maxPart'), ok ? 'valid' : 'invalid');
+        return ok;
+    }
+    function cfValidatePlan() {
+        const desc  = document.getElementById('cf-planDesc').value.trim();
+        const duree = document.getElementById('cf-planDuree').value.trim();
+        if (!desc && !duree) return true;
+        if (desc && !duree)  { cfSetState(document.getElementById('cf-planDuree'), 'invalid'); return false; }
+        if (!desc && duree)  { cfSetState(document.getElementById('cf-planDesc'), 'invalid'); return false; }
+        if (desc.length < 4) { cfSetState(document.getElementById('cf-planDesc'), 'warning'); return false; }
+        return true;
+    }
+    function cfValidateAll() {
+        let ok = true;
+        if (!cfValidateTitle())    ok = false;
+        if (!cfValidateLocation()) ok = false;
+        if (!cfValidateDate())     ok = false;
+        if (!cfValidateMax())      ok = false;
+        if (!cfValidatePlan())     ok = false;
+        return ok;
+    }
+
+    document.getElementById('cf-title').addEventListener('input', () => {
+        cfValidateTitle();
+        document.getElementById('cf-btnCorrectTitle').disabled = !document.getElementById('cf-title').value.trim();
+    });
+    document.getElementById('cf-location').addEventListener('input', cfValidateLocation);
+    document.getElementById('cf-date').addEventListener('change', cfValidateDate);
+    document.getElementById('cf-maxPart').addEventListener('input', cfValidateMax);
+    document.getElementById('cf-planDesc').addEventListener('input', () => {
+        cfValidatePlan();
+        document.getElementById('cf-btnCorrectDesc').disabled = !document.getElementById('cf-planDesc').value.trim();
+    });
+    document.getElementById('cf-planDuree').addEventListener('input', cfValidatePlan);
+
+    document.getElementById('cf-acceptCorr').addEventListener('click', () => {
+        if (cfCorrCallback) cfCorrCallback(true);
+        document.getElementById('cf-correctionDialog').style.display = 'none';
+        cfCorrCallback = null;
+    });
+    document.getElementById('cf-rejectCorr').addEventListener('click', () => {
+        if (cfCorrCallback) cfCorrCallback(false);
+        document.getElementById('cf-correctionDialog').style.display = 'none';
+        cfCorrCallback = null;
+    });
+
+    function cfShowCorrDialog(original, corrected, callback) {
+        cfCorrCallback = callback;
+        document.getElementById('cf-origText').textContent = original;
+        document.getElementById('cf-corrText').textContent = corrected;
+        document.getElementById('cf-correctionDialog').style.display = 'flex';
+    }
+
+    function cfApplyLocalCorrection(text) {
+        const lower = text.toLowerCase();
+        if (localCorrections[lower]) {
+            let c = localCorrections[lower];
+            if (text[0] === text[0].toUpperCase()) c = c[0].toUpperCase() + c.slice(1);
+            return c;
+        }
+        const words = text.split(/\s+/);
+        let changed = false;
+        const result = words.map(w => {
+            const punct = w.match(/[.,!?;:]$/);
+            const clean = w.replace(/[.,!?;:]$/, '');
+            if (localCorrections[clean.toLowerCase()]) {
+                let c = localCorrections[clean.toLowerCase()];
+                if (clean[0] === clean[0].toUpperCase()) c = c[0].toUpperCase() + c.slice(1);
+                changed = true;
+                return c + (punct ? punct[0] : '');
+            }
+            return w;
+        });
+        return changed ? result.join(' ') : null;
+    }
+
+    async function cfCorrect(fieldId, btnId) {
+        const field = document.getElementById(fieldId);
+        const btn   = document.getElementById(btnId);
+        const text  = field.value.trim();
+        if (!text) return;
+        btn.disabled = true;
+        document.getElementById('cf-loading').style.removeProperty('display');
+        const local = cfApplyLocalCorrection(text);
+        if (local && local !== text) {
+            document.getElementById('cf-loading').style.display = 'none';
+            cfShowCorrDialog(text, local, (accepted) => {
+                if (accepted) { field.value = local; showNotification('Correction appliquée !', 'success'); }
+                btn.disabled = false;
+            });
+            return;
+        }
+        try {
+            const res  = await fetch('/psycho/evente/api/correct-text', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ text, type: fieldId.includes('title') ? 'title' : 'description' })
+            });
+            const data = await res.json();
+            if (data.success && data.corrected !== text) {
+                cfShowCorrDialog(text, data.corrected, (accepted) => {
+                    if (accepted) field.value = data.corrected;
+                    btn.disabled = false;
+                });
+            } else {
+                showNotification('Le texte semble déjà correct.', 'info');
+                btn.disabled = false;
+            }
+        } catch(e) {
+            showNotification('Erreur réseau', 'error');
+            btn.disabled = false;
+        } finally {
+            document.getElementById('cf-loading').style.display = 'none';
+        }
+    }
+
+    document.getElementById('cf-btnCorrectTitle').addEventListener('click', () => cfCorrect('cf-title', 'cf-btnCorrectTitle'));
+    document.getElementById('cf-btnCorrectDesc').addEventListener('click',  () => cfCorrect('cf-planDesc', 'cf-btnCorrectDesc'));
+
+    document.getElementById('cf-btnGenerate').addEventListener('click', async () => {
+        const title = document.getElementById('cf-title').value.trim();
+        if (!title) { showNotification('Veuillez d\'abord saisir un titre.', 'warning'); return; }
+        const btn = document.getElementById('cf-btnGenerate');
+        btn.disabled = true;
+        document.getElementById('cf-loading').style.removeProperty('display');
+        try {
+            const res  = await fetch('/psycho/evente/api/generate-planification', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ title })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('cf-planDesc').value  = data.description;
+                document.getElementById('cf-planDuree').value = data.duree;
+                document.getElementById('cf-planDesc').classList.add('cf-suggestion');
+                document.getElementById('cf-planDuree').classList.add('cf-suggestion');
+                document.getElementById('cf-suggestionLabel').style.display = 'inline';
+                document.getElementById('cf-btnAccept').style.display = 'inline-block';
+                document.getElementById('cf-btnReject').style.display  = 'inline-block';
+                showNotification('Planification générée !', 'success');
+            }
+        } catch(e) { showNotification('Erreur réseau', 'error'); }
+        finally {
+            btn.disabled = false;
+            document.getElementById('cf-loading').style.display = 'none';
+        }
+    });
+
+    document.getElementById('cf-btnAccept').addEventListener('click', () => {
+        document.getElementById('cf-planDesc').classList.remove('cf-suggestion');
+        document.getElementById('cf-planDuree').classList.remove('cf-suggestion');
+        document.getElementById('cf-btnAccept').style.display = 'none';
+        document.getElementById('cf-btnReject').style.display  = 'none';
+        document.getElementById('cf-suggestionLabel').style.display = 'none';
+        showNotification('Planification acceptée !', 'success');
+    });
+
+    document.getElementById('cf-btnReject').addEventListener('click', () => {
+        document.getElementById('cf-planDesc').value  = '';
+        document.getElementById('cf-planDuree').value = '';
+        document.getElementById('cf-planDesc').classList.remove('cf-suggestion');
+        document.getElementById('cf-planDuree').classList.remove('cf-suggestion');
+        document.getElementById('cf-btnAccept').style.display = 'none';
+        document.getElementById('cf-btnReject').style.display  = 'none';
+        document.getElementById('cf-suggestionLabel').style.display = 'none';
+        showNotification('Suggestion rejetée.', 'info');
+    });
+
+    document.getElementById('cf-btnSave').addEventListener('click', async () => {
+        document.getElementById('cf-errorBox').style.display = 'none';
+        if (!cfValidateAll()) {
+            document.getElementById('cf-errorBox').textContent = 'Veuillez corriger les champs en erreur.';
+            document.getElementById('cf-errorBox').style.display = 'block';
+            return;
+        }
+        const btn = document.getElementById('cf-btnSave');
+        btn.disabled = true;
+        btn.textContent = 'Sauvegarde...';
+        try {
+            const evRes = await fetch('/psycho/evente/api/events', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    title:               document.getElementById('cf-title').value.trim(),
+                    location:            document.getElementById('cf-location').value.trim(),
+                    eventDate:           document.getElementById('cf-date').value,
+                    link:                document.getElementById('cf-link').value.trim(),
+                    maxParticipants:     parseInt(document.getElementById('cf-maxPart').value),
+                    currentParticipants: 0
+                })
+            });
+            const evResult = await evRes.json();
+            if (!evResult.success) { showNotification('Erreur lors de la création', 'error'); return; }
+            const desc  = document.getElementById('cf-planDesc').value.trim();
+            const duree = document.getElementById('cf-planDuree').value.trim();
+            if (desc && duree) {
+                await fetch('/psycho/evente/api/planifications', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ idEvent: evResult.id, description: desc, duree })
+                });
+            }
+            bootstrap.Modal.getInstance(document.getElementById('createEventModal')).hide();
+            showNotification('Événement créé avec succès !', 'success');
+            setTimeout(() => location.reload(), 1200);
+        } catch(e) {
+            showNotification('Erreur réseau', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Sauvegarder';
+        }
+    });
+
+    document.getElementById('createEventModal').addEventListener('hidden.bs.modal', () => {
+        ['cf-title','cf-location','cf-date','cf-maxPart','cf-link','cf-planDesc','cf-planDuree'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.value = id === 'cf-maxPart' ? '30' : '';
+            el.classList.remove('cf-valid','cf-invalid','cf-warning','cf-suggestion');
+        });
+        document.getElementById('cf-btnAccept').style.display = 'none';
+        document.getElementById('cf-btnReject').style.display  = 'none';
+        document.getElementById('cf-suggestionLabel').style.display = 'none';
+        document.getElementById('cf-errorBox').style.display = 'none';
+        document.getElementById('cf-btnCorrectTitle').disabled = true;
+        document.getElementById('cf-btnCorrectDesc').disabled  = true;
+    });
+
+
+</script>
+{% endblock %}

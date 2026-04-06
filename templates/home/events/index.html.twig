@@ -1,0 +1,602 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Événements & Ateliers - NAFSEYTI{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --sidebar-bg: #ece6df;
+        --green-main: #285921;
+        --green-dark: #2e6a28;
+        --green-light: #7ec8a3;
+        --beige: #c9b99b;
+        --sidebar-text: #69685c;
+        --page-bg: linear-gradient(to bottom right, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);
+        --card-bg: rgba(255,255,255,0.98);
+        --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    body { background: #f5f1ed; font-family: 'DM Sans', sans-serif; }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── MAIN ── */
+    .main { flex:1; overflow-y:auto; padding:30px; background:var(--page-bg); }
+
+    /* Header */
+    .page-header { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
+    .header-icon {
+        width:40px; height:40px; border-radius:50%;
+        background:var(--green-main); display:flex; align-items:center; justify-content:center;
+        font-size:22px; color:white;
+        box-shadow:0 4px 12px rgba(40,89,33,.3);
+    }
+    .header-title { font-size:30px; font-weight:bold; color:var(--green-main); margin:0; }
+    .header-sub { font-size:14px; color:#5a6c5a; font-style:italic; margin:4px 0 0; }
+
+    /* Search/sort bar */
+    .search-bar {
+        display:flex; align-items:center; gap:15px; flex-wrap:wrap;
+        background:rgba(255,255,255,.95);
+        border:1.5px solid rgba(40,89,33,.25);
+        border-radius:20px; padding:15px 20px; margin-bottom:25px;
+        box-shadow:0 4px 12px rgba(40,89,33,.12);
+    }
+    .search-input {
+        flex:1; min-width:250px; padding:12px 16px;
+        border:2px solid rgba(40,89,33,.3); border-radius:15px;
+        font-size:14px; background:white; outline:none;
+        transition:border-color .2s;
+    }
+    .search-input:focus { border-color:var(--green-main); }
+
+    .btn-sort, .btn-fav {
+        padding:12px 20px; border:none; border-radius:15px;
+        font-size:14px; font-weight:bold; cursor:pointer; transition:all .2s;
+    }
+    .btn-sort { background:var(--green-light); color:#000; }
+    .btn-sort:hover { background:#5fb88b; transform:translateY(-2px); }
+    .btn-fav { background:var(--beige); color:#000; }
+    .btn-fav:hover { background:#b8a888; transform:translateY(-2px); }
+    .btn-fav.active { background:var(--green-light); }
+
+    .event-count {
+        margin-left:auto; padding:10px 18px;
+        background:rgba(40,89,33,.1); border:1.5px solid rgba(40,89,33,.3);
+        border-radius:25px; font-size:13px; font-weight:bold; color:var(--green-main);
+    }
+
+    /* Sort dropdown */
+    .sort-wrap { position:relative; }
+    .sort-menu {
+        display:none; position:absolute; top:110%; left:0; z-index:100;
+        background:white; border:1px solid rgba(40,89,33,.2);
+        border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,.12);
+        min-width:200px; overflow:hidden;
+    }
+    .sort-menu.open { display:block; }
+    .sort-menu a {
+        display:block; padding:12px 18px; font-size:13px;
+        color:#333; text-decoration:none; transition:background .15s;
+    }
+    .sort-menu a:hover { background:#f0f5f0; color:var(--green-main); }
+
+    /* Events list */
+    #eventsContainer { display:flex; flex-direction:column; gap:22px; }
+
+    /* Event card */
+    .event-card {
+        display:flex; align-items:stretch;
+        background:var(--card-bg);
+        border:1.5px solid rgba(40,89,33,.2);
+        border-radius:var(--radius);
+        box-shadow:0 4px 15px rgba(40,89,33,.1);
+        transition:transform .2s, box-shadow .2s;
+        overflow:hidden;
+    }
+    .event-card:hover {
+        transform:translateY(-4px);
+        box-shadow:0 8px 25px rgba(40,89,33,.2);
+        border-color:rgba(40,89,33,.4);
+    }
+
+    /* Calendar box */
+    .cal-box {
+        display:flex; flex-direction:column; align-items:center;
+        min-width:90px; max-width:90px;
+        margin:20px; border-radius:15px;
+        border:2px solid rgba(40,89,33,.35);
+        overflow:hidden; align-self:flex-start;
+        box-shadow:0 4px 10px rgba(40,89,33,.12);
+    }
+    .cal-month {
+        width:100%; text-align:center; padding:6px 0;
+        background:#2e6a28; color:white;
+        font-size:11px; font-weight:bold;
+    }
+    .cal-day {
+        padding:10px 0; font-size:34px; font-weight:bold;
+        color:var(--green-main); text-align:center; width:100%;
+        background:linear-gradient(to bottom,#fff,#f5f1ed);
+    }
+
+    /* Info section */
+    .event-info { flex:1; padding:25px; display:flex; flex-direction:column; gap:14px; }
+
+    .event-title-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .event-title { font-size:23px; font-weight:bold; color:var(--green-main); margin:0; }
+
+    .badge-new {
+        font-size:10px; font-weight:bold; color:white;
+        background:var(--green-light); border-radius:6px; padding:4px 10px;
+    }
+    .badge-plans {
+        font-size:11px; font-weight:bold; color:white;
+        background:var(--beige); border-radius:15px; padding:5px 12px;
+    }
+
+    .event-details { display:flex; flex-direction:column; gap:8px; }
+    .detail-row { display:flex; align-items:center; gap:10px; font-size:14px; }
+    .detail-row .icon { font-size:16px; }
+    .detail-row .text { color:#5a6c5a; }
+    .detail-row .text.green { color:#4CAF50; font-weight:bold; }
+    .detail-row .text.orange { color:#ff9800; font-weight:bold; }
+    .detail-row .text.red { color:#b22222; font-weight:bold; }
+
+    /* Action buttons */
+    .action-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+    .btn-participate {
+        padding:8px 18px; border:none; border-radius:15px;
+        font-size:13px; font-weight:bold; cursor:pointer; transition:all .2s;
+        background:var(--green-main); color:white;
+    }
+    .btn-participate:hover { background:#3d7e33; box-shadow:0 4px 12px rgba(40,89,33,.4); }
+    .btn-participate:disabled { background:#4CAF50; cursor:default; }
+    .btn-participate.full { background:#b22222; cursor:default; }
+
+    .btn-heart {
+        font-size:24px; background:transparent; border:none;
+        cursor:pointer; padding:5px; transition:transform .2s;
+    }
+    .btn-heart:hover { transform:scale(1.2); }
+
+    .btn-maps {
+        font-size:18px; background:transparent; border:none;
+        cursor:pointer; padding:5px; border-radius:50%;
+        transition:background .2s;
+    }
+    .btn-maps:hover { background:rgba(40,89,33,.1); }
+
+    /* Separator */
+    .plan-separator {
+        height:1px;
+        background:linear-gradient(to right,transparent,rgba(40,89,33,.25),transparent);
+        margin:5px 0;
+    }
+
+    /* Planification cards */
+    .plan-title-row { display:flex; align-items:center; gap:8px; }
+    .plan-title { font-size:16px; font-weight:bold; color:var(--green-main); margin:0; }
+
+    .plan-list { display:flex; flex-direction:column; gap:10px; }
+    .plan-item {
+        display:flex; align-items:center; gap:14px;
+        background:linear-gradient(to right,rgba(168,230,207,.12),rgba(245,241,237,.2));
+        border:1.5px solid rgba(40,89,33,.2); border-radius:15px; padding:14px 18px;
+    }
+    .plan-num {
+        min-width:34px; max-width:34px; height:34px;
+        border-radius:50%; background:#2e6a28; color:white;
+        font-size:15px; font-weight:bold;
+        display:flex; align-items:center; justify-content:center;
+        box-shadow:0 2px 6px rgba(40,89,33,.3);
+    }
+    .plan-desc { font-size:13px; color:#5a6c5a; font-weight:600; }
+    .plan-dur  { font-size:12px; color:#7a8c7a; font-weight:700; margin-top:4px; }
+
+    /* Image */
+    .event-image {
+        width:190px; min-width:190px; max-width:190px;
+        margin:20px; border-radius:var(--radius); overflow:hidden;
+        box-shadow:0 4px 12px rgba(40,89,33,.2); align-self:center;
+    }
+    .event-image img { width:100%; height:190px; object-fit:cover; display:block; }
+
+    /* Empty state */
+    .empty-state {
+        text-align:center; padding:70px 30px;
+        background:rgba(255,255,255,.95);
+        border:2px solid rgba(40,89,33,.25); border-radius:25px;
+        box-shadow:0 4px 15px rgba(40,89,33,.1);
+    }
+    .empty-state .icon { font-size:72px; margin-bottom:15px; }
+    .empty-state h3 { font-size:22px; font-weight:bold; color:var(--green-main); }
+    .empty-state p  { font-size:14px; color:#5a6c5a; }
+
+    /* Toast */
+    #toast {
+        position:fixed; bottom:25px; right:25px; z-index:9999;
+        padding:14px 24px; border-radius:25px;
+        font-size:14px; font-weight:bold; color:white;
+        background:#285921; box-shadow:0 4px 15px rgba(0,0,0,.2);
+        display:none; animation:fadeInOut .3s ease;
+    }
+    @keyframes fadeInOut { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+</style>
+
+<div class="layout">
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-icon">Ψ</div>
+            <div>
+                <h1 class="header-title">Événements & Ateliers</h1>
+                <p class="header-sub">🌱 Cultivez votre bien-être mental et épanouissement personnel</p>
+            </div>
+        </div>
+
+        <!-- Search / Sort bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input"
+                   placeholder="🔍  Recherchez votre atelier de bien-être...">
+
+            <div class="sort-wrap">
+                <button class="btn-sort" id="sortBtn" onclick="toggleSort()">✨ Trier par</button>
+                <div class="sort-menu" id="sortMenu">
+                    <a href="#" onclick="sortEvents('title'); return false;">📚 Par Titre (A → Z)</a>
+                    <a href="#" onclick="sortEvents('date'); return false;">📅 Par Date (Récent)</a>
+                    <a href="#" onclick="sortEvents('plans'); return false;">🎯 Par Activités</a>
+                </div>
+            </div>
+
+            <button class="btn-fav" id="favBtn" onclick="toggleFav()">💛 Mes Favoris</button>
+
+            <span class="event-count" id="eventCount">🎯 {{ events|length }} événement{{ events|length != 1 ? 's' : '' }}</span>
+        </div>
+
+        <!-- Events list -->
+        <div id="eventsContainer">
+            {% if events is empty %}
+                <div class="empty-state">
+                    <div class="icon">🌸</div>
+                    <h3>Aucun événement disponible</h3>
+                    <p>🌱 Revenez bientôt pour découvrir nos prochains ateliers</p>
+                </div>
+            {% else %}
+                {% for event in events %}
+                {% set ratio = event.maxParticipants > 0 ? event.currentParticipants / event.maxParticipants : 0 %}
+                {% set isNew = event.createdAt and date().diff(event.createdAt).days <= 7 %}
+                {% set isFull = event.currentParticipants >= event.maxParticipants %}
+
+                <div class="event-card"
+                     data-id="{{ event.id }}"
+                     data-title="{{ event.title|lower }}"
+                     data-date="{{ event.eventDate ? event.eventDate|date('Y-m-d') : '' }}"
+                     data-plans="{{ event.planifications|length }}">
+
+                    {# Calendar box #}
+                    {% if event.eventDate %}
+                    <div class="cal-box">
+                        <div class="cal-month">{{ event.eventDate|date('M')|upper }}</div>
+                        <div class="cal-day">{{ event.eventDate|date('d') }}</div>
+                    </div>
+                    {% endif %}
+
+                    {# Info #}
+                    <div class="event-info">
+
+                        {# Title row #}
+                        <div class="event-title-row">
+                            {% if isNew %}<span class="badge-new">NOUVEAU</span>{% endif %}
+                            <h2 class="event-title">{{ event.title }}</h2>
+                            {% if event.planifications|length > 0 %}
+                                <span class="badge-plans">🎯 {{ event.planifications|length }} activité{{ event.planifications|length > 1 ? 's' : '' }}</span>
+                            {% endif %}
+                        </div>
+
+                        {# Details #}
+                        <div class="event-details">
+                            {% if event.location %}
+                            <div class="detail-row">
+                                <span class="icon">📍</span>
+                                <span class="text">{{ event.location }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if event.createdAt %}
+                            <div class="detail-row">
+                                <span class="icon">🕐</span>
+                                <span class="text" style="color:#95a5a6; font-style:italic;">
+                                    Créé le {{ event.createdAt|date('d/m/Y H:i') }}
+                                </span>
+                            </div>
+                            {% endif %}
+
+                            <div class="detail-row">
+                                <span class="icon">👥</span>
+                                <span class="text {% if ratio >= 1 %}red{% elseif ratio >= 0.8 %}orange{% else %}green{% endif %}">
+                                    {{ event.currentParticipants }} / {{ event.maxParticipants }} participants
+                                    {% if isFull %} — Complet{% elseif ratio >= 0.8 %} — Presque complet{% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        {# Action buttons #}
+                        <div class="action-row">
+                            {% if event.hasParticipated %}
+                                <button class="btn-participate" disabled>✅ Déjà inscrit</button>
+                            {% elseif isFull %}
+                                <button class="btn-participate full" disabled>Complet</button>
+                            {% else %}
+                                <button class="btn-participate"
+                                        onclick="participate({{ event.id }}, this)">
+                                    🎯 S'inscrire
+                                </button>
+                            {% endif %}
+
+                            {% if event.location %}
+                            <button class="btn-maps"
+                                    onclick="showQR({{ event.id }})"
+                                    title="Voir QR Code & localisation">📍</button>
+                            {% endif %}
+
+                            <button class="btn-heart"
+                                    id="heart-{{ event.id }}"
+                                    onclick="toggleHeart({{ event.id }}, this)">🤍</button>
+                        </div>
+
+                        {# Planifications #}
+                        {% if event.planifications|length > 0 %}
+                        <div class="plan-separator"></div>
+                        <div class="plan-title-row">
+                            <span>🌱</span>
+                            <h4 class="plan-title">Programme de l'atelier</h4>
+                        </div>
+                        <div class="plan-list">
+                            {% for i, plan in event.planifications %}
+                            <div class="plan-item">
+                                <div class="plan-num">{{ i + 1 }}</div>
+                                <div>
+                                    {% if plan.description %}
+                                        <div class="plan-desc">{{ plan.description }}</div>
+                                    {% endif %}
+                                    {% if plan.duree %}
+                                        <div class="plan-dur">⏰ {{ plan.duree }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    {# Image #}
+                    {% if event.link %}
+                    <div class="event-image">
+                        <img src="{{ event.link }}" alt="{{ event.title }}"
+                             onerror="this.parentElement.style.display='none'">
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </main>
+</div>
+
+<div id="toast"></div>
+
+<!-- QR Code Modal -->
+<div id="qrModal" style="display:none; position:fixed; inset:0; z-index:9998;
+     background:rgba(0,0,0,.5); align-items:center; justify-content:center;">
+  <div style="background:#F5F1E6; border-radius:20px; padding:30px; max-width:420px; width:90%;
+              box-shadow:0 10px 40px rgba(0,0,0,.3); text-align:center; position:relative;">
+
+    <button onclick="closeQR()" style="position:absolute; top:15px; right:18px;
+            background:none; border:none; font-size:22px; cursor:pointer; color:#888;">✕</button>
+
+    <h3 id="qrTitle" style="font-size:20px; font-weight:bold; color:#285921; margin-bottom:6px;">
+        📍 Localisation de l'événement
+    </h3>
+    <p id="qrEventName" style="font-size:16px; font-weight:bold; margin-bottom:4px;"></p>
+    <p id="qrLocation" style="font-size:14px; color:#5a6c5a; margin-bottom:18px;"></p>
+
+    <div id="qrSpinner" style="font-size:40px; margin:20px 0;">⏳</div>
+    <img id="qrImage" src="" alt="QR Code"
+         style="display:none; width:250px; height:250px; border-radius:10px;
+                border:2px solid #d2e0cf; margin-bottom:15px;">
+
+    <input id="qrUrl" type="text" readonly
+           style="width:100%; padding:10px; border:1px solid #CFCBB3; border-radius:8px;
+                  background:white; font-size:12px; margin-bottom:8px; text-align:center;">
+
+    <p style="font-size:12px; color:#8b9a8b; margin-bottom:18px;">
+        Scannez ce code QR pour ouvrir la localisation dans Google Maps
+    </p>
+
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button onclick="copyQrUrl()"
+              style="background:#374535; color:white; border:none; padding:10px 22px;
+                     border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold;">
+          📋 Copier le lien
+      </button>
+      <button onclick="closeQR()"
+              style="background:#b22222; color:white; border:none; padding:10px 22px;
+                     border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold;">
+          Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+var likedIds = new Set();
+var showingFav = false;
+
+// ── Search ──────────────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function() {
+    filterCards(this.value.toLowerCase().trim());
+});
+
+function filterCards(q) {
+    var cards = document.querySelectorAll('.event-card');
+    var visible = 0;
+    cards.forEach(function(c) {
+        var title = c.dataset.title || '';
+        var show = !q || title.includes(q);
+        if (showingFav && !likedIds.has(parseInt(c.dataset.id))) show = false;
+        c.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    document.getElementById('eventCount').textContent = '🎯 ' + visible + ' événement' + (visible !== 1 ? 's' : '');
+}
+
+// ── Sort ────────────────────────────────────────────────────────
+function toggleSort() {
+    document.getElementById('sortMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.sort-wrap')) {
+        document.getElementById('sortMenu').classList.remove('open');
+    }
+});
+
+function sortEvents(by) {
+    document.getElementById('sortMenu').classList.remove('open');
+    var container = document.getElementById('eventsContainer');
+    var cards = Array.from(container.querySelectorAll('.event-card'));
+
+    cards.sort(function(a, b) {
+        if (by === 'title') {
+            return (a.dataset.title || '').localeCompare(b.dataset.title || '', 'fr');
+        }
+        if (by === 'date') {
+            return (a.dataset.date || '').localeCompare(b.dataset.date || '');
+        }
+        if (by === 'plans') {
+            return parseInt(b.dataset.plans || 0) - parseInt(a.dataset.plans || 0);
+        }
+        return 0;
+    });
+
+    cards.forEach(function(c) { container.appendChild(c); });
+}
+
+// ── Favourites ──────────────────────────────────────────────────
+function toggleFav() {
+    showingFav = !showingFav;
+    var btn = document.getElementById('favBtn');
+    btn.textContent = showingFav ? '🌟 Tous' : '💛 Mes Favoris';
+    btn.classList.toggle('active', showingFav);
+    filterCards(document.getElementById('searchInput').value.toLowerCase().trim());
+}
+
+function toggleHeart(id, btn) {
+    if (likedIds.has(id)) {
+        likedIds.delete(id);
+        btn.textContent = '🤍';
+    } else {
+        likedIds.add(id);
+        btn.textContent = '💛';
+    }
+    if (showingFav) {
+        filterCards(document.getElementById('searchInput').value.toLowerCase().trim());
+    }
+}
+
+// ── Participate ─────────────────────────────────────────────────
+function participate(id, btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Traitement...';
+    btn.style.background = '#b22222';
+
+    fetch('/events/' + id + '/participate', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                btn.textContent = '✅ Inscrit !';
+                btn.style.background = '#4CAF50';
+                showToast('✅ ' + data.message, '#285921');
+            } else {
+                btn.textContent = '🎯 S\'inscrire';
+                btn.style.background = '#285921';
+                btn.disabled = false;
+                showToast('⚠️ ' + data.message, '#b22222');
+            }
+        })
+        .catch(function() {
+            btn.textContent = '🎯 S\'inscrire';
+            btn.style.background = '#285921';
+            btn.disabled = false;
+            showToast('❌ Erreur réseau', '#b22222');
+        });
+}
+
+// ── Maps ────────────────────────────────────────────────────────
+function openMaps(location) {
+    window.open('https://www.google.com/maps/search/' + encodeURIComponent(location), '_blank');
+}
+
+// ── QR Code ──────────────────────────────────────────────────────
+function showQR(id) {
+    var modal = document.getElementById('qrModal');
+    modal.style.display = 'flex';
+    document.getElementById('qrSpinner').style.display = 'block';
+    document.getElementById('qrImage').style.display = 'none';
+    document.getElementById('qrUrl').value = '';
+    document.getElementById('qrEventName').textContent = '';
+    document.getElementById('qrLocation').textContent = '';
+
+    fetch('/events/' + id + '/qrcode')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            document.getElementById('qrEventName').textContent = d.title;
+            document.getElementById('qrLocation').textContent  = d.location;
+            document.getElementById('qrUrl').value             = d.mapsUrl;
+            var img = document.getElementById('qrImage');
+            img.src = d.qrCode;
+            img.style.display = 'block';
+            document.getElementById('qrSpinner').style.display = 'none';
+        })
+        .catch(function() {
+            document.getElementById('qrSpinner').textContent = '❌ Erreur';
+        });
+}
+
+function closeQR() {
+    document.getElementById('qrModal').style.display = 'none';
+}
+
+function copyQrUrl() {
+    var url = document.getElementById('qrUrl').value;
+    navigator.clipboard.writeText(url).then(function() {
+        showToast('📋 Lien copié !', '#285921');
+    });
+}
+
+// Close modal on backdrop click
+document.getElementById('qrModal').addEventListener('click', function(e) {
+    if (e.target === this) closeQR();
+});
+
+// ── Toast ────────────────────────────────────────────────────────
+function showToast(msg, color) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = color || '#285921';
+    t.style.display = 'block';
+    setTimeout(function() { t.style.display = 'none'; }, 3000);
+}
+</script>
+{% endblock %}
+
+{% endblock %}

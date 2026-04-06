@@ -1,0 +1,935 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Assistant Bien-être - Planification d'Événements Apaisants{% endblock %}
+
+{% block body %}
+<style>
+        :root {
+            --primary-green: #5c715a;
+            --secondary-green: #7f9a7d;
+            --light-green: #9cb39b;
+            --pale-green: #a5b8a3;
+            --soft-green: #b7c9b5;
+            --bg-light: #f5f3ed;
+            --card-bg: #fcfaf7;
+            --border-green: #d2e0cf;
+            --input-bg: #f0f1ec;
+            --text-dark: #4d604b;
+            --text-muted: #8a9a87;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Segoe UI', 'Georgia', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--input-bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-green);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-green);
+        }
+
+        /* Main Container */
+        .ai-container {
+            background: linear-gradient(135deg, #f3efe9, #e8e3db);
+            min-height: 100vh;
+            padding: 25px;
+        }
+
+        /* Header Avatar */
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--light-green), var(--secondary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(127, 154, 125, 0.3);
+        }
+
+        .avatar-circle span {
+            font-size: 45px;
+        }
+
+        /* Badges */
+        .nature-badge {
+            background: linear-gradient(135deg, var(--soft-green), var(--pale-green));
+            padding: 8px 20px;
+            border-radius: 25px;
+            color: #3d533b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Banner */
+        .banner-wellness {
+            background: rgba(159, 185, 151, 0.15);
+            border-radius: 20px;
+            padding: 15px 20px;
+        }
+
+        /* Form Controls */
+        .form-control-nature, .form-select-nature {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 25px;
+            padding: 10px 15px;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        .form-control-nature:focus, .form-select-nature:focus {
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 0.2rem rgba(127, 154, 125, 0.25);
+            background-color: var(--card-bg);
+            outline: none;
+        }
+
+        .form-control-nature::placeholder {
+            color: var(--pale-green);
+        }
+
+        /* Buttons */
+        .btn-nature {
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            color: white;
+            border: none;
+            border-radius: 35px;
+            padding: 18px 60px;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(127, 154, 125, 0.3);
+            cursor: pointer;
+        }
+
+        .btn-nature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(127, 154, 125, 0.4);
+            color: white;
+        }
+
+        .btn-nature-secondary {
+            background: var(--input-bg);
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            border-radius: 35px;
+            padding: 18px 40px;
+            font-size: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-nature-secondary:hover {
+            background: var(--border-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-nature-outline {
+            background: #e2f0e0;
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            border-radius: 25px;
+            padding: 8px 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-nature-outline:hover {
+            background: var(--secondary-green);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Quick Action Buttons */
+        .btn-quick {
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-quick-idea { background: var(--light-green); }
+        .btn-quick-budget { background: var(--secondary-green); }
+        .btn-quick-planning { background: var(--pale-green); }
+        .btn-quick-share { background: var(--soft-green); }
+
+        .btn-quick:hover {
+            transform: translateY(-2px);
+            filter: brightness(0.95);
+            color: white;
+        }
+
+        /* Tabs */
+        .nav-tabs-nature {
+            border-bottom: 2px solid var(--border-green);
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs-nature .nav-link {
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 15px 15px 0 0;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .nav-tabs-nature .nav-link:hover {
+            color: var(--primary-green);
+            background: rgba(127, 154, 125, 0.1);
+        }
+
+        .nav-tabs-nature .nav-link.active {
+            color: var(--primary-green);
+            background: var(--card-bg);
+            border-bottom: 3px solid var(--secondary-green);
+        }
+
+        .tab-content-nature {
+            background: var(--card-bg);
+            border-radius: 0 0 25px 25px;
+            border: 1px solid var(--border-green);
+            border-top: none;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        /* Text Area */
+        .textarea-nature {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-size: 14px;
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .textarea-nature:focus {
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 0.2rem rgba(127, 154, 125, 0.25);
+            background-color: var(--card-bg);
+            outline: none;
+        }
+
+        /* Result Area */
+        .result-area {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-family: 'Georgia', 'Serif';
+            font-size: 15px;
+            min-height: 400px;
+            width: 100%;
+            padding: 15px;
+            resize: vertical;
+        }
+
+        .result-area:focus {
+            border-color: var(--secondary-green);
+            box-shadow: none;
+            outline: none;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            background: var(--card-bg);
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: rgba(159, 185, 151, 0.15);
+            border-radius: 15px;
+            padding: 12px 20px;
+        }
+
+        /* Filter Section */
+        .filter-section, .toolbar-section {
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border-green);
+            padding: 25px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .ai-container { padding: 15px; }
+            .btn-nature, .btn-nature-secondary { padding: 12px 30px; font-size: 16px; }
+            .nav-tabs-nature .nav-link { padding: 8px 12px; font-size: 12px; }
+        }
+        
+        /* Card style */
+        .card-nature {
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border-green);
+            box-shadow: 0 5px 15px rgba(93, 120, 87, 0.1);
+        }
+    </style>
+<div class="ai-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-4">
+                        <a href="{{ path('admin_events_index') }}"
+                           style="background:var(--input-bg); border:1px solid var(--border-green); color:var(--primary-green);
+                                  border-radius:25px; padding:10px 20px; text-decoration:none; font-weight:bold; font-size:14px;
+                                  display:flex; align-items:center; gap:6px;">
+                            ← Retour aux événements
+                        </a>
+                        <div class="avatar-circle">
+                            <span>🌿</span>
+                        </div>
+                        <div>
+                            <h1 class="display-4 fw-bold" style="color: var(--primary-green);">ASSISTANT BIEN-ÊTRE</h1>
+                            <p class="lead" style="color: var(--text-muted);">Votre espace de sérénité pour des événements apaisants</p>
+                        </div>
+                    </div>
+                    <div class="nature-badge">
+                        🌱 NATURE &amp; PAIX
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="banner-wellness d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-3">🍃</span>
+                        <span class="fw-bold" style="color: var(--primary-green);">+420 séances de bien-être planifiées cette semaine</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-3">🌺</span>
+                        <span style="color: var(--primary-green);">Harmonie intérieure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="filter-section">
+                    <h5 class="mb-3" style="color: var(--primary-green); font-weight: bold;">🔍 FILTRES BIEN-ÊTRE</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold" style="color: var(--secondary-green);">TYPE D'EXPÉRIENCE</label>
+                            <select class="form-select form-select-nature" id="eventTypeCombo">
+                                <option value="">Sélectionner</option>
+                                <option value="🧘 Bien-être & Méditation">🧘 Bien-être & Méditation</option>
+                                <option value="🌿 Retraite & Nature">🌿 Retraite & Nature</option>
+                                <option value="🌸 Ateliers & Cercles de parole">🌸 Ateliers & Cercles de parole</option>
+                                <option value="🎯 Conférences & Séminaires">🎯 Conférences & Séminaires</option>
+                                <option value="💼 Team Building & Entreprise">💼 Team Building & Entreprise</option>
+                                <option value="🎉 Célébrations & Événements">🎉 Célébrations & Événements</option>
+                                <option value="✨ Surprise-moi!">✨ Surprise-moi!</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold" style="color: var(--secondary-green);">BUDGET</label>
+                            <select class="form-select form-select-nature" id="budgetCombo">
+                                <option value="">Sélectionner</option>
+                                <option value="💰 Moins de 500 €">💰 Moins de 500 €</option>
+                                <option value="💰 500 € - 2 000 €">💰 500 € - 2 000 €</option>
+                                <option value="💰 2 000 € - 5 000 €">💰 2 000 € - 5 000 €</option>
+                                <option value="💰 5 000 € - 10 000 €">💰 5 000 € - 10 000 €</option>
+                                <option value="💰 10 000 € +">💰 10 000 € +</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold" style="color: var(--secondary-green);">PARTICIPANTS</label>
+                            <select class="form-select form-select-nature" id="audienceSizeCombo">
+                                <option value="">Sélectionner</option>
+                                <option value="👥 Intime (moins de 20)">👥 Intime (moins de 20)</option>
+                                <option value="👥 Petit (20-50)">👥 Petit (20-50)</option>
+                                <option value="👥 Moyen (50-150)">👥 Moyen (50-150)</option>
+                                <option value="👥 Grand (150-300)">👥 Grand (150-300)</option>
+                                <option value="👥 Très grand (300+)">👥 Très grand (300+)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="toolbar-section">
+                    <div class="row align-items-end g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold" style="color: var(--primary-green);">TYPE D'ACCOMPAGNEMENT</label>
+                            <select class="form-select form-select-nature" id="helpTypeCombo">
+                                <option value="🎯 Idées de thèmes">🎯 Idées de thèmes</option>
+                                <option value="💰 Planification budgétaire">💰 Planification budgétaire</option>
+                                <option value="✨ Suggestions d'activités">✨ Suggestions d'activités</option>
+                                <option value="📢 Stratégie de partage">📢 Stratégie de partage</option>
+                                <option value="🏛️ Suggestions de lieux">🏛️ Suggestions de lieux</option>
+                                <option value="📅 Planification temporelle">📅 Planification temporelle</option>
+                                <option value="🎨 Idées de décoration">🎨 Idées de décoration</option>
+                                <option value="🍽️ Idées de restauration">🍽️ Idées de restauration</option>
+                                <option value="📋 Plan complet">📋 Plan complet</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="d-flex gap-2 flex-wrap justify-content-md-end">
+                                <button class="btn-quick btn-quick-idea" onclick="handleQuickIdea()">🌿 IDÉE VERTE</button>
+                                <button class="btn-quick btn-quick-budget" onclick="handleBudgetHelp()">🍃 BUDGET NATURE</button>
+                                <button class="btn-quick btn-quick-planning" onclick="handleTimelineHelp()">🌱 PLANNING DOUX</button>
+                                <button class="btn-quick btn-quick-share" onclick="handleMarketingHelp()">🕊️ PARTAGE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <ul class="nav nav-tabs-nature" id="aiTabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-tab="themes">🎯 THÈMES</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="budget">💰 BUDGET</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="activities">✨ ACTIVITÉS</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="marketing">📢 PARTAGE</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="venue">🏛️ LIEUX</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="timeline">📅 TIMELINE</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="decor">🎨 DÉCOR</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="catering">🍽️ RESTAURATION</button></li>
+                    <li class="nav-item"><button class="nav-link" data-tab="complete">📋 PLAN COMPLET</button></li>
+                </ul>
+                <div class="tab-content-nature">
+                    <div id="tabContent">
+                        <p style="color: var(--text-muted);">Sélectionnez un thème pour obtenir des conseils personnalisés...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="card-nature p-4">
+                    <label class="fw-bold mb-2" style="color: var(--primary-green);">VOTRE INTENTION</label>
+                    <textarea id="eventDescriptionArea" class="textarea-nature" rows="4" 
+                        placeholder="Décrivez votre événement en toute sérénité... (ex: 'Je souhaite organiser un atelier de méditation pour 30 personnes')"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12 text-center">
+                <div class="d-flex justify-content-center gap-4 flex-wrap">
+                    <button id="generateButton" class="btn-nature" onclick="generateIdeas()">
+                        <span style="font-size: 24px;">🌿</span> GÉNÉRER
+                    </button>
+                    <button id="clearButton" class="btn-nature-secondary" onclick="clearFields()">
+                        <span style="font-size: 18px;">🍃</span> Effacer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner">
+                <div class="spinner-border text-success" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="card-nature p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width: 16px; height: 16px; background: linear-gradient(135deg, var(--secondary-green), var(--primary-green)); border-radius: 50%;"></div>
+                            <h5 class="mb-0" style="color: var(--primary-green);">VOTRE ESPACE DE RÉFLEXION</h5>
+                        </div>
+                        <span id="tokenCountLabel" style="color: var(--pale-green); font-size: 14px;">0 mots</span>
+                    </div>
+                    
+                    <textarea id="resultArea" class="result-area" readonly rows="20"></textarea>
+                    
+                    <div class="d-flex justify-content-end gap-2 mt-3 flex-wrap">
+                        <button class="btn-nature-outline" onclick="copyToClipboard()">📋 Copier</button>
+                        <button class="btn-nature-outline" onclick="showHistory()">📚 Historique</button>
+                        <button class="btn-nature-outline" onclick="showFavorites()">⭐ Mes Favoris</button>
+                        <button class="btn-nature-outline" onclick="exportToFile()">📄 Exporter</button>
+                        <button class="btn-nature-outline" onclick="shareResults()">📤 Partager</button>
+                        <button class="btn-nature-outline" onclick="saveToFavorites()">➕ Ajouter</button>
+                        <button class="btn-nature-outline" style="background: var(--soft-green); color: white;" onclick="closeWindow()">✕ Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="row fade-in">
+            <div class="col-12">
+                <div class="status-bar d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width: 12px; height: 12px; background: var(--secondary-green); border-radius: 50%;"></div>
+                        <span style="color: var(--primary-green); font-size: 13px;">Connexion établie</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="modelLabel" style="color: var(--primary-green); font-size: 13px;">🌿 Modèle: gemini-1.5-flash</span>
+                        <span style="color: var(--pale-green);">•</span>
+                        <span id="timeLabel" style="color: var(--primary-green); font-size: 13px;">🍃 00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="csrf_token" value="{{ csrf_token('ai_assistant') }}">
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+        let currentResult = '';
+        
+        // Initialize welcome message
+        function setWelcomeMessage() {
+            const welcomeMessage = `╔══════════════════════════════════════════════════════════════╗
+║         🧘  ASSISTANT BIEN-ÊTRE & ÉVÉNEMENTS  🧘            ║
+╚══════════════════════════════════════════════════════════════╝
+
+✨ Bienvenue dans votre espace de sérénité.
+
+🌱 **Je peux vous aider à :**
+
+🎯 **Trouver l'inspiration** - Des thèmes uniques et apaisants
+💰 **Planifier votre budget** - Une répartition harmonieuse
+✨ **Créer des activités** - Des moments qui comptent
+📢 **Partager votre vision** - Toucher les cœurs
+🏛️ **Choisir un lieu** - Des espaces qui respirent
+📅 **Organiser le temps** - En toute quiétude
+🎨 **Imaginer la décoration** - Une ambiance douce
+🍽️ **Prévoir la restauration** - Des saveurs qui nourrissent l'âme
+
+🔍 **Décrivez votre intention ci-dessous...**`;
+            
+            document.getElementById('resultArea').value = welcomeMessage;
+            updateWordCount();
+        }
+        
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('timeLabel').innerHTML = `🍃 ${now.toLocaleTimeString('fr-FR')}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+        
+        // Update word count
+        function updateWordCount() {
+            const text = document.getElementById('resultArea').value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('tokenCountLabel').textContent = `📝 ${words.length} mots`;
+        }
+        
+        // Show/hide loading
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+        
+        // Apply quick filters
+        function applyQuickFilters() {
+            const eventType = document.getElementById('eventTypeCombo').value;
+            const budget = document.getElementById('budgetCombo').value;
+            const audience = document.getElementById('audienceSizeCombo').value;
+            
+            let filterText = '';
+            if (eventType) filterText += eventType.replace(/[🧘🌿🌸🎯💼🎉✨]/g, '').trim();
+            if (budget) filterText += ' avec ' + budget.replace('💰', '').trim();
+            if (audience) filterText += ' pour ' + audience.replace('👥', '').trim();
+            
+            if (filterText) {
+                document.getElementById('eventDescriptionArea').value = filterText.toLowerCase();
+            }
+        }
+        
+        // Generate ideas
+        async function generateIdeas() {
+            const description = document.getElementById('eventDescriptionArea').value.trim();
+            const eventType = document.getElementById('eventTypeCombo').value;
+            const budget = document.getElementById('budgetCombo').value;
+            const audienceSize = document.getElementById('audienceSizeCombo').value;
+            const helpType = document.getElementById('helpTypeCombo').value;
+            
+            if (!description) {
+                alert('Veuillez décrire votre événement');
+                return;
+            }
+            
+            showLoading(true);
+            document.getElementById('resultArea').value = '🧘 **Je médite sur votre demande...**\n\nGénération d\'idées apaisantes...\nType: ' + helpType + '\n\n✨ Prenez une grande inspiration...';
+            
+            try {
+                const response = await fetch('{{ path('admin_ai_assistant_generate') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': document.getElementById('csrf_token').value
+                    },
+                    body: JSON.stringify({
+                        description: description,
+                        event_type: eventType,
+                        budget: budget,
+                        audience_size: audienceSize,
+                        help_type: helpType
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('resultArea').value = data.result;
+                    currentResult = data.result;
+                } else {
+                    document.getElementById('resultArea').value = '❌ Erreur: ' + (data.error || 'Impossible de générer des idées');
+                }
+            } catch (error) {
+                document.getElementById('resultArea').value = '❌ Erreur de connexion: ' + error.message;
+            } finally {
+                showLoading(false);
+                updateWordCount();
+            }
+        }
+        
+        // Clear fields
+        function clearFields() {
+            document.getElementById('eventDescriptionArea').value = '';
+            document.getElementById('eventTypeCombo').value = '';
+            document.getElementById('budgetCombo').value = '';
+            document.getElementById('audienceSizeCombo').value = '';
+            document.getElementById('helpTypeCombo').value = '🎯 Idées de thèmes';
+            setWelcomeMessage();
+        }
+        
+        // Copy to clipboard
+        async function copyToClipboard() {
+            const text = document.getElementById('resultArea').value;
+            if (!text || text.includes('BIENVENUE')) {
+                alert('Rien à copier');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('✨ Copié dans le presse-papiers!');
+            } catch (err) {
+                alert('Impossible de copier');
+            }
+        }
+        
+        // Export to file
+        async function exportToFile() {
+            const content = document.getElementById('resultArea').value;
+            if (!content || content.includes('BIENVENUE')) {
+                alert('Veuillez d\'abord générer des idées!');
+                return;
+            }
+            
+            const format = await new Promise((resolve) => {
+                const formatSelect = window.prompt('Format d\'export (txt, doc, pdf):', 'txt');
+                resolve(formatSelect || 'txt');
+            });
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch('{{ path('admin_ai_assistant_export') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': document.getElementById('csrf_token').value
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        format: format
+                    })
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `idees_bien_etre_${new Date().toISOString().slice(0,19)}.${format}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showToast('✅ Fichier exporté!');
+                } else {
+                    alert('Erreur lors de l\'export');
+                }
+            } catch (error) {
+                alert('Erreur: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Share results
+        async function shareResults() {
+            const content = document.getElementById('resultArea').value;
+            if (!content || content.includes('BIENVENUE')) {
+                alert('Rien à partager');
+                return;
+            }
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Assistant Bien-être - Idées d\'événement',
+                        text: content
+                    });
+                } catch (err) {
+                    console.log('Share cancelled');
+                }
+            } else {
+                copyToClipboard();
+                alert('Partage non supporté - Texte copié dans le presse-papiers');
+            }
+        }
+        
+        // Save to favorites
+        async function saveToFavorites() {
+            const content = document.getElementById('resultArea').value;
+            if (!content || content.includes('BIENVENUE')) {
+                alert('Rien à sauvegarder');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch('{{ path('admin_ai_assistant_save_favorite') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': document.getElementById('csrf_token').value
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        description: document.getElementById('eventDescriptionArea').value.substring(0, 100)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('⭐ Ajouté aux favoris!');
+                } else {
+                    alert('Erreur: ' + data.error);
+                }
+            } catch (error) {
+                alert('Erreur de connexion');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Show history
+        async function showHistory() {
+            showLoading(true);
+            
+            try {
+                const response = await fetch('{{ path('admin_ai_assistant_history') }}');
+                const data = await response.json();
+                
+                if (data.success && data.history.length > 0) {
+                    let historyText = '=== HISTORIQUE DES CONVERSATIONS ===\n\n';
+                    data.history.forEach((item, index) => {
+                        historyText += `[${index + 1}] ${item.created_at}\n`;
+                        historyText += `Type: ${item.type}\n`;
+                        historyText += `Question: ${item.question.substring(0, 100)}...\n`;
+                        historyText += `Réponse: ${item.result.substring(0, 200)}...\n`;
+                        historyText += '-'.repeat(50) + '\n\n';
+                    });
+                    document.getElementById('resultArea').value = historyText;
+                    updateWordCount();
+                } else {
+                    alert('Aucun historique trouvé');
+                }
+            } catch (error) {
+                alert('Erreur de chargement');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Show favorites
+        async function showFavorites() {
+            showLoading(true);
+            
+            try {
+                const response = await fetch('{{ path('admin_ai_assistant_favorites') }}');
+                const data = await response.json();
+                
+                if (data.success && data.favorites.length > 0) {
+                    let favoritesText = '=== MES FAVORIS ===\n\n';
+                    data.favorites.forEach((item, index) => {
+                        favoritesText += `[${index + 1}] ${item.created_at}\n`;
+                        favoritesText += `Description: ${item.description || 'Sans description'}\n`;
+                        favoritesText += `Contenu: ${item.content.substring(0, 300)}...\n`;
+                        favoritesText += '-'.repeat(50) + '\n\n';
+                    });
+                    document.getElementById('resultArea').value = favoritesText;
+                    updateWordCount();
+                } else {
+                    alert('Aucun favori trouvé');
+                }
+            } catch (error) {
+                alert('Erreur de chargement');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Quick actions
+        function handleQuickIdea() {
+            document.getElementById('eventDescriptionArea').value = 'Je cherche l\'inspiration pour un événement doux et apaisant';
+            document.getElementById('helpTypeCombo').value = '🎯 Idées de thèmes';
+            generateIdeas();
+        }
+        
+        function handleBudgetHelp() {
+            document.getElementById('eventDescriptionArea').value = 'Comment planifier un budget avec sérénité pour mon événement ?';
+            document.getElementById('helpTypeCombo').value = '💰 Planification budgétaire';
+            generateIdeas();
+        }
+        
+        function handleTimelineHelp() {
+            document.getElementById('eventDescriptionArea').value = 'Quel calendrier apaisant pour mon événement ?';
+            document.getElementById('helpTypeCombo').value = '📅 Planification temporelle';
+            generateIdeas();
+        }
+        
+        function handleMarketingHelp() {
+            document.getElementById('eventDescriptionArea').value = 'Comment partager mon événement avec bienveillance ?';
+            document.getElementById('helpTypeCombo').value = '📢 Stratégie de partage';
+            generateIdeas();
+        }
+        
+        // Tab handling
+        document.querySelectorAll('#aiTabs .nav-link').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#aiTabs .nav-link').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tab = this.getAttribute('data-tab');
+                const helpTypeMap = {
+                    'themes': '🎯 Idées de thèmes',
+                    'budget': '💰 Planification budgétaire',
+                    'activities': '✨ Suggestions d\'activités',
+                    'marketing': '📢 Stratégie de partage',
+                    'venue': '🏛️ Suggestions de lieux',
+                    'timeline': '📅 Planification temporelle',
+                    'decor': '🎨 Idées de décoration',
+                    'catering': '🍽️ Idées de restauration',
+                    'complete': '📋 Plan complet'
+                };
+                
+                if (helpTypeMap[tab]) {
+                    document.getElementById('helpTypeCombo').value = helpTypeMap[tab];
+                }
+            });
+        });
+        
+        // Apply filters on change
+        document.getElementById('eventTypeCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('budgetCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('audienceSizeCombo').addEventListener('change', applyQuickFilters);
+        
+        // Result area listener
+        document.getElementById('resultArea').addEventListener('input', updateWordCount);
+        
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#7f9a7d;color:white;padding:12px 24px;border-radius:25px;z-index:10000;animation:fadeInOut 2s';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        // Close window
+        function closeWindow() {
+            window.location.href = '{{ path('admin_events_index') }}';
+        }
+        
+        // Initialize
+        setWelcomeMessage();
+    </script>
+{% endblock %}

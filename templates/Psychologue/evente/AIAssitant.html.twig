@@ -1,0 +1,453 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Assistant Bien-Être — NAFSEYTI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f5f3ed; font-family: "Segoe UI", sans-serif; min-height: 100vh; }
+        .page { background: linear-gradient(to bottom, #f3efe9, #e8e3db); padding: 25px; max-width: 1100px; margin: 0 auto; }
+
+        /* Header */
+        .ai-header { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .ai-avatar { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(to bottom, #9cb39b, #7f9a7d); display: flex; align-items: center; justify-content: center; font-size: 45px; box-shadow: 0 4px 15px rgba(127,154,125,.5); flex-shrink: 0; }
+        .ai-title { font-size: 32px; font-weight: 700; color: #5c715a; }
+        .ai-subtitle { font-size: 16px; color: #8a9a87; font-style: italic; margin-top: 6px; }
+        .nature-badge { margin-left: auto; background: linear-gradient(to bottom, #b7c9b5, #a5b8a3); color: #3d533b; font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: 25px; white-space: nowrap; }
+
+        /* Banner */
+        .banner { display: flex; align-items: center; background: rgba(159,185,151,.15); border-radius: 20px; padding: 15px 20px; margin-bottom: 20px; gap: 10px; }
+        .banner span { font-size: 14px; font-weight: 700; color: #5f735d; }
+        .banner-spacer { flex: 1; }
+
+        /* Filter panel */
+        .filter-panel { background: #fcfaf7; border: 1px solid #d2e0cf; border-radius: 30px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(93,120,87,.1); }
+        .filter-title { font-size: 18px; font-weight: 700; color: #5c715a; margin-bottom: 16px; letter-spacing: 1px; }
+        .filter-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .filter-group label { display: block; font-size: 12px; font-weight: 700; color: #7f9a7d; margin-bottom: 6px; }
+        select { width: 100%; padding: 10px 14px; border: 1px solid #c4d4c1; border-radius: 20px; background: #f0f1ec; color: #4d604b; font-size: 13px; outline: none; cursor: pointer; }
+        select:focus { border-color: #7f9a7d; }
+
+        /* Toolbar */
+        .toolbar { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .help-type-group { flex: 1; min-width: 200px; }
+        .help-type-group label { display: block; font-size: 12px; font-weight: 700; color: #5c715a; margin-bottom: 6px; }
+        .help-type-group select { border-radius: 25px; padding: 12px 16px; }
+        .toolbar-spacer { flex: 1; }
+        .quick-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 12px 22px; border: none; border-radius: 25px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .15s, transform .15s; white-space: nowrap; }
+        .btn:hover { opacity: .88; transform: translateY(-1px); }
+        .btn-green1 { background: #9cb39b; color: white; box-shadow: 0 4px 10px rgba(156,179,155,.5); }
+        .btn-green2 { background: #7f9a7d; color: white; box-shadow: 0 4px 10px rgba(127,154,125,.5); }
+        .btn-green3 { background: #a5b8a3; color: white; box-shadow: 0 4px 10px rgba(165,184,163,.5); }
+        .btn-green4 { background: #b7c9b5; color: white; box-shadow: 0 4px 10px rgba(183,201,181,.5); }
+        .btn-light  { background: #f0f1ec; color: #5c715a; border: 1px solid #c4d4c1; }
+        .btn-close  { background: #b7c9b5; color: white; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0; border-bottom: 2px solid #d2e0cf; margin-bottom: 0; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 18px; border: none; background: transparent; color: #8a9a87; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; }
+        .tab-btn.active { color: #5c715a; border-bottom-color: #7f9a7d; }
+        .tab-btn:hover { color: #5c715a; }
+        .tab-content { background: #fcfaf7; border: 1px solid #d2e0cf; border-top: none; border-radius: 0 0 25px 25px; padding: 16px 20px; min-height: 60px; margin-bottom: 20px; }
+        .tab-pane { display: none; color: #7f9a7d; font-size: 14px; }
+        .tab-pane.active { display: block; }
+
+        /* Intention area */
+        .intention-box { background: #fcfaf7; border: 1px solid #d2e0cf; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(93,120,87,.1); }
+        .intention-box label { display: block; font-size: 16px; font-weight: 700; color: #5c715a; margin-bottom: 10px; }
+        textarea { width: 100%; padding: 14px 16px; border: 1px solid #c4d4c1; border-radius: 20px; background: #f0f1ec; color: #4d604b; font-size: 14px; resize: vertical; min-height: 110px; outline: none; font-family: inherit; }
+        textarea::placeholder { color: #a5b8a3; }
+        textarea:focus { border-color: #7f9a7d; }
+
+        /* Main action buttons */
+        .main-actions { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; }
+        .btn-generate { background: linear-gradient(to bottom, #7f9a7d, #5c715a); color: white; font-size: 20px; font-weight: 700; padding: 18px 60px; border-radius: 35px; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(127,154,125,.5); transition: opacity .15s, transform .15s; }
+        .btn-generate:hover { opacity: .9; transform: translateY(-2px); }
+
+        /* Spinner */
+        .spinner { display: none; width: 60px; height: 60px; border: 5px solid #d2e0cf; border-top-color: #7f9a7d; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Result area */
+        .result-box { background: #fcfaf7; border: 1px solid #d2e0cf; border-radius: 25px; padding: 25px; box-shadow: 0 5px 15px rgba(93,120,87,.1); }
+        .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .result-dot { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(to bottom, #7f9a7d, #5c715a); flex-shrink: 0; }
+        .result-title { font-size: 18px; font-weight: 700; color: #5c715a; flex: 1; }
+        .word-count { font-size: 14px; color: #a5b8a3; }
+        .result-area { width: 100%; min-height: 220px; padding: 16px; border: 1px solid #c4d4c1; border-radius: 20px; background: #f0f1ec; color: #4d604b; font-family: Georgia, serif; font-size: 15px; resize: vertical; outline: none; }
+        .result-toolbar { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+        /* Status bar */
+        .status-bar { display: flex; align-items: center; gap: 16px; background: rgba(159,185,151,.15); border-radius: 15px; padding: 12px 20px; margin-top: 20px; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #7f9a7d; flex-shrink: 0; }
+        .status-text { font-size: 13px; color: #5c715a; }
+        .status-spacer { flex: 1; }
+        .status-model { font-size: 13px; color: #5c715a; }
+        .status-time  { font-size: 13px; color: #5c715a; }
+
+        /* Modal overlay */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: #fcfaf7; border-radius: 20px; padding: 25px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,.2); }
+        .modal h3 { font-size: 18px; font-weight: 700; color: #5c715a; margin-bottom: 16px; }
+        .modal-item { background: #f0f1ec; border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; font-size: 13px; color: #4d604b; }
+        .modal-item .meta { font-size: 11px; color: #a5b8a3; margin-top: 4px; }
+        .modal-close { display: block; margin-top: 16px; text-align: right; }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <!-- Header -->
+    <div class="ai-header">
+        <div class="ai-avatar">🌿</div>
+        <div>
+            <div class="ai-title">ASSISTANT BIEN-ÊTRE</div>
+            <div class="ai-subtitle">Votre espace de sérénité pour des événements apaisants</div>
+        </div>
+        <div class="nature-badge">🌱 NATURE &amp; PAIX</div>
+    </div>
+
+    <!-- Banner -->
+    <div class="banner">
+        <span>🍃</span>
+        <span>+420 séances de bien-être planifiées cette semaine</span>
+        <div class="banner-spacer"></div>
+        <span>🌺</span>
+        <span>Harmonie intérieure</span>
+    </div>
+
+    <!-- Filter panel -->
+    <div class="filter-panel">
+        <div class="filter-title">🔍 FILTRES BIEN-ÊTRE</div>
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label>TYPE D'EXPÉRIENCE</label>
+                <select id="eventTypeCombo">
+                    <option value="">Sélectionner</option>
+                    <option>Atelier de méditation</option>
+                    <option>Retraite bien-être</option>
+                    <option>Séance de yoga</option>
+                    <option>Conférence psychologie</option>
+                    <option>Groupe de parole</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>BUDGET</label>
+                <select id="budgetCombo">
+                    <option value="">Sélectionner</option>
+                    <option>Moins de 500€</option>
+                    <option>500€ – 2 000€</option>
+                    <option>2 000€ – 5 000€</option>
+                    <option>Plus de 5 000€</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>PARTICIPANTS</label>
+                <select id="audienceSizeCombo">
+                    <option value="">Sélectionner</option>
+                    <option>1 – 10</option>
+                    <option>10 – 30</option>
+                    <option>30 – 100</option>
+                    <option>Plus de 100</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="help-type-group">
+            <label>TYPE D'ACCOMPAGNEMENT</label>
+            <select id="helpTypeCombo">
+                <option>🎯 Idées de thèmes</option>
+                <option>💰 Conseils budgétaires</option>
+                <option>✨ Suggestions d'activités</option>
+                <option>🕊️ Conseils de partage</option>
+                <option>🏛️ Suggestions de lieux</option>
+                <option>📅 Planification temporelle</option>
+                <option>🎨 Idées de décoration</option>
+                <option>🍽️ Idées de restauration</option>
+                <option>📋 Plan complet</option>
+            </select>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <div class="quick-btns">
+            <button class="btn btn-green1" onclick="quickGenerate('🎯 Idées de thèmes')">🌿 IDÉE VERTE</button>
+            <button class="btn btn-green2" onclick="quickGenerate('💰 Conseils budgétaires')">🍃 BUDGET NATURE</button>
+            <button class="btn btn-green3" onclick="quickGenerate('📅 Planification temporelle')">🌱 PLANNING DOUX</button>
+            <button class="btn btn-green4" onclick="quickGenerate('🕊️ Conseils de partage')">🕊️ PARTAGE</button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('themes', this)">�� THÈMES</button>
+        <button class="tab-btn" onclick="switchTab('budget', this)">💰 BUDGET</button>
+        <button class="tab-btn" onclick="switchTab('activities', this)">✨ ACTIVITÉS</button>
+        <button class="tab-btn" onclick="switchTab('marketing', this)">📢 PARTAGE</button>
+        <button class="tab-btn" onclick="switchTab('venue', this)">🏛️ LIEUX</button>
+        <button class="tab-btn" onclick="switchTab('timeline', this)">📅 TIMELINE</button>
+        <button class="tab-btn" onclick="switchTab('decor', this)">🎨 DÉCOR</button>
+        <button class="tab-btn" onclick="switchTab('catering', this)">🍽️ RESTAURATION</button>
+        <button class="tab-btn" onclick="switchTab('complete', this)">📋 PLAN COMPLET</button>
+    </div>
+    <div class="tab-content">
+        <div id="tab-themes"     class="tab-pane active">Explorez des thèmes apaisants et inspirants</div>
+        <div id="tab-budget"     class="tab-pane">Planifiez sereinement votre budget</div>
+        <div id="tab-activities" class="tab-pane">Découvrez des activités ressourçantes</div>
+        <div id="tab-marketing"  class="tab-pane">Diffusez votre message en douceur</div>
+        <div id="tab-venue"      class="tab-pane">Trouvez des espaces de sérénité</div>
+        <div id="tab-timeline"   class="tab-pane">Organisez votre temps en toute quiétude</div>
+        <div id="tab-decor"      class="tab-pane">Créez une ambiance harmonieuse</div>
+        <div id="tab-catering"   class="tab-pane">Des saveurs qui apaisent</div>
+        <div id="tab-complete"   class="tab-pane">Votre accompagnement sur mesure</div>
+    </div>
+
+    <!-- Intention -->
+    <div class="intention-box">
+        <label>VOTRE INTENTION</label>
+        <textarea id="eventDescriptionArea"
+                  placeholder="Décrivez votre événement en toute sérénité... (ex: 'Je souhaite organiser un atelier de méditation pour 30 personnes')"></textarea>
+    </div>
+
+    <!-- Main actions -->
+    <div class="main-actions">
+        <button class="btn-generate" id="generateBtn" onclick="generateIdeas()">🌿 Générer des idées</button>
+        <button class="btn btn-light" onclick="clearFields()">🍃 Effacer</button>
+    </div>
+
+    <!-- Spinner -->
+    <div class="spinner" id="spinner"></div>
+
+    <!-- Result -->
+    <div class="result-box">
+        <div class="result-header">
+            <div class="result-dot"></div>
+            <div class="result-title">VOTRE ESPACE DE RÉFLEXION</div>
+            <div class="word-count" id="wordCount">0 mots</div>
+        </div>
+        <textarea class="result-area" id="resultArea" readonly
+                  placeholder="Vos idées apparaîtront ici..."></textarea>
+        <div class="result-toolbar">
+            <button class="btn btn-light" onclick="copyResult()">📋 Copier</button>
+            <button class="btn btn-light" onclick="showHistory()">📚 Historique</button>
+            <button class="btn btn-light" onclick="showFavorites()">⭐ Mes Favoris</button>
+            <button class="btn btn-light" onclick="exportResult()">📄 Exporter</button>
+            <button class="btn btn-light" onclick="shareResult()">📤 Partager</button>
+            <button class="btn btn-light" onclick="saveToFavorites()">➕ Ajouter</button>
+            <a href="{{ path('psycho_events_index') }}" class="btn btn-close">✕ Fermer</a>
+        </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+        <div class="status-dot"></div>
+        <span class="status-text">Connexion établie</span>
+        <div class="status-spacer"></div>
+        <span class="status-model">🌿 Modèle: gemini-2.5-flash</span>
+        <span style="color:#a5b8a3;">•</span>
+        <span class="status-time" id="clock">🍃 00:00:00</span>
+    </div>
+</div>
+
+<!-- History modal -->
+<div class="modal-overlay" id="historyModal">
+    <div class="modal">
+        <h3>📚 Historique</h3>
+        <div id="historyList"><p style="color:#a5b8a3;">Aucun historique.</p></div>
+        <div class="modal-close">
+            <button class="btn btn-light" onclick="closeModal('historyModal')">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Favorites modal -->
+<div class="modal-overlay" id="favoritesModal">
+    <div class="modal">
+        <h3>⭐ Mes Favoris</h3>
+        <div id="favoritesList"><p style="color:#a5b8a3;">Aucun favori.</p></div>
+        <div class="modal-close">
+            <button class="btn btn-light" onclick="closeModal('favoritesModal')">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const generateUrl      = '{{ path("psycho_ai_assistant_generate") }}';
+    const historyUrl       = '{{ path("psycho_ai_assistant_history") }}';
+    const saveFavoriteUrl  = '{{ path("psycho_ai_assistant_save_favorite") }}';
+    const favoritesUrl     = '{{ path("psycho_ai_assistant_favorites") }}';
+    const exportUrl        = '{{ path("psycho_ai_assistant_export") }}';
+
+    // ── Clock ────────────────────────────────────────────────────────────────
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent =
+            '🍃 ' + now.toTimeString().slice(0, 8);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── Tabs ─────────────────────────────────────────────────────────────────
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // ── Generate ─────────────────────────────────────────────────────────────
+    function generateIdeas() {
+        const description = document.getElementById('eventDescriptionArea').value.trim();
+        const helpType    = document.getElementById('helpTypeCombo').value;
+        const eventType   = document.getElementById('eventTypeCombo').value;
+        const budget      = document.getElementById('budgetCombo').value;
+        const audience    = document.getElementById('audienceSizeCombo').value;
+
+        setLoading(true);
+
+        fetch(generateUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description, help_type: helpType, event_type: eventType, budget, audience_size: audience })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('resultArea').value = data.result;
+                updateWordCount(data.result);
+            }
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    }
+
+    function quickGenerate(helpType) {
+        document.getElementById('helpTypeCombo').value = helpType;
+        generateIdeas();
+    }
+
+    // ── Clear ────────────────────────────────────────────────────────────────
+    function clearFields() {
+        document.getElementById('eventDescriptionArea').value = '';
+        document.getElementById('resultArea').value = '';
+        document.getElementById('wordCount').textContent = '0 mots';
+        document.getElementById('eventTypeCombo').value = '';
+        document.getElementById('budgetCombo').value = '';
+        document.getElementById('audienceSizeCombo').value = '';
+    }
+
+    // ── Copy ─────────────────────────────────────────────────────────────────
+    function copyResult() {
+        const text = document.getElementById('resultArea').value;
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => alert('Copié dans le presse-papiers !'));
+    }
+
+    // ── Export ───────────────────────────────────────────────────────────────
+    function exportResult() {
+        const content = document.getElementById('resultArea').value;
+        if (!content) return;
+        fetch(exportUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content, format: 'txt' })
+        })
+        .then(r => r.blob())
+        .then(blob => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'idees_bien_etre.txt';
+            a.click();
+        });
+    }
+
+    // ── Share ────────────────────────────────────────────────────────────────
+    function shareResult() {
+        const text = document.getElementById('resultArea').value;
+        if (!text) return;
+        if (navigator.share) {
+            navigator.share({ title: 'Idées Bien-Être', text });
+        } else {
+            copyResult();
+            alert('Lien copié dans le presse-papiers !');
+        }
+    }
+
+    // ── Save to favorites ────────────────────────────────────────────────────
+    function saveToFavorites() {
+        const content     = document.getElementById('resultArea').value;
+        const description = document.getElementById('eventDescriptionArea').value;
+        if (!content) return;
+        fetch(saveFavoriteUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content, description })
+        })
+        .then(r => r.json())
+        .then(data => alert(data.message || 'Ajouté aux favoris !'));
+    }
+
+    // ── History modal ────────────────────────────────────────────────────────
+    function showHistory() {
+        fetch(historyUrl)
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('historyList');
+                if (!data.history || data.history.length === 0) {
+                    list.innerHTML = '<p style="color:#a5b8a3;">Aucun historique.</p>';
+                } else {
+                    list.innerHTML = data.history.map(h => `
+                        <div class="modal-item">
+                            <strong>${escHtml(h.type)}</strong> — ${escHtml(h.question).slice(0, 80)}...
+                            <div class="meta">${h.created_at}</div>
+                        </div>`).join('');
+                }
+                openModal('historyModal');
+            });
+    }
+
+    // ── Favorites modal ──────────────────────────────────────────────────────
+    function showFavorites() {
+        fetch(favoritesUrl)
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('favoritesList');
+                if (!data.favorites || data.favorites.length === 0) {
+                    list.innerHTML = '<p style="color:#a5b8a3;">Aucun favori.</p>';
+                } else {
+                    list.innerHTML = data.favorites.map(f => `
+                        <div class="modal-item">
+                            ${escHtml(f.content).slice(0, 120)}...
+                            <div class="meta">${f.created_at}</div>
+                        </div>`).join('');
+                }
+                openModal('favoritesModal');
+            });
+    }
+
+    // ── Modal helpers ────────────────────────────────────────────────────────
+    function openModal(id)  { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    function setLoading(on) {
+        document.getElementById('spinner').style.display   = on ? 'block' : 'none';
+        document.getElementById('generateBtn').disabled    = on;
+    }
+
+    function updateWordCount(text) {
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        document.getElementById('wordCount').textContent = words + ' mots';
+    }
+
+    function escHtml(str) {
+        return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+</script>
+</body>
+</html>
