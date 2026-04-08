@@ -11,27 +11,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-public function index(): Response
-{
-    /** @var User $user */
-    $user = $this->getUser();
+    public function index(): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
 
-    // If logged in as admin, redirect to dashboard
-    if ($user && in_array('ROLE_ADMIN', $user->getRoles())) {
-        return $this->redirectToRoute('admin_dashboard');
+        // If logged in as admin, redirect to dashboard
+        if ($user && in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        return $this->render('home/index.html.twig');
     }
-
-    return $this->render('home/index.html.twig');
-}
 
     #[Route('/profile', name: 'app_profile')]
     public function profile(): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        return $this->render('home/profile.html.twig', [
-            'user' => $user,
-        ]);
+
+        // Admin sees admin layout
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->render('back/profile.html.twig', ['user' => $user]);
+        }
+
+        return $this->render('home/profile.html.twig', ['user' => $user]);
     }
 
     #[Route('/profile/edit', name: 'app_profile_edit')]
@@ -74,15 +78,26 @@ public function index(): Response
 
             // Redirect based on role
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
-                return $this->redirectToRoute('admin_dashboard');
+                return $this->redirectToRoute('admin_profile');
             }
 
             return $this->redirectToRoute('app_profile');
         }
 
-        return $this->render('home/edit_profile.html.twig', [
-            'user' => $user,
-        ]);
+        // Render based on role
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->render('back/edit_profile.html.twig', ['user' => $user]);
+        }
+
+        return $this->render('home/edit_profile.html.twig', ['user' => $user]);
+    }
+
+    #[Route('/admin/profile', name: 'admin_profile')]
+    public function adminProfile(): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render('back/profile.html.twig', ['user' => $user]);
     }
 
     #[Route('/profile/delete', name: 'app_profile_delete')]
