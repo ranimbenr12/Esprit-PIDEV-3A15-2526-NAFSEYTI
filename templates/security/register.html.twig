@@ -12,69 +12,91 @@
             <p style="color:#6B7D5A; font-size:0.95rem;">Rejoignez la plateforme Nafseyti</p>
         </div>
 
-        {% if app.session.flashBag.has('error') %}
-            {% for message in app.flashes('error') %}
-                <div style="background:#fee2e2; color:#991b1b; padding:12px 16px; border-radius:8px; margin-bottom:20px; font-size:0.9rem;">
-                    ⚠️ {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-
         <form method="post" action="{{ path('app_register') }}">
 
             <!-- Firstname + Lastname -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
                 <div>
                     <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">Prénom</label>
-                    <input type="text" name="firstname" required
-                           style="width:100%; padding:12px 16px; border:1.5px solid #d4c9a8; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
+                    <input type="text" name="firstname" value="{{ old.firstname ?? '' }}"
+                           style="width:100%; padding:12px 16px; border:1.5px solid {{ errors.firstname is defined ? '#ef4444' : '#d4c9a8' }}; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
                            placeholder="Prénom">
+                    {% if errors.firstname is defined %}
+                        <p style="color:#ef4444; font-size:0.8rem; margin-top:4px;">⚠️ {{ errors.firstname }}</p>
+                    {% endif %}
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">Nom</label>
-                    <input type="text" name="lastname" required
-                           style="width:100%; padding:12px 16px; border:1.5px solid #d4c9a8; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
+                    <input type="text" name="lastname" value="{{ old.lastname ?? '' }}"
+                           style="width:100%; padding:12px 16px; border:1.5px solid {{ errors.lastname is defined ? '#ef4444' : '#d4c9a8' }}; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
                            placeholder="Nom">
+                    {% if errors.lastname is defined %}
+                        <p style="color:#ef4444; font-size:0.8rem; margin-top:4px;">⚠️ {{ errors.lastname }}</p>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Email -->
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">Email</label>
-                <input type="email" name="email" required
-                       style="width:100%; padding:12px 16px; border:1.5px solid #d4c9a8; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
+                <input type="text" name="email" value="{{ old.email ?? '' }}"
+                       style="width:100%; padding:12px 16px; border:1.5px solid {{ errors.email is defined ? '#ef4444' : '#d4c9a8' }}; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
                        placeholder="votre@email.com">
+                {% if errors.email is defined %}
+                    <p style="color:#ef4444; font-size:0.8rem; margin-top:4px;">⚠️ {{ errors.email }}</p>
+                {% endif %}
             </div>
 
             <!-- Password -->
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">Mot de passe</label>
                 <div style="position:relative;">
-                    <input type="password" name="password" id="password" required
-                           style="width:100%; padding:12px 16px; padding-right:48px; border:1.5px solid #d4c9a8; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
+                    <input type="password" name="password" id="password"
+                           style="width:100%; padding:12px 16px; padding-right:48px; border:1.5px solid {{ errors.password is defined ? '#ef4444' : '#d4c9a8' }}; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
                            placeholder="••••••••">
                     <span id="togglePassword"
                           style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; color:#6B7D5A;">
                         <i class="fas fa-eye" id="eyeIcon"></i>
                     </span>
                 </div>
+                {% if errors.password is defined %}
+                    <p style="color:#ef4444; font-size:0.8rem; margin-top:4px;">⚠️ {{ errors.password }}</p>
+                {% endif %}
             </div>
 
             <!-- Phone -->
             <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">Téléphone</label>
-                <input type="text" name="phone_number"
-                       style="width:100%; padding:12px 16px; border:1.5px solid #d4c9a8; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
+                <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">
+                    Téléphone
+                </label>
+                <input type="text" name="phone_number" value="{{ old.phone_number ?? '' }}"
+                       style="width:100%; padding:12px 16px; border:1.5px solid {{ errors.phone_number is defined ? '#ef4444' : '#d4c9a8' }}; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
                        placeholder="+216 XX XXX XXX">
+                {% if errors.phone_number is defined %}
+                    <p style="color:#ef4444; font-size:0.8rem; margin-top:4px;">⚠️ {{ errors.phone_number }}</p>
+                {% endif %}
             </div>
 
             <!-- Address -->
             <div style="margin-bottom:28px;">
-                <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">Adresse</label>
-                <input type="text" name="address"
-                       style="width:100%; padding:12px 16px; border:1.5px solid #d4c9a8; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
+                <label style="display:block; font-weight:600; color:#2d3a1e; margin-bottom:8px;">
+                    Adresse <span style="color:#999; font-size:0.8rem;">(optionnel)</span>
+                </label>
+                <input type="text" name="address" value="{{ old.address ?? '' }}"
+                       style="width:100%; padding:12px 16px; border:1.5px solid {{ errors.address is defined ? '#ef4444' : '#d4c9a8' }}; border-radius:8px; font-size:1rem; outline:none; box-sizing:border-box;"
                        placeholder="Votre adresse">
+                {% if errors.address is defined %}
+                    <p style="color:#ef4444; font-size:0.8rem; margin-top:4px;">⚠️ {{ errors.address }}</p>
+                {% endif %}
             </div>
+
+            <!-- reCAPTCHA -->
+            <div style="margin-bottom:28px; display:flex; justify-content:center;">
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+            </div>
+            {% if errors.recaptcha is defined %}
+                <p style="color:#ef4444; font-size:0.8rem; margin-bottom:16px; text-align:center;">⚠️ {{ errors.recaptcha }}</p>
+            {% endif %}
 
             <button type="submit"
                     style="width:100%; padding:14px; background:#4a7c3f; color:white; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; letter-spacing:0.5px;">
@@ -89,6 +111,7 @@
     </div>
 </section>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     document.getElementById('togglePassword').addEventListener('click', function() {
         const password = document.getElementById('password');

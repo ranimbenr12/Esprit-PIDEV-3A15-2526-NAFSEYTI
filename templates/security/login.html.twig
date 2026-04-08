@@ -44,6 +44,11 @@
                 </div>
             </div>
 
+            <!-- reCAPTCHA -->
+            <div style="margin-bottom:28px;">
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" style="display:flex; justify-content:center;"></div>
+            </div>
+
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
             <button type="submit"
@@ -59,6 +64,7 @@
     </div>
 </section>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     document.getElementById('togglePassword').addEventListener('click', function() {
         const password = document.getElementById('password');
