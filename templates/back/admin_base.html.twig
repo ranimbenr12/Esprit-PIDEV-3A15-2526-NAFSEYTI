@@ -78,6 +78,19 @@
                         </a>
                     </li>
 
+                    <!-- 🔴 NOUVEAU LIEN ALERTES DANS LA SIDEBAR -->
+                    <li class="{% block alertes_active %}{% endblock %}">
+                        <a href="{{ path('admin_alertes_index') }}" style="background: #dc3545; color: white; border-radius: 5px;">
+                            <i class="fa fa-exclamation-triangle" style="color: white;"></i>
+                            <span>🚨 Alertes critiques</span>
+                            {% if nb_nouvelles_alertes is defined and nb_nouvelles_alertes > 0 %}
+                                <span class="badge badge-light" style="float: right; background: white; color: #dc3545; border-radius: 50%; padding: 3px 8px;">
+                                    {{ nb_nouvelles_alertes }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </li>
+
                     <li>
                         <a href="#">
                             <i class="fa fa-calendar-check-o red_color"></i>
@@ -118,7 +131,18 @@
                         </div>
                         <div class="right_topbar">
                             <div class="icon_info">
+                                <!-- 🔴 BOUTON ALERTES DANS LA TOPBAR (en icône) -->
                                 <ul>
+                                    <li>
+                                        <a href="{{ path('admin_alertes_index') }}" 
+                                           class="alertes-btn"
+                                           style="position: relative; background: #dc3545; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                            <i class="fa fa-exclamation-triangle" style="color: white; font-size: 18px;"></i>
+                                            <span class="badge" style="position: absolute; top: -5px; right: -5px; background: #ffc107; color: #dc3545; border-radius: 50%; padding: 2px 6px; font-size: 10px;">
+                                                {{ nb_nouvelles_alertes|default(0) }}
+                                            </span>
+                                        </a>
+                                    </li>
                                     <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
                                     <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
                                     <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
@@ -146,7 +170,17 @@
                     </div>
                 </nav>
             </div>
-
+<script>
+// Rafraîchit le compteur après chaque action
+document.addEventListener('DOMContentLoaded', function() {
+    const countSpan = document.getElementById('alertes-count');
+    if (countSpan && window.location.search.includes('refresh')) {
+        fetch('{{ path('admin_alertes_count') }}')
+            .then(r => r.json())
+            .then(d => { countSpan.textContent = d.count; });
+    }
+});
+</script>
             <!-- Messages Flash -->
             <div class="midde_cont">
                 <div class="container-fluid">

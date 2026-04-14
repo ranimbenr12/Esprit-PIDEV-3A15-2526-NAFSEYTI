@@ -1,0 +1,319 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Alertes Critiques — Administration{% endblock %}
+
+{% block admin_content %}
+<div class="container-fluid px-4">
+
+    {# Header #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">
+            <i class="fa fa-exclamation-triangle text-danger"></i> Alertes Critiques
+            {% if nb_nouvelles > 0 %}
+                <span class="badge bg-danger">{{ nb_nouvelles }} nouvelles</span>
+            {% endif %}
+        </h1>
+    </div>
+
+    {# Flash messages #}
+    {% for msg in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa fa-check-circle"></i> {{ msg }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+    {# Cartes statistiques #}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-left-danger shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="text-muted mb-1">Nouvelles</h6>
+                            <h2 class="mb-0 text-danger">{{ nouvelles|length }}</h2>
+                        </div>
+                        <div class="col-4 text-right">
+                            <i class="fa fa-bell fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-left-warning shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="text-muted mb-1">En cours</h6>
+                            <h2 class="mb-0 text-warning">{{ en_cours|length }}</h2>
+                        </div>
+                        <div class="col-4 text-right">
+                            <i class="fa fa-spinner fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-left-success shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="text-muted mb-1">Traitées</h6>
+                            <h2 class="mb-0 text-success">{{ traitees|length }}</h2>
+                        </div>
+                        <div class="col-4 text-right">
+                            <i class="fa fa-check-circle fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Nouvelles alertes #}
+    {% if nouvelles is not empty %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">
+                <i class="fa fa-bell"></i> Nouvelles alertes
+                <span class="badge badge-light ml-2">{{ nouvelles|length }}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="bg-light">
+                        <tr>
+                            <th><i class="fa fa-user"></i> Utilisateur</th>
+                            <th><i class="fa fa-envelope"></i> Email</th>
+                            <th><i class="fa fa-puzzle-piece"></i> Test</th>
+                            <th><i class="fa fa-calendar"></i> Date</th>
+                            <th><i class="fa fa-cog"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alerte in nouvelles %}
+                        <tr class="alert-row">
+                            <td>
+                                {% if alerte.utilisateur %}
+                                    <strong>{{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}</strong>
+                                    <br><small class="text-muted">ID: {{ alerte.utilisateur.id }}</small>
+                                {% else %}
+                                    <span class="text-muted">Anonyme</span>
+                                    <br><small class="text-muted">Non connecté</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ alerte.utilisateur ? alerte.utilisateur.email : 'Non renseigné' }}</td>
+                            <td><span class="badge badge-info">{{ alerte.test.titre }}</span></td>
+                            <td>{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}"
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fa fa-eye"></i> Traiter
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# En cours #}
+    {% if en_cours is not empty %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">
+                <i class="fa fa-spinner fa-spin"></i> En cours de traitement
+                <span class="badge badge-dark ml-2">{{ en_cours|length }}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="bg-light">
+                        <tr>
+                            <th><i class="fa fa-user"></i> Utilisateur</th>
+                            <th><i class="fa fa-envelope"></i> Email</th>
+                            <th><i class="fa fa-puzzle-piece"></i> Test</th>
+                            <th><i class="fa fa-calendar"></i> Date</th>
+                            <th><i class="fa fa-cog"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alerte in en_cours %}
+                        <tr class="alert-row">
+                            <td>
+                                {% if alerte.utilisateur %}
+                                    {{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}
+                                {% else %}
+                                    <span class="text-muted">Anonyme</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alerte.utilisateur ? alerte.utilisateur.email : 'Non renseigné' }}</td>
+                            <td><span class="badge badge-info">{{ alerte.test.titre }}</span></td>
+                            <td>{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}"
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fa fa-eye"></i> Suivre
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Traitées #}
+    {% if traitees is not empty %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="fa fa-check-circle"></i> Alertes traitées
+                <span class="badge badge-light ml-2">{{ traitees|length }}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="bg-light">
+                        <tr>
+                            <th><i class="fa fa-user"></i> Utilisateur</th>
+                            <th><i class="fa fa-puzzle-piece"></i> Test</th>
+                            <th><i class="fa fa-calendar"></i> Détectée</th>
+                            <th><i class="fa fa-check"></i> Traitée</th>
+                            <th><i class="fa fa-user-md"></i> Traité par</th>
+                            <th><i class="fa fa-cog"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alerte in traitees %}
+                        <tr>
+                            <td>
+                                {% if alerte.utilisateur %}
+                                    {{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}
+                                {% else %}
+                                    <span class="text-muted">Anonyme</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alerte.test.titre }}</td>
+                            <td>{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
+                            <td>{{ alerte.traiteLe ? alerte.traiteLe|date('d/m/Y H:i') : '-' }}</td>
+                            <td>{{ alerte.traitePar ?? 'Admin' }}</td>
+                            <td>
+                                <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}"
+                                   class="btn btn-outline-success btn-sm">
+                                    <i class="fa fa-eye"></i> Voir
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Message vide #}
+    {% if nouvelles is empty and en_cours is empty and traitees is empty %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="fa fa-check-circle fa-4x text-success mb-3"></i>
+                <h4 class="text-muted">Aucune alerte critique</h4>
+                <p class="text-muted">Toutes les alertes ont été traitées.</p>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.border-left-danger { border-left: 4px solid #dc3545; }
+.border-left-warning { border-left: 4px solid #ffc107; }
+.border-left-success { border-left: 4px solid #28a745; }
+
+.alert-row {
+    transition: all 0.2s ease;
+}
+.alert-row:hover {
+    background-color: #f8f9fc;
+    transform: translateX(2px);
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+.card-header {
+    border-radius: 10px 10px 0 0;
+}
+.table th {
+    border-top: none;
+    font-weight: 600;
+}
+.badge-light {
+    background-color: rgba(255,255,255,0.25);
+    color: white;
+}
+</style>
+{# ... le reste de votre template ... #}
+
+<script>
+    // Fonction pour jouer le son d'alerte
+    function playAlertSound() {
+        const audio = new Audio("{{ asset('sounds/alert.mp3') }}");
+        audio.volume = 0.5; // Ajustez le volume (0.0 à 1.0)
+        audio.play().catch(error => {
+            // Les navigateurs modernes bloquent souvent la lecture automatique.
+            console.log("Lecture audio automatique bloquée par le navigateur.", error);
+        });
+    }
+
+    // Vérifie s'il y a de nouvelles alertes et joue le son
+    // La variable 'nouvelles' est passée depuis votre contrôleur
+    {% if nouvelles is defined and nouvelles|length > 0 %}
+        // On ajoute un petit délai pour s'assurer que la page est chargée
+        setTimeout(playAlertSound, 500);
+    {% endif %}
+</script>
+{% if nouvelles|length > 0 %}
+<script>
+    (function playEmergencyBeep() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioCtx();
+            const beep = () => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 880;
+                gain.gain.value = 0.3;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.4);
+                osc.stop(ctx.currentTime + 0.4);
+            };
+            
+            // Tentative de jouer immédiatement
+            if (ctx.state === 'running') {
+                beep();
+            } else {
+                ctx.resume().then(beep);
+            }
+        } catch(e) { console.log('Audio non supporté'); }
+    })();
+</script>
+{% endif %}
+
+{% endblock %}

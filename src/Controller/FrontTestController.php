@@ -8,6 +8,7 @@ use App\Repository\TestRepository;
 use App\Service\GeminiService;
 use App\Service\FaceppService;
 use App\Service\PdfService;
+use App\Service\AlerteService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,6 +20,10 @@ use App\Service\ScoringService;
 #[Route('/tests')]
 class FrontTestController extends AbstractController
 {
+      public function __construct(
+        private AlerteService $alerteService  // ← AJOUTE CETTE LIGNE
+    ) {
+    }
     #[Route('/', name: 'front_test_list')]
     public function list(TestRepository $testRepository): Response
     {
@@ -167,6 +172,37 @@ $categories = $scoringService->calculerScoresParCategorie($reponsesData);
         $motsCritiques = $gemini->detecterMotsCritiques($questionsReponses);
         $isCritique    = $motsCritiques || ($analyseGemini['niveau_risque'] ?? 'normal') === 'critique';
 
+// 🚨 DEBUG
+error_log('=== AVANT IF ===');
+error_log('isCritique value: ' . ($isCritique ? 'true' : 'false'));
+
+if ($isCritique) {
+    error_log('=== DANS LE IF ===');
+    $this->alerteService->creerAlerte(null, $test, $questionsReponses);
+    $this->addFlash('warning', '⚠️ Alerte critique détectée et envoyée à l\'administrateur !');
+    error_log('=== FLASH AJOUTÉ ===');
+} else {
+    error_log('=== PAS DANS LE IF ===');
+}
+
+        if ($isCritique) {
+    error_log('CRÉATION ALERTE - Début');
+    try {
+        $this->alerteService->creerAlerte(
+            null,  // Pas d'utilisateur pour l'instant
+            $test,
+            $questionsReponses
+        );
+        error_log('CRÉATION ALERTE - Succès');
+        error_log('=== DEBUG ALERTE ===');
+error_log('isCritique: ' . ($isCritique ? 'true' : 'false'));
+error_log('motsCritiques: ' . ($motsCritiques ? 'true' : 'false'));
+error_log('niveau_risque: ' . ($analyseGemini['niveau_risque'] ?? 'normal'));
+        $this->addFlash('warning', 'Une alerte critique a été détectée et signalée.');
+    } catch (\Exception $e) {
+        error_log('CRÉATION ALERTE - Erreur: ' . $e->getMessage());
+    }
+}
         // ── Sauvegarder pour le PDF ──
         $request->getSession()->set('rapport_test_' . $test->getId(), [
             'test'           => $test,
