@@ -157,6 +157,7 @@ class FrontTestController extends AbstractController
         $badge      = $scoringService->calculerNiveauBadge($percentage);
 $categories = $scoringService->calculerScoresParCategorie($reponsesData);
 
+
         // ── Appel Gemini ──
         $analyseGemini = $gemini->analyserReponses(
             $questionsReponses,
@@ -186,6 +187,9 @@ $categories = $scoringService->calculerScoresParCategorie($reponsesData);
             'reponses'       => $reponsesData,
             'gemini'         => $analyseGemini,
             'isCritique'     => $isCritique,
+             'badge'          => $badge,
+              'categories'     => $categories,
+
         ]);
     }
 
