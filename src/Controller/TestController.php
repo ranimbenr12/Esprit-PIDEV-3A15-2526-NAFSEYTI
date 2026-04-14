@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse; 
 
 #[Route('/test')]
 class TestController extends AbstractController
@@ -135,5 +136,49 @@ class TestController extends AbstractController
         }
 
         return $this->redirectToRoute('app_test_index');
+    }
+    /**
+ * @Route("/test/search-ajax", name="app_test_search_ajax", methods={"GET"})
+ */
+ #[Route('/search-ajax', name: 'app_test_search_ajax', methods: ['GET'])]  // Note: le chemin est relatif à /test
+    public function searchAjax(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $search = $request->query->get('search', '');
+        $status = $request->query->get('status', '');
+        $categorie = $request->query->get('categorie', '');
+        $sort = $request->query->get('sort', 'id');
+        $order = $request->query->get('order', 'DESC');
+
+        $repository = $entityManager->getRepository(Test::class);
+        $queryBuilder = $repository->createQueryBuilder('t');
+
+        if ($search) {
+            $queryBuilder->andWhere('t.titre LIKE :search OR t.description LIKE :search')
+                         ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($status) {
+            $queryBuilder->andWhere('t.status = :status')
+                         ->setParameter('status', $status);
+        }
+
+        if ($categorie) {
+            $queryBuilder->andWhere('t.categorie = :categorie')
+                         ->setParameter('categorie', $categorie);
+        }
+
+        $orderDirection = $order === 'ASC' ? 'ASC' : 'DESC';
+        $queryBuilder->orderBy('t.' . $sort, $orderDirection);
+
+        $tests = $queryBuilder->getQuery()->getResult();
+
+        $html = $this->renderView('back/test/_test_rows.html.twig', [
+            'tests' => $tests,
+        ]);
+
+        return new JsonResponse([
+            'html' => $html,
+            'count' => count($tests),
+        ]);
     }
 }

@@ -5,12 +5,17 @@ namespace App\Controller;
 use App\Entity\ReponsesScore;
 use App\Entity\Test;
 use App\Repository\TestRepository;
+use App\Service\GeminiService;
+use App\Service\FaceppService;
+use App\Service\PdfService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use App\Service\ScoringService;
 #[Route('/tests')]
 class FrontTestController extends AbstractController
 {
@@ -18,22 +23,38 @@ class FrontTestController extends AbstractController
     public function list(TestRepository $testRepository): Response
     {
         $tests = $testRepository->findBy(['status' => 'actif']);
-
-        return $this->render('front/tests/list.html.twig', [
-            'tests' => $tests,
-        ]);
+        return $this->render('front/tests/list.html.twig', ['tests' => $tests]);
     }
 
     #[Route('/{id}', name: 'front_test_show', requirements: ['id' => '\d+'])]
-    public function show(Test $test): Response
-    {
+    public function show(
+        Test $test,
+        Request $request,
+        RateLimiterFactory $testViewLimiter
+    ): Response {
+        // ── RATE LIMITER ──
+        $identifier = 'ip_' . $request->getClientIp();
+        $limiter    = $testViewLimiter->create($identifier);
+        $limit      = $limiter->consume(1);
+
+        if (!$limit->isAccepted()) {
+            $retryAfter = $limit->getRetryAfter()->getTimestamp() - time();
+            $minutes    = ceil($retryAfter / 60);
+
+            return $this->render('front/tests/rate_limit.html.twig', [
+                'minutes'   => $minutes,
+                'test'      => $test,
+                'remaining' => 0,
+            ]);
+        }
+
         if ($test->getStatus() !== 'actif') {
             $this->addFlash('error', 'Ce test n\'est pas disponible.');
             return $this->redirectToRoute('front_test_list');
         }
 
-        $questions = $test->getQuestions()->filter(function ($question) {
-            return $question->getStatus() === 'actif';
+        $questions = $test->getQuestions()->filter(function ($q) {
+            return $q->getStatus() === 'actif';
         })->toArray();
 
         usort($questions, function ($a, $b) {
@@ -50,62 +71,111 @@ class FrontTestController extends AbstractController
     public function submit(
         Request $request,
         Test $test,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        GeminiService $gemini,
+        RateLimiterFactory $testSubmissionLimiter,
+        ScoringService $scoringService
     ): Response {
-        $questions = $test->getQuestions()->filter(function ($question) {
-            return $question->getStatus() === 'actif';
+        // ── RATE LIMITER ──
+        $identifier = 'ip_' . $request->getClientIp();
+        $limiter    = $testSubmissionLimiter->create($identifier);
+        $limit      = $limiter->consume(1);
+
+       if (false && !$limit->isAccepted())if (false && !$limit->isAccepted()) {
+            $retryAfter = $limit->getRetryAfter()->getTimestamp() - time();
+            $minutes    = ceil($retryAfter / 60);
+
+            return $this->render('front/tests/rate_limit.html.twig', [
+                'minutes'   => $minutes,
+                'test'      => $test,
+                'remaining' => $limit->getRemainingTokens(),
+            ]);
+        }
+
+        // ── TRAITEMENT ──
+        $questions = $test->getQuestions()->filter(function ($q) {
+            return $q->getStatus() === 'actif';
         });
 
-        $totalScore   = 0;
-        $maxScore     = 0;
-        $reponsesData = [];
+        $totalScore        = 0;
+        $maxScore          = 0;
+        $reponsesData      = [];
+        $questionsReponses = [];
+        $sessionId         = $request->getSession()->getId();
 
-        $sessionId = $request->getSession()->getId();
+        $emotionVisage = $request->getSession()->get('emotion_visage', null);
 
-        foreach ($questions as $question) {
-            $maxScore     += $question->getPoints();
-            $reponseValue  = $request->request->get('reponse_' . $question->getId());
+       foreach ($questions as $question) {
+    $scoreMax     = $scoringService->getScoreMax($question);
+    $maxScore    += $scoreMax;
+    $reponseValue = $request->request->get('reponse_' . $question->getId());
 
-            if ($reponseValue === null || $reponseValue === '') {
-                continue;
-            }
+    if ($reponseValue === null || $reponseValue === '') {
+        continue;
+    }
 
-            $score = $this->calculateScore($question, $reponseValue);
-            $totalScore += $score;
+    $score       = $scoringService->calculerScore($question, $reponseValue);
+    $totalScore += $score;
 
-            $reponseText = is_array($reponseValue)
-                ? implode(', ', $reponseValue)
-                : $reponseValue;
+    $reponseText = is_array($reponseValue)
+        ? implode(', ', $reponseValue)
+        : $reponseValue;
 
-            $reponsesData[] = [
-                'question'   => $question,
-                'reponse'    => $reponseText,
-                'score'      => $score,
-                'points_max' => $question->getPoints(),
-            ];
+    $reponsesData[] = [
+        'question'   => $question,
+        'reponse'    => $reponseText,
+        'score'      => $score,
+        'score_max'  => $scoreMax,   // ← ajouté
+        'points_max' => $scoreMax,
+    ];
 
-            $reponseScore = new ReponsesScore();
-            $reponseScore->setTest($test);
-            $reponseScore->setQuestion($question);
-            $reponseScore->setReponse($reponseText);
-            $reponseScore->setScore($score);
-            $reponseScore->setSessionId($sessionId);
-            $reponseScore->setCreatedAt(new \DateTime());
+    $questionsReponses[] = [
+        'question' => $question->getTexte(),
+        'reponse'  => $reponseText,
+        'type'     => $question->getTypeQuestion(),
+    ];
 
-            if ($this->getUser()) {
-                $reponseScore->setUser($this->getUser());
-            }
+    $reponseScore = new ReponsesScore();
+    $reponseScore->setTest($test);
+    $reponseScore->setQuestion($question);
+    $reponseScore->setReponse($reponseText);
+    $reponseScore->setScore($score);
+    $reponseScore->setSessionId($sessionId);
+    $reponseScore->setCreatedAt(new \DateTime());
 
-            $em->persist($reponseScore);
-        }
+    if ($this->getUser()) {
+        $reponseScore->setUser($this->getUser());
+    }
+
+    $em->persist($reponseScore);
+}
 
         $em->flush();
 
-        $percentage = $maxScore > 0
-            ? round(($totalScore / $maxScore) * 100)
-            : 0;
-
+        $percentage     = $maxScore > 0 ? round(($totalScore / $maxScore) * 100) : 0;
         $interpretation = $this->getInterpretation($percentage, $totalScore, $maxScore);
+        $badge      = $scoringService->calculerNiveauBadge($percentage);
+$categories = $scoringService->calculerScoresParCategorie($reponsesData);
+
+        // ── Appel Gemini ──
+        $analyseGemini = $gemini->analyserReponses(
+            $questionsReponses,
+            $test->getTitre(),
+            $emotionVisage
+        );
+        $motsCritiques = $gemini->detecterMotsCritiques($questionsReponses);
+        $isCritique    = $motsCritiques || ($analyseGemini['niveau_risque'] ?? 'normal') === 'critique';
+
+        // ── Sauvegarder pour le PDF ──
+        $request->getSession()->set('rapport_test_' . $test->getId(), [
+            'test'           => $test,
+            'percentage'     => $percentage,
+            'totalScore'     => $totalScore,
+            'maxScore'       => $maxScore,
+            'interpretation' => $interpretation,
+            'gemini'         => $analyseGemini,
+            'reponses'       => $reponsesData,
+        ]);
 
         return $this->render('front/tests/result.html.twig', [
             'test'           => $test,
@@ -114,80 +184,70 @@ class FrontTestController extends AbstractController
             'percentage'     => $percentage,
             'interpretation' => $interpretation,
             'reponses'       => $reponsesData,
+            'gemini'         => $analyseGemini,
+            'isCritique'     => $isCritique,
         ]);
     }
 
-    /**
-     * Calcule le score pour une réponse donnée
-     * Version simplifiée et fiable
-     */
-    private function calculateScore($question, $reponseValue): int
+    #[Route('/{id}/analyse-visage', name: 'front_test_analyse_visage', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function analyseVisage(Request $request, FaceppService $facepp): JsonResponse
     {
-        $points = $question->getPoints();
-        
-        // Si la réponse est vide, pas de points
-        if (empty($reponseValue)) {
-            return 0;
+        $data        = json_decode($request->getContent(), true);
+        $base64Image = $data['image'] ?? '';
+
+        if (empty($base64Image)) {
+            return $this->json(['success' => false, 'message' => 'Aucune image reçue']);
         }
-        
-        // Pour les choix multiples (tableau)
-        if (is_array($reponseValue)) {
-            $validReponses = array_filter($reponseValue);
-            if (empty($validReponses)) {
-                return 0;
-            }
-            return $points;
-        }
-        
-        // Pour tout type de question, donner tous les points si l'utilisateur a répondu
-        return $points;
+
+        $resultat = $facepp->analyserEmotion($base64Image);
+        $request->getSession()->set('emotion_visage', $resultat);
+
+        return $this->json($resultat);
     }
 
-    /**
-     * Interprétation basée sur le pourcentage et le score
-     */
+    #[Route('/{id}/pdf', name: 'front_test_pdf', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function telechargerPdf(
+        Request $request,
+        Test $test,
+        PdfService $pdfService
+    ): Response {
+        $sessionData = $request->getSession()->get('rapport_test_' . $test->getId());
+
+        if (!$sessionData) {
+            $this->addFlash('error', 'Session expirée, veuillez refaire le test.');
+            return $this->redirectToRoute('front_test_show', ['id' => $test->getId()]);
+        }
+
+        $pdfContent = $pdfService->genererRapportTest($sessionData);
+
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment; filename="rapport-' . $test->getId() . '-' . date('Y-m-d') . '.pdf"');
+
+        return $response;
+    }
+
+    private function calculateScore($question, $reponseValue): int
+    {
+        if (empty($reponseValue)) return 0;
+        if (is_array($reponseValue)) {
+            return empty(array_filter($reponseValue)) ? 0 : $question->getPoints();
+        }
+        return $question->getPoints();
+    }
+
     private function getInterpretation(int $percentage, int $totalScore, int $maxScore): array
     {
         if ($percentage >= 80) {
-            return [
-                'title' => '🌟 Excellent résultat !',
-                'description' => "Vous avez obtenu $totalScore points sur $maxScore. Votre profil montre un très bon équilibre psychologique.",
-                'advice' => 'Continuez à prendre soin de votre santé mentale et partagez votre expérience positive.',
-                'color' => 'success',
-                'icon' => 'fa-star'
-            ];
+            return ['title' => '🌟 Excellent résultat !', 'description' => "Vous avez obtenu $totalScore points sur $maxScore. Votre profil montre un très bon équilibre psychologique.", 'advice' => 'Continuez à prendre soin de votre santé mentale.', 'color' => 'success', 'icon' => 'fa-star'];
         } elseif ($percentage >= 60) {
-            return [
-                'title' => '👍 Bon résultat',
-                'description' => "Vous avez obtenu $totalScore points sur $maxScore. Vous êtes sur la bonne voie.",
-                'advice' => 'Identifiez les domaines où vous pouvez progresser et consultez nos ressources gratuites.',
-                'color' => 'info',
-                'icon' => 'fa-thumbs-up'
-            ];
+            return ['title' => '👍 Bon résultat', 'description' => "Vous avez obtenu $totalScore points sur $maxScore. Vous êtes sur la bonne voie.", 'advice' => 'Identifiez les domaines où vous pouvez progresser.', 'color' => 'info', 'icon' => 'fa-thumbs-up'];
         } elseif ($percentage >= 40) {
-            return [
-                'title' => '📊 Résultat moyen',
-                'description' => "Vous avez obtenu $totalScore points sur $maxScore. Certains aspects méritent votre attention.",
-                'advice' => 'Nous vous recommandons de participer à nos ateliers de bien-être.',
-                'color' => 'warning',
-                'icon' => 'fa-chart-line'
-            ];
+            return ['title' => '📊 Résultat moyen', 'description' => "Vous avez obtenu $totalScore points sur $maxScore. Certains aspects méritent votre attention.", 'advice' => 'Nous vous recommandons de participer à nos ateliers.', 'color' => 'warning', 'icon' => 'fa-chart-line'];
         } elseif ($percentage >= 20) {
-            return [
-                'title' => '🌱 Potentiel d\'amélioration',
-                'description' => "Vous avez obtenu $totalScore points sur $maxScore. Des efforts ciblés pourraient faire la différence.",
-                'advice' => 'Consultez nos articles sur le bien-être et la gestion du stress.',
-                'color' => 'danger',
-                'icon' => 'fa-seedling'
-            ];
+            return ['title' => '🌱 Potentiel d\'amélioration', 'description' => "Vous avez obtenu $totalScore points sur $maxScore.", 'advice' => 'Consultez nos articles sur le bien-être.', 'color' => 'danger', 'icon' => 'fa-seedling'];
         } else {
-            return [
-                'title' => '💪 Besoin d\'accompagnement',
-                'description' => "Vous avez obtenu $totalScore points sur $maxScore. Ce résultat identifie des axes de développement importants.",
-                'advice' => 'Nous vous encourageons à prendre rendez-vous avec un psychologue pour un accompagnement personnalisé.',
-                'color' => 'danger',
-                'icon' => 'fa-heart'
-            ];
+            return ['title' => '💪 Besoin d\'accompagnement', 'description' => "Vous avez obtenu $totalScore points sur $maxScore.", 'advice' => 'Prenez rendez-vous avec un psychologue.', 'color' => 'danger', 'icon' => 'fa-heart'];
         }
     }
 }

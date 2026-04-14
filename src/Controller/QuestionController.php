@@ -132,7 +132,41 @@ class QuestionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+   #[Route('/search', name: 'app_question_search_ajax', methods: ['GET'])]
+public function searchAjax(Request $request, QuestionRepository $questionRepository): Response
+{
+    $search = $request->query->get('search', '');
+    $type   = $request->query->get('type', '');
+    $status = $request->query->get('status', '');
 
+    $qb = $questionRepository->createQueryBuilder('q')
+        ->leftJoin('q.test', 't')
+        ->addSelect('t');
+
+    if (!empty($search)) {
+        $qb->andWhere('q.texte LIKE :search')
+           ->setParameter('search', '%' . $search . '%');
+    }
+    if (!empty($type)) {
+        $qb->andWhere('q.typeQuestion = :type')
+           ->setParameter('type', $type);
+    }
+    if (!empty($status)) {
+        $qb->andWhere('q.status = :status')
+           ->setParameter('status', $status);
+    }
+
+    $questions = $qb->orderBy('q.createdAt', 'DESC')->getQuery()->getResult();
+
+    $html = $this->renderView('back/question/_table_rows.html.twig', [
+        'questions' => $questions,
+    ]);
+
+    return $this->json([
+        'html'  => $html,
+        'count' => count($questions),
+    ]);
+}
     #[Route('/{id}', name: 'app_question_show', methods: ['GET'])]
     public function show(Question $question): Response
     {
@@ -175,4 +209,5 @@ class QuestionController extends AbstractController
 
         return $this->redirectToRoute('app_question_index');
     }
+
 }

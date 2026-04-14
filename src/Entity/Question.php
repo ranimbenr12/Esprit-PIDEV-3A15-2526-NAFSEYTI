@@ -79,26 +79,25 @@ private Collection $reponses;
     /**
      * Retourne un tableau des réponses possibles
      */
-    public function getReponsesPossiblesArray(): array
-    {
-        // Pour les questions vrai/faux
-        if ($this->typeQuestion === 'vrai_faux') {
-            return ['Vrai', 'Faux'];
-        }
-        
-        if (empty($this->reponsesPossibles)) {
-            return [];
-        }
-        
-        // Détecter le séparateur (| ou ,)
-        if (strpos($this->reponsesPossibles, '|') !== false) {
-            $reponses = array_map('trim', explode('|', $this->reponsesPossibles));
-        } else {
-            $reponses = array_map('trim', explode(',', $this->reponsesPossibles));
-        }
-        
-        return array_filter($reponses);
+   public function getReponsesPossiblesArray(): array
+{
+    if ($this->typeQuestion === 'vrai_faux') {
+        return ['Vrai', 'Faux'];
     }
+
+    if (empty($this->reponsesPossibles)) {
+        return [];
+    }
+
+    $items = array_map('trim', explode('|', $this->reponsesPossibles));
+
+    return array_map(function($item) {
+        // Supprimer le poids du label si présent
+        return str_contains($item, ':')
+            ? trim(explode(':', $item, 2)[0])
+            : trim($item);
+    }, array_filter($items));
+}
 
     /**
      * Retourne le type de champ à afficher
@@ -207,4 +206,29 @@ private Collection $reponses;
             $this->createdAt = new \DateTime();
         }
     }
+    /**
+ * Retourne les réponses avec leurs poids : ['label' => poids]
+ */
+public function getReponsesAvecPoids(): array
+{
+    if (empty($this->reponsesPossibles)) {
+        return [];
+    }
+
+    $result = [];
+    $items = array_map('trim', explode('|', $this->reponsesPossibles));
+
+    foreach ($items as $item) {
+        if (str_contains($item, ':')) {
+            [$label, $poids] = explode(':', $item, 2);
+            $result[trim($label)] = (int) trim($poids);
+        } else {
+            // Ancien format sans poids → poids = points max (compatibilité)
+            $result[trim($item)] = $this->points ?? 1;
+        }
+    }
+
+    return $result;
+}
+
 }

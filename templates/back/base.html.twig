@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- basic -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 
-    <!-- site metas -->
     <title>{% block title %}Dashboard{% endblock %}</title>
 
-    <!-- site icon -->
     <link rel="icon" href="{{ asset('back/images/fevicon.png') }}" type="image/png" />
 
-    <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('back/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('back/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('back/css/responsive.css') }}" />
@@ -23,14 +17,24 @@
     <link rel="stylesheet" href="{{ asset('back/css/bootstrap-select.css') }}" />
     <link rel="stylesheet" href="{{ asset('back/css/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('back/css/custom.css') }}" />
+<link rel="stylesheet" href="{{ asset('styles/tests/index.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/tests/show.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/tests/edit.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/tests/new.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/questions/shared.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/questions/form.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/questions/show.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/questions/index.css') }}">
 
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('app.css') }}">
+    {% endblock %}
 </head>
 
 <body class="dashboard dashboard_1">
 
     {% block body %}{% endblock %}
 
-    <!-- JS -->
     <script src="{{ asset('back/js/jquery.min.js') }}"></script>
     <script src="{{ asset('back/js/popper.min.js') }}"></script>
     <script src="{{ asset('back/js/bootstrap.min.js') }}"></script>
@@ -49,5 +53,6 @@
         var ps = new PerfectScrollbar('#sidebar');
     </script>
 
+    {% block javascripts %}{% endblock %}
 </body>
 </html>

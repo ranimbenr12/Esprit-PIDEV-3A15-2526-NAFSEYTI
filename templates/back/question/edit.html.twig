@@ -4,76 +4,7 @@
 {% block question_active %}active{% endblock %}
 
 {% block admin_content %}
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-:root{
-    --green-deep:#1a3d2b;--green-mid:#2d6a4f;--green-sage:#52b788;--green-light:#95d5b2;
-    --green-pale:#d8f3dc;--cream:#faf6f0;--cream-mid:#f0e9de;--cream-dark:#e0d5c5;
-    --sand:#c9b99a;--ink:#1a2e1f;--ink-mid:#3d5a45;--ink-soft:#7a9482;--white:#fff;
-    --red-soft:#c0392b;--red-pale:#fdf0ee;--amber:#b7791f;--amber-pale:#fef9ee;
-    --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
-    --shadow-md:0 2px 8px rgba(26,61,43,.08),0 8px 24px rgba(26,61,43,.09);
-    --tr:.2s cubic-bezier(.4,0,.2,1);
-}
-*,*::before,*::after{box-sizing:border-box;}
-.nt{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--cream);min-height:100vh;padding:32px 28px 48px;animation:pf .4s ease both;}
-@keyframes pf{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-.nt-breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-size:.8rem;color:var(--ink-soft);}
-.nt-breadcrumb a{color:var(--green-mid);text-decoration:none;font-weight:500;}
-.nt-breadcrumb a:hover{color:var(--green-deep);}
-.nt-breadcrumb span{opacity:.5;}
-.nt-header{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--cream-dark);}
-.nt-eyebrow{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-sage);margin-bottom:4px;}
-.nt-title{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--green-deep);margin:0;}
-.nt-title em{font-style:italic;color:var(--green-sage);}
-
-.form-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden;max-width:780px;}
-.form-card-head{padding:18px 28px;border-bottom:1px solid var(--cream-mid);display:flex;align-items:center;gap:10px;background:var(--cream);}
-.form-card-head .icon{width:34px;height:34px;border-radius:8px;background:var(--green-pale);color:var(--green-mid);display:flex;align-items:center;justify-content:center;}
-.form-card-head h3{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--green-deep);margin:0;}
-.form-body{padding:28px;}
-.field-group{margin-bottom:22px;}
-.field-label{display:block;font-size:.8rem;font-weight:600;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
-.field-label .req{color:var(--green-sage);margin-left:2px;}
-.field-hint{font-size:.75rem;color:var(--ink-soft);margin-top:5px;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-@media(max-width:600px){.field-row{grid-template-columns:1fr;}}
-
-.field-group input[type=text],
-.field-group input[type=number],
-.field-group select,
-.field-group textarea{width:100% !important;padding:11px 14px !important;border:1.5px solid #e0d5c5 !important;border-radius:8px !important;font-family:'DM Sans',sans-serif !important;font-size:.875rem !important;color:#1a2e1f !important;background:#ffffff !important;transition:.2s cubic-bezier(.4,0,.2,1);outline:none !important;box-shadow:none !important;}
-.field-group input[type=text]:focus,
-.field-group input[type=number]:focus,
-.field-group select:focus,
-.field-group textarea:focus{border-color:#52b788 !important;background:#ffffff !important;box-shadow:0 0 0 3px rgba(82,183,136,.15) !important;}
-.field-group select{appearance:none !important;color:#1a2e1f !important;background-color:#ffffff !important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9482' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;}
-.field-group .form-error{font-size:.75rem;color:var(--red-soft);margin-top:4px;display:block;}
-.field-group select option{color:#1a2e1f !important;background:#ffffff !important;font-size:.875rem !important;}
-.field-group select option:disabled{color:#7a9482 !important;}
-/* Force Symfony form select widgets too */
-select.form-control, select[name]{color:#1a2e1f !important;background:#ffffff !important;}
-select.form-control option, select[name] option{color:#1a2e1f !important;background:#ffffff !important;}
-
-.help-box{display:none;background:var(--green-pale);border:1px solid var(--green-light);border-radius:var(--radius-sm);padding:13px 16px;font-size:.82rem;color:var(--ink-mid);gap:10px;align-items:flex-start;margin-top:8px;}
-.help-box.visible{display:flex;}
-.help-box svg{flex-shrink:0;color:var(--green-sage);}
-
-.checkbox-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;}
-.checkbox-wrap input[type=checkbox]{width:18px;height:18px;accent-color:var(--green-mid);cursor:pointer;}
-.checkbox-wrap label{font-size:.875rem;color:var(--ink-mid);cursor:pointer;margin:0;}
-
-.section-divider{display:flex;align-items:center;gap:12px;margin:28px 0 22px;}
-.section-divider span{font-size:.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
-.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--cream-dark);}
-
-.form-footer{padding:20px 28px;border-top:1px solid var(--cream-mid);background:var(--cream);display:flex;gap:10px;align-items:center;}
-.btn-submit{display:inline-flex;align-items:center;gap:8px;background:var(--green-deep);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:11px 24px;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:var(--tr);}
-.btn-submit:hover{background:var(--green-mid);transform:translateY(-1px);}
-.btn-cancel{display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--ink-mid);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;padding:11px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--cream-dark);text-decoration:none;transition:var(--tr);}
-.btn-cancel:hover{border-color:var(--green-sage);color:var(--green-deep);text-decoration:none;}
-</style>
 
 <div class="nt">
     <div class="nt-breadcrumb">

@@ -1,255 +1,80 @@
 {% extends 'back/admin_base.html.twig' %}
 
-{% block title %}{{ test.titre }} — Détails{% endblock %}
+{% block title %}{{ test.titre }} — Nafseyti{% endblock %}
 {% block test_active %}active{% endblock %}
 
 {% block admin_content %}
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-:root {
-    --green-deep:#1a3d2b;--green-mid:#2d6a4f;--green-sage:#52b788;--green-light:#95d5b2;
-    --green-pale:#d8f3dc;--cream:#faf6f0;--cream-mid:#f0e9de;--cream-dark:#e0d5c5;
-    --sand:#c9b99a;--ink:#1a2e1f;--ink-mid:#3d5a45;--ink-soft:#7a9482;--white:#fff;
-    --red-soft:#c0392b;--red-pale:#fdf0ee;--amber:#b7791f;--amber-pale:#fef9ee;
-    --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
-    --shadow-sm:0 1px 3px rgba(26,61,43,.06),0 4px 12px rgba(26,61,43,.07);
-    --shadow-md:0 2px 8px rgba(26,61,43,.08),0 8px 24px rgba(26,61,43,.09);
-    --tr:.2s cubic-bezier(.4,0,.2,1);
-}
-*,*::before,*::after{box-sizing:border-box;}
-.nt{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--cream);min-height:100vh;padding:32px 28px 48px;animation:pf .4s ease both;}
-@keyframes pf{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* Header */
-.nt-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--cream-dark);}
-.nt-eyebrow{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-sage);margin-bottom:4px;}
-.nt-title{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--green-deep);margin:0;line-height:1.15;}
-.nt-title em{font-style:italic;color:var(--green-sage);}
-
-/* Breadcrumb */
-.nt-breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-size:.8rem;color:var(--ink-soft);}
-.nt-breadcrumb a{color:var(--green-mid);text-decoration:none;font-weight:500;}
-.nt-breadcrumb a:hover{color:var(--green-deep);}
-.nt-breadcrumb span{opacity:.5;}
-
-/* Cards */
-.nt-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden;margin-bottom:20px;}
-.nt-card-head{padding:18px 24px;border-bottom:1px solid var(--cream-mid);display:flex;align-items:center;gap:10px;}
-.nt-card-head h3{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--green-deep);margin:0;}
-.nt-card-head .icon{width:32px;height:32px;border-radius:8px;background:var(--green-pale);color:var(--green-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.nt-card-body{padding:24px;}
-
-/* Info table */
-.info-table{width:100%;border-collapse:collapse;}
-.info-table tr{border-bottom:1px solid var(--cream-mid);}
-.info-table tr:last-child{border-bottom:none;}
-.info-table th{padding:13px 16px;font-size:.75rem;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;width:32%;background:var(--cream);vertical-align:top;}
-.info-table td{padding:13px 16px;color:var(--ink);font-size:.875rem;vertical-align:top;}
-
-/* Badges */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;font-size:.73rem;font-weight:600;white-space:nowrap;}
-.badge-cat{background:var(--green-pale);color:var(--green-deep);}
-.badge-actif{background:var(--green-pale);color:var(--green-deep);border:1px solid var(--green-light);}
-.badge-inact{background:var(--cream-mid);color:var(--sand);border:1px solid var(--cream-dark);}
-.badge-q{background:var(--cream-mid);color:var(--ink-mid);}
-.badge-niveau{background:var(--cream-mid);color:var(--ink-mid);}
-
-/* Buttons */
-.btn-primary-nt{display:inline-flex;align-items:center;gap:7px;background:var(--green-deep);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:10px 20px;border-radius:var(--radius-sm);border:none;text-decoration:none;cursor:pointer;transition:var(--tr);}
-.btn-primary-nt:hover{background:var(--green-mid);color:var(--cream);text-decoration:none;transform:translateY(-1px);}
-.btn-secondary-nt{display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--ink-mid);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;padding:10px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--cream-dark);text-decoration:none;cursor:pointer;transition:var(--tr);}
-.btn-secondary-nt:hover{border-color:var(--green-sage);color:var(--green-deep);text-decoration:none;}
-.btn-warning-nt{display:inline-flex;align-items:center;gap:7px;background:var(--amber-pale);color:var(--amber);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:10px 18px;border-radius:var(--radius-sm);border:1.5px solid #f6d860;text-decoration:none;cursor:pointer;transition:var(--tr);}
-.btn-warning-nt:hover{background:#fef3d0;color:var(--amber);text-decoration:none;transform:translateY(-1px);}
-.btn-danger-nt{display:inline-flex;align-items:center;gap:7px;background:var(--red-pale);color:var(--red-soft);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;padding:10px 18px;border-radius:var(--radius-sm);border:1.5px solid #f5a99c;cursor:pointer;transition:var(--tr);}
-.btn-danger-nt:hover{background:#fce8e6;transform:translateY(-1px);}
-.btn-actions{display:flex;gap:10px;flex-wrap:wrap;padding:20px 24px;border-top:1px solid var(--cream-mid);}
-
-/* Question list */
-.q-item{padding:14px 18px;border-bottom:1px solid var(--cream-mid);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:background var(--tr);}
-.q-item:last-child{border-bottom:none;}
-.q-item:hover{background:var(--cream);}
-.q-num{width:28px;height:28px;border-radius:50%;background:var(--green-pale);color:var(--green-deep);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.q-text{font-size:.875rem;color:var(--ink);font-weight:500;margin-bottom:4px;}
-.q-meta{font-size:.75rem;color:var(--ink-soft);}
-.q-acts{display:flex;gap:6px;flex-shrink:0;}
-.btn-act{width:32px;height:32px;border-radius:7px;border:1.5px solid var(--cream-dark);background:var(--white);color:var(--ink-soft);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;transition:var(--tr);}
-.btn-act:hover{text-decoration:none;transform:translateY(-2px);}
-.btn-act.view:hover{background:var(--green-pale);color:var(--green-deep);border-color:var(--green-light);}
-.btn-act.edit:hover{background:var(--amber-pale);color:var(--amber);border-color:#f6d860;}
-
-/* Info box */
-.info-box{background:var(--green-pale);border:1px solid var(--green-light);border-radius:var(--radius-sm);padding:14px 18px;font-size:.82rem;color:var(--ink-mid);display:flex;gap:10px;align-items:flex-start;}
-.info-box svg{flex-shrink:0;color:var(--green-sage);margin-top:1px;}
-.info-box strong{color:var(--green-deep);}
-
-/* Grid layout */
-.detail-grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
-@media(max-width:900px){.detail-grid{grid-template-columns:1fr;}}
-
-.add-q-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--green-pale);color:var(--green-deep);border:1.5px dashed var(--green-light);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;text-decoration:none;transition:var(--tr);margin-top:4px;}
-.add-q-btn:hover{background:var(--green-pale);border-color:var(--green-sage);color:var(--green-deep);text-decoration:none;transform:translateY(-1px);}
-.empty-q{padding:32px 20px;text-align:center;color:var(--ink-soft);font-size:.875rem;}
-.empty-q svg{display:block;margin:0 auto 10px;opacity:.35;}
-</style>
-
-<div class="nt">
-    <div class="nt-breadcrumb">
-        <a href="{{ path('app_test_index') }}">Tests</a>
-        <span>/</span>
-        <span>{{ test.titre }}</span>
-    </div>
+<div class="nt-page">
 
     <div class="nt-header">
-        <div>
-            <div class="nt-eyebrow">Détails du test</div>
+        <div class="nt-header-left">
+            <div class="nt-eyebrow">Détail du test</div>
             <h1 class="nt-title">{{ test.titre }}</h1>
         </div>
-        <div style="display:flex;gap:10px;">
-            <a href="{{ path('app_test_edit', {'id': test.id}) }}" class="btn-warning-nt">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <div style="display:flex; gap:10px;">
+            <a href="{{ path('app_test_edit', {'id': test.id}) }}" class="btn-create">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 Modifier
             </a>
-            <button type="button" class="btn-danger-nt" onclick="deleteTest({{ test.id }}, '{{ test.titre|e('js') }}')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                Supprimer
-            </button>
+            <a href="{{ path('app_test_index') }}" class="btn-create" style="background:var(--ink-soft);">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Retour
+            </a>
         </div>
     </div>
 
-    <div class="detail-grid">
-        {# ── LEFT: test info ── #}
-        <div>
-            <div class="nt-card">
-                <div class="nt-card-head">
-                    <div class="icon">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
-                    </div>
-                    <h3>Informations générales</h3>
+    <div class="form-card" style="max-width:100%;">
+        <div class="form-body">
+            <div class="field-row">
+                <div class="field-group">
+                    <span class="field-label">Titre</span>
+                    <p>{{ test.titre }}</p>
                 </div>
-                <table class="info-table">
-                    <tr><th>Titre</th><td><strong>{{ test.titre }}</strong></td></tr>
-                    <tr><th>Description</th><td>{{ test.description ?: '—' }}</td></tr>
-                    <tr><th>Catégorie</th><td><span class="badge badge-cat">{{ test.categorie|capitalize }}</span></td></tr>
-                    <tr><th>Niveau</th><td><span class="badge badge-niveau">{{ test.niveau|capitalize }}</span></td></tr>
-                    <tr><th>Durée</th><td>{{ test.duree ? test.duree ~ ' minutes' : '—' }}</td></tr>
-                    <tr><th>Score maximum</th><td>{{ test.scoreMax ?: '—' }}</td></tr>
-                    <tr>
-                        <th>Statut</th>
-                        <td>
-                            {% if test.status == 'actif' %}
-                                <span class="badge badge-actif">
-                                    <svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
-                                    Actif
-                                </span>
-                            {% else %}
-                                <span class="badge badge-inact">
-                                    <svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
-                                    Inactif
-                                </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="nt-card">
-                <div class="nt-card-head">
-                    <div class="icon">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                    </div>
-                    <h3>Métadonnées</h3>
-                </div>
-                <table class="info-table">
-                    <tr>
-                        <th>Créé par</th>
-                        <td>{{ test.user ? test.user.email : '—' }}</td>
-                    </tr>
-                    <tr><th>Créé le</th><td>{{ test.createdAt|date('d/m/Y à H:i') }}</td></tr>
-                    <tr><th>Modifié le</th><td>{{ test.updatedAt|date('d/m/Y à H:i') }}</td></tr>
-                </table>
-                <div class="btn-actions">
-                    <a href="{{ path('app_test_index') }}" class="btn-secondary-nt">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                        Retour à la liste
-                    </a>
+                <div class="field-group">
+                    <span class="field-label">Statut</span>
+                    <p>
+                        {% if test.status == 'actif' %}
+                            <span class="badge badge-actif">Actif</span>
+                        {% else %}
+                            <span class="badge badge-inact">Inactif</span>
+                        {% endif %}
+                    </p>
                 </div>
             </div>
-        </div>
 
-        {# ── RIGHT: questions ── #}
-        <div>
-            <div class="nt-card">
-                <div class="nt-card-head">
-                    <div class="icon">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    </div>
-                    <h3>Questions
-                        <span class="badge badge-q" style="margin-left:8px;">{{ test.questions|length }}</span>
-                    </h3>
+            <div class="field-group">
+                <span class="field-label">Description</span>
+                <p>{{ test.description ?? '—' }}</p>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <span class="field-label">Catégorie</span>
+                    <p><span class="badge badge-cat">{{ test.categorie|capitalize }}</span></p>
                 </div>
-
-                {% if test.questions is empty %}
-                    <div class="empty-q">
-                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        Aucune question pour ce test.
-                    </div>
-                {% else %}
-                    {% for question in test.questions|sort((a, b) => a.ordre <=> b.ordre) %}
-                    <div class="q-item">
-                        <div style="display:flex;gap:10px;flex:1;min-width:0;">
-                            <div class="q-num">{{ loop.index }}</div>
-                            <div style="flex:1;min-width:0;">
-                                <div class="q-text">{{ question.texte|slice(0,75) }}{% if question.texte|length > 75 %}…{% endif %}</div>
-                                <div class="q-meta">
-                                    {% set typeLabels = {'qcm_unique':'QCM Unique','qcm_multiple':'QCM Multiple','texte_libre':'Texte libre','likert':'Likert','numerique':'Numérique'} %}
-                                    {{ typeLabels[question.typeQuestion]|default(question.typeQuestion) }}
-                                    &nbsp;·&nbsp; {{ question.points }} pt{{ question.points > 1 ? 's' : '' }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="q-acts">
-                            <a href="{{ path('app_question_show', {'id': question.id}) }}" class="btn-act view" title="Voir">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </a>
-                            <a href="{{ path('app_question_edit', {'id': question.id}) }}" class="btn-act edit" title="Modifier">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                            </a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% endif %}
-
-                <div style="padding:16px 18px;">
-                    <a href="{{ path('app_question_new_with_test', {'testId': test.id}) }}" class="add-q-btn">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Ajouter une question
-                    </a>
+                <div class="field-group">
+                    <span class="field-label">Niveau</span>
+                    <p><span class="badge badge-niveau">{{ test.niveau|capitalize }}</span></p>
                 </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <span class="field-label">Durée</span>
+                    <p>{{ test.duree ? test.duree ~ ' min' : '—' }}</p>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Score maximum</span>
+                    <p>{{ test.scoreMax ?? '—' }}</p>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Questions</span>
+                <p><span class="badge badge-q">{{ test.questions|length }} question{{ test.questions|length > 1 ? 's' : '' }}</span></p>
             </div>
         </div>
     </div>
+
 </div>
-
-<form id="delete-form-{{ test.id }}" method="post" action="{{ path('app_test_delete', {'id': test.id}) }}" style="display:none;">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete'~test.id) }}">
-</form>
-
-{% block javascripts %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-function deleteTest(id, titre) {
-    Swal.fire({
-        title: 'Supprimer ce test ?',
-        html: '<span style="color:#3d5a45">Le test <strong>' + titre + '</strong> et toutes ses questions seront supprimés.</span>',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#c0392b',
-        cancelButtonColor: '#2d6a4f',
-        confirmButtonText: 'Supprimer',
-        cancelButtonText: 'Annuler'
-    }).then(function(r){ if(r.isConfirmed) document.getElementById('delete-form-'+id).submit(); });
-}
-</script>
-{% endblock %}
 {% endblock %}

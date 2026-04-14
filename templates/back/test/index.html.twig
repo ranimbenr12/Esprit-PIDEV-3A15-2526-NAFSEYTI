@@ -3,429 +3,12 @@
 {% block title %}Gestion des Tests{% endblock %}
 {% block test_active %}active{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/tests/index.css') }}">
+{% endblock %}
+
 {% block admin_content %}
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-:root {
-    --green-deep:   #1a3d2b;
-    --green-mid:    #2d6a4f;
-    --green-sage:   #52b788;
-    --green-light:  #95d5b2;
-    --green-pale:   #d8f3dc;
-    --cream:        #faf6f0;
-    --cream-mid:    #f0e9de;
-    --cream-dark:   #e0d5c5;
-    --sand:         #c9b99a;
-    --ink:          #1a2e1f;
-    --ink-mid:      #3d5a45;
-    --ink-soft:     #7a9482;
-    --white:        #ffffff;
-    --red-soft:     #c0392b;
-    --red-pale:     #fdf0ee;
-    --amber:        #b7791f;
-    --amber-pale:   #fef9ee;
-    --radius-sm:    8px;
-    --radius-md:    14px;
-    --radius-lg:    20px;
-    --shadow-sm:    0 1px 3px rgba(26,61,43,.06), 0 4px 12px rgba(26,61,43,.07);
-    --shadow-md:    0 2px 8px rgba(26,61,43,.08), 0 8px 24px rgba(26,61,43,.09);
-    --transition:   all .2s cubic-bezier(.4,0,.2,1);
-}
-
-/* ── Reset & base ── */
-*, *::before, *::after { box-sizing: border-box; }
-
-.nt-page {
-    font-family: 'DM Sans', sans-serif;
-    color: var(--ink);
-    background: var(--cream);
-    min-height: 100vh;
-    padding: 32px 28px 48px;
-    animation: pageFade .4s ease both;
-}
-@keyframes pageFade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-/* ── Page header ── */
-.nt-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--cream-dark);
-}
-.nt-header-left {}
-.nt-eyebrow {
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--green-sage);
-    margin-bottom: 4px;
-}
-.nt-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: var(--green-deep);
-    margin: 0;
-    line-height: 1.15;
-}
-.nt-title em {
-    font-style: italic;
-    color: var(--green-sage);
-}
-
-.btn-create {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--green-deep);
-    color: var(--cream);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .875rem;
-    font-weight: 600;
-    padding: 11px 22px;
-    border-radius: var(--radius-md);
-    border: none;
-    text-decoration: none;
-    letter-spacing: .2px;
-    transition: var(--transition);
-    box-shadow: 0 2px 8px rgba(26,61,43,.25);
-}
-.btn-create:hover {
-    background: var(--green-mid);
-    color: var(--cream);
-    text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(26,61,43,.3);
-}
-
-/* ── Stat cards ── */
-.stat-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-}
-.stat-card {
-    background: var(--white);
-    border: 1px solid var(--cream-dark);
-    border-radius: var(--radius-md);
-    padding: 22px 24px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
-}
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px;
-    height: 100%;
-    border-radius: 4px 0 0 4px;
-}
-.stat-card.total::before  { background: var(--green-sage); }
-.stat-card.active::before { background: var(--green-mid); }
-.stat-card.inactive::before { background: var(--sand); }
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-}
-.stat-icon-wrap {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.stat-card.total   .stat-icon-wrap { background: var(--green-pale); color: var(--green-mid); }
-.stat-card.active  .stat-icon-wrap { background: var(--green-pale); color: var(--green-deep); }
-.stat-card.inactive .stat-icon-wrap { background: var(--cream-mid); color: var(--sand); }
-.stat-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.1rem;
-    color: var(--green-deep);
-    line-height: 1;
-    margin-bottom: 3px;
-}
-.stat-label {
-    font-size: .75rem;
-    font-weight: 500;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .6px;
-}
-
-/* ── Search panel ── */
-.search-panel {
-    background: var(--white);
-    border: 1px solid var(--cream-dark);
-    border-radius: var(--radius-md);
-    padding: 20px 22px;
-    margin-bottom: 22px;
-    box-shadow: var(--shadow-sm);
-}
-.search-form {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-.search-field {
-    flex: 1;
-    min-width: 220px;
-    position: relative;
-}
-.search-field svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ink-soft);
-    pointer-events: none;
-}
-.search-field input {
-    width: 100%;
-    padding: 10px 14px 10px 38px;
-    border: 1.5px solid var(--cream-dark);
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .875rem;
-    color: var(--ink);
-    background: var(--cream);
-    transition: var(--transition);
-    outline: none;
-}
-.search-field input::placeholder { color: var(--ink-soft); }
-.search-field input:focus {
-    border-color: var(--green-sage);
-    background: var(--white);
-    box-shadow: 0 0 0 3px rgba(82,183,136,.15);
-}
-.filter-sel {
-    padding: 10px 14px;
-    border: 1.5px solid var(--cream-dark);
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .875rem;
-    color: var(--ink);
-    background: var(--cream);
-    min-width: 165px;
-    outline: none;
-    cursor: pointer;
-    transition: var(--transition);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9482' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
-}
-.filter-sel:focus { border-color: var(--green-sage); box-shadow: 0 0 0 3px rgba(82,183,136,.15); }
-
-.btn-filter {
-    padding: 10px 20px;
-    background: var(--green-mid);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .875rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    transition: var(--transition);
-    white-space: nowrap;
-}
-.btn-filter:hover { background: var(--green-deep); transform: translateY(-1px); }
-
-.btn-reset {
-    padding: 10px 16px;
-    background: transparent;
-    color: var(--ink-soft);
-    border: 1.5px solid var(--cream-dark);
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .875rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: var(--transition);
-    white-space: nowrap;
-}
-.btn-reset:hover {
-    border-color: var(--green-sage);
-    color: var(--green-mid);
-    text-decoration: none;
-}
-
-/* ── Table ── */
-.tbl-card {
-    background: var(--white);
-    border: 1px solid var(--cream-dark);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    overflow: hidden;
-}
-.tbl-card table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .875rem;
-}
-.tbl-card thead tr {
-    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
-}
-.tbl-card thead th {
-    padding: 14px 18px;
-    font-weight: 500;
-    font-size: .72rem;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    color: var(--green-pale);
-    white-space: nowrap;
-    border: none;
-}
-.tbl-card thead th a {
-    color: var(--green-pale);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: color .15s;
-}
-.tbl-card thead th a:hover  { color: var(--white); }
-.tbl-card thead th a.active { color: var(--white); }
-.sort-icon { font-size: .6rem; opacity: .6; }
-.sort-icon.on { opacity: 1; }
-
-.tbl-card tbody tr {
-    border-bottom: 1px solid var(--cream-mid);
-    transition: background .15s;
-}
-.tbl-card tbody tr:last-child { border-bottom: none; }
-.tbl-card tbody tr:hover { background: var(--cream); }
-
-.tbl-card tbody td {
-    padding: 15px 18px;
-    color: var(--ink);
-    vertical-align: middle;
-}
-.cell-id {
-    font-size: .78rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-    font-variant-numeric: tabular-nums;
-}
-.cell-title strong {
-    display: block;
-    font-weight: 600;
-    color: var(--green-deep);
-    margin-bottom: 2px;
-}
-.cell-title small {
-    color: var(--ink-soft);
-    font-size: .78rem;
-    line-height: 1.4;
-}
-
-/* ── Badges ── */
-.badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 11px;
-    border-radius: 20px;
-    font-size: .73rem;
-    font-weight: 600;
-    letter-spacing: .2px;
-    white-space: nowrap;
-}
-.badge-cat    { background: var(--green-pale);  color: var(--green-deep); }
-.badge-niveau { background: var(--cream-mid);   color: var(--ink-mid); }
-.badge-q      { background: var(--cream-mid);   color: var(--ink-mid); }
-.badge-actif  { background: var(--green-pale);  color: var(--green-deep);
-                border: 1px solid var(--green-light); }
-.badge-inact  { background: var(--cream-mid);   color: var(--sand);
-                border: 1px solid var(--cream-dark); }
-
-/* ── Action buttons ── */
-.actions { display: flex; gap: 7px; align-items: center; }
-.btn-act {
-    width: 34px;
-    height: 34px;
-    border-radius: var(--radius-sm);
-    border: 1.5px solid var(--cream-dark);
-    background: var(--white);
-    color: var(--ink-soft);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: var(--transition);
-    padding: 0;
-}
-.btn-act:hover { text-decoration: none; transform: translateY(-2px); }
-.btn-act.view:hover { background: var(--green-pale); color: var(--green-deep); border-color: var(--green-light); box-shadow: 0 4px 12px rgba(45,106,79,.15); }
-.btn-act.edit:hover { background: var(--amber-pale); color: var(--amber);      border-color: #f6d860; box-shadow: 0 4px 12px rgba(183,121,31,.15); }
-.btn-act.del:hover  { background: var(--red-pale);   color: var(--red-soft);   border-color: #f5a99c; box-shadow: 0 4px 12px rgba(192,57,43,.15); }
-
-/* ── Empty state ── */
-.empty-state {
-    padding: 64px 24px;
-    text-align: center;
-}
-.empty-circle {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background: var(--green-pale);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    color: var(--green-sage);
-}
-.empty-state h4 {
-    font-family: 'DM Serif Display', serif;
-    color: var(--green-deep);
-    font-size: 1.2rem;
-    margin-bottom: 6px;
-}
-.empty-state p {
-    color: var(--ink-soft);
-    font-size: .875rem;
-    margin-bottom: 20px;
-}
-
-/* ── Result info ── */
-.result-info {
-    margin-top: 14px;
-    font-size: .8rem;
-    color: var(--ink-soft);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 16px;
-    background: var(--green-pale);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--green-light);
-    width: fit-content;
-}
-.result-info strong { color: var(--green-deep); font-weight: 700; }
-</style>
 
 <div class="nt-page">
 
@@ -474,7 +57,7 @@
 
     {# ── SEARCH PANEL ── #}
     <div class="search-panel">
-        <form method="get" action="{{ path('app_test_index') }}" id="searchForm" class="search-form">
+        <form id="searchForm" class="search-form">
             <div class="search-field">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" name="search" id="searchInput"
@@ -482,13 +65,13 @@
                        value="{{ search }}">
             </div>
 
-            <select name="status" class="filter-sel">
+            <select name="status" id="filterStatus" class="filter-sel">
                 <option value="">Tous les statuts</option>
                 <option value="actif"   {{ status == 'actif'   ? 'selected' : '' }}>Actif</option>
                 <option value="inactif" {{ status == 'inactif' ? 'selected' : '' }}>Inactif</option>
             </select>
 
-            <select name="categorie" class="filter-sel">
+            <select name="categorie" id="filterCategorie" class="filter-sel">
                 <option value="">Toutes les catégories</option>
                 <option value="personnalite" {{ categorie == 'personnalite' ? 'selected' : '' }}>Personnalité</option>
                 <option value="intelligence" {{ categorie == 'intelligence' ? 'selected' : '' }}>Intelligence</option>
@@ -500,60 +83,46 @@
             <button type="submit" class="btn-filter">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                 Filtrer
+                <span class="ajax-spinner" id="spinner"></span>
             </button>
 
-            {% if search or status or categorie %}
-                <a href="{{ path('app_test_index') }}" class="btn-reset">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    Réinitialiser
-                </a>
-            {% endif %}
+            <button type="button" id="btnReset" class="btn-reset"
+                    style="{{ (search or status or categorie) ? '' : 'display:none' }}">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Réinitialiser
+            </button>
         </form>
     </div>
 
     {# ── TABLE ── #}
-    <div class="tbl-card">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width:60px">
-                        <a href="?sort=id&order={{ sort == 'id' and order == 'ASC' ? 'DESC' : 'ASC' }}{{ search ? '&search='~search : '' }}{{ status ? '&status='~status : '' }}{{ categorie ? '&categorie='~categorie : '' }}"
-                           class="{{ sort == 'id' ? 'active' : '' }}">
-                            ID <span class="sort-icon {{ sort == 'id' ? 'on' : '' }}">{{ sort == 'id' ? (order == 'ASC' ? '▲' : '▼') : '▲' }}</span>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="?sort=titre&order={{ sort == 'titre' and order == 'ASC' ? 'DESC' : 'ASC' }}{{ search ? '&search='~search : '' }}{{ status ? '&status='~status : '' }}{{ categorie ? '&categorie='~categorie : '' }}"
-                           class="{{ sort == 'titre' ? 'active' : '' }}">
-                            Titre <span class="sort-icon {{ sort == 'titre' ? 'on' : '' }}">{{ sort == 'titre' ? (order == 'ASC' ? '▲' : '▼') : '▲' }}</span>
-                        </a>
-                    </th>
-                    <th>Catégorie</th>
-                    <th>Niveau</th>
-                    <th>Durée</th>
-                    <th>Questions</th>
-                    <th>Statut</th>
-                    <th style="width:120px; text-align:center;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if tests is empty %}
+    <div id="tableWrapper">
+        <div class="tbl-card">
+            <table>
+                <thead>
                     <tr>
-                        <td colspan="8">
-                            <div class="empty-state">
-                                <div class="empty-circle">
-                                    <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
-                                </div>
-                                <h4>Aucun test trouvé</h4>
-                                <p>Commencez par créer votre premier test psychologique.</p>
-                                <a href="{{ path('app_test_new') }}" class="btn-create" style="margin:0 auto;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                    Créer un test
-                                </a>
-                            </div>
-                        </td>
+                        <th style="width:60px">
+                            <a href="#" class="sort-link {{ sort == 'id' ? 'active' : '' }}"
+                               data-sort="id"
+                               data-order="{{ sort == 'id' and order == 'ASC' ? 'DESC' : 'ASC' }}">
+                                ID <span class="sort-icon {{ sort == 'id' ? 'on' : '' }}">{{ sort == 'id' ? (order == 'ASC' ? '▲' : '▼') : '▲' }}</span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" class="sort-link {{ sort == 'titre' ? 'active' : '' }}"
+                               data-sort="titre"
+                               data-order="{{ sort == 'titre' and order == 'ASC' ? 'DESC' : 'ASC' }}">
+                                Titre <span class="sort-icon {{ sort == 'titre' ? 'on' : '' }}">{{ sort == 'titre' ? (order == 'ASC' ? '▲' : '▼') : '▲' }}</span>
+                            </a>
+                        </th>
+                        <th>Catégorie</th>
+                        <th>Niveau</th>
+                        <th>Durée</th>
+                        <th>Questions</th>
+                        <th>Statut</th>
+                        <th style="width:120px; text-align:center;">Actions</th>
                     </tr>
-                {% else %}
+                </thead>
+                <tbody id="tableBody">
                     {% for test in tests %}
                     <tr>
                         <td><span class="cell-id">#{{ test.id }}</span></td>
@@ -577,12 +146,12 @@
                         <td>
                             {% if test.status == 'actif' %}
                                 <span class="badge badge-actif">
-                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" style="border-radius:50%;"><circle cx="4" cy="4" r="4"/></svg>
+                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
                                     Actif
                                 </span>
                             {% else %}
                                 <span class="badge badge-inact">
-                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" style="border-radius:50%;"><circle cx="4" cy="4" r="4"/></svg>
+                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
                                     Inactif
                                 </span>
                             {% endif %}
@@ -607,26 +176,43 @@
                             </form>
                         </td>
                     </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-circle">
+                                    <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
+                                </div>
+                                <h4>Aucun test trouvé</h4>
+                                <p>Commencez par créer votre premier test psychologique.</p>
+                                <a href="{{ path('app_test_new') }}" class="btn-create" style="margin:0 auto;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    Créer un test
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                     {% endfor %}
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-
-    {# ── RESULT COUNT ── #}
-    {% if search or status or categorie %}
-        <div class="result-info">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <strong>{{ tests|length }}</strong>
-            résultat{{ tests|length > 1 ? 's' : '' }} trouvé{{ tests|length > 1 ? 's' : '' }}
+                </tbody>
+            </table>
         </div>
-    {% endif %}
+
+        <div id="resultInfo">
+            {% if search or status or categorie %}
+            <div class="result-info">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <strong>{{ tests|length }}</strong> résultat{{ tests|length > 1 ? 's' : '' }} trouvé{{ tests|length > 1 ? 's' : '' }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
 </div>
 
 {% block javascripts %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
 function deleteTest(id, titre) {
     Swal.fire({
         title: 'Supprimer ce test ?',
@@ -637,7 +223,6 @@ function deleteTest(id, titre) {
         cancelButtonColor: '#2d6a4f',
         confirmButtonText: 'Supprimer',
         cancelButtonText: 'Annuler',
-        customClass: { popup: 'swal-popup' }
     }).then(function(result) {
         if (result.isConfirmed) {
             document.getElementById('delete-form-' + id).submit();
@@ -645,16 +230,102 @@ function deleteTest(id, titre) {
     });
 }
 
-var searchTimeout = null;
-var searchInput = document.getElementById('searchInput');
-if (searchInput) {
-    searchInput.addEventListener('keyup', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            document.getElementById('searchForm').submit();
-        }, 500);
+const ajaxUrl         = '{{ path("app_test_search_ajax") }}';
+const searchInput     = document.getElementById('searchInput');
+const filterStatus    = document.getElementById('filterStatus');
+const filterCategorie = document.getElementById('filterCategorie');
+const tableBody       = document.getElementById('tableBody');
+const tableWrapper    = document.getElementById('tableWrapper');
+const resultInfo      = document.getElementById('resultInfo');
+const spinner         = document.getElementById('spinner');
+const btnReset        = document.getElementById('btnReset');
+const searchForm      = document.getElementById('searchForm');
+
+let searchTimeout = null;
+
+function doSearch() {
+    var params = new URLSearchParams({
+        search:    searchInput.value,
+        status:    filterStatus.value,
+        categorie: filterCategorie.value,
+    });
+
+    var hasFilters = searchInput.value || filterStatus.value || filterCategorie.value;
+    btnReset.style.display = hasFilters ? 'inline-flex' : 'none';
+
+    spinner.classList.add('visible');
+    tableWrapper.classList.add('loading');
+
+    fetch(ajaxUrl + '?' + params.toString(), {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        tableBody.innerHTML = data.html;
+        if (hasFilters) {
+            var n = data.count;
+            resultInfo.innerHTML =
+                '<div class="result-info">' +
+                '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+                '<strong>' + n + '</strong> résultat' + (n > 1 ? 's' : '') + ' trouvé' + (n > 1 ? 's' : '') +
+                '</div>';
+        } else {
+            resultInfo.innerHTML = '';
+        }
+    })
+    .catch(function() {
+        resultInfo.innerHTML = '<div class="result-info" style="border-color:#f5a99c;background:#fdf0ee;color:#c0392b;">Erreur lors de la recherche.</div>';
+    })
+    .finally(function() {
+        spinner.classList.remove('visible');
+        tableWrapper.classList.remove('loading');
     });
 }
+
+searchInput.addEventListener('keyup', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(doSearch, 400);
+});
+
+filterStatus.addEventListener('change', doSearch);
+filterCategorie.addEventListener('change', doSearch);
+
+searchForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    doSearch();
+});
+
+btnReset.addEventListener('click', function() {
+    searchInput.value     = '';
+    filterStatus.value    = '';
+    filterCategorie.value = '';
+    doSearch();
+});
+
+document.querySelectorAll('.sort-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var params = new URLSearchParams({
+            search:    searchInput.value,
+            status:    filterStatus.value,
+            categorie: filterCategorie.value,
+            sort:      this.dataset.sort,
+            order:     this.dataset.order,
+        });
+        spinner.classList.add('visible');
+        tableWrapper.classList.add('loading');
+        fetch(ajaxUrl + '?' + params.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) { tableBody.innerHTML = data.html; })
+        .finally(function() {
+            spinner.classList.remove('visible');
+            tableWrapper.classList.remove('loading');
+        });
+    });
+});
+
 </script>
 {% endblock %}
 
