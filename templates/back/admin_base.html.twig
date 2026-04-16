@@ -133,16 +133,8 @@
                             <div class="icon_info">
                                 <!-- 🔴 BOUTON ALERTES DANS LA TOPBAR (en icône) -->
                                 <ul>
-                                    <li>
-                                        <a href="{{ path('admin_alertes_index') }}" 
-                                           class="alertes-btn"
-                                           style="position: relative; background: #dc3545; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                            <i class="fa fa-exclamation-triangle" style="color: white; font-size: 18px;"></i>
-                                            <span class="badge" style="position: absolute; top: -5px; right: -5px; background: #ffc107; color: #dc3545; border-radius: 50%; padding: 2px 6px; font-size: 10px;">
-                                                {{ nb_nouvelles_alertes|default(0) }}
-                                            </span>
-                                        </a>
-                                    </li>
+                                    
+                                        
                                     <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
                                     <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
                                     <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>

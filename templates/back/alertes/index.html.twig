@@ -3,317 +3,641 @@
 {% block title %}Alertes Critiques — Administration{% endblock %}
 
 {% block admin_content %}
-<div class="container-fluid px-4">
+<div class="alertes-container">
 
     {# Header #}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">
-            <i class="fa fa-exclamation-triangle text-danger"></i> Alertes Critiques
-            {% if nb_nouvelles > 0 %}
-                <span class="badge bg-danger">{{ nb_nouvelles }} nouvelles</span>
-            {% endif %}
-        </h1>
+    <div class="page-header">
+        <div>
+            <p class="page-surtitle">Administration</p>
+            <h1 class="page-title">
+                Alertes <em>Critiques</em>
+                {% if nb_nouvelles > 0 %}
+                    <span class="badge-count">{{ nb_nouvelles }} nouvelles</span>
+                {% endif %}
+            </h1>
+        </div>
     </div>
 
     {# Flash messages #}
     {% for msg in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <i class="fa fa-check-circle"></i> {{ msg }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="flash-success" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ msg }}
+            <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
         </div>
     {% endfor %}
 
     {# Cartes statistiques #}
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card border-left-danger shadow-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h6 class="text-muted mb-1">Nouvelles</h6>
-                            <h2 class="mb-0 text-danger">{{ nouvelles|length }}</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <i class="fa fa-bell fa-2x text-danger"></i>
-                        </div>
-                    </div>
-                </div>
+    <div class="stats-grid">
+        <div class="stat-card stat-danger">
+            <div>
+                <div class="stat-label">Nouvelles</div>
+                <div class="stat-value">{{ nouvelles|length }}</div>
+            </div>
+            <div class="stat-icon icon-danger">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-left-warning shadow-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h6 class="text-muted mb-1">En cours</h6>
-                            <h2 class="mb-0 text-warning">{{ en_cours|length }}</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <i class="fa fa-spinner fa-2x text-warning"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="stat-card stat-amber">
+            <div>
+                <div class="stat-label">En cours</div>
+                <div class="stat-value">{{ en_cours|length }}</div>
+            </div>
+            <div class="stat-icon icon-amber">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-left-success shadow-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h6 class="text-muted mb-1">Traitées</h6>
-                            <h2 class="mb-0 text-success">{{ traitees|length }}</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <i class="fa fa-check-circle fa-2x text-success"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="stat-card stat-success">
+            <div>
+                <div class="stat-label">Traitées</div>
+                <div class="stat-value">{{ traitees|length }}</div>
+            </div>
+            <div class="stat-icon icon-success">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
         </div>
     </div>
 
     {# Nouvelles alertes #}
     {% if nouvelles is not empty %}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-danger text-white">
-            <h5 class="mb-0">
-                <i class="fa fa-bell"></i> Nouvelles alertes
-                <span class="badge badge-light ml-2">{{ nouvelles|length }}</span>
-            </h5>
+    <div class="section-card">
+        <div class="section-header header-danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="section-title">Nouvelles alertes</span>
+            <span class="section-badge">{{ nouvelles|length }}</span>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <thead class="bg-light">
-                        <tr>
-                            <th><i class="fa fa-user"></i> Utilisateur</th>
-                            <th><i class="fa fa-envelope"></i> Email</th>
-                            <th><i class="fa fa-puzzle-piece"></i> Test</th>
-                            <th><i class="fa fa-calendar"></i> Date</th>
-                            <th><i class="fa fa-cog"></i> Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for alerte in nouvelles %}
-                        <tr class="alert-row">
-                            <td>
-                                {% if alerte.utilisateur %}
-                                    <strong>{{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}</strong>
-                                    <br><small class="text-muted">ID: {{ alerte.utilisateur.id }}</small>
-                                {% else %}
-                                    <span class="text-muted">Anonyme</span>
-                                    <br><small class="text-muted">Non connecté</small>
-                                {% endif %}
-                            </td>
-                            <td>{{ alerte.utilisateur ? alerte.utilisateur.email : 'Non renseigné' }}</td>
-                            <td><span class="badge badge-info">{{ alerte.test.titre }}</span></td>
-                            <td>{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
-                            <td>
-                                <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}"
-                                   class="btn btn-danger btn-sm">
-                                    <i class="fa fa-eye"></i> Traiter
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Email</th>
+                        <th>Test</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alerte in nouvelles %}
+                    <tr class="table-row">
+                        <td>
+                            {% if alerte.utilisateur %}
+                                <span class="user-name">{{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}</span>
+                                <span class="user-sub">ID : {{ alerte.utilisateur.id }}</span>
+                            {% else %}
+                                <span class="user-name">Anonyme</span>
+                                <span class="user-sub">Non connecté</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">
+                            {{ alerte.utilisateur ? alerte.utilisateur.email : 'Non renseigné' }}
+                        </td>
+                        <td>
+                            <span class="test-badge">{{ alerte.test.titre }}</span>
+                        </td>
+                        <td class="text-muted">{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}" class="btn btn-danger">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                Traiter
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}
 
     {# En cours #}
     {% if en_cours is not empty %}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-warning">
-            <h5 class="mb-0">
-                <i class="fa fa-spinner fa-spin"></i> En cours de traitement
-                <span class="badge badge-dark ml-2">{{ en_cours|length }}</span>
-            </h5>
+    <div class="section-card">
+        <div class="section-header header-amber">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span class="section-title">En cours de traitement</span>
+            <span class="section-badge">{{ en_cours|length }}</span>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <thead class="bg-light">
-                        <tr>
-                            <th><i class="fa fa-user"></i> Utilisateur</th>
-                            <th><i class="fa fa-envelope"></i> Email</th>
-                            <th><i class="fa fa-puzzle-piece"></i> Test</th>
-                            <th><i class="fa fa-calendar"></i> Date</th>
-                            <th><i class="fa fa-cog"></i> Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for alerte in en_cours %}
-                        <tr class="alert-row">
-                            <td>
-                                {% if alerte.utilisateur %}
-                                    {{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}
-                                {% else %}
-                                    <span class="text-muted">Anonyme</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ alerte.utilisateur ? alerte.utilisateur.email : 'Non renseigné' }}</td>
-                            <td><span class="badge badge-info">{{ alerte.test.titre }}</span></td>
-                            <td>{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
-                            <td>
-                                <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}"
-                                   class="btn btn-warning btn-sm">
-                                    <i class="fa fa-eye"></i> Suivre
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Email</th>
+                        <th>Test</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alerte in en_cours %}
+                    <tr class="table-row">
+                        <td>
+                            {% if alerte.utilisateur %}
+                                <span class="user-name">{{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}</span>
+                            {% else %}
+                                <span class="user-name">Anonyme</span>
+                                <span class="user-sub">Non connecté</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">
+                            {{ alerte.utilisateur ? alerte.utilisateur.email : 'Non renseigné' }}
+                        </td>
+                        <td>
+                            <span class="test-badge">{{ alerte.test.titre }}</span>
+                        </td>
+                        <td class="text-muted">{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}" class="btn btn-amber">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                Suivre
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}
 
     {# Traitées #}
     {% if traitees is not empty %}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">
-                <i class="fa fa-check-circle"></i> Alertes traitées
-                <span class="badge badge-light ml-2">{{ traitees|length }}</span>
-            </h5>
+    <div class="section-card">
+        <div class="section-header header-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="section-title">Alertes traitées</span>
+            <span class="section-badge">{{ traitees|length }}</span>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <thead class="bg-light">
-                        <tr>
-                            <th><i class="fa fa-user"></i> Utilisateur</th>
-                            <th><i class="fa fa-puzzle-piece"></i> Test</th>
-                            <th><i class="fa fa-calendar"></i> Détectée</th>
-                            <th><i class="fa fa-check"></i> Traitée</th>
-                            <th><i class="fa fa-user-md"></i> Traité par</th>
-                            <th><i class="fa fa-cog"></i> Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for alerte in traitees %}
-                        <tr>
-                            <td>
-                                {% if alerte.utilisateur %}
-                                    {{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}
-                                {% else %}
-                                    <span class="text-muted">Anonyme</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ alerte.test.titre }}</td>
-                            <td>{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
-                            <td>{{ alerte.traiteLe ? alerte.traiteLe|date('d/m/Y H:i') : '-' }}</td>
-                            <td>{{ alerte.traitePar ?? 'Admin' }}</td>
-                            <td>
-                                <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}"
-                                   class="btn btn-outline-success btn-sm">
-                                    <i class="fa fa-eye"></i> Voir
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Test</th>
+                        <th>Détectée</th>
+                        <th>Traitée le</th>
+                        <th>Traité par</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alerte in traitees %}
+                    <tr class="table-row">
+                        <td>
+                            {% if alerte.utilisateur %}
+                                <span class="user-name">{{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}</span>
+                            {% else %}
+                                <span class="user-name text-muted">Anonyme</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="test-badge">{{ alerte.test.titre }}</span></td>
+                        <td class="text-muted">{{ alerte.createdAt|date('d/m/Y H:i') }}</td>
+                        <td class="text-muted">{{ alerte.traiteLe ? alerte.traiteLe|date('d/m/Y H:i') : '—' }}</td>
+                        <td class="text-muted">{{ alerte.traitePar ?? 'Admin' }}</td>
+                        <td>
+                            <a href="{{ path('admin_alertes_detail', {id: alerte.id}) }}" class="btn btn-outline">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                Voir
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}
 
-    {# Message vide #}
+    {# Aucune alerte #}
     {% if nouvelles is empty and en_cours is empty and traitees is empty %}
-        <div class="card shadow-sm">
-            <div class="card-body text-center py-5">
-                <i class="fa fa-check-circle fa-4x text-success mb-3"></i>
-                <h4 class="text-muted">Aucune alerte critique</h4>
-                <p class="text-muted">Toutes les alertes ont été traitées.</p>
-            </div>
-        </div>
+    <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.5" style="margin-bottom:1rem"><polyline points="20 6 9 17 4 12"/></svg>
+        <h3>Aucune alerte critique</h3>
+        <p>Toutes les alertes ont été traitées.</p>
+    </div>
     {% endif %}
 
 </div>
 
+{# Bouton flottant si nouvelles alertes #}
+{% if nouvelles|length > 0 %}
+<div id="alert-float">
+    <div id="alert-bubble">
+        {{ nouvelles|length }} alerte(s) critique(s)<br>
+        <small>Cliquez sur la cloche pour activer le son</small>
+    </div>
+    <button id="btn-alerte" title="Alertes critiques">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="float-badge">{{ nouvelles|length }}</span>
+    </button>
+</div>
+{% endif %}
+
 <style>
-.border-left-danger { border-left: 4px solid #dc3545; }
-.border-left-warning { border-left: 4px solid #ffc107; }
-.border-left-success { border-left: 4px solid #28a745; }
+/* ============================================================
+   VARIABLES — cohérentes avec le reste du projet
+   ============================================================ */
+:root {
+    --green-dark:   #1a3a2a;
+    --green-mid:    #2d5a3d;
+    --green-light:  #4a8c5c;
+    --green-pale:   #e8f5e9;
+    --green-badge:  #c8e6c9;
+    --cream:        #f5f3ef;
+    --white:        #ffffff;
+    --border:       #e0ddd8;
+    --text:         #1a1a1a;
+    --muted:        #6b7280;
+    --red:          #dc2626;
+    --red-pale:     #fef2f2;
+    --amber:        #d97706;
+    --amber-pale:   #fffbeb;
+    --success:      #16a34a;
+    --success-pale: #f0fdf4;
+}
 
-.alert-row {
-    transition: all 0.2s ease;
-}
-.alert-row:hover {
-    background-color: #f8f9fc;
-    transform: translateX(2px);
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.alertes-container {
+    padding: 2rem;
+    max-width: 1200px;
 }
 
-.card {
-    border: none;
-    border-radius: 10px;
+/* ============================================================
+   HEADER
+   ============================================================ */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
 }
-.card-header {
-    border-radius: 10px 10px 0 0;
-}
-.table th {
-    border-top: none;
+.page-surtitle {
+    font-size: 0.75rem;
     font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
 }
-.badge-light {
-    background-color: rgba(255,255,255,0.25);
+.page-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.page-title em {
+    font-style: italic;
+    color: var(--green-light);
+}
+.badge-count {
+    background: var(--red);
     color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-style: normal;
+    vertical-align: middle;
+}
+
+/* ============================================================
+   FLASH
+   ============================================================ */
+.flash-success {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--success-pale);
+    color: var(--success);
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.flash-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--success);
+    line-height: 1;
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+.stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stat-danger .stat-value { color: var(--red); }
+.stat-amber  .stat-value { color: var(--amber); }
+.stat-success .stat-value { color: var(--success); }
+.icon-danger  { background: var(--red-pale); }
+.icon-amber   { background: var(--amber-pale); }
+.icon-success { background: var(--success-pale); }
+
+/* ============================================================
+   SECTION CARDS
+   ============================================================ */
+.section-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 1.5rem;
+}
+.header-danger  { background: var(--red); }
+.header-amber   { background: var(--amber); }
+.header-success { background: var(--green-dark); }
+.section-title {
+    flex: 1;
+    color: white;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.section-badge {
+    background: rgba(255,255,255,0.25);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 999px;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table-wrapper {
+    overflow-x: auto;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.data-table th {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding: 0.85rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+}
+.data-table td {
+    padding: 0.95rem 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+.table-row:hover td {
+    background: var(--cream);
+    transition: background 0.15s ease;
+}
+.user-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text);
+}
+.user-sub {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+.text-muted {
+    color: var(--muted);
+}
+.test-badge {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--green-badge);
+    letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   BOUTONS
+   ============================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.85; }
+.btn-danger  { background: var(--red);        color: white; }
+.btn-amber   { background: var(--amber);      color: white; }
+.btn-outline {
+    background: var(--white);
+    color: var(--green-dark);
+    border: 1px solid var(--border);
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    padding: 4rem 2rem;
+}
+.empty-state h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.empty-state p {
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+/* ============================================================
+   BOUTON FLOTTANT
+   ============================================================ */
+#alert-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+#alert-bubble {
+    background: var(--green-dark);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: none;
+    max-width: 200px;
+    text-align: center;
+    line-height: 1.5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+#alert-bubble small { font-weight: 400; opacity: 0.85; }
+#btn-alerte {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--red);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(220,38,38,0.45);
+    animation: ring 2s ease infinite;
+}
+.float-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: white;
+    color: var(--red);
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@keyframes ring {
+    0%,50%,100% { transform: rotate(0deg); }
+    10%          { transform: rotate(14deg); }
+    20%          { transform: rotate(-14deg); }
+    30%          { transform: rotate(9deg); }
+    40%          { transform: rotate(-9deg); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .alertes-container { padding: 1rem; }
+    .page-title { font-size: 1.4rem; }
+}
+
+@media print {
+    #alert-float, .btn { display: none !important; }
+    .section-card { break-inside: avoid; }
 }
 </style>
-{# ... le reste de votre template ... #}
 
 <script>
-    // Fonction pour jouer le son d'alerte
-    function playAlertSound() {
-        const audio = new Audio("{{ asset('sounds/alert.mp3') }}");
-        audio.volume = 0.5; // Ajustez le volume (0.0 à 1.0)
-        audio.play().catch(error => {
-            // Les navigateurs modernes bloquent souvent la lecture automatique.
-            console.log("Lecture audio automatique bloquée par le navigateur.", error);
-        });
-    }
+(function () {
+    const btn    = document.getElementById('btn-alerte');
+    const bubble = document.getElementById('alert-bubble');
+    if (!btn) return;
 
-    // Vérifie s'il y a de nouvelles alertes et joue le son
-    // La variable 'nouvelles' est passée depuis votre contrôleur
-    {% if nouvelles is defined and nouvelles|length > 0 %}
-        // On ajoute un petit délai pour s'assurer que la page est chargée
-        setTimeout(playAlertSound, 500);
-    {% endif %}
-</script>
-{% if nouvelles|length > 0 %}
-<script>
-    (function playEmergencyBeep() {
+    let soundPlayed = false;
+
+    btn.addEventListener('mouseenter', () => bubble.style.display = 'block');
+    btn.addEventListener('mouseleave', () => bubble.style.display = 'none');
+
+    btn.addEventListener('click', function () {
+        if (soundPlayed) return;
+        soundPlayed = true;
+        btn.style.animation  = 'none';
+        btn.style.background = '#6b7280';
+        btn.title = 'Son joué';
+
         try {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            const ctx = new AudioCtx();
-            const beep = () => {
-                const osc = ctx.createOscillator();
+            const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+            [0, 0.55, 1.1].forEach(function (t) {
+                const osc  = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
+                osc.type = 'sine';
                 osc.frequency.value = 880;
-                gain.gain.value = 0.3;
-                osc.start();
-                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.4);
-                osc.stop(ctx.currentTime + 0.4);
-            };
-            
-            // Tentative de jouer immédiatement
-            if (ctx.state === 'running') {
-                beep();
-            } else {
-                ctx.resume().then(beep);
-            }
-        } catch(e) { console.log('Audio non supporté'); }
-    })();
+                gain.gain.setValueAtTime(0.4, ctx.currentTime + t);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.45);
+                osc.start(ctx.currentTime + t);
+                osc.stop(ctx.currentTime + t + 0.45);
+            });
+        } catch (e) {
+            console.warn('Audio non supporté :', e);
+        }
+    });
+})();
 </script>
-{% endif %}
 
 {% endblock %}

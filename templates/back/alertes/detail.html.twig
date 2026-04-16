@@ -3,199 +3,529 @@
 {% block title %}Alerte #{{ alerte.id }} — Administration{% endblock %}
 
 {% block admin_content %}
-<div class="container-fluid px-4">
+<div class="alertes-container">
 
-    <div class="mb-3">
-        <a href="{{ path('admin_alertes_index') }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> Retour aux alertes
+    {# Actions en haut #}
+    <div class="top-actions">
+        <a href="{{ path('admin_alertes_index') }}" class="btn-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Retour aux alertes
         </a>
-        
         {% if alerte.statut != 'traite' %}
-        <button onclick="window.print()" class="btn btn-info ml-2">
-            <i class="fa fa-print"></i> Imprimer
+        <button onclick="window.print()" class="btn-print">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimer
         </button>
         {% endif %}
     </div>
 
-    <div class="card border-danger shadow-sm">
-        <div class="card-header bg-danger text-white">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">
-                    <i class="fa fa-exclamation-triangle"></i> Alerte #{{ alerte.id }}
-                </h4>
-                <div>
-                    {% if alerte.statut == 'nouveau' %}
-                        <span class="badge bg-light text-danger">
-                            <i class="fa fa-bell"></i> 🔴 Nouvelle
-                        </span>
-                    {% elseif alerte.statut == 'en_cours' %}
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-spinner fa-spin"></i> 🟡 En cours
-                        </span>
-                    {% else %}
-                        <span class="badge bg-success">
-                            <i class="fa fa-check-circle"></i> ✅ Traitée
-                        </span>
-                    {% endif %}
-                </div>
+    {# Carte principale #}
+    <div class="main-card">
+
+        {# En-tête de la carte #}
+        <div class="main-card-header">
+            <h2 class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Alerte #{{ alerte.id }}
+            </h2>
+            <div>
+                {% if alerte.statut == 'nouveau' %}
+                    <span class="status-badge status-new">
+                        <span class="status-dot dot-red"></span> Nouvelle
+                    </span>
+                {% elseif alerte.statut == 'en_cours' %}
+                    <span class="status-badge status-progress">
+                        <span class="status-dot dot-amber"></span> En cours
+                    </span>
+                {% else %}
+                    <span class="status-badge status-done">
+                        <span class="status-dot dot-green"></span> Traitée
+                    </span>
+                {% endif %}
             </div>
         </div>
-        
+
         <div class="card-body">
 
             {# Informations utilisateur #}
-            <div class="card bg-light mb-4">
-                <div class="card-body">
-                    <h5 class="card-title text-danger">
-                        <i class="fa fa-user-circle"></i> Informations utilisateur
-                    </h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <small class="text-muted">Nom complet</small>
-                            <div class="font-weight-bold">
-                                {% if alerte.utilisateur %}
-                                    {{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}
-                                {% else %}
-                                    <span class="text-muted">Anonyme (non connecté)</span>
-                                {% endif %}
-                            </div>
+            <div class="info-block">
+                <div class="block-title block-title-danger">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Informations utilisateur
+                </div>
+                <div class="info-grid">
+                    <div class="info-field">
+                        <label>Nom complet</label>
+                        <div class="field-value">
+                            {% if alerte.utilisateur %}
+                                {{ alerte.utilisateur.firstname }} {{ alerte.utilisateur.lastname }}
+                            {% else %}
+                                <span class="text-muted">Anonyme (non connecté)</span>
+                            {% endif %}
                         </div>
-                        <div class="col-md-6">
-                            <small class="text-muted">Email</small>
-                            <div>
-                                {% if alerte.utilisateur %}
-                                    {{ alerte.utilisateur.email }}
-                                {% else %}
-                                    <span class="text-muted">Non renseigné</span>
-                                {% endif %}
-                            </div>
+                    </div>
+                    <div class="info-field">
+                        <label>Email</label>
+                        <div class="field-value">
+                            {% if alerte.utilisateur %}
+                                {{ alerte.utilisateur.email }}
+                            {% else %}
+                                <span class="text-muted">Non renseigné</span>
+                            {% endif %}
                         </div>
-                        <div class="col-md-6 mt-2">
-                            <small class="text-muted">Téléphone</small>
-                            <div>
-                                {% if alerte.utilisateur and alerte.utilisateur.phoneNumber %}
-                                    {{ alerte.utilisateur.phoneNumber }}
-                                {% else %}
-                                    <span class="text-muted">Non renseigné</span>
-                                {% endif %}
-                            </div>
+                    </div>
+                    <div class="info-field">
+                        <label>Téléphone</label>
+                        <div class="field-value">
+                            {% if alerte.utilisateur and alerte.utilisateur.phoneNumber %}
+                                {{ alerte.utilisateur.phoneNumber }}
+                            {% else %}
+                                <span class="text-muted">Non renseigné</span>
+                            {% endif %}
                         </div>
-                        <div class="col-md-6 mt-2">
-                            <small class="text-muted">Test passé</small>
-                            <div>
-                                <span class="badge badge-info">{{ alerte.test.titre }}</span>
-                            </div>
+                    </div>
+                    <div class="info-field">
+                        <label>Test passé</label>
+                        <div class="field-value">
+                            <span class="test-badge">{{ alerte.test.titre }}</span>
                         </div>
-                        <div class="col-md-6 mt-2">
-                            <small class="text-muted">Détectée le</small>
-                            <div>{{ alerte.createdAt|date('d/m/Y à H:i') }}</div>
-                        </div>
+                    </div>
+                    <div class="info-field">
+                        <label>Détectée le</label>
+                        <div class="field-value">{{ alerte.createdAt|date('d/m/Y à H:i') }}</div>
                     </div>
                 </div>
             </div>
 
-            {# Résumé des réponses #}
-            <div class="card mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0"><i class="fa fa-comments"></i> Réponses de l'utilisateur</h5>
+            {# Réponses de l'utilisateur #}
+            <div class="responses-block">
+                <div class="responses-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Réponses de l'utilisateur
                 </div>
-                <div class="card-body">
-                    <div style="background: #f8f9fc; padding: 15px; border-radius: 8px; white-space: pre-line; font-size: 0.95rem; max-height: 400px; overflow-y: auto;">
-                        {{ alerte.reponsesResume ?? 'Non disponible' }}
-                    </div>
-                </div>
-            </div>
-
-   {# Notes admin existantes #}
-{% if alerte.notesAdmin %}
-<div class="card mb-4">
-    <div class="card-header bg-light">
-        <h5 class="mb-0 text-secondary">
-            <i class="fa fa-sticky-note"></i> Notes précédentes
-        </h5>
-    </div>
-    <div class="card-body bg-light">
-        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #6c757d;">
-            {{ alerte.notesAdmin|nl2br }}
-        </div>
-    </div>
-</div>
-
-{% endif %}
-
-            {# Formulaire de traitement #}
-            {% if alerte.statut != 'traite' %}
-            <div class="card border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0"><i class="fa fa-cogs"></i> Traitement de l'alerte</h5>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ path('admin_alertes_statut', {id: alerte.id}) }}">
-                        <div class="mb-3">
-                            <label class="form-label font-weight-bold">Statut</label>
-                            <select name="statut" class="form-control">
-                                <option value="nouveau" {% if alerte.statut == 'nouveau' %}selected{% endif %}>
-                                    🔴 Nouveau - À traiter
-                                </option>
-                                <option value="en_cours" {% if alerte.statut == 'en_cours' %}selected{% endif %}>
-                                    🟡 En cours - En traitement
-                                </option>
-                                <option value="traite">✅ Traité - Résolu</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label font-weight-bold">Notes internes</label>
-                            <textarea name="notes" class="form-control" rows="5"
-                                      placeholder="Ex: Contacté par email, orienté vers un professionnel...">{{ alerte.notesAdmin }}</textarea>
-                            <small class="text-muted">Ces notes sont privées (visibles uniquement par les admins).</small>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-save"></i> Enregistrer
-                        </button>
-                    </form>
+                <div class="responses-body">
+                    {{ alerte.reponsesResume ?? 'Non disponible' }}
                 </div>
             </div>
-            {% else %}
-            <div class="alert alert-success shadow-sm">
-            {% if alerte.statut == 'en_cours' %}
-<div class="text-right mt-3">
-    <button type="submit" name="statut" value="traite" class="btn btn-success btn-lg">
-        <i class="fa fa-check-circle"></i> ✅ Marquer comme traitée
-    </button>
-</div>
-{% endif %}
-                <div class="d-flex align-items-center">
-                    <div class="mr-3">
-                        <i class="fa fa-check-circle fa-2x"></i>
-                    </div>
-                    <div>
-                        <h5 class="mb-1">Alerte traitée</h5>
-                        <p class="mb-0">
-                            Cette alerte a été traitée le <strong>{{ alerte.traiteLe|date('d/m/Y à H:i') }}</strong> 
-                            par <strong>{{ alerte.traitePar }}</strong>.
-                        </p>
-                    </div>
+
+            {# Notes admin existantes #}
+            {% if alerte.notesAdmin %}
+            <div class="notes-block">
+                <div class="notes-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Notes précédentes
+                </div>
+                <div class="notes-body">
+                    {{ alerte.notesAdmin|nl2br }}
                 </div>
             </div>
             {% endif %}
 
-        </div>
-    </div>
-</div>
+            {# Formulaire de traitement #}
+            {% if alerte.statut != 'traite' %}
+            <div class="form-block">
+                <div class="form-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                    Traitement de l'alerte
+                </div>
+                <div class="form-body">
+                    <form method="POST" action="{{ path('admin_alertes_statut', {id: alerte.id}) }}">
+                        <div class="form-group">
+                            <label class="form-label">Statut</label>
+                            <select name="statut" class="form-control">
+                                <option value="nouveau" {% if alerte.statut == 'nouveau' %}selected{% endif %}>
+                                    Nouveau — À traiter
+                                </option>
+                                <option value="en_cours" {% if alerte.statut == 'en_cours' %}selected{% endif %}>
+                                    En cours — En traitement
+                                </option>
+                                <option value="traite">Traité — Résolu</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notes internes</label>
+                            <textarea name="notes" class="form-control" rows="5"
+                                placeholder="Ex : contacté par email, orienté vers un professionnel...">{{ alerte.notesAdmin }}</textarea>
+                            <span class="form-hint">Ces notes sont privées — visibles uniquement par les administrateurs.</span>
+                        </div>
+                        <button type="submit" class="btn-save">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Enregistrer
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% else %}
+
+            {# Alerte déjà traitée #}
+            <div class="treated-notice">
+                <div class="treated-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <h4 class="treated-title">Alerte traitée</h4>
+                    <p class="treated-desc">
+                        Cette alerte a été traitée le
+                        <strong>{{ alerte.traiteLe|date('d/m/Y à H:i') }}</strong>
+                        par <strong>{{ alerte.traitePar }}</strong>.
+                    </p>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>{# /.card-body #}
+    </div>{# /.main-card #}
+
+</div>{# /.alertes-container #}
 
 <style>
-.bg-opacity-10 {
-    background-color: rgba(255, 193, 7, 0.1);
+/* ============================================================
+   VARIABLES
+   ============================================================ */
+:root {
+    --green-dark:   #1a3a2a;
+    --green-mid:    #2d5a3d;
+    --green-light:  #4a8c5c;
+    --green-pale:   #e8f5e9;
+    --green-badge:  #c8e6c9;
+    --cream:        #f5f3ef;
+    --white:        #ffffff;
+    --border:       #e0ddd8;
+    --text:         #1a1a1a;
+    --muted:        #6b7280;
+    --red:          #dc2626;
+    --red-pale:     #fef2f2;
+    --red-border:   #fca5a5;
+    --amber:        #d97706;
+    --amber-pale:   #fffbeb;
+    --success:      #16a34a;
+    --success-pale: #f0fdf4;
 }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.alertes-container {
+    padding: 2rem;
+    max-width: 860px;
+}
+
+/* ============================================================
+   ACTIONS HAUT DE PAGE
+   ============================================================ */
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+.btn-back, .btn-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--muted);
+    transition: color 0.15s, border-color 0.15s;
+}
+.btn-back:hover, .btn-print:hover {
+    color: var(--green-dark);
+    border-color: var(--green-dark);
+}
+
+/* ============================================================
+   CARTE PRINCIPALE
+   ============================================================ */
+.main-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+}
+.main-card-header {
+    background: var(--red);
+    padding: 1.25rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: white;
+}
+.card-body {
+    padding: 1.75rem;
+}
+
+/* ============================================================
+   BLOC INFO UTILISATEUR
+   ============================================================ */
+.info-block {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+.block-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.block-title-danger { color: var(--red); }
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.info-field label {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 3px;
+}
+.field-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+}
+.text-muted { color: var(--muted); }
+.test-badge {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--green-badge);
+}
+
+/* ============================================================
+   RÉPONSES
+   ============================================================ */
+.responses-block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+.responses-header {
+    background: var(--red);
+    color: white;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.responses-body {
+    background: var(--cream);
+    padding: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: var(--text);
+    max-height: 280px;
+    overflow-y: auto;
+    white-space: pre-line;
+}
+
+/* ============================================================
+   NOTES
+   ============================================================ */
+.notes-block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+.notes-header {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cream);
+}
+.notes-body {
+    padding: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: var(--text);
+    border-left: 3px solid var(--border);
+}
+
+/* ============================================================
+   FORMULAIRE DE TRAITEMENT
+   ============================================================ */
+.form-block {
+    border: 1px solid var(--red-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.form-header {
+    background: var(--green-dark);
+    color: white;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.form-body {
+    padding: 1.5rem;
+}
+.form-group {
+    margin-bottom: 1.25rem;
+}
+.form-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.form-control {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: var(--text);
+    background: var(--white);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-control:focus {
+    border-color: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(74,140,92,0.12);
+}
+textarea.form-control {
+    resize: vertical;
+}
+.form-hint {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 5px;
+}
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-dark);
+    color: white;
+    border: none;
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+}
+.btn-save:hover {
+    background: var(--green-mid);
+}
+
+/* ============================================================
+   NOTICE TRAITÉE
+   ============================================================ */
+.treated-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--success-pale);
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 1.25rem;
+}
+.treated-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid #bbf7d0;
+}
+.treated-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--success);
+    margin-bottom: 4px;
+}
+.treated-desc {
+    font-size: 0.875rem;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .alertes-container { padding: 1rem; }
+    .card-body { padding: 1.25rem; }
+}
+
+/* ============================================================
+   IMPRESSION
+   ============================================================ */
 @media print {
-    .btn, .topbar, .sidebar, .right_topbar {
-        display: none !important;
-    }
-    .card {
-        break-inside: avoid;
-    }
+    .top-actions, .btn-save, .form-block { display: none !important; }
+    .main-card { break-inside: avoid; box-shadow: none; }
+    .alertes-container { padding: 0; }
 }
 </style>
+
 {% endblock %}
