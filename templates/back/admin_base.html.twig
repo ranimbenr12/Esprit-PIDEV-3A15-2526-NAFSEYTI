@@ -1,0 +1,202 @@
+{% extends 'back/base.html.twig' %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="{{ path('app_dashboard') }}">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sidebar_user_info">
+                    <div class="icon_setting"></div>
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive"
+                                src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                alt="user"
+                                style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;">
+                        </div>
+                        <div class="user_info" style="text-align:center;">
+                            <h6 style="color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;">
+                                {{ app.user.firstname }} {{ app.user.lastname }}
+                            </h6>
+                            <p style="margin:0;">
+                                <span class="online_animation"></span> en_ligne
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar_blog_2">
+                <h4></h4>
+                <ul class="list-unstyled components">
+                    <li class="{% block dashboard_active %}{% endblock %}">
+                        <a href="{{ path('app_dashboard') }}">
+                            <i class="fa fa-dashboard yellow_color"></i>
+                            <span>Tableau de bord</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-users blue1_color"></i>
+                            <span>Utilisateurs</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar orange_color"></i>
+                            <span>Rendez-vous</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-book purple_color2"></i>
+                            <span>Contenu psychologique</span>
+                        </a>
+                    </li>
+
+                    <li class="{% block test_active %}{% endblock %}">
+                        <a href="{{ path('app_test_index') }}">
+                            <i class="fa fa-check-square green_color"></i>
+                            <span>Tests</span>
+                        </a>
+                    </li>
+
+                    <li class="{% block question_active %}{% endblock %}">
+                        <a href="{{ path('app_question_index') }}">
+                            <i class="fa fa-question-circle blue1_color"></i>
+                            <span>Questions</span>
+                        </a>
+                    </li>
+
+                    <!-- 🔴 NOUVEAU LIEN ALERTES DANS LA SIDEBAR -->
+                    <li class="{% block alertes_active %}{% endblock %}">
+                        <a href="{{ path('admin_alertes_index') }}" style="background: #dc3545; color: white; border-radius: 5px;">
+                            <i class="fa fa-exclamation-triangle" style="color: white;"></i>
+                            <span>🚨 Alertes critiques</span>
+                            {% if nb_nouvelles_alertes is defined and nb_nouvelles_alertes > 0 %}
+                                <span class="badge badge-light" style="float: right; background: white; color: #dc3545; border-radius: 50%; padding: 3px 8px;">
+                                    {{ nb_nouvelles_alertes }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar-check-o red_color"></i>
+                            <span>Événements</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-line-chart yellow_color"></i>
+                            <span>Suivi personnel</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="logo_section">
+                            <a href="{{ path('app_dashboard') }}" style="display: flex; align-items: center; text-decoration: none;">
+                                <img class="img-responsive"
+                                     src="{{ asset('back/images/logo/logo1.png') }}"
+                                     alt="logo"
+                                     style="width: 40px; height: 40px; margin-right: 10px;" />
+                                <span style="font-size: 20px; font-weight: bold; color: #3c943c;">
+                                    Nafseyti
+                                </span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <!-- 🔴 BOUTON ALERTES DANS LA TOPBAR (en icône) -->
+                                <ul>
+                                    
+                                        
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <img class="img-responsive rounded-circle" 
+                                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}" 
+                                                 alt="#" />
+                                            <span class="name_user">{{ app.user ? app.user.email|split('@')[0] : 'Admin' }}</span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Mon profil</a>
+                                            <a class="dropdown-item" href="#">Paramètres</a>
+                                            <a class="dropdown-item" href="#">Aide</a>
+                                            <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                                <span>Déconnexion</span> <i class="fa fa-sign-out"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+<script>
+// Rafraîchit le compteur après chaque action
+document.addEventListener('DOMContentLoaded', function() {
+    const countSpan = document.getElementById('alertes-count');
+    if (countSpan && window.location.search.includes('refresh')) {
+        fetch('{{ path('admin_alertes_count') }}')
+            .then(r => r.json())
+            .then(d => { countSpan.textContent = d.count; });
+    }
+});
+</script>
+            <!-- Messages Flash -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    
+                    {% block admin_content %}{% endblock %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

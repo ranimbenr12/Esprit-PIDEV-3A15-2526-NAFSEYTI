@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Fiche #{{ fiche.id }} — Nafseyti</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DejaVu Sans', sans-serif;
+      font-size: 12px;
+      color: #1a1a2e;
+      background: #fff;
+    }
+
+    .top-bar {
+      height: 6px;
+      background: #055114;
+      width: 100%;
+    }
+
+    .page {
+      padding: 32px 44px 40px;
+    }
+
+    .title-band {
+      background: #e8f5eb;
+      border-left: 5px solid #055114;
+      padding: 12px 18px;
+      margin-bottom: 22px;
+    }
+
+    .title-band h1 {
+      font-size: 14px;
+      font-weight: bold;
+      color: #055114;
+    }
+
+    .title-band p {
+      font-size: 9.5px;
+      color: #999;
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section {
+      margin-bottom: 13px;
+      border: 1px solid #d6ead9;
+    }
+
+    .section-head {
+      width: 100%;
+      border-collapse: collapse;
+      background: #055114;
+    }
+
+    .section-head td {
+      padding: 8px 14px;
+      vertical-align: middle;
+    }
+
+    .section-ico {
+      width: 26px;
+      font-size: 12px;
+      font-weight: bold;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .section-lbl {
+      font-size: 10px;
+      font-weight: bold;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .section-content {
+      padding: 12px 16px;
+      line-height: 1.8;
+      color: #333;
+      font-size: 12px;
+      min-height: 34px;
+      background: #fff;
+    }
+
+    .section-content.empty {
+      color: #bbb;
+      font-style: italic;
+    }
+
+    .badge {
+      background: #055114;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 5px 13px;
+    }
+
+    .meta {
+      font-size: 10px;
+      color: #888;
+      line-height: 1.9;
+      margin-top: 7px;
+    }
+
+    .meta strong { color: #555; }
+
+    .app-name {
+      font-size: 22px;
+      font-weight: bold;
+      color: #055114;
+      line-height: 1;
+    }
+
+    .app-name span { color: #1b9c36; }
+
+    .app-tagline {
+      font-size: 9px;
+      color: #aaa;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .sig-notice {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      padding: 11px 14px;
+      font-size: 10.5px;
+      color: #78350f;
+      line-height: 1.7;
+    }
+
+    .sig-label {
+      font-size: 10px;
+      color: #999;
+      margin-bottom: 38px;
+    }
+
+    .sig-line {
+      border-top: 1.5px solid #055114;
+      padding-top: 7px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #055114;
+    }
+
+    .sig-sub {
+      font-size: 10px;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .footer-brand {
+      font-size: 13px;
+      font-weight: bold;
+      color: #1b9c36;
+    }
+
+    .footer-sub {
+      font-size: 9px;
+      color: #ccc;
+      margin-top: 1px;
+    }
+
+    .bottom-bar {
+      height: 5px;
+      background: #055114;
+      width: 100%;
+      margin-top: 26px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<div class="page">
+
+  {# ══ HEADER ══ #}
+  <table style="width:100%; border-collapse:collapse; padding-bottom:18px; margin-bottom:22px; border-bottom:2px solid #d6ead9;">
+    <tr>
+      <td style="vertical-align:middle; width:55%;">
+        <table style="border-collapse:collapse;">
+          <tr>
+            <td style="vertical-align:middle; padding-right:12px;">
+              {# ✅ SVG direct, pas de variable #}
+<svg viewBox="0 0 50 50" width="46" height="46" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="25" cy="25" r="25" fill="#055114"/>
+  <text x="25" y="33" font-family="DejaVu Sans" font-size="24"
+        font-weight="bold" fill="#ffffff" text-anchor="middle">&#936;</text>
+</svg>
+            </td>
+            <td style="vertical-align:middle;">
+              <div class="app-name">Nafse<span>yti</span></div>
+              <div class="app-tagline">Plateforme de santé mentale</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td style="vertical-align:middle; text-align:right; width:45%;">
+        <div class="badge">Fiche #{{ fiche.id }}</div>
+        <div class="meta">
+          <strong>Créée le :</strong> {{ fiche.createdAt ? fiche.createdAt|date('d/m/Y à H:i') : '—' }}<br>
+          <strong>Exportée le :</strong> {{ "now"|date('d/m/Y à H:i') }}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  {# ══ TITRE ══ #}
+  <div class="title-band">
+    <h1>Fiche de Consultation Psychologique</h1>
+    <p>Document confidentiel — usage médical strictement réservé au professionnel</p>
+  </div>
+
+  {# ══ PSYCHOLOGUE / RDV ══ #}
+  <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
+    <tr>
+      <td style="width:48%; vertical-align:top; background:#f6fdf7; border:1px solid #d6ead9; border-top:3px solid #055114; padding:12px 15px;">
+        <div style="font-size:9px; text-transform:uppercase; letter-spacing:1px; color:#055114; font-weight:bold; margin-bottom:6px;">
+          Psychologue traitant
+        </div>
+        <div style="font-size:14px; font-weight:bold; color:#1a1a2e; margin-bottom:3px;">
+          {{ psy.firstname }} {{ psy.lastname }}
+        </div>
+        <div style="font-size:11px; color:#777;">{{ psy.email }}</div>
+      </td>
+      <td style="width:4%;"></td>
+      <td style="width:48%; vertical-align:top; background:#f6fdf7; border:1px solid #d6ead9; border-top:3px solid #1b9c36; padding:12px 15px;">
+        <div style="font-size:9px; text-transform:uppercase; letter-spacing:1px; color:#1b9c36; font-weight:bold; margin-bottom:6px;">
+          Rendez-vous associé
+        </div>
+        {% if fiche.rendezVous %}
+          <div style="font-size:14px; font-weight:bold; color:#1a1a2e; margin-bottom:3px;">
+            {{ fiche.rendezVous.dateRendezVous }}
+          </div>
+          <div style="font-size:11px; color:#777;">
+            {{ fiche.rendezVous.heureDebut ? fiche.rendezVous.heureDebut|date('H:i') : '—' }}
+            → {{ fiche.rendezVous.heureFin ? fiche.rendezVous.heureFin|date('H:i') : '—' }}
+            &nbsp;·&nbsp;
+            {{ fiche.rendezVous.typeSeance == 'en_ligne' ? 'En ligne' : 'Présentiel' }}
+          </div>
+        {% else %}
+          <div style="font-size:12px; color:#bbb; font-style:italic;">Non renseigné</div>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+  {# ══ 1. PROBLÈME PRINCIPAL ══ #}
+  <div class="section">
+    <table class="section-head" style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td class="section-ico">!</td>
+        <td class="section-lbl">Problème principal</td>
+      </tr>
+    </table>
+    <div class="section-content {% if not fiche.problemePrincipal %}empty{% endif %}">
+      {{ fiche.problemePrincipal ?: 'Non renseigné' }}
+    </div>
+  </div>
+
+  {# ══ 2. NOTES CLINIQUES ══ #}
+  <div class="section">
+    <table class="section-head" style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td class="section-ico">#</td>
+        <td class="section-lbl">Notes cliniques</td>
+      </tr>
+    </table>
+    <div class="section-content {% if not fiche.notes %}empty{% endif %}">
+      {{ fiche.notes ?: 'Aucune note' }}
+    </div>
+  </div>
+
+  {# ══ 3. DIAGNOSTIC ══ #}
+  <div class="section">
+    <table class="section-head" style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td class="section-ico">Dx</td>
+        <td class="section-lbl">Diagnostic</td>
+      </tr>
+    </table>
+    <div class="section-content {% if not fiche.diagnostic %}empty{% endif %}">
+      {{ fiche.diagnostic ?: 'Non renseigné' }}
+    </div>
+  </div>
+
+  {# ══ 4. TRAITEMENT ══ #}
+  <div class="section">
+    <table class="section-head" style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td class="section-ico">Rx</td>
+        <td class="section-lbl">Traitement prescrit</td>
+      </tr>
+    </table>
+    <div class="section-content {% if not fiche.traitement %}empty{% endif %}">
+      {{ fiche.traitement ?: 'Non renseigné' }}
+    </div>
+  </div>
+
+  {# ══ 5. RECOMMANDATIONS ══ #}
+  <div class="section">
+    <table class="section-head" style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td class="section-ico">*</td>
+        <td class="section-lbl">Recommandations</td>
+      </tr>
+    </table>
+    <div class="section-content {% if not fiche.recommandations %}empty{% endif %}">
+      {{ fiche.recommandations ?: 'Aucune recommandation' }}
+    </div>
+  </div>
+
+  {# ══ SIGNATURE ══ #}
+  <table style="width:100%; border-collapse:collapse; margin-top:28px;">
+    <tr>
+      <td style="width:56%; vertical-align:bottom; padding-right:20px;">
+        <div class="sig-notice">
+          Ce document est généré automatiquement par la plateforme <strong>Nafseyti</strong>.<br>
+          Il est strictement confidentiel et ne peut être communiqué<br>
+          qu'aux personnes habilitées dans le cadre du suivi médical.
+        </div>
+      </td>
+      <td style="width:44%; vertical-align:top; text-align:center;">
+        <div class="sig-label">Signature du psychologue</div>
+        <div class="sig-line">{{ psy.firstname }} {{ psy.lastname }}</div>
+        <div class="sig-sub">Psychologue certifié — Nafseyti</div>
+      </td>
+    </tr>
+  </table>
+
+  {# ══ FOOTER ══ #}
+  <table style="width:100%; border-collapse:collapse; margin-top:26px; border-top:1.5px solid #d6ead9;">
+    <tr>
+      <td style="vertical-align:middle; padding-top:10px;">
+        <div class="footer-brand">Nafseyti</div>
+        <div class="footer-sub">Plateforme de santé mentale</div>
+      </td>
+      <td style="vertical-align:middle; text-align:right; font-size:9.5px; color:#bbb; line-height:1.8; padding-top:10px;">
+        Fiche #{{ fiche.id }} &nbsp;|&nbsp;
+        {{ fiche.createdAt ? fiche.createdAt|date('d/m/Y') : '—' }} &nbsp;|&nbsp;
+        Document confidentiel — Ne pas diffuser
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+<div class="bottom-bar"></div>
+
+</body>
+</html>

@@ -18,22 +18,29 @@
                         </a>
                     </div>
                 </div>
-                <div class="sidebar_user_info">
-                    <div class="icon_setting"></div>
-                    <div class="user_profle_side">
-                        <div class="user_img">
-                            <img class="img-responsive"
-                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
-                                 alt="user" />
-                        </div>
-                        <div class="user_info">
-                            <h6>Amri Sirine</h6>
-                            <p><span class="online_animation"></span> En ligne</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <div class="sidebar_user_info">
+    <div class="icon_setting"></div>
+    <div class="user_profle_side">
+        <div class="user_img">
+            
+                <img class="img-responsive"
+                    src="{{ asset('back/images/layout_img/user_img.jpg') }}" 
+                     alt="user"
+                     style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;">
+           
+        </div>
+        <div class="user_info" style="text-align:center;">
+            <h6 style="color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;">
+                {{ app.user.firstname }} {{ app.user.lastname }}
+            </h6>
+            <p style="margin:0;">
+                <span class="online_animation"></span> En ligne
+            </p>
+        </div>
+    </div>
+</div>
             <div class="sidebar_blog_2">
+                <h4></h4>
                 <ul class="list-unstyled components">
                    <li>
     <a href="{{ path('admin_tableau')}}">
@@ -41,10 +48,10 @@
         <span>Tableau de bord</span>
     </a>
 </li>
-                    <li><a href="#"><i class="fa fa-users blue1_color"></i><span>Utilisateurs</span></a></li>
+                    <li class="active"><a href="{{ path('admin_users') }}"><i class="fa fa-users blue1_color"></i><span>Utilisateurs</span></a></li>
                     <li class="active"><a href="{{ path('admin_rendezvous') }}"><i class="fa fa-calendar orange_color"></i><span>Rendez-vous</span></a></li>
                     <li><a href="#"><i class="fa fa-book purple_color2"></i><span>Contenu psychologique</span></a></li>
-                    <li><a href="#"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
+                    <li class="active"><a href="{{ path('app_test_index') }}"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
                     <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i><span>Événements</span></a></li>
                     <li><a href="#"><i class="fa fa-line-chart yellow_color"></i><span>Suivi personnel</span></a></li>
                 </ul>
@@ -58,11 +65,18 @@
             <div class="topbar">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <div class="full">
-                        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
                         <div class="logo_section">
-                            <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
-                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width:40px;height:40px;margin-right:10px;" />
-                                <span style="font-size:20px;font-weight:bold;color:#3c943c;">Nafseyti</span>
+                            <a href="{{ path('admin_dashboard') }}" style="display:flex; align-items:center; text-decoration:none;">
+                                <img class="img-responsive"
+                                     src="{{ asset('back/images/logo/logo1.png') }}"
+                                     alt="logo"
+                                     style="width:40px; height:40px; margin-right:10px;" />
+                                <span style="font-size:20px; font-weight:bold; color:#3c943c;">
+                                    Nafseyti
+                                </span>
                             </a>
                         </div>
                         <div class="right_topbar">
@@ -74,16 +88,25 @@
                                 </ul>
                                 <ul class="user_profile_dd">
                                     <li>
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <img class="img-responsive rounded-circle" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
-                                            <span class="name_user">Amri Sirine</span>
-                                        </a>
+                                                                            <a class="dropdown-toggle" data-toggle="dropdown">
+    <img class="img-responsive rounded-circle"
+         src="{{ asset('back/images/layout_img/user_img.jpg') }}" 
+         alt="photo"
+         style="width:35px; height:35px; object-fit:cover; border-radius:50%;">
+
+    <span class="name_user">
+        {{ app.user.firstname }} {{ app.user.lastname }}
+    </span>
+</a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="profile.html">My Profile</a>
-                                            <a class="dropdown-item" href="settings.html">Settings</a>
-                                            <a class="dropdown-item" href="help.html">Help</a>
-                                            <a class="dropdown-item" href="#"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
-                                        </div>
+    <a class="dropdown-item" href="{{ path('app_profile') }}">
+        <i class="fa fa-user"></i> Mon Profil
+    </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('app_logout') }}">
+        <span>Se déconnecter</span> <i class="fa fa-sign-out"></i>
+    </a>
+</div>
                                     </li>
                                 </ul>
                             </div>
@@ -91,6 +114,7 @@
                     </div>
                 </nav>
             </div>
+
 
             <!-- Main Content -->
             <div class="midde_cont">

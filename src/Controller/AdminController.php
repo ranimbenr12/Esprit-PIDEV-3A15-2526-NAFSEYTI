@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,73 +37,94 @@ class AdminController extends AbstractController
     {
         return $this->render('back/dashboard.html.twig');
     }
+    /////
+   // ── Liste + Créer ──
+#[Route('/admin/liste_rendezvous', name: 'admin_liste_rendezvous', methods: ['GET', 'POST'])]
+public function liste_rendez_vous(
+    Request $request,
+    RendezVouRepository $repository,
+    EntityManagerInterface $em,
+    UserRepository $userRepository   // ← ajouter ce paramètre
+): Response {
+    $rendezvous = $repository->findAllOrderedByDate();
 
-    // ── Liste + Créer ──
-    #[Route('/admin/liste_rendezvous', name: 'admin_liste_rendezvous', methods: ['GET', 'POST'])]
-    public function liste_rendez_vous(
-        Request $request,
-        RendezVouRepository $repository,
-        EntityManagerInterface $em
-    ): Response {
-        $rendezvous = $repository->findAllOrderedByDate();
-        $newRdv = new RendezVou();
-        $createForm = $this->createForm(RendezVousType::class, $newRdv);
-        $createForm->handleRequest($request);
+    // ── Médecins filtrés (psychologue ou coach de vie) ──
+    $medecins = $userRepository->createQueryBuilder('u')
+        ->where('u.role LIKE :psy OR u.role LIKE :coach')
+        ->setParameter('psy', '%psychologue%')
+        ->setParameter('coach', '%coach_vie%')
+        ->getQuery()
+        ->getResult();
 
-        $showCreateModal = false; // ← pour rouvrir la modale si erreurs
+    $newRdv = new RendezVou();
+    $createForm = $this->createForm(RendezVousType::class, $newRdv);
+    $createForm->handleRequest($request);
 
-        if ($createForm->isSubmitted()) {
-            if ($createForm->isValid()) {
-                $em->persist($newRdv);
-                $em->flush();
-                return $this->redirectToRoute('admin_liste_rendezvous');
-            }
-            $showCreateModal = true; // ← erreurs → rouvrir la modale
-        }
+    $showCreateModal = false;
 
-        return $this->render('back/rendezvous_liste.html.twig', [
-            'rendezvous'      => $rendezvous,
-            'createForm'      => $createForm->createView(),
-            'showCreateModal' => $showCreateModal,
-        ]);
-    }
-
-    // ── Modifier ──
-    #[Route('/admin/liste_rendezvous/{id}/edit', name: 'admin_rendezvous_edit', methods: ['GET', 'POST'])]
-    public function edit_rendez_vous(
-        int $id,
-        Request $request,
-        RendezVouRepository $repository,
-        EntityManagerInterface $em
-    ): Response {
-        $rdv = $repository->find($id);
-
-        if (!$rdv) {
-            throw $this->createNotFoundException('Rendez-vous introuvable');
-        }
-
-        $editForm = $this->createForm(RendezVousType::class, $rdv);
-        $editForm->handleRequest($request);
-
-        $showEditModal = true; // ← toujours ouvrir la modale edit sur cette route
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+    if ($createForm->isSubmitted()) {
+        if ($createForm->isValid()) {
+            $em->persist($newRdv);
             $em->flush();
             return $this->redirectToRoute('admin_liste_rendezvous');
         }
-
-        $rendezvous = $repository->findAllOrderedByDate();
-        $newRdv = new RendezVou();
-        $createForm = $this->createForm(RendezVousType::class, $newRdv);
-
-        return $this->render('back/rendezvous_liste.html.twig', [
-            'rendezvous'    => $rendezvous,
-            'createForm'    => $createForm->createView(),
-            'editForm'      => $editForm->createView(),
-            'editRdvId'     => $id,
-            'showEditModal' => $showEditModal,
-        ]);
+        $showCreateModal = true;
     }
+
+    return $this->render('back/rendezvous_liste.html.twig', [
+        'rendezvous'      => $rendezvous,
+        'medecins'        => $medecins,      // ← ajouter
+        'createForm'      => $createForm->createView(),
+        'showCreateModal' => $showCreateModal,
+    ]);
+}
+
+
+    // ── Modifier ──
+   #[Route('/admin/liste_rendezvous/{id}/edit', name: 'admin_rendezvous_edit', methods: ['GET', 'POST'])]
+public function edit_rendez_vous(
+    int $id,
+    Request $request,
+    RendezVouRepository $repository,
+    EntityManagerInterface $em,
+    UserRepository $userRepository   // ← ajouter
+): Response {
+    $rdv = $repository->find($id);
+    if (!$rdv) {
+        throw $this->createNotFoundException('Rendez-vous introuvable');
+    }
+
+    $editForm = $this->createForm(RendezVousType::class, $rdv);
+    $editForm->handleRequest($request);
+
+    $showEditModal = true;
+
+    if ($editForm->isSubmitted() && $editForm->isValid()) {
+        $em->flush();
+        return $this->redirectToRoute('admin_liste_rendezvous');
+    }
+
+    $rendezvous = $repository->findAllOrderedByDate();
+    $newRdv = new RendezVou();
+    $createForm = $this->createForm(RendezVousType::class, $newRdv);
+
+    // ── Médecins filtrés ──
+    $medecins = $userRepository->createQueryBuilder('u')
+        ->where('u.role LIKE :psy OR u.role LIKE :coach')
+        ->setParameter('psy', '%psychologue%')
+        ->setParameter('coach', '%coach_vie%')
+        ->getQuery()
+        ->getResult();
+
+    return $this->render('back/rendezvous_liste.html.twig', [
+        'rendezvous'    => $rendezvous,
+        'medecins'      => $medecins,        // ← ajouter
+        'createForm'    => $createForm->createView(),
+        'editForm'      => $editForm->createView(),
+        'editRdvId'     => $id,
+        'showEditModal' => $showEditModal,
+    ]);
+}
 
     // ── Supprimer ──
     #[Route('/admin/rendezvous/{id}/delete', name: 'admin_rendezvous_delete', methods: ['POST'])]
@@ -211,6 +232,7 @@ public function edit_fiche(
             'rendezvous' => $rendezvous,
         ]);
     }
+    //pdf du fiche
     #[Route('/admin/fiches/{id}/pdf', name: 'admin_fiche_pdf', methods: ['GET'])]
     public function downloadFichePdf(
         int $id,

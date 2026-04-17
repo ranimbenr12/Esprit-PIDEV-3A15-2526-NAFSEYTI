@@ -1,0 +1,70 @@
+{% for test in tests %}
+<tr>
+    <td><span class="cell-id">#{{ test.id }}</span></td>
+    <td class="cell-title">
+        <strong>{{ test.titre }}</strong>
+        {% if test.description %}
+            <small>{{ test.description|slice(0,70) }}{% if test.description|length > 70 %}…{% endif %}</small>
+        {% endif %}
+    </td>
+    <td><span class="badge badge-cat">{{ test.categorie|capitalize }}</span></td>
+    <td><span class="badge badge-niveau">{{ test.niveau|capitalize }}</span></td>
+    <td style="color:var(--ink-soft); font-weight:500;">
+        {{ test.duree ? test.duree ~ ' min' : '—' }}
+    </td>
+    <td>
+        <span class="badge badge-q">
+            {{ test.questions|length }}
+            {{ test.questions|length > 1 ? 'questions' : 'question' }}
+        </span>
+    </td>
+    <td>
+        {% if test.status == 'actif' %}
+            <span class="badge badge-actif">
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+                Actif
+            </span>
+        {% else %}
+            <span class="badge badge-inact">
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+                Inactif
+            </span>
+        {% endif %}
+    </td>
+    <td>
+        <div class="actions" style="justify-content:center;">
+            <a href="{{ path('app_test_show', {'id': test.id}) }}" class="btn-act view" title="Voir">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </a>
+            <a href="{{ path('app_test_edit', {'id': test.id}) }}" class="btn-act edit" title="Modifier">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </a>
+            <button type="button" class="btn-act del" title="Supprimer"
+                    onclick="deleteTest({{ test.id }}, '{{ test.titre|e('js') }}')">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+        </div>
+        <form id="delete-form-{{ test.id }}" method="post"
+              action="{{ path('app_test_delete', {'id': test.id}) }}"
+              style="display:none;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete'~test.id) }}">
+        </form>
+    </td>
+</tr>
+{% else %}
+<tr>
+    <td colspan="8">
+        <div class="empty-state">
+            <div class="empty-circle">
+                <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
+            </div>
+            <h4>Aucun test trouvé</h4>
+            <p>Commencez par créer votre premier test psychologique.</p>
+            <a href="{{ path('app_test_new') }}" class="btn-create" style="margin:0 auto;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Créer un test
+            </a>
+        </div>
+    </td>
+</tr>
+{% endfor %}

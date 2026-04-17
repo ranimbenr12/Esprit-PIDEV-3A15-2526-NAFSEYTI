@@ -1,0 +1,217 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Modifier l'utilisateur{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="{{ path('admin_dashboard') }}">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}" alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+    <div class="icon_setting"></div>
+    <div class="user_profle_side">
+        <div class="user_img">
+            {% if app.user.profile_photo %}
+                <img class="img-responsive"
+                     src="{{ asset(app.user.profile_photo) }}"
+                     alt="user"
+                     style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;">
+            {% else %}
+                <div style="width:70px; height:70px; background:#3c943c; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto;">
+                    <i class="fa fa-user" style="color:white; font-size:1.8rem;"></i>
+                </div>
+            {% endif %}
+        </div>
+        <div class="user_info" style="text-align:center;">
+            <h6 style="color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;">
+                {{ app.user.firstname }} {{ app.user.lastname }}
+            </h6>
+            <p style="margin:0;">
+                <span class="online_animation"></span> En ligne
+            </p>
+        </div>
+    </div>
+</div>
+            <div class="sidebar_blog_2">
+    <ul class="list-unstyled components">
+        <li>
+            <a href="{{ path('admin_dashboard') }}">
+                <i class="fa fa-dashboard yellow_color"></i>
+                <span>Tableau de bord</span>
+            </a>
+        </li>
+        <li class="active">
+            <a href="{{ path('admin_users') }}">
+                <i class="fa fa-users blue1_color"></i>
+                <span>Utilisateurs</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-calendar orange_color"></i>
+                <span>Rendez-vous</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-book purple_color2"></i>
+                <span>Contenu psychologique</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-check-square green_color"></i>
+                <span>Tests</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-calendar-check-o red_color"></i>
+                <span>Événements</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-line-chart yellow_color"></i>
+                <span>Suivi personnel</span>
+            </a>
+        </li>
+    </ul>
+</div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="logo_section">
+                            <a href="{{ path('admin_dashboard') }}" style="display:flex; align-items:center; text-decoration:none;">
+                                <img src="{{ asset('back/images/logo/logo1.png') }}" alt="logo" style="width:40px; height:40px; margin-right:10px;" />
+                                <span style="font-size:20px; font-weight:bold; color:#3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+    {% if app.user.profile_photo %}
+        <img class="img-responsive rounded-circle"
+             src="{{ asset(app.user.profile_photo) }}"
+             alt="#"
+             style="width:35px; height:35px; object-fit:cover;">
+    {% else %}
+        <div style="width:35px; height:35px; background:#3c943c; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; vertical-align:middle;">
+            <i class="fa fa-user" style="color:white; font-size:1rem;"></i>
+        </div>
+    {% endif %}
+    <span class="name_user">{{ app.user.firstname }} {{ app.user.lastname }}</span>
+</a>
+                                        <div class="dropdown-menu">
+    <a class="dropdown-item" href="{{ path('app_profile') }}">
+        <i class="fa fa-user"></i> Mon Profil
+    </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('app_logout') }}">
+        <span>Se déconnecter</span> <i class="fa fa-sign-out"></i>
+    </a>
+</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+
+                    <div class="row column_title">
+                        <div class="col-md-12">
+                            <div class="page_title">
+                                <h2>Modifier l'utilisateur</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="white_shd full" style="padding:32px;">
+
+                                <!-- User info header -->
+                                <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid #f0f0f0;">
+                                    {% if user.profile_photo %}
+                                        <img src="{{ asset(user.profile_photo) }}"
+                                             style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid #3c943c;">
+                                    {% else %}
+                                        <div style="width:60px; height:60px; background:#3c943c; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                                            <i class="fa fa-user" style="color:white; font-size:1.5rem;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <div style="font-size:1.1rem; font-weight:600; color:#333;">{{ user.firstname }} {{ user.lastname }}</div>
+                                        <div style="font-size:0.85rem; color:#666;">{{ user.email }}</div>
+                                    </div>
+                                </div>
+
+                                <form method="post" action="{{ path('admin_user_edit', {id: user.id}) }}">
+
+                                    <div style="margin-bottom:20px;">
+                                        <label style="display:block; font-weight:600; color:#333; margin-bottom:8px;">Rôle</label>
+                                        <select name="role" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px; font-size:0.95rem;">
+                                            <option value="etudiant" {{ user.role == 'etudiant' ? 'selected' : '' }}>Étudiant</option>
+                                            <option value="enseignant" {{ user.role == 'enseignant' ? 'selected' : '' }}>Enseignant</option>
+                                            <option value="psychologue" {{ user.role == 'psychologue' ? 'selected' : '' }}>Psychologue</option>
+                                            <option value="coach_vie" {{ user.role == 'coach_vie' ? 'selected' : '' }}>Coach de vie</option>
+                                            <option value="administrateur" {{ user.role == 'administrateur' ? 'selected' : '' }}>Administrateur</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="margin-bottom:28px;">
+                                        <label style="display:block; font-weight:600; color:#333; margin-bottom:8px;">Statut</label>
+                                        <select name="status" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px; font-size:0.95rem;">
+                                            <option value="actif" {{ user.status == 'actif' ? 'selected' : '' }}>Actif</option>
+                                            <option value="inactif" {{ user.status == 'inactif' ? 'selected' : '' }}>Inactif</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="display:flex; gap:12px;">
+                                        <button type="submit"
+                                                style="flex:1; padding:12px; background:#3c943c; color:white; border:none; border-radius:8px; font-size:0.95rem; font-weight:600; cursor:pointer;">
+                                            💾 Enregistrer
+                                        </button>
+                                        <a href="{{ path('admin_users') }}"
+                                           style="flex:1; text-align:center; padding:12px; background:#f0f0f0; color:#333; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.95rem;">
+                                            Annuler
+                                        </a>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

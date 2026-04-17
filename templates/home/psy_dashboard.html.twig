@@ -1,0 +1,1975 @@
+{# templates/home/psy_dashboard.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}NAFSEYTI — Espace Psychologue{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/psy_dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('css/psy_ia_analyse.css') }}">
+<script src="{{ asset('js/psy_ia_analyse.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="psy-layout">
+
+  {# ══════════════════ SIDEBAR ══════════════════ #}
+  <aside class="psy-sidebar">
+
+    {# — HERO — #}
+    <div class="sb-hero">
+      <svg class="sb-hero-svg" viewBox="0 0 268 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <!-- Ambient circles -->
+        <circle cx="230" cy="30"  r="70" fill="rgba(122,158,118,0.10)"/>
+        <circle cx="20"  cy="170" r="55" fill="rgba(200,169,110,0.08)"/>
+        <circle cx="134" cy="-5"  r="70" fill="rgba(255,255,255,0.03)"/>
+        <!-- Mandala psychologie -->
+        <g transform="translate(134,88)" opacity="0.65">
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.55)" stroke-width="1"   transform="rotate(0)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.45)" stroke-width="1"   transform="rotate(45)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.45)" stroke-width="1"   transform="rotate(90)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.35)" stroke-width="1"   transform="rotate(135)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.35)" stroke-width="1"   transform="rotate(180)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.35)" stroke-width="1"   transform="rotate(225)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.30)" stroke-width="1"   transform="rotate(270)"/>
+          <ellipse cx="0" cy="-38" rx="7" ry="15" fill="none" stroke="rgba(200,220,196,0.30)" stroke-width="1"   transform="rotate(315)"/>
+          <circle cx="0" cy="0" r="16" fill="none" stroke="rgba(200,220,196,0.40)" stroke-width="1"/>
+          <circle cx="0" cy="0" r="8"  fill="rgba(200,220,196,0.12)" stroke="rgba(200,220,196,0.50)" stroke-width="0.8"/>
+          <circle cx="0"  cy="-26" r="2.2" fill="rgba(200,169,110,0.70)"/>
+          <circle cx="26" cy="0"   r="1.8" fill="rgba(200,169,110,0.50)"/>
+          <circle cx="-26" cy="0"  r="1.8" fill="rgba(200,169,110,0.50)"/>
+          <circle cx="0"  cy="26"  r="2.2" fill="rgba(200,169,110,0.70)"/>
+          <circle cx="18" cy="-18" r="1.2" fill="rgba(200,220,196,0.50)"/>
+          <circle cx="-18" cy="-18" r="1.2" fill="rgba(200,220,196,0.50)"/>
+          <circle cx="18" cy="18"  r="1.2" fill="rgba(200,220,196,0.50)"/>
+          <circle cx="-18" cy="18" r="1.2" fill="rgba(200,220,196,0.50)"/>
+        </g>
+        <!-- Floating particles -->
+        <circle cx="40"  cy="35"  r="2"   fill="rgba(200,220,196,0.40)"/>
+        <circle cx="210" cy="140" r="1.5" fill="rgba(200,169,110,0.55)"/>
+        <circle cx="50"  cy="130" r="1"   fill="rgba(200,220,196,0.30)"/>
+        <circle cx="225" cy="55"  r="2.5" fill="rgba(200,220,196,0.20)"/>
+        <circle cx="15"  cy="60"  r="1.2" fill="rgba(200,169,110,0.30)"/>
+        <circle cx="255" cy="95"  r="1.8" fill="rgba(200,220,196,0.25)"/>
+      </svg>
+      <div class="sb-profile">
+        <div class="sb-avatar-ring">
+          <div class="sb-avatar-inner">
+            {{ app.user ? app.user.firstname|first ~ app.user.lastname|first : 'PS' }}
+            <span class="sb-status-dot"></span>
+          </div>
+        </div>
+        <div class="sb-name">{{ app.user ? app.user.firstname ~ ' ' ~ app.user.lastname : 'Docteur' }}</div>
+        <div class="sb-spec">Psychologue Clinicien</div>
+      </div>
+    </div>
+
+    {# — CITATION DU JOUR — #}
+    <div class="sb-section">
+      <div class="sb-section-title">✦ Citation du jour</div>
+      <div class="sb-quote-card">
+        <div class="sb-quote-text" id="quoteText">La guérison est un retour à soi-même, pas une fuite de la douleur.</div>
+        <div class="sb-quote-author" id="quoteAuthor">Carl Rogers</div>
+        <div class="sb-quote-nav" id="quoteNav"></div>
+      </div>
+    </div>
+
+    {# — ÉTAT DU CABINET — #}
+    <div class="sb-section">
+      <div class="sb-section-title">◈ État du cabinet</div>
+      <div class="sb-mood-grid">
+        <div class="sb-mood-chip active" onclick="setMood(this)">
+          <span class="sb-mood-icon">🌿</span>
+          <span class="sb-mood-label">Serein</span>
+        </div>
+        <div class="sb-mood-chip" onclick="setMood(this)">
+          <span class="sb-mood-icon">⚡</span>
+          <span class="sb-mood-label">Actif</span>
+        </div>
+        <div class="sb-mood-chip" onclick="setMood(this)">
+          <span class="sb-mood-icon">🤝</span>
+          <span class="sb-mood-label">Écoute</span>
+        </div>
+        <div class="sb-mood-chip" onclick="setMood(this)">
+          <span class="sb-mood-icon">🌙</span>
+          <span class="sb-mood-label">Calme</span>
+        </div>
+      </div>
+    </div>
+
+    {# — PROCHAIN RDV — #}
+    <div class="sb-section">
+      <div class="sb-section-title">◎ Prochain rendez-vous</div>
+      {% if myReservations is not empty %}
+        {% set nextRes = myReservations|first %}
+        {% set nextRdv = nextRes.rendezVous %}
+        <div class="sb-next-rdv">
+          <div class="sb-next-tag">Prochain</div>
+          <div class="sb-next-time">{{ nextRdv.heureDebut|date('H:i') }}</div>
+          <div class="sb-next-name">{{ nextRes.user.firstname }} {{ nextRes.user.lastname }}</div>
+          <div class="sb-next-type">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+              <circle cx="6" cy="4" r="3" stroke="#c8dcc4" stroke-width="1.2"/>
+              <path d="M2 11c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#c8dcc4" stroke-width="1.2"/>
+            </svg>
+            {{ nextRdv.typeSeance == 'en_ligne' ? 'En ligne' : 'Présentiel' }} · {{ nextRdv.dateRendezVous }}
+          </div>
+        </div>
+      {% else %}
+        <div class="sb-no-rdv">Aucun rendez-vous à venir</div>
+      {% endif %}
+    </div>
+
+    {# — PRÉSENCE & BIEN-ÊTRE — #}
+    <div class="sb-section">
+      <div class="sb-section-title">❋ Présence & bien-être</div>
+      <div class="sb-plant-wrap">
+        <svg width="150" height="115" viewBox="0 0 150 115" xmlns="http://www.w3.org/2000/svg">
+          <!-- Pot -->
+          <path d="M55 88 L60 108 Q75 114 90 108 L95 88Z" fill="#8a9e86" opacity="0.55"/>
+          <ellipse cx="75" cy="89" rx="20" ry="5" fill="#7a9e76" opacity="0.65"/>
+          <!-- Terre -->
+          <ellipse cx="75" cy="87" rx="18" ry="4" fill="#4a6741" opacity="0.4"/>
+          <!-- Tige -->
+          <path d="M75 88 C75 75 73 60 70 46" stroke="#4a6741" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Feuilles gauche -->
+          <path d="M73 77 C62 68 50 63 47 53 C53 58 63 62 71 70" fill="#4a6741" opacity="0.75"/>
+          <path d="M72 62 C59 51 47 43 44 33 C51 40 62 46 70 57" fill="#7a9e76" opacity="0.65"/>
+          <!-- Feuilles droite -->
+          <path d="M71 72 C81 63 93 58 96 48 C90 53 80 57 72 65" fill="#4a6741" opacity="0.70"/>
+          <path d="M70 57 C81 47 92 40 95 30 C89 36 78 42 70 52" fill="#7a9e76" opacity="0.60"/>
+          <!-- Fleur -->
+          <circle cx="70" cy="46" r="5"   fill="#c8a96e" opacity="0.90"/>
+          <circle cx="70" cy="46" r="3"   fill="#f5eedf"/>
+          <circle cx="70" cy="46" r="1.5" fill="#c8a96e"/>
+          <!-- Petites feuilles accent -->
+          <path d="M71 53 C66 48 60 46 58 40 C62 44 67 46 70 51" fill="#7a9e76" opacity="0.50"/>
+          <!-- Petites étincelles -->
+          <circle cx="50" cy="42" r="1.5" fill="#c8a96e" opacity="0.45"/>
+          <circle cx="98" cy="47" r="1"   fill="#c8dcc4" opacity="0.55"/>
+          <circle cx="92" cy="33" r="1.5" fill="#c8a96e" opacity="0.40"/>
+          <circle cx="47" cy="28" r="1"   fill="#c8dcc4" opacity="0.40"/>
+        </svg>
+      </div>
+      <div class="sb-wellness-list">
+        <div class="sb-wellness-item">
+          <div class="sb-wellness-label">Énergie</div>
+          <div class="sb-wellness-bar-wrap">
+            <div class="sb-wellness-fill" style="width:78%;background:linear-gradient(90deg,#4a6741,#7a9e76)"></div>
+          </div>
+          <div class="sb-wellness-pct">78%</div>
+        </div>
+        <div class="sb-wellness-item">
+          <div class="sb-wellness-label">Concentration</div>
+          <div class="sb-wellness-bar-wrap">
+            <div class="sb-wellness-fill" style="width:85%;background:linear-gradient(90deg,#c8a96e,#e8c882)"></div>
+          </div>
+          <div class="sb-wellness-pct">85%</div>
+        </div>
+        <div class="sb-wellness-item">
+          <div class="sb-wellness-label">Sérénité</div>
+          <div class="sb-wellness-bar-wrap">
+            <div class="sb-wellness-fill" style="width:92%;background:linear-gradient(90deg,#b8a9c9,#c8d0e8)"></div>
+          </div>
+          <div class="sb-wellness-pct">92%</div>
+        </div>
+      </div>
+    </div>
+
+    {# — STATISTIQUES RAPIDES — #}
+    <div class="sb-section">
+      <div class="sb-section-title">◉ Cette semaine</div>
+      <div class="sb-mini-stats">
+        <div class="sb-mini-stat">
+          <span class="sb-mini-stat-icon">📅</span>
+          <div class="sb-mini-stat-val">{{ mySlots|length }}</div>
+          <div class="sb-mini-stat-label">Créneaux</div>
+        </div>
+        <div class="sb-mini-stat">
+          <span class="sb-mini-stat-icon">👥</span>
+          <div class="sb-mini-stat-val">{{ myReservations|length }}</div>
+          <div class="sb-mini-stat-label">RDV reçus</div>
+        </div>
+        <div class="sb-mini-stat">
+          <span class="sb-mini-stat-icon">📋</span>
+          <div class="sb-mini-stat-val">{{ myFiches|length }}</div>
+          <div class="sb-mini-stat-label">Fiches</div>
+        </div>
+        <div class="sb-mini-stat">
+          <span class="sb-mini-stat-icon">⏳</span>
+          <div class="sb-mini-stat-val">{{ myReservations|length }}</div>
+          <div class="sb-mini-stat-label">En attente</div>
+        </div>
+      </div>
+    </div>
+
+    {# — OUTILS THÉRAPEUTIQUES — #}
+    <div class="sb-section">
+      <div class="sb-section-title">⊕ Outils rapides</div>
+      <div class="sb-tools-grid">
+        <div class="sb-tool-card" title="Minuterie de méditation" onclick="alert('Minuterie — À intégrer')">
+          <svg class="sb-tool-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="13" r="8" stroke="#4a6741" stroke-width="1.5"/>
+            <path d="M12 9v4l3 2" stroke="#4a6741" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M9 2h6M12 2v3" stroke="#4a6741" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="sb-tool-name">Minuterie</div>
+          <div class="sb-tool-sub">Méditation</div>
+        </div>
+        <div class="sb-tool-card" title="Exercices de respiration" onclick="alert('Respiration — À intégrer')">
+          <svg class="sb-tool-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3C8 3 5 6 5 10c0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" stroke="#c8a96e" stroke-width="1.5"/>
+            <circle cx="12" cy="10" r="2.5" stroke="#c8a96e" stroke-width="1.2"/>
+          </svg>
+          <div class="sb-tool-name">Respiration</div>
+          <div class="sb-tool-sub">4 – 7 – 8</div>
+        </div>
+        <div class="sb-tool-card" title="Grilles d'évaluation" onclick="alert('Évaluation — À intégrer')">
+          <svg class="sb-tool-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="16" height="16" rx="3" stroke="#b8a9c9" stroke-width="1.5"/>
+            <path d="M8 12l3 3 5-6" stroke="#b8a9c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="sb-tool-name">Évaluation</div>
+          <div class="sb-tool-sub">PHQ-9, GAD</div>
+        </div>
+        <div class="sb-tool-card" title="Notes rapides" onclick="alert('Notes — À intégrer')">
+          <svg class="sb-tool-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#7a9e76" stroke-width="1.5"/>
+            <path d="M14 2v6h6M8 13h8M8 17h5" stroke="#7a9e76" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <div class="sb-tool-name">Notes</div>
+          <div class="sb-tool-sub">Rapides</div>
+        </div>
+      </div>
+    </div>
+
+    {# — FOOTER — #}
+    <div class="sb-footer">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="13.5" stroke="#4a6741" stroke-width="1"/>
+        <path d="M15 5C10.6 5 7 8.6 7 13c0 5.5 8 13 8 13s8-7.5 8-13c0-4.4-3.6-8-8-8z" fill="#eef4ed" stroke="#4a6741" stroke-width="1"/>
+        <circle cx="15" cy="13" r="3" fill="#4a6741" opacity="0.45"/>
+      </svg>
+      <div>
+        <div class="sb-footer-brand">NAFSEYTI</div>
+        <div class="sb-footer-tagline">Soin · Écoute · Présence</div>
+      </div>
+    </div>
+
+  </aside>
+
+  {# ══════════════════ ZONE PRINCIPALE ══════════════════ #}
+  <div class="psy-content-area">
+
+    {# ══════════════════ TOPBAR ══════════════════ #}
+<div class="psy-topbar">
+  <div class="topbar-left">
+    <div class="topbar-title">
+      <h1 id="topbarTitle">Vue d'ensemble</h1>
+      <p id="topbarSub">Bonjour, bienvenue dans votre espace</p>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="notif-wrap" id="notifWrap">
+
+      {# ── Cloche ── #}
+      <button class="notif-bell-btn" onclick="toggleNotifPanel()">
+        <i class="fas fa-bell"></i>
+        <span class="notif-badge" id="notifBadge"
+              style="{{ notifCount is defined and notifCount > 0 ? '' : 'display:none;' }}">
+          {{ notifCount is defined ? notifCount : 0 }}
+        </span>
+      </button>
+
+      {# ── Panel ── #}
+      <div class="notif-panel" id="notifPanel" style="display:none;">
+
+        <div class="notif-panel-header">
+          <span><i class="fas fa-bell"></i>&nbsp; Notifications</span>
+          {% if notifCount is defined and notifCount > 0 %}
+            <button class="notif-tout-lire-btn" onclick="toutMarquerLu()">
+              <i class="fas fa-check-double"></i> Tout marquer lu
+            </button>
+          {% endif %}
+        </div>
+
+        <div class="notif-list">
+          {% if notifications is not defined or notifications is empty %}
+            <div class="notif-empty">
+              <i class="fas fa-check-circle"></i><br>
+              Aucune nouvelle notification
+            </div>
+          {% else %}
+            {% for notif in notifications %}
+              <div class="notif-item{% if not notif.lu %} unread{% endif %}"
+                   id="notif-{{ notif.id }}"
+                   onclick="marquerLue({{ notif.id }}, this)">
+
+                <div class="notif-ico ico-{{ notif.type }}">
+                  <i class="fas fa-{% if notif.type == 'rdv' %}calendar-plus
+                    {% elseif notif.type == 'confirme' %}check-circle
+                    {% else %}times-circle{% endif %}"></i>
+                </div>
+
+                <div class="notif-body">
+                  <div class="notif-msg">{{ notif.message }}</div>
+                  <div class="notif-time">
+                    <i class="far fa-clock"></i>
+                    {{ notif.createdAt|date('d/m/Y à H:i') }}
+                  </div>
+                </div>
+
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+      </div>{# /notif-panel #}
+    </div>{# /notif-wrap #}
+  </div>
+</div>
+
+    {# ══════════════════ NAVIGATION HORIZONTALE ══════════════════ #}
+    <div class="psy-nav">
+      <div class="nav-container">
+        <a class="nav-item active" onclick="showSection('overview')" href="#">
+          <i class="fas fa-chart-line"></i>
+          <span>Vue d'ensemble</span>
+        </a>
+        <a class="nav-item" onclick="showSection('horaires')" href="#">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Mes horaires</span>
+        </a>
+        <a class="nav-item" onclick="showSection('rendez-vous')" href="#">
+          <i class="fas fa-calendar-check"></i>
+          <span>Rendez-vous reçus</span>
+          <span class="nav-badge" id="badgeRdv">0</span>
+        </a>
+        <a class="nav-item" onclick="showSection('fiches')" href="#">
+          <i class="fas fa-file-alt"></i>
+          <span>Fiches consultation</span>
+        </a>
+        <a class="nav-item" onclick="showSection('conges')" href="#">
+          <i class="fas fa-file-medical-alt"></i>
+          <span>Congés maladie</span>
+          {% if congesEnAttente > 0 %}
+            <span class="nav-badge" id="badgeConges">{{ congesEnAttente }}</span>
+          {% endif %}
+        </a>
+      </div>
+    </div>
+
+    {# ══════════════════ MAIN CONTENT ══════════════════ #}
+    <main class="psy-main">
+
+      {# SECTION : OVERVIEW #}
+      <section class="psy-section active" id="section-overview">
+        <div class="overview-greeting">
+          <h1>Bonjour, <em>{{ app.user ? app.user.firstname : 'Docteur' }}</em> 👋</h1>
+          <p>✨ Voici un résumé de votre activité du jour.</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card green">
+            <div class="kpi-icon green"><i class="fas fa-calendar-week"></i></div>
+            <div class="kpi-val">{{ mySlots|length }}</div>
+            <div class="kpi-label">Créneaux actifs</div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-icon gold"><i class="fas fa-users"></i></div>
+            <div class="kpi-val">{{ myReservations|length }}</div>
+            <div class="kpi-label">RDV reçus</div>
+          </div>
+          <div class="kpi-card blue">
+            <div class="kpi-icon blue"><i class="fas fa-notes-medical"></i></div>
+            <div class="kpi-val">{{ myFiches|length }}</div>
+            <div class="kpi-label">Fiches consultation</div>
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-icon red"><i class="fas fa-clock"></i></div>
+            <div class="kpi-val">{{ myReservations|length }}</div>
+            <div class="kpi-label">En attente</div>
+          </div>
+        </div>
+
+        <div class="overview-grid">
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title">
+                <i class="fas fa-calendar-alt"></i>
+                Prochains rendez-vous
+              </div>
+              <a class="widget-action" onclick="showSection('rendez-vous')" href="#">Voir tout →</a>
+            </div>
+            {% if myReservations is empty %}
+              <div class="empty-state" style="padding:40px;">
+                <i class="fas fa-calendar-check empty-state-icon"></i>
+                <p>Aucun rendez-vous reçu pour le moment.</p>
+              </div>
+            {% else %}
+              {% for res in myReservations|slice(0, 5) %}
+                {% set rdv = res.rendezVous %}
+                <div class="appt-row">
+                  <div class="appt-time-block">
+                    <div class="appt-time">{{ rdv.heureDebut|date('H:i') }}</div>
+                    <div class="appt-day">{{ rdv.dateRendezVous|slice(0,3) }}</div>
+                  </div>
+                  <div class="appt-user-avatar">
+                    {{ res.user.firstname|slice(0,1) }}{{ res.user.lastname|slice(0,1) }}
+                  </div>
+                  <div class="appt-info">
+                    <div class="appt-name">{{ res.user.firstname }} {{ res.user.lastname }}</div>
+                    <div class="appt-meta">
+                      <span><i class="far fa-calendar"></i> {{ res.dateRdv ? res.dateRdv|date('d/m/Y') : '—' }}</span>
+                      <span>•</span>
+                      <span><i class="far fa-clock"></i> {{ rdv.heureDebut|date('H:i') }} – {{ rdv.heureFin|date('H:i') }}</span>
+                    </div>
+                  </div>
+                  <span class="appt-type-pill {{ rdv.typeSeance == 'en_ligne' ? 'pill-enligne' : 'pill-presentiel' }}">
+                    <i class="fas fa-{{ rdv.typeSeance == 'en_ligne' ? 'video' : 'building' }}"></i>
+                    {{ rdv.typeSeance == 'en_ligne' ? 'En ligne' : 'Présentiel' }}
+                  </span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title">
+                <i class="fas fa-chart-simple"></i>
+                Ma semaine
+              </div>
+              <a class="widget-action" onclick="showSection('horaires')" href="#">Gérer →</a>
+            </div>
+            <div class="mini-schedule">
+              {% set joursOrdre = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'] %}
+              {% for jour in joursOrdre %}
+                {% set slotsJour = mySlots|filter(s => s.dateRendezVous == jour) %}
+                <div class="mini-schedule-day">
+                  <div class="msd-day">{{ jour|slice(0,3) }}</div>
+                  <div class="msd-slots">
+                    {% if slotsJour|length > 0 %}
+                      {% for s in slotsJour|slice(0,3) %}
+                        <span class="msd-slot taken">{{ s.heureDebut|date('H:i') }}</span>
+                      {% endfor %}
+                      {% if slotsJour|length > 3 %}
+                        <span class="msd-slot" style="background:var(--sage-ghost);color:var(--sage);">+{{ slotsJour|length - 3 }}</span>
+                      {% endif %}
+                    {% else %}
+                      <span class="msd-slot empty">💤 Repos</span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {# SECTION : HORAIRES #}
+      <section class="psy-section" id="section-horaires">
+        <div class="section-header">
+          <div>
+            <h2>Mes <em>horaires</em></h2>
+            <p><i class="fas fa-calendar-week"></i> Gérez vos créneaux de consultation hebdomadaires</p>
+          </div>
+          <button class="topbar-btn primary" onclick="openModal('modalCreateSlot')">
+            <i class="fas fa-plus-circle"></i> Ajouter un créneau
+          </button>
+        </div>
+
+        {% for msg in app.flashes('success') %}
+          <div class="flash-bar success"><i class="fas fa-check-circle"></i> {{ msg }}</div>
+        {% endfor %}
+        {% for msg in app.flashes('error') %}
+          <div class="flash-bar error"><i class="fas fa-exclamation-circle"></i> {{ msg }}</div>
+        {% endfor %}
+
+        {% if mySlots is empty %}
+          <div class="empty-state">
+            <i class="fas fa-calendar-plus empty-state-icon"></i>
+            <h3>Aucun créneau défini</h3>
+            <p>Ajoutez vos disponibilités pour que les patients puissent réserver.</p>
+          </div>
+        {% else %}
+          <div class="horaires-grouped">
+            {% set joursOrdre = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'] %}
+            {% for jour in joursOrdre %}
+              {% set slotsDuJour = mySlots|filter(s => s.dateRendezVous == jour)|sort((a,b) => a.heureDebut <=> b.heureDebut) %}
+              {% if slotsDuJour|length > 0 %}
+                <div class="day-card">
+  <div class="day-card-header {{ jour in ['Samedi','Dimanche'] ? 'weekend' : 'weekday' }}">
+    <div class="day-name">
+      <i class="fas fa-calendar-alt"></i>
+      {{ jour }}
+    </div>
+    <div class="day-badge">
+      {{ slotsDuJour|length }} créneau{{ slotsDuJour|length > 1 ? 'x' : '' }}
+    </div>
+  </div>
+  <div class="day-card-body">
+
+    {# ── Créneaux du matin (avant 12h) — tous les jours ── #}
+    {% for slot in slotsDuJour %}
+      {% set heure = slot.heureDebut|date('H:i') %}
+      {% if heure < '12:00' %}
+        <div class="slot-item">
+          <div class="slot-time">
+            <i class="fas fa-clock"></i>
+            <span>{{ slot.heureDebut|date('H:i') }} – {{ slot.heureFin|date('H:i') }}</span>
+          </div>
+          <div class="slot-type">
+            <span class="seance-tag {{ slot.typeSeance == 'en_ligne' ? 'enligne' : 'presentiel' }}">
+              <i class="fas fa-{{ slot.typeSeance == 'en_ligne' ? 'video' : 'building' }}"></i>
+              {{ slot.typeSeance == 'en_ligne' ? 'En ligne' : 'Présentiel' }}
+            </span>
+          </div>
+          <div class="slot-status">
+            <span class="statut-tag {{ slot.statut == 'Pas encore pris' ? 'libre' : 'pris' }}">
+              <span class="sdot"></span>
+              {{ slot.statut == 'Pas encore pris' ? 'Disponible' : 'Non Disponible' }}
+            </span>
+          </div>
+          <div class="slot-actions">
+            <button class="act-btn edit" title="Modifier"
+                    onclick="openEditSlotModal({{ slot.id }}, '{{ slot.dateRendezVous }}', '{{ slot.heureDebut|date('H:i') }}', '{{ slot.heureFin|date('H:i') }}', '{{ slot.typeSeance }}', '{{ slot.statut }}')">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="act-btn del" title="Supprimer"
+                    onclick="openDeleteSlotModal({{ slot.id }})">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {# ── Samedi : fin de journée à 12h ── #}
+    {% if jour == 'Samedi' %}
+      <div class="pause-slot fin-semaine">
+        <i class="fas fa-door-open"></i>
+        <span>Fin de travail — Bon week-end ! 🎉</span>
+      </div>
+
+    {# ── Autres jours : pause déjeuner + après-midi ── #}
+    {% else %}
+      <div class="pause-slot">
+        <i class="fas fa-mug-hot"></i>
+        <span>Pause déjeuner 12:00 – 14:00</span>
+      </div>
+
+      {% for slot in slotsDuJour %}
+        {% set heure = slot.heureDebut|date('H:i') %}
+        {% if heure >= '14:00' %}
+          <div class="slot-item">
+            <div class="slot-time">
+              <i class="fas fa-clock"></i>
+              <span>{{ slot.heureDebut|date('H:i') }} – {{ slot.heureFin|date('H:i') }}</span>
+            </div>
+            <div class="slot-type">
+              <span class="seance-tag {{ slot.typeSeance == 'en_ligne' ? 'enligne' : 'presentiel' }}">
+                <i class="fas fa-{{ slot.typeSeance == 'en_ligne' ? 'video' : 'building' }}"></i>
+                {{ slot.typeSeance == 'en_ligne' ? 'En ligne' : 'Présentiel' }}
+              </span>
+            </div>
+            <div class="slot-status">
+              <span class="statut-tag {{ slot.statut == 'Pas encore pris' ? 'libre' : 'pris' }}">
+                <span class="sdot"></span>
+                {{ slot.statut == 'Pas encore pris' ? 'Disponible' : 'Réservé' }}
+              </span>
+            </div>
+            <div class="slot-actions">
+              <button class="act-btn edit" title="Modifier"
+                      onclick="openEditSlotModal({{ slot.id }}, '{{ slot.dateRendezVous }}', '{{ slot.heureDebut|date('H:i') }}', '{{ slot.heureFin|date('H:i') }}', '{{ slot.typeSeance }}', '{{ slot.statut }}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="act-btn del" title="Supprimer"
+                      onclick="openDeleteSlotModal({{ slot.id }})">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+  </div>
+</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </section>
+
+      {# SECTION : RDV REÇUS #}
+<section class="psy-section" id="section-rendez-vous">
+  <div class="section-header">
+    <div>
+      <h2>Rendez-vous <em>reçus</em></h2>
+      <p><i class="fas fa-users"></i> Les patients qui ont réservé un créneau avec vous</p>
+    </div>
+  </div>
+
+  {% if myReservationsPaginated.totalItemCount == 0 %}
+    <div class="empty-state">
+      <i class="fas fa-calendar-times empty-state-icon"></i>
+      <h3>Aucun rendez-vous reçu</h3>
+      <p>Vos prochains rendez-vous apparaîtront ici.</p>
+    </div>
+  {% else %}
+    <div class="rdv-recu-grid">
+      {% for res in myReservationsPaginated %}
+        {% set rdv = res.rendezVous %}
+        {% set patient = res.user %}
+        <div class="rdv-recu-card"
+             data-resa-id="{{ res.id }}"
+             data-rdv-id="{{ rdv.id }}"
+             data-patient="{{ patient.firstname|e('html_attr') }} {{ patient.lastname|e('html_attr') }}">
+          <div class="rrc-stripe {{ res.statut == 'confirme' ? 'confirmed' : (res.statut == 'annule' ? 'cancelled' : 'pending') }}"></div>
+          <div class="rrc-body">
+            <div class="rrc-top">
+              <div class="rrc-avatar">
+                {{ patient.firstname|slice(0,1) }}{{ patient.lastname|slice(0,1) }}
+              </div>
+              <div>
+                <div class="rrc-name">{{ patient.firstname }} {{ patient.lastname }}</div>
+                <div class="rrc-sub"><i class="fas fa-envelope"></i> {{ patient.email }}</div>
+              </div>
+              <span class="rrc-status
+                {% if res.statut == 'confirme' %}confirme
+                {% elseif res.statut == 'annule' %}annule
+                {% else %}attente{% endif %}">
+                <i class="fas fa-
+                  {% if res.statut == 'confirme' %}check-circle
+                  {% elseif res.statut == 'annule' %}times-circle
+                  {% else %}hourglass-half{% endif %}">
+                </i>
+                {% if res.statut == 'confirme' %}Confirmé
+                {% elseif res.statut == 'annule' %}Annulé
+                {% else %}En attente{% endif %}
+              </span>
+            </div>
+
+            <div class="rrc-chips">
+              <div class="rrc-chip">
+                <i class="fas fa-calendar-alt"></i>
+                {{ res.dateRdv ? res.dateRdv|date('d/m/Y') : '—' }}
+              </div>
+              <div class="rrc-chip">
+                <i class="fas fa-tag"></i>
+                {{ rdv.dateRendezVous }}
+              </div>
+              <div class="rrc-chip">
+                <i class="fas fa-clock"></i>
+                {{ rdv.heureDebut|date('H:i') }} – {{ rdv.heureFin|date('H:i') }}
+              </div>
+              <div class="rrc-chip">
+                <i class="fas fa-{{ rdv.typeSeance == 'en_ligne' ? 'video' : 'building' }}"></i>
+                {{ rdv.typeSeance == 'en_ligne' ? 'En ligne' : 'Présentiel' }}
+              </div>
+            </div>
+
+            <div class="rrc-footer">
+  {% if res.statut == 'confirme' %}
+    <button class="rrc-btn fiche"
+            data-resa-id="{{ res.id }}"
+            data-rdv-id="{{ rdv.id }}"
+            data-patient="{{ patient.firstname|e('html_attr') }} {{ patient.lastname|e('html_attr') }}"
+            onclick="openCreateFicheModal(this)">
+      <i class="fas fa-file-medical"></i> Créer fiche
+    </button>
+
+    {# ── BOUTON GOOGLE CALENDAR ── #}
+    <button type="button"
+        class="rrc-btn gcal-btn"
+        data-resa-id="{{ res.id }}"
+        onclick="return syncGoogleCalendar(event, this, {{ res.id }})">
+      <svg class="gcal-icon" viewBox="0 0 24 24" width="14" height="14" fill="none">
+        <rect x="3" y="4" width="18" height="17" rx="2" fill="#fff" stroke="#dadce0" stroke-width="1.5"/>
+        <rect x="3" y="8" width="18" height="2.5" fill="#4285F4"/>
+        <line x1="8" y1="4" x2="8" y2="7" stroke="#5f6368" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="16" y1="4" x2="16" y2="7" stroke="#5f6368" stroke-width="1.5" stroke-linecap="round"/>
+        <text x="12" y="18" text-anchor="middle" font-size="6" font-weight="700" fill="#1a73e8">{{ rdv.dateRendezVous }}</text>
+      </svg>
+      Sync Calendar
+    </button>
+
+  {% elseif res.statut == 'annule' %}
+    <span class="rrc-cancelled-msg"><i class="fas fa-ban"></i> Rendez-vous annulé</span>
+  {% else %}
+    <button class="rrc-btn confirm"
+            onclick="updateReservationStatus({{ res.id }}, 'confirme', this)">
+      <i class="fas fa-check"></i> Confirmer
+    </button>
+    <button class="rrc-btn cancel"
+            onclick="updateReservationStatus({{ res.id }}, 'annule', this)">
+      <i class="fas fa-times"></i> Annuler
+    </button>
+  {% endif %}
+
+  <button class="rrc-btn outline">
+    <i class="fas fa-eye"></i> Détails
+  </button>
+</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {# Pagination rendez-vous #}
+    {% if myReservationsPaginated.pageCount > 1 %}
+    <div class="fiche-pagination">
+
+      {% if myReservationsPaginated.currentPageNumber > 1 %}
+        <a class="fiche-page-btn prev-next" href="#"
+           onclick="goToRdvPage({{ myReservationsPaginated.currentPageNumber - 1 }})">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+      {% else %}
+        <span class="fiche-page-btn prev-next disabled">
+          <i class="fas fa-chevron-left"></i>
+        </span>
+      {% endif %}
+
+      {% set cur = myReservationsPaginated.currentPageNumber %}
+      {% set tot = myReservationsPaginated.pageCount %}
+      {% for i in 1..tot %}
+        {% if i == 1 or i == tot or (i >= cur - 2 and i <= cur + 2) %}
+          <a class="fiche-page-btn {{ i == cur ? 'active' : '' }}"
+             href="#" onclick="goToRdvPage({{ i }})">
+            {{ i }}
+          </a>
+        {% elseif i == cur - 3 or i == cur + 3 %}
+          <span class="fiche-page-ellipsis">…</span>
+        {% endif %}
+      {% endfor %}
+
+      {% if myReservationsPaginated.currentPageNumber < myReservationsPaginated.pageCount %}
+        <a class="fiche-page-btn prev-next" href="#"
+           onclick="goToRdvPage({{ myReservationsPaginated.currentPageNumber + 1 }})">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      {% else %}
+        <span class="fiche-page-btn prev-next disabled">
+          <i class="fas fa-chevron-right"></i>
+        </span>
+      {% endif %}
+
+      <span class="fiche-page-info">
+        Page {{ myReservationsPaginated.currentPageNumber }} / {{ myReservationsPaginated.pageCount }}
+        &nbsp;·&nbsp;
+        {{ myReservationsPaginated.totalItemCount }} rendez-vous
+      </span>
+
+    </div>
+    {% endif %}
+
+  {% endif %}
+</section>
+
+     {# SECTION : FICHES #}
+    <section class="psy-section" id="section-fiches">
+
+  <div class="section-header fiches-header-top">
+    <div>
+      <h2>Fiches de <em>consultation</em></h2>
+      <p>
+        <i class="fas fa-notes-medical"></i>
+        Vos notes cliniques et comptes-rendus de séances
+      </p>
+    </div>
+
+    <div class="header-ia-zone">
+      {% include 'home/psy_ia_analyse.html.twig' %}
+    </div>
+  </div>
+
+  {# Barre de recherche en dessous #}
+  <div class="search-zone">
+    <div class="fiches-search-box">
+      <i class="fas fa-search fiches-search-icon"></i>
+      <input
+        type="text"
+        id="ficheSearchInput"
+        class="fiches-search-input"
+        placeholder="Rechercher par nom du patient…"
+        autocomplete="off"
+        value="{{ search is defined ? search : '' }}"
+      >
+
+      {% if search is defined and search != '' %}
+        <button class="fiches-search-clear" id="ficheSearchClear" onclick="clearFicheSearch()">
+          <i class="fas fa-times"></i>
+        </button>
+      {% else %}
+        <button class="fiches-search-clear" id="ficheSearchClear" onclick="clearFicheSearch()" style="display:none;">
+          <i class="fas fa-times"></i>
+        </button>
+      {% endif %}
+    </div>
+
+    <div class="fiches-search-count" id="ficheSearchCount">
+      {% if search is defined and search != '' %}
+        {{ myFiches.totalItemCount }} fiche{{ myFiches.totalItemCount > 1 ? 's' : '' }} trouvée{{ myFiches.totalItemCount > 1 ? 's' : '' }}
+      {% endif %}
+    </div>
+  </div>
+  
+
+  {# ── Aucun résultat de recherche ── #}
+  {% if search is defined and search != '' and myFiches.totalItemCount == 0 %}
+    <div class="empty-state">
+      <i class="fas fa-search empty-state-icon"></i>
+      <h3>Aucun résultat</h3>
+      <p>Aucune fiche ne correspond à <strong>« {{ search }} »</strong>.</p>
+      <a href="{{ path('psy_dashboard', {section: 'fiches'}) }}" class="fiche-page-btn" style="margin-top:12px; text-decoration:none;">
+        <i class="fas fa-times"></i> Effacer la recherche
+      </a>
+    </div>
+
+  {% elseif myFiches.totalItemCount == 0 %}
+    <div class="empty-state">
+      <i class="fas fa-file-alt empty-state-icon"></i>
+      <h3>Aucune fiche rédigée</h3>
+      <p>Créez vos premières fiches de consultation après confirmation d'un RDV.</p>
+    </div>
+
+  {% else %}
+    <div class="fiches-grid">
+      {% for fiche in myFiches %}
+
+        {% set patientName = 'Patient inconnu' %}
+        {% for reservation in myReservations %}
+          {% if reservation.rendezVous and fiche.rendezVous and reservation.rendezVous.id == fiche.rendezVous.id %}
+            {% set patientName = reservation.user.firstname ~ ' ' ~ reservation.user.lastname %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="fiche-card" data-patient="{{ patientName|lower }}">
+
+          <div class="fiche-card-header">
+            <div class="fiche-card-id"><i class="fas fa-hashtag"></i> Fiche #{{ fiche.id }}</div>
+            <div class="fiche-card-date">
+              <i class="far fa-calendar-alt"></i>
+              {{ fiche.createdAt ? fiche.createdAt|date('d/m/Y') : '—' }}
+            </div>
+          </div>
+
+          <div class="fiche-card-body">
+            <div class="fiche-patient-row">
+              <div class="fiche-patient-ico"><i class="fas fa-user-circle"></i></div>
+              <div>
+                <div class="fiche-patient-name">{{ patientName }}</div>
+                <div class="fiche-patient-type">Consultation</div>
+              </div>
+            </div>
+            <div class="fiche-excerpt">
+              {{ fiche.notes|slice(0, 100) }}{% if fiche.notes|length > 100 %}…{% endif %}
+            </div>
+          </div>
+
+          <div class="fiche-card-footer">
+            <button class="fiche-act-btn view"
+              onclick='openFicheDrawer({
+                id: {{ fiche.id }},
+                date: {{ fiche.createdAt|date("d/m/Y à H:i")|json_encode|raw }},
+                patient: {{ patientName|json_encode|raw }},
+                probleme: {{ fiche.problemePrincipal|json_encode|raw }},
+                notes: {{ fiche.notes|json_encode|raw }},
+                diagnostic: {{ fiche.diagnostic|json_encode|raw }},
+                traitement: {{ fiche.traitement|json_encode|raw }},
+                recommandations: {{ fiche.recommandations|json_encode|raw }}
+              })'>
+              <i class="fas fa-eye"></i> Voir
+            </button>
+
+            <button class="fiche-act-btn edit"
+              onclick="openEditFicheModal(
+                '{{ fiche.id }}',
+                '{{ fiche.problemePrincipal|e('js') }}',
+                '{{ fiche.notes|e('js') }}',
+                '{{ fiche.diagnostic|e('js') }}',
+                '{{ fiche.traitement|e('js') }}',
+                '{{ fiche.recommandations|e('js') }}'
+              )">
+              <i class="fas fa-edit"></i> Modifier
+            </button>
+
+            <a class="fiche-act-btn pdf"
+               href="{{ path('psy_fiche_pdf', {id: fiche.id}) }}"
+               target="_blank">
+              <i class="fas fa-file-pdf"></i> PDF
+            </a>
+
+            <button class="fiche-act-btn del"
+                    onclick="openDeleteFicheModal({{ fiche.id }})">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+    {# ── Pagination ── #}
+    {% if myFiches.pageCount > 1 %}
+    <div class="fiche-pagination">
+
+      {# Précédent #}
+      {% if myFiches.currentPageNumber > 1 %}
+        <a class="fiche-page-btn prev-next" href="#"
+           onclick="goToFichePage({{ myFiches.currentPageNumber - 1 }})">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+      {% else %}
+        <span class="fiche-page-btn prev-next disabled">
+          <i class="fas fa-chevron-left"></i>
+        </span>
+      {% endif %}
+
+      {# Numéros avec ellipsis #}
+      {% set current = myFiches.currentPageNumber %}
+      {% set total   = myFiches.pageCount %}
+      {% for i in 1..total %}
+        {% if i == 1 or i == total or (i >= current - 2 and i <= current + 2) %}
+          <a class="fiche-page-btn {{ i == current ? 'active' : '' }}"
+             href="#" onclick="goToFichePage({{ i }})">
+            {{ i }}
+          </a>
+        {% elseif i == current - 3 or i == current + 3 %}
+          <span class="fiche-page-ellipsis">…</span>
+        {% endif %}
+      {% endfor %}
+
+      {# Suivant #}
+      {% if myFiches.currentPageNumber < myFiches.pageCount %}
+        <a class="fiche-page-btn prev-next" href="#"
+           onclick="goToFichePage({{ myFiches.currentPageNumber + 1 }})">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      {% else %}
+        <span class="fiche-page-btn prev-next disabled">
+          <i class="fas fa-chevron-right"></i>
+        </span>
+      {% endif %}
+
+      <span class="fiche-page-info">
+        Page {{ myFiches.currentPageNumber }} / {{ myFiches.pageCount }}
+        &nbsp;·&nbsp;
+        {{ myFiches.totalItemCount }} fiche{{ myFiches.totalItemCount > 1 ? 's' : '' }}
+        {% if search is defined and search != '' %}
+          &nbsp;·&nbsp; <em>« {{ search }} »</em>
+        {% endif %}
+      </span>
+
+    </div>
+    {% endif %}
+
+  {% endif %}
+</section>
+{% include 'home/psy_conge_section.html.twig' %}
+
+    </main>
+  </div>{# fin psy-content-area #}
+</div>{# fin psy-layout #}
+
+{# ══════════════════ MODALS ══════════════════ #}
+<div class="modal-backdrop" id="modalCreateSlot"
+     {% if showCreateModal is defined and showCreateModal %}style="display:flex"{% endif %}>
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <button class="modal-close" onclick="closeModal('modalCreateSlot')"><i class="fas fa-times"></i></button>
+      <div class="modal-hdr-title">Nouveau <em>créneau</em></div>
+      <div class="modal-hdr-sub">Définissez votre disponibilité hebdomadaire</div>
+    </div>
+    <form action="{{ path('psy_slot_create') }}" method="post" novalidate>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label class="form-label">Jour de la semaine</label>
+          <select name="dateRendezVous"
+                  class="form-control {% if fieldErrors.dateRendezVous is defined %}input-error{% endif %}">
+            <option value="">— Choisir —</option>
+            {% for jour in ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'] %}
+              <option value="{{ jour }}"
+                {% if oldInput.dateRendezVous is defined and oldInput.dateRendezVous == jour %}selected{% endif %}>
+                {{ jour }}
+              </option>
+            {% endfor %}
+          </select>
+          {% if fieldErrors.dateRendezVous is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrors.dateRendezVous }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Heure de début</label>
+            <input type="time" name="heureDebut"
+                   class="form-control {% if fieldErrors.heureDebut is defined %}input-error{% endif %}"
+                   value="{{ oldInput.heureDebut is defined ? oldInput.heureDebut : '' }}">
+            {% if fieldErrors.heureDebut is defined %}
+              <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrors.heureDebut }}</small>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure de fin</label>
+            <input type="time" name="heureFin"
+                   class="form-control {% if fieldErrors.heureFin is defined %}input-error{% endif %}"
+                   value="{{ oldInput.heureFin is defined ? oldInput.heureFin : '' }}">
+            {% if fieldErrors.heureFin is defined %}
+              <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrors.heureFin }}</small>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Type de séance</label>
+          <select name="typeSeance"
+                  class="form-control {% if fieldErrors.typeSeance is defined %}input-error{% endif %}">
+            <option value="Présentiel"
+              {% if oldInput.typeSeance is not defined or oldInput.typeSeance == 'Présentiel' %}selected{% endif %}>
+              🏢 Présentiel
+            </option>
+            <option value="en_ligne"
+              {% if oldInput.typeSeance is defined and oldInput.typeSeance == 'en_ligne' %}selected{% endif %}>
+              💻 En ligne
+            </option>
+          </select>
+          {% if fieldErrors.typeSeance is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrors.typeSeance }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Statut</label>
+          <select name="statut" class="form-control">
+            <option value="Pas encore pris">✅ Disponible</option>
+          </select>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="modal-btn cancel" onclick="closeModal('modalCreateSlot')">Annuler</button>
+        <button type="submit" class="modal-btn submit"><i class="fas fa-save"></i> Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Modifier créneau -->
+<div class="modal-backdrop" id="modalEditSlot" {% if showEditModal is defined and showEditModal %}style="display:flex"{% endif %}>
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <button class="modal-close" onclick="closeModal('modalEditSlot')"><i class="fas fa-times"></i></button>
+      <div class="modal-hdr-title">Modifier le <em>créneau</em></div>
+      <div class="modal-hdr-sub">Mettez à jour votre disponibilité</div>
+    </div>
+    <form id="editSlotForm" method="post"
+          action="{{ editSlot is defined ? path('psy_slot_edit', {id: editSlot.id}) : '#' }}"
+          novalidate>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label class="form-label">Jour de la semaine</label>
+          <select name="dateRendezVous" id="editSlotJour" class="form-control {% if fieldErrorsEdit.dateRendezVous is defined %}input-error{% endif %}">
+            {% for jour in ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'] %}
+              <option value="{{ jour }}"
+                {% if editSlot is defined and editSlot.dateRendezVous == jour %}selected{% endif %}>
+                {{ jour }}
+              </option>
+            {% endfor %}
+          </select>
+          {% if fieldErrorsEdit.dateRendezVous is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrorsEdit.dateRendezVous }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Heure de début</label>
+            <input type="time" name="heureDebut" id="editSlotDebut"
+                   class="form-control {% if fieldErrorsEdit.heureDebut is defined %}input-error{% endif %}"
+                   value="{{ editSlot is defined and editSlot.heureDebut ? editSlot.heureDebut|date('H:i') : '' }}">
+            {% if fieldErrorsEdit.heureDebut is defined %}
+              <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrorsEdit.heureDebut }}</small>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure de fin</label>
+            <input type="time" name="heureFin" id="editSlotFin"
+                   class="form-control {% if fieldErrorsEdit.heureFin is defined %}input-error{% endif %}"
+                   value="{{ editSlot is defined and editSlot.heureFin ? editSlot.heureFin|date('H:i') : '' }}">
+            {% if fieldErrorsEdit.heureFin is defined %}
+              <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrorsEdit.heureFin }}</small>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Type de séance</label>
+          <select name="typeSeance" id="editSlotType"
+                  class="form-control {% if fieldErrorsEdit.typeSeance is defined %}input-error{% endif %}">
+            <option value="Présentiel" {% if editSlot is defined and editSlot.typeSeance == 'Présentiel' %}selected{% endif %}>🏢 Présentiel</option>
+            <option value="en_ligne"   {% if editSlot is defined and editSlot.typeSeance == 'en_ligne' %}selected{% endif %}>💻 En ligne</option>
+          </select>
+          {% if fieldErrorsEdit.typeSeance is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ fieldErrorsEdit.typeSeance }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Statut</label>
+          <select name="statut" id="editSlotStatut" class="form-control">
+            <option value="Pas encore pris" {% if editSlot is defined and editSlot.statut == 'Pas encore pris' %}selected{% endif %}>✅ Disponible</option>
+            <option value="Confirmé"         {% if editSlot is defined and editSlot.statut == 'Confirmé' %}selected{% endif %}>❌ Non Disponible</option>
+          </select>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="modal-btn cancel" onclick="closeModal('modalEditSlot')">Annuler</button>
+        <button type="submit" class="modal-btn submit"><i class="fas fa-save"></i> Mettre à jour</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Supprimer créneau -->
+<div class="modal-backdrop" id="modalDeleteSlot">
+  <div class="modal-box modal-box-sm">
+    <div class="modal-body" style="text-align:center; padding-top:32px;">
+      <div class="del-modal-icon"><i class="fas fa-trash-alt"></i></div>
+      <div class="del-modal-title">Supprimer ce créneau ?</div>
+      <div class="del-modal-sub">Cette action est irréversible. Le créneau sera définitivement supprimé.</div>
+    </div>
+    <div class="modal-footer" style="justify-content:center; gap:12px;">
+      <button class="modal-btn cancel" onclick="closeModal('modalDeleteSlot')">Annuler</button>
+      <form id="deleteSlotForm" method="post" style="display:inline;">
+        <button type="submit" class="modal-btn danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Créer fiche -->
+<div class="modal-backdrop" id="modalCreateFiche"
+     {% if showCreateFiche is defined and showCreateFiche %}style="display:flex"{% endif %}>
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <button class="modal-close" onclick="closeModal('modalCreateFiche')"><i class="fas fa-times"></i></button>
+      <div class="modal-hdr-title">Nouvelle <em>fiche</em></div>
+      <div class="modal-hdr-sub">Rédigez votre compte-rendu de consultation</div>
+    </div>
+    <form action="{{ path('psy_fiche_create') }}" method="post" novalidate>
+      <input type="hidden" name="reservation_id" id="ficheResaId"
+             value="{{ ficheOldInput.reservation_id is defined ? ficheOldInput.reservation_id : '' }}">
+      <input type="hidden" name="rendezVous" id="ficheRdvId"
+             value="{{ ficheOldInput.rendezVous is defined ? ficheOldInput.rendezVous : '' }}">
+
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label class="form-label">Patient</label>
+          <input type="text" id="fichePatientName" class="form-control" readonly
+                 style="background:var(--cream-dark);"
+                 value="{{ ficheOldInput.patientName is defined ? ficheOldInput.patientName : '' }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Problème principal <span class="required">*</span></label>
+          <textarea name="probleme_principal"
+                    class="form-control {% if ficheErrors.probleme_principal is defined %}input-error{% endif %}"
+                    rows="2"
+                    placeholder="Ex: Anxiété généralisée, dépression...">{{ ficheOldInput.probleme_principal is defined ? ficheOldInput.probleme_principal : '' }}</textarea>
+          {% if ficheErrors.probleme_principal is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrors.probleme_principal }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notes cliniques <span class="required">*</span></label>
+          <textarea name="notes"
+                    class="form-control {% if ficheErrors.notes is defined %}input-error{% endif %}"
+                    rows="4"
+                    placeholder="Observations, éléments cliniques importants...">{{ ficheOldInput.notes is defined ? ficheOldInput.notes : '' }}</textarea>
+          {% if ficheErrors.notes is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrors.notes }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Diagnostic <span class="required">*</span></label>
+          <textarea name="diagnostic"
+                    class="form-control {% if ficheErrors.diagnostic is defined %}input-error{% endif %}"
+                    rows="3"
+                    placeholder="Diagnostic établi...">{{ ficheOldInput.diagnostic is defined ? ficheOldInput.diagnostic : '' }}</textarea>
+          {% if ficheErrors.diagnostic is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrors.diagnostic }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Traitement <span class="required">*</span></label>
+          <textarea name="traitement"
+                    class="form-control {% if ficheErrors.traitement is defined %}input-error{% endif %}"
+                    rows="3"
+                    placeholder="Traitement prescrit ou recommandé...">{{ ficheOldInput.traitement is defined ? ficheOldInput.traitement : '' }}</textarea>
+          {% if ficheErrors.traitement is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrors.traitement }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Recommandations <span class="required">*</span></label>
+          <textarea name="recommandations"
+                    class="form-control {% if ficheErrors.recommandations is defined %}input-error{% endif %}"
+                    rows="3"
+                    placeholder="Recommandations au patient...">{{ ficheOldInput.recommandations is defined ? ficheOldInput.recommandations : '' }}</textarea>
+          {% if ficheErrors.recommandations is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrors.recommandations }}</small>
+          {% endif %}
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="modal-btn cancel" onclick="closeModal('modalCreateFiche')">Annuler</button>
+        <button type="submit" class="modal-btn submit"><i class="fas fa-save"></i> Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Modifier fiche -->
+<div class="modal-backdrop" id="modalEditFiche"
+     {% if showEditFiche is defined and showEditFiche %}style="display:flex"{% endif %}>
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <button type="button" class="modal-close" onclick="closeModal('modalEditFiche')">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="modal-hdr-title">Modifier la <em>fiche</em></div>
+      <div class="modal-hdr-sub">Mettez à jour les informations</div>
+    </div>
+
+    <form id="editFicheForm" method="post"
+          action="{{ editFiche is defined ? path('psy_fiche_edit', {'id': editFiche.id}) : '#' }}"
+          novalidate>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label>Problème principal</label>
+          <textarea name="probleme_principal" id="editProbleme"
+                    class="form-control {% if ficheErrorsEdit.problemePrincipal is defined %}input-error{% endif %}"
+                    rows="2">{{ editFiche is defined ? editFiche.problemePrincipal : '' }}</textarea>
+          {% if ficheErrorsEdit.problemePrincipal is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrorsEdit.problemePrincipal }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label>Notes cliniques</label>
+          <textarea name="notes" id="editNotes"
+                    class="form-control {% if ficheErrorsEdit.notes is defined %}input-error{% endif %}"
+                    rows="4">{{ editFiche is defined ? editFiche.notes : '' }}</textarea>
+          {% if ficheErrorsEdit.notes is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrorsEdit.notes }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label>Diagnostic</label>
+          <textarea name="diagnostic" id="editDiagnostic"
+                    class="form-control {% if ficheErrorsEdit.diagnostic is defined %}input-error{% endif %}"
+                    rows="3">{{ editFiche is defined ? editFiche.diagnostic : '' }}</textarea>
+          {% if ficheErrorsEdit.diagnostic is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrorsEdit.diagnostic }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label>Traitement</label>
+          <textarea name="traitement" id="editTraitement"
+                    class="form-control {% if ficheErrorsEdit.traitement is defined %}input-error{% endif %}"
+                    rows="3">{{ editFiche is defined ? editFiche.traitement : '' }}</textarea>
+          {% if ficheErrorsEdit.traitement is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrorsEdit.traitement }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label>Recommandations</label>
+          <textarea name="recommandations" id="editRecommandations"
+                    class="form-control {% if ficheErrorsEdit.recommandations is defined %}input-error{% endif %}"
+                    rows="3">{{ editFiche is defined ? editFiche.recommandations : '' }}</textarea>
+          {% if ficheErrorsEdit.recommandations is defined %}
+            <small class="text-danger"><i class="fas fa-exclamation-circle"></i> {{ ficheErrorsEdit.recommandations }}</small>
+          {% endif %}
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="modal-btn cancel" onclick="closeModal('modalEditFiche')">Annuler</button>
+        <button type="submit" class="modal-btn submit"><i class="fas fa-save"></i> Mettre à jour</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Supprimer fiche -->
+<div class="modal-backdrop" id="modalDeleteFiche">
+  <div class="modal-box modal-box-sm">
+    <div class="modal-body" style="text-align:center; padding-top:32px;">
+      <div class="del-modal-icon"><i class="fas fa-file-times"></i></div>
+      <div class="del-modal-title">Supprimer cette fiche ?</div>
+      <div class="del-modal-sub">Le compte-rendu sera définitivement supprimé.</div>
+    </div>
+    <div class="modal-footer" style="justify-content:center; gap:12px;">
+      <button class="modal-btn cancel" onclick="closeModal('modalDeleteFiche')">Annuler</button>
+      <form id="deleteFicheForm" method="post" style="display:inline;">
+        <button type="submit" class="modal-btn danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{# ════ DRAWER FICHE DÉTAIL ════ #}
+<div class="fiche-drawer-overlay" id="ficheDrawerOverlay" onclick="closeFicheDrawer()"></div>
+<div class="fiche-drawer" id="ficheDrawer">
+
+  <div class="fiche-drawer-header">
+    <div class="fiche-drawer-header-left">
+      <div class="fiche-drawer-icon"><i class="fas fa-file-medical-alt"></i></div>
+      <div>
+        <div class="fiche-drawer-title">Fiche <span id="drawerFicheId"></span></div>
+        <div class="fiche-drawer-date"><i class="far fa-clock"></i> <span id="drawerDate"></span></div>
+      </div>
+    </div>
+    <button class="fiche-drawer-close" onclick="closeFicheDrawer()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="fiche-drawer-patient">
+    <div class="fiche-drawer-avatar" id="drawerAvatar"></div>
+    <div>
+      <div class="fiche-drawer-patient-name" id="drawerPatient"></div>
+      <div class="fiche-drawer-patient-label">Patient</div>
+    </div>
+  </div>
+
+  <div class="fiche-drawer-body">
+    <div class="fiche-drawer-section">
+      <div class="fiche-drawer-section-title"><i class="fas fa-exclamation-circle"></i> Problème principal</div>
+      <div class="fiche-drawer-section-content" id="drawerProbleme"></div>
+    </div>
+    <div class="fiche-drawer-section">
+      <div class="fiche-drawer-section-title"><i class="fas fa-notes-medical"></i> Notes cliniques</div>
+      <div class="fiche-drawer-section-content" id="drawerNotes"></div>
+    </div>
+    <div class="fiche-drawer-section">
+      <div class="fiche-drawer-section-title"><i class="fas fa-stethoscope"></i> Diagnostic</div>
+      <div class="fiche-drawer-section-content" id="drawerDiagnostic"></div>
+    </div>
+    <div class="fiche-drawer-section">
+      <div class="fiche-drawer-section-title"><i class="fas fa-pills"></i> Traitement</div>
+      <div class="fiche-drawer-section-content" id="drawerTraitement"></div>
+    </div>
+    <div class="fiche-drawer-section">
+      <div class="fiche-drawer-section-title"><i class="fas fa-clipboard-list"></i> Recommandations</div>
+      <div class="fiche-drawer-section-content" id="drawerReco"></div>
+    </div>
+  </div>
+
+  <div class="fiche-drawer-footer">
+    <a class="fiche-drawer-pdf-btn" id="drawerPdfLink" href="#" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      PDF
+    </a>
+
+    <div class="fiche-trad-group">
+      <button class="fiche-trad-btn" id="btnTradAr" onclick="traduireFiche('arabe')">
+        🇸🇦 <span>عربي</span>
+      </button>
+      <button class="fiche-trad-btn" id="btnTradFr" onclick="traduireFiche('français')">
+        🇫🇷 <span>Français</span>
+      </button>
+      <button class="fiche-trad-btn" id="btnTradEn" onclick="traduireFiche('anglais')">
+        🇬🇧 <span>English</span>
+      </button>
+    </div>
+
+    <button class="fiche-drawer-close-btn" onclick="closeFicheDrawer()">
+      <i class="fas fa-times"></i> Fermer
+    </button>
+  </div>
+
+  {# Zone traduction #}
+  <div id="ficheTraductionBox" class="fiche-trad-overlay">
+    <div class="fiche-trad-overlay-header">
+      <div class="fiche-trad-overlay-title">
+        <i class="fas fa-language"></i>
+        Traduction
+        <span class="fiche-trad-lang-badge" id="tradLangue"></span>
+      </div>
+      <button class="fiche-trad-overlay-close" onclick="closeTradPanel()">✕</button>
+    </div>
+    <div class="fiche-trad-overlay-body">
+      <div id="tradLoader" style="display:none; text-align:center; padding:40px 0; color:var(--color-text-secondary);">
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Traduction en cours…
+      </div>
+      <div id="tradContenu" style="display:none;">
+        <div class="fiche-drawer-section">
+          <div class="fiche-drawer-section-title"><i class="fas fa-exclamation-circle"></i> Problème principal</div>
+          <div class="fiche-drawer-section-content fiche-trad-val" id="tradProbleme"></div>
+        </div>
+        <div class="fiche-drawer-section">
+          <div class="fiche-drawer-section-title"><i class="fas fa-notes-medical"></i> Notes cliniques</div>
+          <div class="fiche-drawer-section-content fiche-trad-val" id="tradNotes"></div>
+        </div>
+        <div class="fiche-drawer-section">
+          <div class="fiche-drawer-section-title"><i class="fas fa-stethoscope"></i> Diagnostic</div>
+          <div class="fiche-drawer-section-content fiche-trad-val" id="tradDiagnostic"></div>
+        </div>
+        <div class="fiche-drawer-section">
+          <div class="fiche-drawer-section-title"><i class="fas fa-pills"></i> Traitement</div>
+          <div class="fiche-drawer-section-content fiche-trad-val" id="tradTraitement"></div>
+        </div>
+        <div class="fiche-drawer-section">
+          <div class="fiche-drawer-section-title"><i class="fas fa-clipboard-list"></i> Recommandations</div>
+          <div class="fiche-drawer-section-content fiche-trad-val" id="tradReco"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>{# fin ficheDrawer #}
+{# ── Modal résultat IA ── #}
+<div class="ia-modal-overlay" id="iaModalOverlay" onclick="fermerModalIA(event)">
+  <div class="ia-modal" id="iaModal">
+
+    <button class="ia-modal-close" onclick="fermerModalIA(null, true)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    {# Loading state #}
+    <div class="ia-loading" id="iaLoading">
+      <div class="ia-spinner"></div>
+      <p>Analyse en cours…</p>
+      <p class="ia-loading-sub">OpenAI lit les fiches de <span id="iaLoadingName"></span></p>
+    </div>
+
+    {# Result state #}
+    <div class="ia-result" id="iaResult" style="display:none">
+
+      <div class="ia-result-header">
+        <div class="ia-result-avatar" id="iaResultAvatar"></div>
+        <div>
+          <div class="ia-result-name" id="iaResultName"></div>
+          <div class="ia-result-meta" id="iaResultMeta"></div>
+        </div>
+        <span class="ia-evolution-badge" id="iaEvoBadge"></span>
+      </div>
+
+      {# KPI row #}
+      <div class="ia-kpi-row" id="iaKpiRow"></div>
+
+      {# Tendances #}
+      <div class="ia-section-title">Évolution par symptôme</div>
+      <div class="ia-tendances" id="iaTendances"></div>
+
+      {# Synthèse IA #}
+      <div class="ia-section-title">Synthèse clinique</div>
+      <div class="ia-synthese" id="iaSynthese"></div>
+
+      {# Recommandations #}
+      <div class="ia-section-title">Recommandations</div>
+      <div class="ia-recommandations" id="iaReco"></div>
+
+    </div>
+
+    {# Error state #}
+    <div class="ia-error" id="iaError" style="display:none">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M12 7v5M12 16v.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <p id="iaErrorMsg">Une erreur est survenue.</p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+/* ══ Navigation sections ══ */
+const sectionTitles = {
+  'overview':    { title: "Vue d'ensemble",         sub: 'Bonjour, bienvenue dans votre espace' },
+  'horaires':    { title: 'Mes horaires',            sub: 'Gérez vos créneaux de disponibilité' },
+  'rendez-vous': { title: 'Rendez-vous reçus',       sub: 'Patients ayant réservé un créneau' },
+  'fiches':      { title: 'Fiches de consultation',  sub: 'Vos comptes-rendus cliniques' },
+  'conges':      { title: 'Congés maladie',          sub: 'Demandes soumises par vos patients' }, // ← ajouter
+};
+
+function showSection(name) {
+  document.querySelectorAll('.psy-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const section = document.getElementById('section-' + name);
+  if (section) section.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(name)) n.classList.add('active');
+  });
+  const info = sectionTitles[name];
+  if (info) {
+    document.getElementById('topbarTitle').textContent = info.title;
+    document.getElementById('topbarSub').textContent   = info.sub;
+  }
+  if (name === 'conges') loadCongesPsy(); // ← ajouter
+}
+
+/* ══ Modals ══ */
+function openModal(id)  { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = ''; }
+
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
+});
+
+function openEditSlotModal(id, jour, debut, fin, type, statut) {
+  document.getElementById('editSlotForm').action = '/psy/slot/' + id + '/edit';
+  document.getElementById('editSlotJour').value   = jour;
+  document.getElementById('editSlotDebut').value  = debut;
+  document.getElementById('editSlotFin').value    = fin;
+  document.getElementById('editSlotType').value   = type;
+  document.getElementById('editSlotStatut').value = statut;
+  openModal('modalEditSlot');
+}
+
+function openDeleteSlotModal(id) {
+  document.getElementById('deleteSlotForm').action = '/psy/slot/' + id + '/delete';
+  openModal('modalDeleteSlot');
+}
+
+function openCreateFicheModal(btn) {
+  const resaId      = btn.dataset.resaId   || '';
+  const rdvId       = btn.dataset.rdvId    || '';
+  const patientName = btn.dataset.patient  || '';
+  document.getElementById('ficheResaId').value      = resaId;
+  document.getElementById('ficheRdvId').value       = rdvId;
+  document.getElementById('fichePatientName').value = patientName;
+  openModal('modalCreateFiche');
+}
+
+function openEditFicheModal(id, probleme, notes, diagnostic, traitement, recommandations) {
+  document.getElementById('editFicheForm').action = '/psy/fiche/' + id + '/edit';
+  document.getElementById('editProbleme').value        = probleme;
+  document.getElementById('editNotes').value           = notes;
+  document.getElementById('editDiagnostic').value      = diagnostic;
+  document.getElementById('editTraitement').value      = traitement;
+  document.getElementById('editRecommandations').value = recommandations;
+  document.getElementById('modalEditFiche').style.display = 'flex';
+}
+
+function openDeleteFicheModal(id) {
+  document.getElementById('deleteFicheForm').action = '/psy/fiche/' + id + '/delete';
+  openModal('modalDeleteFiche');
+}
+
+/* ══ Badge RDV ══ */
+document.getElementById('badgeRdv').textContent = '{{ myReservations|length }}';
+
+/* ══ Sidebar — mood picker ══ */
+function setMood(el) {
+  document.querySelectorAll('.sb-mood-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ══ Sidebar — citations rotatives ══ */
+const quotes = [
+  { text: "La guérison est un retour à soi-même, pas une fuite de la douleur.", author: "Carl Rogers" },
+  { text: "Ce n'est pas ce qui nous arrive qui nous affecte, mais la façon dont nous y répondons.", author: "Épictète" },
+  { text: "Le courage, c'est d'être soi-même face aux autres.", author: "André Gide" },
+  { text: "La bienveillance envers soi est le début de toute transformation.", author: "Kristin Neff" },
+  { text: "Là où il y a une volonté, il y a un chemin.", author: "Viktor Frankl" },
+];
+let currentQuote = 0;
+
+function buildQuoteNav() {
+  const nav = document.getElementById('quoteNav');
+  if (!nav) return;
+  nav.innerHTML = '';
+  quotes.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.className = 'sb-quote-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => setQuote(i);
+    nav.appendChild(dot);
+  });
+}
+
+function setQuote(idx) {
+  currentQuote = idx;
+  const q = quotes[idx];
+  const textEl   = document.getElementById('quoteText');
+  const authorEl = document.getElementById('quoteAuthor');
+  if (textEl)   { textEl.style.opacity   = 0; setTimeout(() => { textEl.textContent   = q.text;   textEl.style.opacity   = 1; }, 200); }
+  if (authorEl) { authorEl.style.opacity = 0; setTimeout(() => { authorEl.textContent = q.author; authorEl.style.opacity = 1; }, 200); }
+  document.querySelectorAll('.sb-quote-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+buildQuoteNav();
+setInterval(() => setQuote((currentQuote + 1) % quotes.length), 6000);
+
+const style = document.createElement('style');
+style.textContent = '#quoteText, #quoteAuthor { transition: opacity .2s ease; }';
+document.head.appendChild(style);
+
+function updateReservationStatus(reservationId, statut, btn) {
+  const card     = btn.closest('.rdv-recu-card');
+  const footer   = card.querySelector('.rrc-footer');
+  const stripeEl = card.querySelector('.rrc-stripe');
+  const statusEl = card.querySelector('.rrc-status');
+  const rdvId       = card.dataset.rdvId;
+  const patientName = card.dataset.patient;
+
+  footer.querySelectorAll('button').forEach(b => b.disabled = true);
+
+  fetch(`/psy/reservation/${reservationId}/statut`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ statut })
+  })
+  .then(async res => {
+    const text = await res.text();
+    try { return JSON.parse(text); }
+    catch (e) { throw new Error('Réponse non-JSON : ' + text.substring(0, 100)); }
+  })
+  .then(data => {
+    if (!data.success) throw new Error(data.message || 'Erreur serveur');
+
+    if (statut === 'confirme') {
+      stripeEl.className = 'rrc-stripe confirmed';
+      statusEl.className = 'rrc-status confirme';
+      statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Confirmé';
+      footer.innerHTML = `
+        <button class="rrc-btn fiche"
+                data-resa-id="${reservationId}"
+                data-rdv-id="${rdvId}"
+                data-patient="${patientName}"
+                onclick="openCreateFicheModal(this)">
+          <i class="fas fa-file-medical"></i> Créer fiche
+        </button>
+        <button class="rrc-btn outline"><i class="fas fa-eye"></i> Détails</button>
+      `;
+    } else {
+      stripeEl.className = 'rrc-stripe cancelled';
+      statusEl.className = 'rrc-status annule';
+      statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Annulé';
+      footer.innerHTML = `
+        <span class="rrc-cancelled-msg"><i class="fas fa-ban"></i> Rendez-vous annulé</span>
+        <button class="rrc-btn outline"><i class="fas fa-eye"></i> Détails</button>
+      `;
+    }
+  })
+  .catch(err => {
+    console.error('Erreur complète :', err);
+    alert('Erreur : ' + err.message);
+    footer.querySelectorAll('button').forEach(b => b.disabled = false);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const params = new URLSearchParams(window.location.search);
+  const section = params.get('section');
+  if (section) showSection(section);
+});
+
+/* ══ Drawer fiche ══ */
+let currentFicheId = null;
+
+function openFicheDrawer(data) {
+  currentFicheId = data.id;
+  const initiales = data.patient.split(' ').map(w => w[0] || '').slice(0, 2).join('');
+  document.getElementById('drawerFicheId').textContent    = '#' + data.id;
+  document.getElementById('drawerDate').textContent       = data.date;
+  document.getElementById('drawerAvatar').textContent     = initiales.toUpperCase();
+  document.getElementById('drawerPatient').textContent    = data.patient;
+  document.getElementById('drawerProbleme').textContent   = data.probleme    || '—';
+  document.getElementById('drawerNotes').textContent      = data.notes       || '—';
+  document.getElementById('drawerDiagnostic').textContent = data.diagnostic  || '—';
+  document.getElementById('drawerTraitement').textContent = data.traitement  || '—';
+  document.getElementById('drawerReco').textContent       = data.recommandations || '—';
+  document.getElementById('drawerPdfLink').href           = '/psy/fiche/' + data.id + '/pdf';
+  document.getElementById('ficheDrawerOverlay').classList.add('active');
+  document.getElementById('ficheDrawer').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFicheDrawer() {
+  document.getElementById('ficheDrawerOverlay').classList.remove('active');
+  document.getElementById('ficheDrawer').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/* ══ Notifications ══ */
+function toggleNotifPanel() {
+  const panel = document.getElementById('notifPanel');
+  panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
+}
+
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('notifWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('notifPanel').style.display = 'none';
+  }
+});
+
+function marquerLue(id, el) {
+  fetch('/psy/notification/' + id + '/lue', {
+    method: 'POST',
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  })
+  .then(r => r.json())
+  .then(data => { if (data.success) { el.classList.remove('unread'); _decrementerBadge(); } });
+}
+
+function toutMarquerLu() {
+  fetch('/psy/notifications/tout-lire', {
+    method: 'POST',
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+      const badge = document.getElementById('notifBadge');
+      if (badge) badge.style.display = 'none';
+      const btn = document.querySelector('.notif-tout-lire-btn');
+      if (btn) btn.remove();
+    }
+  });
+}
+
+function _decrementerBadge() {
+  const badge = document.getElementById('notifBadge');
+  if (!badge) return;
+  let count = parseInt(badge.textContent) - 1;
+  if (count <= 0) {
+    badge.style.display = 'none';
+    const btn = document.querySelector('.notif-tout-lire-btn');
+    if (btn) btn.remove();
+  } else {
+    badge.textContent = count;
+  }
+}
+
+/* ══ Traduction fiche ══ */
+function closeTradPanel() {
+  document.getElementById('ficheTraductionBox').classList.remove('open');
+  document.querySelectorAll('.fiche-trad-btn').forEach(b => b.classList.remove('active'));
+}
+
+function traduireFiche(langue) {
+  if (!currentFicheId) return;
+
+  const box     = document.getElementById('ficheTraductionBox');
+  const loader  = document.getElementById('tradLoader');
+  const contenu = document.getElementById('tradContenu');
+
+  document.querySelectorAll('.fiche-trad-btn').forEach(b => b.classList.remove('active'));
+  const map = { arabe: 'btnTradAr', français: 'btnTradFr', anglais: 'btnTradEn' };
+  if (map[langue]) document.getElementById(map[langue])?.classList.add('active');
+
+  const labels = { arabe: 'العربية', français: 'Français', anglais: 'English' };
+  document.getElementById('tradLangue').textContent = labels[langue] || langue;
+
+  box.classList.add('open');
+  loader.style.display = 'block';
+  contenu.style.display = 'none';
+
+  const formData = new FormData();
+  formData.append('langue', langue);
+
+  fetch(`/psy/fiche/${currentFicheId}/traduire`, { method: 'POST', body: formData })
+  .then(r => r.json())
+  .then(data => {
+    loader.style.display = 'none';
+    if (data.success) {
+      const t = data.traduction;
+      document.getElementById('tradProbleme').textContent   = t.probleme_principal ?? '—';
+      document.getElementById('tradNotes').textContent      = t.notes ?? '—';
+      document.getElementById('tradDiagnostic').textContent = t.diagnostic ?? '—';
+      document.getElementById('tradTraitement').textContent = t.traitement ?? '—';
+      document.getElementById('tradReco').textContent       = t.recommandations ?? '—';
+      contenu.style.direction = langue === 'arabe' ? 'rtl' : 'ltr';
+      contenu.style.display   = 'block';
+    } else {
+      contenu.innerHTML     = `<p style="color:red;">Erreur : ${data.message}</p>`;
+      contenu.style.display = 'block';
+    }
+  })
+  .catch(() => {
+    loader.style.display  = 'none';
+    contenu.innerHTML     = '<p style="color:red;">Erreur réseau.</p>';
+    contenu.style.display = 'block';
+  });
+}
+/* ══ Recherche fiches — côté serveur ══ */
+(function () {
+  const input = document.getElementById('ficheSearchInput');
+  const clear = document.getElementById('ficheSearchClear');
+  if (!input) return;
+
+  // Afficher/masquer le bouton clear en temps réel
+  input.addEventListener('input', function () {
+    clear.style.display = input.value.trim() ? 'inline-flex' : 'none';
+  });
+
+  // Lancer la recherche au Enter
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      launchSearch(input.value.trim());
+    }
+  });
+
+  // Lancer la recherche après 500ms sans frappe (debounce)
+  let debounceTimer = null;
+  input.addEventListener('input', function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      launchSearch(input.value.trim());
+    }, 500);
+  });
+})();
+
+function launchSearch(query) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('section', 'fiches');
+  url.searchParams.set('page', '1');   // reset à page 1 à chaque nouvelle recherche
+  if (query) {
+    url.searchParams.set('search', query);
+  } else {
+    url.searchParams.delete('search');
+  }
+  window.location.href = url.toString();
+}
+
+function clearFicheSearch() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('search');
+  url.searchParams.set('page', '1');
+  url.searchParams.set('section', 'fiches');
+  window.location.href = url.toString();
+}
+
+/* ══ Pagination fiches ══ */
+function goToFichePage(page) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', page);
+  url.searchParams.set('section', 'fiches');
+  // ← Conserver le terme de recherche en changeant de page
+  window.location.href = url.toString();
+}
+
+function goToRdvPage(page) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('rdv_page', page);
+  url.searchParams.set('section', 'rendez-vous');
+  window.location.href = url.toString();
+}
+
+// ── Google Calendar Sync ──
+async function syncGoogleCalendar(event, btn, resaId) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (btn.classList.contains('syncing') || btn.classList.contains('synced')) {
+    return false;
+  }
+
+  btn.classList.add('syncing');
+  const original = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sync...';
+
+  try {
+    const res = await fetch(`/psy/reservation/${resaId}/sync-calendar`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+
+    const data = await res.json();
+
+    if (data.need_auth) {
+      showGcalToast('info', '🔑 Connexion Google requise...');
+      setTimeout(() => {
+        window.location.href = '/psy/google/connect';
+      }, 1200);
+
+      btn.innerHTML = original;
+      btn.classList.remove('syncing');
+      return false;
+    }
+
+    if (data.success) {
+      btn.classList.remove('syncing');
+      btn.classList.add('synced');
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> Synchronisé';
+      showGcalToast('success', '✅ Ajouté à Google Calendar');
+    } else {
+      btn.innerHTML = original;
+      btn.classList.remove('syncing');
+      showGcalToast('error', data.message);
+    }
+
+  } catch (err) {
+    btn.innerHTML = original;
+    btn.classList.remove('syncing');
+    showGcalToast('error', 'Erreur réseau');
+  }
+
+  return false;
+}
+function showGcalToast(type, message) {
+  // Supprimer toast existant
+  document.querySelectorAll('.gcal-toast').forEach(t => t.remove());
+
+  const icons = { success: '📅', error: '⚠️', info: 'ℹ️' };
+  const toast = document.createElement('div');
+  toast.className = `gcal-toast ${type}`;
+  toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add('show'), 50);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 400);
+  }, 4000);
+}
+
+// Auto-sync quand un RDV est confirmé
+const originalUpdateReservationStatus = window.updateReservationStatus;
+window.updateReservationStatus = async function(resaId, statut, btn) {
+  await originalUpdateReservationStatus?.(resaId, statut, btn);
+  
+  if (statut === 'confirme') {
+    // Attendre que l'UI se mette à jour puis proposer la sync
+    setTimeout(() => {
+      const card = btn.closest('.rdv-recu-card');
+      if (card) {
+        showGcalToast('info', '📅 RDV confirmé ! Cliquez sur "Sync Calendar" pour ajouter à Google Calendar.');
+      }
+    }, 800);
+  }
+};
+
+</script>
+{% endblock %}

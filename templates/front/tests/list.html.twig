@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tests psychologiques - NAFSEYTI{% endblock %}
+
+{% block body %}
+<section class="hero-section" style="min-height: 40vh; padding: 60px 60px;">
+    <div class="hero-content" style="text-align: center;">
+        <div class="hero-tag" style="justify-content: center;">Évaluez votre bien-être</div>
+        <h1 class="hero-title" style="font-size: clamp(2rem, 5vw, 3.5rem);">
+            Tests <em>psychologiques</em>
+        </h1>
+        <p class="hero-subtitle" style="max-width: 700px; margin: 0 auto;">
+            Découvrez nos tests conçus par des professionnels pour mieux comprendre votre état psychologique
+            et obtenir des conseils personnalisés.
+        </p>
+    </div>
+</section>
+
+<section class="services-section" style="padding-top: 0;">
+    <div class="container-custom">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2px; background: var(--beige-mid);">
+            
+            {% set img = ['img1.jpg', 'img2.jpg', 'img3.jpg'] %}
+            
+            {% for test in tests %}
+                <div class="service-card" style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                    
+                    {# IMAGE EN HAUT #}
+                    <div style="height: 220px; overflow: hidden; position: relative;">
+                        <img src="{{ asset('img/' ~ img[loop.index0 % 3]) }}" 
+                             alt="{{ test.titre }}"
+                             style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; display: block;">
+                        {# OVERLAY VERT AU HOVER #}
+                        <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(26,61,43,0.7) 100%);"></div>
+                        {# BADGE CATEGORIE #}
+                        <div style="position: absolute; top: 16px; left: 16px; background: var(--beige-cream); color: var(--green-deep); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; font-weight: 600;">
+                            Psychologie
+                        </div>
+                    </div>
+
+                    {# CONTENU #}
+                    <div style="padding: 28px; display: flex; flex-direction: column; flex: 1; background: var(--beige-white);">
+                        <div class="service-icon" style="margin-bottom: 16px;">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="service-name">{{ test.titre }}</h3>
+                        <p class="service-desc">{{ test.description|slice(0, 120) }}{{ test.description|length > 120 ? '...' : '' }}</p>
+                        
+                        <div style="margin-top: auto;">
+                            {# STATS #}
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; padding: 12px 0; border-top: 1px solid var(--beige-mid); font-size: 0.8rem; color: var(--green-mid);">
+                                <span><i class="fas fa-clock" style="margin-right: 6px;"></i>{{ test.duree ? test.duree ~ ' min' : '10 min' }}</span>
+                                <span><i class="fas fa-question-circle" style="margin-right: 6px;"></i>{{ test.questions|length }} questions</span>
+                            </div>
+                            <a href="{{ path('front_test_show', {'id': test.id}) }}" 
+                               class="donate-btn" 
+                               style="width: 100%; text-align: center; display: block; background: var(--green-deep);">
+                                Commencer le test →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="service-card" style="text-align: center; grid-column: 1/-1;">
+                    <div class="service-icon"><i class="fas fa-brain"></i></div>
+                    <p>Aucun test disponible pour le moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .service-card:hover img {
+        transform: scale(1.05);
+    }
+</style>
+
+{% endblock %}

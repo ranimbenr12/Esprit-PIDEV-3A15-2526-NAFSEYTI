@@ -272,13 +272,39 @@
   text-decoration: none; white-space: nowrap;
 }
 .btn-book:hover { background: var(--navy-mid); transform: scale(1.02); color: white; text-decoration: none; }
-.btn-profile {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Instrument Sans', sans-serif; font-size: .75rem;
-  color: var(--slate); background: none; border: none;
-  cursor: pointer; padding: 4px 0; transition: color .2s;
+.btn-conge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--slate);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  width: 100%;
 }
-.btn-profile:hover { color: var(--navy); }
+
+.btn-conge:hover {
+  color: var(--navy);
+  background: rgba(74, 103, 65, 0.08);
+}
+
+.btn-conge i, 
+.btn-conge svg {
+  font-size: 1.1rem;
+  color: var(--sage);
+  transition: color 0.2s;
+}
+
+.btn-conge:hover i,
+.btn-conge:hover svg {
+  color: var(--navy);
+}
 
 .rdv-empty { text-align: center; padding: 80px 0; color: var(--slate); }
 .rdv-empty i { font-size: 2.5rem; color: var(--border); margin-bottom: 16px; display: block; }
@@ -384,7 +410,115 @@
 .sp-pane { display: none; }
 .sp-pane.active { display: block; }
 .sp-section-label { font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--slate-lt); margin-bottom: 12px; }
-.slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.slots-grid {
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+.cal-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 340px;
+}
+.cal-table th {
+  text-align: center;
+  padding: 8px 6px 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: .72rem; font-weight: 700;
+  color: var(--navy);
+  border-bottom: 2px solid var(--border);
+}
+.cal-table th .cal-day-name {
+  display: block;
+  font-size: .78rem;
+  color: var(--navy);
+}
+.cal-table th .cal-day-date {
+  display: block;
+  font-size: .68rem;
+  color: var(--slate-lt);
+  font-weight: 400;
+  margin-top: 2px;
+}
+.cal-table td {
+  text-align: center;
+  padding: 4px 5px;
+}
+.slot-time-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 9px 4px;
+  background: #8eba59;
+  color: #1a2e1a;
+  border: 1.5px solid #1a2e1a;
+  border-radius: 8px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: .76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .1s;
+  white-space: nowrap;
+}
+.slot-time-btn:hover {
+  background: #8eba59;
+  border-color: #1a2e1a;
+  transform: scale(1.04);
+}
+.slot-time-btn.selected {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+.slot-time-btn.taken {
+  background: var(--off-white);
+  color: var(--slate-lt);
+  border-color: var(--border);
+  cursor: not-allowed;
+  opacity: .55;
+  font-size: .7rem;
+}
+.cal-empty { color: var(--slate-lt); font-size: 1.1rem; }
+.cal-more-row td {
+  padding-top: 10px;
+}
+.cal-more-btn {
+  background: none;
+  border: none;
+  color: var(--slate);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: .78rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 0;
+}
+.cal-more-btn:hover { color: var(--navy); }
+.cal-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-nav-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: white;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; color: var(--navy);
+  transition: background .15s;
+}
+.cal-nav-btn:hover { background: var(--blue-light); }
+.cal-week-label {
+  font-family: 'Syne', sans-serif;
+  font-size: .72rem;
+  color: var(--slate);
+  font-weight: 700;
+}
 .slot-card {
   background: var(--white); border: 1.5px solid var(--border);
   border-radius: 12px; padding: 14px 16px;
@@ -517,6 +651,20 @@
   font-size: .7rem; color: var(--slate-lt);
   font-family: 'Instrument Sans', sans-serif; white-space: nowrap;
 }
+.res-status-popup.confirme{
+   background:#dcfce7;
+   color:#166534;
+}
+
+.res-status-popup.annule{
+   background:#fee2e2;
+   color:#991b1b;
+}
+
+.res-status-popup.attente{
+   background:#fef3c7;
+   color:#92400e;
+}
 
 /* ════ RESPONSIVE ════ */
 @media (max-width: 900px) {
@@ -541,6 +689,17 @@
   .rdv-steps-bar-inner { grid-template-columns: 1fr; }
   .popup-box { margin: 12px; border-radius: 16px; }
   .res-body-popup { gap: 10px; }
+}
+/* ════ OVERLAY GLOBAL ════ */
+.rdv-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 62, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10001;
+  align-items: center;
+  justify-content: center;
 }
 </style>
 {% endblock %}
@@ -638,6 +797,10 @@
       Mes rendez-vous réservés
       <span class="rdv-badge-count" id="rdvBadgeCount">…</span>
     </button>
+    <button class="btn-my-rdv" onclick="openMesCongesPopup()" style="margin-left:10px">
+      <i class="fas fa-file-medical-alt"></i>
+      Mes congés
+    </button>
   </div>
 
   <div class="pro-list" id="proList">
@@ -652,7 +815,7 @@
 
         <div class="pro-card-img">
           {% if user.profile_photo %}
-            <img src="{{ asset('uploads/photos/' ~ user.profile_photo) }}" alt="{{ user.firstname }} {{ user.lastname }}">
+            <img src="{{ asset(user.profile_photo) }}" alt="{{ user.firstname }} {{ user.lastname }}">
           {% else %}
             <img src="https://ui-avatars.com/api/?name={{ user.firstname|url_encode }}+{{ user.lastname|url_encode }}&background={{ isCoach ? '6D8B74' : '5F7161' }}&color=fff&size=200" alt="{{ user.firstname }} {{ user.lastname }}">
           {% endif %}
@@ -687,8 +850,11 @@
             <i class="fas fa-calendar-plus"></i>
             Voir les créneaux
           </button>
-          <button class="btn-profile">
-            <i class="fas fa-eye"></i> Voir le profil
+          <button class="btn-conge"
+                  onclick="openCongeModal({{ user.id }}, '{{ user.firstname }} {{ user.lastname }}')"
+                  data-psy-id="{{ user.id }}">
+            <i class="fas fa-file-medical"></i>
+            <span>Demander un congé</span>
           </button>
         </div>
 
@@ -800,26 +966,31 @@
       </div>
     </div>
 
-    <div class="sp-pane" id="pane-book">
-      <div id="slotPreview" class="selected-slot-preview" style="display:none;">
-        <i class="fas fa-clock"></i>
-        <span id="slotPreviewText">—</span>
-      </div>
-      <div id="bookPrompt" style="display:none;">
-        <form action="{{ path('rdv_reserve') }}" method="post">
-          <input type="hidden" name="pro_id" id="spProId">
-          <input type="hidden" name="rdv_id" id="spRdvId">
-          <button type="submit" class="btn-confirm-sp">
-            <i class="fas fa-calendar-check"></i>
-            Réserver ce créneau
-          </button>
-        </form>
-      </div>
-      <div id="bookNoSlot" style="text-align:center;padding:40px 0;color:var(--slate-lt);font-size:.88rem;">
-        <i class="fas fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:10px;color:var(--border);"></i>
-        Veuillez d'abord sélectionner un créneau.
-      </div>
+      <div class="sp-pane" id="pane-book">
+  <div id="slotPreview" class="selected-slot-preview" style="display:none;">
+    <i class="fas fa-clock"></i>
+    <span id="slotPreviewText">—</span>
+  </div>
+
+  <form action="{{ path('rdv_reserve') }}" method="post" id="bookForm">
+    <input type="hidden" name="pro_id" id="spProId">
+    <input type="hidden" name="rdv_id" id="spRdvId">
+    <input type="hidden" name="date_rdv" id="spDateRdvHidden">
+    
+    <div id="bookPrompt" style="display:none;">
+      <button type="button" class="btn-confirm-sp" onclick="submitBooking()">
+        <i class="fas fa-calendar-check"></i>
+        Confirmer la réservation
+      </button>
     </div>
+  </form>
+
+  <div id="bookNoSlot" style="text-align:center;padding:40px 0;color:var(--slate-lt);font-size:.88rem;">
+    <i class="fas fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:10px;color:var(--border);"></i>
+    Veuillez d'abord sélectionner un créneau dans le calendrier.
+  </div>
+</div>	
+
   </div>
 </div>
 
@@ -843,6 +1014,7 @@
 </div>
 
 </div>{# /rdv-page #}
+{% include 'home/conge_modal_patient.html.twig' %}
 
 {# ════ DONNÉES JSON ════ #}
 <script>
@@ -852,7 +1024,7 @@ const SLOTS_DATA = {
     {% for slot in slots[pro.id] ?? [] %}
     {
       id:    {{ slot.id }},
-      date:  "{{ slot.dateRendezVous|date('d/m/Y') }}",
+      date:  "{{ slot.dateRendezVous }}",
       debut: "{{ slot.heureDebut|date('H:i') }}",
       fin:   "{{ slot.heureFin|date('H:i') }}",
       type:  "{{ slot.typeSeance }}",
@@ -862,6 +1034,7 @@ const SLOTS_DATA = {
   ]{{ not loop.last ? ',' : '' }}
   {% endfor %}
 };
+const RESERVED_DATES = {{ reservedDates|json_encode|raw }};
 
 const PROS_DATA = {
   {% for pro in professionals %}
@@ -871,15 +1044,26 @@ const PROS_DATA = {
     email:    "{{ pro.email|default('')|e('html_attr') }}",
     phone:    "{{ pro.phone_number|default('')|e('html_attr') }}",
     location: "{{ pro.location|default('')|e('html_attr') }}",
-    avatar:   "{{ pro.profile_photo ? asset('uploads/photos/' ~ pro.profile_photo) : '' }}"
+    avatar: "{{ pro.profile_photo ? asset(pro.profile_photo) : '' }}"
   }{{ not loop.last ? ',' : '' }}
   {% endfor %}
 };
 </script>
+
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
+
+
+
+{# ── 1. Script Twig : expose les URLs générées côté serveur ── #}
+<script>
+  const RDV_RESERVATIONS_URL = '{{ path("rdv_mes_reservations") }}';
+</script>
+
+{# ── 2. Tout le JS pur dans verbatim (les backticks ne posent plus de problème) ── #}
+{% verbatim %}
 <script>
 const FALLBACK = (name, isCoach) => {
   const c = isCoach ? '6D8B74' : '5F7161';
@@ -912,35 +1096,11 @@ function openPanel(proId) {
   const none  = document.getElementById('noSlots');
   grid.innerHTML = '';
 
-  if (slots.length === 0) {
+ if (slots.length === 0) {
     none.style.display = 'block';
   } else {
     none.style.display = 'none';
-    slots.forEach(slot => {
-      const enLigne  = slot.type === 'en_ligne';
-      const reserved = slot.statut === 'en attente';
-      const card = document.createElement('div');
-      card.className = 'slot-card' + (reserved ? ' slot-reserved' : '');
-      card.dataset.id    = slot.id;
-      card.dataset.date  = slot.date;
-      card.dataset.debut = slot.debut;
-      card.dataset.fin   = slot.fin;
-      card.dataset.type  = slot.type;
-      card.innerHTML = `
-        <div class="slot-date">
-          <i class="fas fa-calendar" style="margin-right:5px;font-size:.65rem;color:var(--blue-acc)"></i>${slot.date}
-        </div>
-        <div class="slot-time"><i class="fas fa-clock"></i>${slot.debut} – ${slot.fin}</div>
-        <span class="slot-type-badge ${enLigne ? 'enligne' : 'presentiel'}">
-          <i class="fas fa-${enLigne ? 'video' : 'building'}"></i>
-          ${enLigne ? 'En ligne' : 'Présentiel'}
-        </span>
-        ${reserved ? '<span class="slot-taken"><i class="fas fa-lock"></i> En attente</span>' : ''}`;
-      if (!reserved) {
-        card.addEventListener('click', () => selectSlot(card));
-      }
-      grid.appendChild(card);
-    });
+    buildCalendar(slots, grid, 0);
   }
 
   switchTab('slots');
@@ -948,7 +1108,231 @@ function openPanel(proId) {
   document.getElementById('sidePanel').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+function buildCalendar(slots, container, weekOffset) {
+  container.innerHTML = '';
 
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const dayNames = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
+  const months   = ['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+
+  // ── Regrouper les slots par nom de jour ──
+  const slotsByNom = {};
+  slots.forEach(slot => {
+    if (!slotsByNom[slot.date]) slotsByNom[slot.date] = [];
+    slotsByNom[slot.date].push(slot);
+  });
+
+  // ── Appliquer les règles de filtrage ──
+  const jourToDow = {
+    'Dimanche':0,'Lundi':1,'Mardi':2,'Mercredi':3,'Jeudi':4,'Vendredi':5,'Samedi':6
+  };
+  Object.keys(slotsByNom).forEach(jourNom => {
+    const dow = jourToDow[jourNom] ?? -1;
+    slotsByNom[jourNom] = slotsByNom[jourNom].filter(slot => {
+  const [hh, mm] = slot.debut.split(':').map(Number);
+  const minutes = hh * 60 + mm;
+
+  if (dow === 0) return false; // dimanche fermé
+  if (dow >= 1 && dow <= 5) return !(minutes >= 720 && minutes < 840);
+  if (dow === 6) return minutes < 720;
+
+  return true;
+});
+  });
+
+  // ── Générer les 5 jours à afficher (skip dimanche) ──
+  const days = [];
+  let d = new Date(today);
+  d.setDate(today.getDate() + weekOffset * 5);
+  while (days.length < 7) {
+  days.push(new Date(d));
+  d.setDate(d.getDate() + 1);
+}
+
+  // ── Mapper les slots aux jours affichés ──
+  const dowToNom = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const slotsByDow = {};
+  days.forEach(day => {
+    const nom = dowToNom[day.getDay()];
+    slotsByDow[day.getDay()] = slotsByNom[nom] || [];
+  });
+
+  // ── Vérifier s'il reste des créneaux après filtrage ──
+  const totalVisible = Object.values(slotsByDow).reduce((s, a) => s + a.length, 0);
+  if (totalVisible === 0) {
+    document.getElementById('noSlots').style.display = 'block';
+    return;
+  }
+  document.getElementById('noSlots').style.display = 'none';
+
+  // ── Nav row ──
+  const navRow = document.createElement('div');
+  navRow.className = 'cal-nav-row';
+  navRow.innerHTML = `
+    <button class="cal-nav-btn" id="calPrev"><i class="fas fa-chevron-left"></i></button>
+    <span class="cal-week-label">${days[0].getDate()} – ${days[4].getDate()} ${months[days[4].getMonth()]}</span>
+    <button class="cal-nav-btn" id="calNext"><i class="fas fa-chevron-right"></i></button>
+  `;
+  container.appendChild(navRow);
+
+  // ── Table ──
+  const table = document.createElement('table');
+  table.className = 'cal-table';
+
+  const thead = document.createElement('thead');
+  const headRow = document.createElement('tr');
+  days.forEach(day => {
+    const th = document.createElement('th');
+   const isSam = day.getDay() === 6;
+  const isSun = day.getDay() === 0;
+    th.innerHTML = `
+  <span class="cal-day-name" style="${
+    isSun ? 'color:#c0392b' :
+    isSam ? 'color:#c05a00' : ''
+  }">
+    ${dayNames[day.getDay()]}
+  </span>
+  <span class="cal-day-date">${day.getDate()} ${months[day.getMonth()]}</span>
+  ${
+    isSun
+      ? '<span style="display:block;font-size:.58rem;color:#c0392b;margin-top:2px;">pas de travail</span>'
+      : isSam
+      ? '<span style="display:block;font-size:.58rem;color:#c05a00;margin-top:2px;">jusqu\\\'à 12h</span>'
+      : ''
+  }
+`;
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  const maxRows = 3;
+  const showMore = {};
+  days.forEach(day => {
+    const dow = day.getDay();
+    showMore[dow] = (slotsByDow[dow] || []).length > maxRows;
+  });
+  const expandedCols = {};
+function makeSlotBtn(slot, day) {
+  const reservedDatesForSlot = RESERVED_DATES[slot.id] || [];
+  const isoDate =
+  day.getFullYear() + '-' +
+  String(day.getMonth() + 1).padStart(2, '0') + '-' +
+  String(day.getDate()).padStart(2, '0');
+  const reserved = reservedDatesForSlot.includes(isoDate);
+  const btn = document.createElement('button');
+  btn.className = 'slot-time-btn' + (reserved ? ' taken' : '');
+  btn.textContent = slot.debut;
+  btn.disabled = reserved;
+  if (!reserved) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.slot-time-btn.selected').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('spRdvId').value = slot.id;
+      const typeLabel = slot.type === 'en_ligne' ? 'En ligne' : 'Présentiel';
+      const dateStr = `${day.getDate()} ${months[day.getMonth()]} ${day.getFullYear()}`;
+      document.getElementById('slotPreviewText').textContent =
+        `${dateStr}  •  ${slot.debut} – ${slot.fin}  •  ${typeLabel}`;
+      document.getElementById('slotPreview').style.display = 'flex';
+      document.getElementById('bookPrompt').style.display  = 'block';
+      document.getElementById('bookNoSlot').style.display  = 'none';
+      document.getElementById('spDateRdvHidden').value = isoDate; // ← seule ligne date restante
+      setTimeout(() => switchTab('book'), 260);
+    });
+  }
+  return btn;
+}
+
+  function renderRows(expanded) {
+    tbody.innerHTML = '';
+
+    // ── Ligne "pause" visible entre les créneaux matin/après-midi ──
+    // (uniquement informatif dans le header, pas besoin d'une ligne séparée)
+
+    for (let row = 0; row < maxRows; row++) {
+      const tr = document.createElement('tr');
+      days.forEach(day => {
+        const dow = day.getDay();
+        const daySlots = slotsByDow[dow] || [];
+        const slot = daySlots[row];
+        const td = document.createElement('td');
+        if (slot) {
+          td.appendChild(makeSlotBtn(slot, day));
+        } else {
+          td.innerHTML = '<span class="cal-empty">–</span>';
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    }
+
+    // ── Lignes supplémentaires si expand ──
+    if (Object.keys(expanded).length > 0) {
+      const maxExtra = Math.max(
+        ...days.map(day => {
+          const dow = day.getDay();
+          return expanded[dow] ? (slotsByDow[dow] || []).length - maxRows : 0;
+        })
+      );
+      for (let row = 0; row < maxExtra; row++) {
+        const tr = document.createElement('tr');
+        days.forEach(day => {
+          const dow = day.getDay();
+          const slot = expanded[dow] ? (slotsByDow[dow] || [])[maxRows + row] : null;
+          const td = document.createElement('td');
+          if (slot) td.appendChild(makeSlotBtn(slot, day));
+          else td.innerHTML = '<span class="cal-empty"></span>';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+    }
+
+    // ── Bouton "Plus de disponibilités" ──
+    const hasMore = days.some(day => showMore[day.getDay()] && !expanded[day.getDay()]);
+    if (hasMore) {
+      const moreRow = document.createElement('tr');
+      moreRow.className = 'cal-more-row';
+      const moreTd = document.createElement('td');
+      moreTd.colSpan = 7; moreTd.style.textAlign = 'center';
+      const moreBtn = document.createElement('button');
+      moreBtn.className = 'cal-more-btn';
+      moreBtn.innerHTML = 'Plus de disponibilités <i class="fas fa-chevron-down"></i>';
+      moreBtn.addEventListener('click', () => {
+        days.forEach(day => { if (showMore[day.getDay()]) expanded[day.getDay()] = true; });
+        renderRows(expanded);
+      });
+      moreTd.appendChild(moreBtn);
+      moreRow.appendChild(moreTd);
+      tbody.appendChild(moreRow);
+    }
+  }
+
+  renderRows(expandedCols);
+  table.appendChild(tbody);
+  container.appendChild(table);
+
+  // ── Légende pause ──
+  const legend = document.createElement('div');
+  legend.style.cssText = 'margin-top:12px;padding:8px 12px;background:#f5f0e8;border-radius:8px;font-size:.7rem;color:#9a7a4a;font-family:Instrument Sans,sans-serif;display:flex;gap:12px;flex-wrap:wrap;';
+  legend.innerHTML = `
+  <span>☕ Lun–Ven : pause 12h–14h</span>
+  <span>🕛 Samedi : fermeture à 12h</span>
+  <span>🚫 Dimanche : pas de travail</span>
+`;
+  container.appendChild(legend);
+
+  // ── Navigation ──
+  container.querySelector('#calPrev').addEventListener('click', () => {
+    if (weekOffset > 0) buildCalendar(slots, container, weekOffset - 1);
+  });
+  container.querySelector('#calNext').addEventListener('click', () => {
+    buildCalendar(slots, container, weekOffset + 1);
+  });
+}
 /* ══ Close panel ══ */
 function closePanel() {
   document.getElementById('panelBackdrop').classList.remove('open');
@@ -956,20 +1340,68 @@ function closePanel() {
   document.body.style.overflow = '';
 }
 
-/* ══ Select slot ══ */
-function selectSlot(card) {
-  document.querySelectorAll('.slot-card').forEach(c => c.classList.remove('selected'));
-  card.classList.add('selected');
-  document.getElementById('spRdvId').value = card.dataset.id;
+/* ══ Select slot (nouvelle version par ligne) ══ */
 
-  const typeLabel = card.dataset.type === 'en_ligne' ? 'En ligne' : 'Présentiel';
-  document.getElementById('slotPreviewText').textContent =
-    `${card.dataset.date}  •  ${card.dataset.debut} – ${card.dataset.fin}  •  ${typeLabel}`;
-  document.getElementById('slotPreview').style.display = 'flex';
-  document.getElementById('bookPrompt').style.display  = 'block';
-  document.getElementById('bookNoSlot').style.display  = 'none';
 
-  setTimeout(() => switchTab('book'), 260);
+/* ══ Calculer la prochaine date d'un jour nommé (côté JS) ══ */
+function getProchainJourDate(jourNom) {
+  const jours = {
+    'Lundi': 1, 'Mardi': 2, 'Mercredi': 3,
+    'Jeudi': 4, 'Vendredi': 5, 'Samedi': 6, 'Dimanche': 0
+  };
+  const cible = jours[jourNom] ?? 1;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const jourActuel = today.getDay();
+  let diff = (cible - jourActuel + 7) % 7;
+  if (diff === 0) diff = 7;
+  const result = new Date(today);
+  result.setDate(today.getDate() + diff);
+  return result.toISOString().split('T')[0];
+}
+
+/* ══ Valider que la date choisie correspond au bon jour ══ */
+function validateDate(jourNom) {
+  const jours = {
+    'Lundi': 1, 'Mardi': 2, 'Mercredi': 3,
+    'Jeudi': 4, 'Vendredi': 5, 'Samedi': 6, 'Dimanche': 0
+  };
+  const input  = document.getElementById('spDateRdv');
+  const errDiv = document.getElementById('dateError');
+  const errMsg = document.getElementById('dateErrorMsg');
+
+  if (!input.value) return false;
+
+  const selected    = new Date(input.value);
+  const selectedDay = selected.getDay();
+  const cible       = jours[jourNom];
+
+  if (selectedDay !== cible) {
+    errMsg.textContent = `Ce créneau est un ${jourNom}. Veuillez choisir un ${jourNom}.`;
+    errDiv.style.display    = 'block';
+    input.style.borderColor = '#DC2626';
+    return false;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (selected < today) {
+    errMsg.textContent = 'La date ne peut pas être dans le passé.';
+    errDiv.style.display    = 'block';
+    input.style.borderColor = '#DC2626';
+    return false;
+  }
+
+  errDiv.style.display    = 'none';
+  input.style.borderColor = '#22C55E';
+  return true;
+}
+
+/* ══ Soumettre le formulaire avec validation ══ */
+function submitBooking() {
+  const dateVal = document.getElementById('spDateRdvHidden').value;
+  if (!dateVal) return;
+  document.getElementById('bookForm').submit();
 }
 
 /* ══ Switch tabs ══ */
@@ -990,7 +1422,8 @@ async function openReservationsPopup() {
   document.body.style.overflow = 'hidden';
 
   try {
-    const res  = await fetch('{{ path("rdv_mes_reservations") }}');
+    // ✅ On utilise la variable JS définie avant le bloc verbatim
+    const res  = await fetch(RDV_RESERVATIONS_URL);
     const data = await res.json();
 
     document.getElementById('rdvBadgeCount').textContent = data.length;
@@ -1015,8 +1448,13 @@ async function openReservationsPopup() {
             <div class="res-doctor-popup">${r.doctorName}</div>
             <div class="res-role-popup">${r.doctorRole}</div>
           </div>
+          <div style="font-size:.75rem;color:var(--slate);margin-bottom:6px;font-family:'Instrument Sans',sans-serif;">
+              <i class="fas fa-user" style="color:var(--slate-lt);margin-right:4px;"></i>
+              Réservé par <strong style="color:var(--navy);">${r.userName}</strong>
+          </div>
           <div class="res-meta-popup">
             <div class="res-chip-popup"><i class="fas fa-calendar"></i>${r.date}</div>
+            <div class="res-chip-popup"><i class="fas fa-tag"></i>${r.jourNom}</div>
             <div class="res-chip-popup"><i class="fas fa-clock"></i>${r.debut} – ${r.fin}</div>
             <div class="res-chip-popup">
               <i class="fas fa-${r.type === 'en_ligne' ? 'video' : 'building'}"></i>
@@ -1024,7 +1462,22 @@ async function openReservationsPopup() {
             </div>
             <div class="res-chip-popup"><i class="fas fa-calendar-plus"></i>Réservé le ${r.reservedAt}</div>
           </div>
-          <span class="res-status-popup"><i class="fas fa-hourglass-half"></i> En attente</span>
+          <span class="res-status-popup ${r.statut}">
+            <i class="fas fa-${
+                r.statut === 'confirme'
+                ? 'check-circle'
+                : r.statut === 'annule'
+                ? 'times-circle'
+                : 'hourglass-half'
+            }"></i>
+            ${
+                r.statut === 'confirme'
+                ? 'Confirmé'
+                : r.statut === 'annule'
+                ? 'Annulé'
+                : 'En attente'
+            }
+          </span>
           <div class="res-lock-popup"><i class="fas fa-lock"></i> Non modifiable</div>
         </div>
       </div>`).join('');
@@ -1045,7 +1498,8 @@ function closeReservationsPopup(e) {
 }
 
 /* ══ Badge au chargement ══ */
-fetch('{{ path("rdv_mes_reservations") }}')
+// ✅ On utilise la variable JS définie avant le bloc verbatim
+fetch(RDV_RESERVATIONS_URL)
   .then(r => r.json())
   .then(d => { document.getElementById('rdvBadgeCount').textContent = d.length; })
   .catch(() => { document.getElementById('rdvBadgeCount').textContent = '0'; });
@@ -1074,4 +1528,5 @@ function filterCards() {
     `<strong>${visible}</strong> professionnel${visible > 1 ? 's' : ''} disponible${visible > 1 ? 's' : ''}`;
 }
 </script>
+{% endverbatim %}
 {% endblock %}

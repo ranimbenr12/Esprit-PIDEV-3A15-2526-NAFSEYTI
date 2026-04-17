@@ -1,0 +1,240 @@
+/* ══════════════════════════════════════════════
+   MODULE IA — Analyse patient
+   À ajouter dans psy_dashboard.css (ou <style>)
+   ══════════════════════════════════════════════ */
+
+/* ── Barre de lancement ── */
+.ia-analyse-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #f8f7ff;
+  border: 1px solid #e4e1fd;
+  border-radius: 12px;
+  margin-bottom: 22px;
+height: 52px;
+}
+
+.ia-bar-icon {
+  width: 32px;
+  height: 32px;
+  background: #4c4203;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+.ia-bar-icon svg { width: 16px; height: 16px; }
+
+.ia-patient-input {
+  flex: 1;
+  border: 1px solid #d6d3f8;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #1a1a2e;
+  background: #fff;
+  outline: none;
+  transition: border-color .2s;
+}
+.ia-patient-input:focus { border-color: #084b27; }
+
+.ia-analyse-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: #4c4203;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .18s, transform .1s;
+  white-space: nowrap;
+}
+.ia-analyse-btn:hover  { background: #85620b; }
+.ia-analyse-btn:active { transform: scale(0.97); }
+.ia-analyse-btn:disabled { background: #b0aee8; cursor: not-allowed; }
+
+/* ── Overlay + Modal ── */
+.ia-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.42);
+  z-index: 1200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.ia-modal-overlay.open { display: flex; }
+
+.ia-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(83,74,183,.18);
+}
+
+.ia-modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: #f3f3f3;
+  border: none;
+  border-radius: 6px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #666;
+}
+.ia-modal-close:hover { background: #ebebeb; }
+
+/* ── Loading ── */
+.ia-loading {
+  text-align: center;
+  padding: 48px 0 32px;
+}
+.ia-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #e4e1fd;
+  border-top-color: #4c4203;
+  border-radius: 50%;
+  animation: ia-spin .7s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes ia-spin { to { transform: rotate(360deg); } }
+.ia-loading p      { margin: 0; font-size: 15px; color: #333; }
+.ia-loading-sub    { font-size: 13px; color: #888; margin-top: 6px !important; }
+
+/* ── Error ── */
+.ia-error {
+  text-align: center;
+  padding: 40px 0 28px;
+  color: #A32D2D;
+}
+.ia-error svg { margin: 0 auto 12px; display: block; }
+.ia-error p   { font-size: 14px; }
+
+/* ── Result header ── */
+.ia-result-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+.ia-result-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: #EEEDFE;
+  color: #4c4203;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 500;
+  flex-shrink: 0;
+}
+.ia-result-name { font-size: 16px; font-weight: 600; color: #1a1a2e; }
+.ia-result-meta { font-size: 12px; color: #888; margin-top: 2px; }
+
+.ia-evolution-badge {
+  margin-left: auto;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap;
+}
+.evo-positive  { background: #EAF3DE; color: #3B6D11; }
+.evo-stable    { background: #FAEEDA; color: #854F0B; }
+.evo-negative  { background: #FCEBEB; color: #A32D2D; }
+
+/* ── KPI row ── */
+.ia-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.ia-kpi {
+  background: #f8f7ff;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+.ia-kpi-val {
+  font-size: 22px; font-weight: 600; color: #4c4203;
+  line-height: 1;
+}
+.ia-kpi-lbl {
+  font-size: 11px; color: #888;
+  margin-top: 4px;
+}
+
+/* ── Sections ── */
+.ia-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #999;
+  margin: 0 0 10px;
+}
+
+/* ── Tendances ── */
+.ia-tendances { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.ia-tendance-row {
+  display: flex; align-items: center; gap: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.ia-tendance-symptome { flex: 1; font-size: 13px; color: #333; }
+.ia-t-badge {
+  font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 20px;
+}
+.t-pos  { background: #EAF3DE; color: #3B6D11; }
+.t-neu  { background: #FAEEDA; color: #854F0B; }
+.t-neg  { background: #FCEBEB; color: #A32D2D; }
+
+/* ── Synthèse ── */
+.ia-synthese {
+  font-size: 13px; color: #444; line-height: 1.7;
+  border-left: 3px solid #084b27;
+  padding: 10px 14px;
+  background: #f8f7ff;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 20px;
+}
+
+/* ── Recommandations ── */
+.ia-recommandations { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.ia-reco-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: #333; line-height: 1.5;
+  padding: 8px 12px;
+  background: #f0faf5;
+  border-radius: 8px;
+}
+.ia-reco-num {
+  width: 20px; height: 20px; flex-shrink: 0;
+  background: #0F6E56; color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .ia-analyse-bar { flex-wrap: wrap; }
+  .ia-patient-input { width: 100%; }
+  .ia-kpi-row { grid-template-columns: 1fr 1fr; }
+}

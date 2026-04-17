@@ -1,6 +1,6 @@
 {% extends 'back/base.html.twig' %}
 
-{% block title %}Liste des Rendez-vous{% endblock %}
+{% block title %}Horaires des Médecins{% endblock %}
 
 {% block body %}
 <div class="full_container">
@@ -23,17 +23,23 @@
                     <div class="user_profle_side">
                         <div class="user_img">
                             <img class="img-responsive"
-                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
-                                 alt="user" />
+                                src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                alt="user"
+                                style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;">
                         </div>
-                        <div class="user_info">
-                            <h6>Amri Sirine</h6>
-                            <p><span class="online_animation"></span> En ligne</p>
+                        <div class="user_info" style="text-align:center;">
+                            <h6 style="color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;">
+                                {{ app.user.firstname }} {{ app.user.lastname }}
+                            </h6>
+                            <p style="margin:0;">
+                                <span class="online_animation"></span> en_ligne
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="sidebar_blog_2">
+                <h4></h4>
                 <ul class="list-unstyled components">
                     <li>
                         <a href="{{ path('admin_tableau') }}">
@@ -49,7 +55,7 @@
                         </a>
                     </li>
                     <li><a href="#"><i class="fa fa-book purple_color2"></i><span>Contenu psychologique</span></a></li>
-                    <li><a href="#"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
+                    <li class="active"><a href="{{ path('app_test_index') }}"><i class="fa fa-check-square green_color"></i><span>Tests</span></a></li>
                     <li><a href="#"><i class="fa fa-calendar-check-o red_color"></i><span>Événements</span></a></li>
                     <li><a href="#"><i class="fa fa-line-chart yellow_color"></i><span>Suivi personnel</span></a></li>
                 </ul>
@@ -67,10 +73,12 @@
                             <i class="fa fa-bars"></i>
                         </button>
                         <div class="logo_section">
-                            <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
-                                <img class="img-responsive" src="{{ asset('back/images/logo/logo1.png') }}" alt="logo"
-                                     style="width:40px;height:40px;margin-right:10px;" />
-                                <span style="font-size:20px;font-weight:bold;color:#3c943c;">Nafseyti</span>
+                            <a href="{{ path('admin_dashboard') }}" style="display:flex; align-items:center; text-decoration:none;">
+                                <img class="img-responsive"
+                                     src="{{ asset('back/images/logo/logo1.png') }}"
+                                     alt="logo"
+                                     style="width:40px; height:40px; margin-right:10px;" />
+                                <span style="font-size:20px; font-weight:bold; color:#3c943c;">Nafseyti</span>
                             </a>
                         </div>
                         <div class="right_topbar">
@@ -84,14 +92,19 @@
                                     <li>
                                         <a class="dropdown-toggle" data-toggle="dropdown">
                                             <img class="img-responsive rounded-circle"
-                                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
-                                            <span class="name_user">Amri Sirine</span>
+                                                 src="{{ asset('back/images/layout_img/user_img.jpg') }}"
+                                                 alt="photo"
+                                                 style="width:35px; height:35px; object-fit:cover; border-radius:50%;">
+                                            <span class="name_user">{{ app.user.firstname }} {{ app.user.lastname }}</span>
                                         </a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="profile.html">My Profile</a>
-                                            <a class="dropdown-item" href="settings.html">Settings</a>
-                                            <a class="dropdown-item" href="help.html">Help</a>
-                                            <a class="dropdown-item" href="#"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                                            <a class="dropdown-item" href="{{ path('app_profile') }}">
+                                                <i class="fa fa-user"></i> Mon Profil
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                                <span>Se déconnecter</span> <i class="fa fa-sign-out"></i>
+                                            </a>
                                         </div>
                                     </li>
                                 </ul>
@@ -108,71 +121,70 @@
                     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
                     <style>
-                        .liste-wrap {
+                        .horaires-wrap {
                             font-family: 'DM Sans', sans-serif;
                             padding: 10px 0 50px;
                         }
 
-                        /* ── Page header ── */
-                        .liste-header {
+                        /* ── Header ── */
+                        .horaires-header {
                             display: flex;
-                            align-items: center;
+                            align-items: flex-end;
                             justify-content: space-between;
                             margin-bottom: 28px;
                         }
-                        .liste-header-left .page-eyebrow {
+                        .page-eyebrow {
                             font-size: 10px;
                             letter-spacing: 2px;
                             text-transform: uppercase;
                             color: #a0a090;
                             margin-bottom: 4px;
                         }
-                        .liste-header-left h2 {
+                        .horaires-header h2 {
                             font-family: 'DM Serif Display', serif;
                             font-size: 32px;
                             color: #1a2e1a;
                             margin: 0;
                             line-height: 1.1;
                         }
-                        .liste-header-left h2 em {
+                        .horaires-header h2 em {
                             color: #3c8c3c;
                             font-style: italic;
                         }
 
-                        /* ── Créer bouton ── */
+                        /* ── Bouton créer ── */
                         .btn-creer {
                             display: inline-flex;
                             align-items: center;
                             gap: 10px;
-                            background: #1a2e1a;
-                            color: #a8dc78;
                             padding: 13px 24px;
                             border-radius: 50px;
                             font-size: 14px;
                             font-weight: 500;
                             text-decoration: none;
-                            transition: 0.25s;
-                            border: none;
                             cursor: pointer;
                             font-family: 'DM Sans', sans-serif;
+                            background: transparent;
+                            border: 2px solid #3c8c3c;
+                            color: #3c8c3c;
+                            transition: 0.25s;
                         }
                         .btn-creer:hover {
-                            background: #2a4e2a;
-                            color: #c8f098;
+                            background: rgba(60,140,60,0.08);
+                            color: #2a6a10;
+                            border-color: #2a6a10;
                             transform: translateY(-2px);
-                            box-shadow: 0 8px 20px rgba(26,46,26,0.25);
                             text-decoration: none;
                         }
                         .btn-creer .plus-icon {
                             width: 22px; height: 22px;
-                            background: #a8dc78;
+                            border: 1px solid #3c8c3c;
                             border-radius: 50%;
                             display: flex; align-items: center; justify-content: center;
-                            flex-shrink: 0;
+                            background: transparent;
                         }
-                        .btn-creer .plus-icon svg { display: block; }
 
-                        /* ── Stats mini bar ── */
+                        /* ── Stats bar ── */
                         .stats-bar {
                             display: flex;
                             gap: 14px;
@@ -202,12 +214,12 @@
                         .stat-chip-val { font-size: 22px; font-weight: 500; color: #1a2e1a; line-height: 1; }
                         .stat-chip-lbl { font-size: 11px; color: #999; margin-top: 2px; }
 
-                        /* ── Search bar ── */
+                        /* ── Barre recherche ── */
                         .search-row {
                             display: flex;
                             align-items: center;
                             gap: 12px;
-                            margin-bottom: 20px;
+                            margin-bottom: 24px;
                         }
                         .search-box {
                             flex: 1;
@@ -245,94 +257,84 @@
                             cursor: pointer;
                         }
 
-                        /* ── Table container ── */
-                        .table-card {
+                        /* ── Grille médecins ── */
+                        .doctors-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); /* plus large */
+                            gap: 24px;
+                        }
+
+                        /* ── Carte médecin ── */
+                        .doc-card {
                             background: #fffdf8;
                             border: 1px solid #e8e2d8;
                             border-radius: 20px;
                             overflow: hidden;
                         }
-                        .table-card table {
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
-                        .table-card thead tr {
+                        .doc-card-header {
                             background: #1a2e1a;
+                            padding: 16px 18px;
+                            display: flex;
+                            align-items: center;
+                            gap: 14px;
                         }
-                        .table-card thead th {
-                            padding: 15px 18px;
-                            text-align: left;
-                            font-size: 10px;
-                            letter-spacing: 1.5px;
-                            text-transform: uppercase;
-                            color: #8dc96e;
-                            font-weight: 500;
-                            white-space: nowrap;
+                        .doc-avatar {
+                            width: 44px; height: 44px;
+                            border-radius: 12px;
+                            background: rgba(168,220,120,0.18);
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 14px; font-weight: 600;
+                            color: #a8dc78;
+                            flex-shrink: 0;
                         }
-                        .table-card tbody tr {
+                        .doc-name { font-size: 15px; font-weight: 500; color: #e8f5e0; line-height: 1.2; }
+                        .doc-spec { font-size: 11px; color: #7ab860; margin-top: 3px; }
+
+                        /* ── Tableau horaires ── */
+                        .schedule-table { width: 100%; border-collapse: collapse; }
+                        .schedule-table thead tr { background: #f5f0e8; }
+                        .schedule-table thead th {
+                            padding: 9px 14px;
+                            font-size: 10px; letter-spacing: 1.5px;
+                            text-transform: uppercase; color: #999;
+                            font-weight: 500; text-align: left;
                             border-bottom: 1px solid #f0ece4;
-                            transition: background 0.2s;
                         }
-                        .table-card tbody tr:last-child { border-bottom: none; }
-                        .table-card tbody tr:hover { background: #f5f0e8; }
-                        .table-card tbody td {
-                            padding: 14px 18px;
-                            font-size: 13px;
-                            color: #3a3a3a;
+                        .schedule-table thead th:last-child { text-align: center; }
+                        .schedule-table tbody tr {
+                            border-bottom: 1px solid #f0ece4;
+                            transition: background 0.15s;
+                        }
+                        .schedule-table tbody tr:last-child { border-bottom: none; }
+                        .schedule-table tbody tr:hover { background: #f9f5ef; }
+                        .schedule-table tbody td {
+                            padding: 10px 14px;
+                            font-size: 12px; color: #3a3a3a;
                             vertical-align: middle;
                         }
 
-                        /* ── Avatar initials ── */
-                        .td-avatar {
-                            display: flex;
-                            align-items: center;
-                            gap: 10px;
-                        }
-                        .av-circle {
-                            width: 36px; height: 36px;
-                            border-radius: 10px;
-                            display: flex; align-items: center; justify-content: center;
-                            font-size: 12px; font-weight: 500;
-                            flex-shrink: 0;
-                        }
-                        .av-1 { background: #fff0e4; color: #c05a00; }
-                        .av-2 { background: #e4f0ff; color: #0050aa; }
-                        .av-3 { background: #e4fff0; color: #006640; }
-                        .av-4 { background: #f0e4ff; color: #6600aa; }
-                        .av-5 { background: #fff0f0; color: #aa0000; }
-
-                        /* ── Date pill ── */
-                        .date-pill {
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 6px;
-                            background: #f0f7e8;
-                            color: #2a6a10;
-                            padding: 5px 12px;
-                            border-radius: 20px;
-                            font-size: 12px;
-                            font-weight: 500;
-                        }
-
-                        /* ── Time badge ── */
-                        .time-badge {
+                        .day-badge {
                             display: inline-block;
-                            background: #1a2e1a;
-                            color: #a8dc78;
-                            padding: 4px 12px;
-                            border-radius: 20px;
-                            font-size: 12px;
-                            font-weight: 500;
+                            font-size: 11px; font-weight: 500;
+                            padding: 4px 11px; border-radius: 8px;
                             white-space: nowrap;
                         }
+                        .day-work { background: #e8f5e2; color: #2a6a10; }
+                        .day-sam  { background: #fff0e4; color: #c05a00; }
 
-                        /* ── Type seance badge ── */
+                        .slot-pill {
+                            display: inline-block;
+                            background: #1a2e1a; color: #a8dc78;
+                            font-size: 11px; font-weight: 500;
+                            padding: 3px 10px; border-radius: 20px;
+                            margin: 2px 3px 2px 0; white-space: nowrap;
+                        }
+
+                        /* ── Type séance badge ── */
                         .type-badge {
                             display: inline-block;
-                            padding: 4px 12px;
-                            border-radius: 20px;
-                            font-size: 11px;
-                            font-weight: 500;
+                            padding: 3px 10px; border-radius: 20px;
+                            font-size: 11px; font-weight: 500;
                         }
                         .type-individuel { background: #e4f0ff; color: #0050aa; }
                         .type-groupe     { background: #f0e4ff; color: #6600aa; }
@@ -341,334 +343,233 @@
 
                         /* ── Statut badge ── */
                         .statut-badge {
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 5px;
-                            padding: 5px 12px;
-                            border-radius: 20px;
-                            font-size: 11px;
-                            font-weight: 500;
+                            display: inline-flex; align-items: center; gap: 5px;
+                            padding: 4px 10px; border-radius: 20px;
+                            font-size: 11px; font-weight: 500;
                         }
-                        .statut-badge .dot {
-                            width: 6px; height: 6px;
-                            border-radius: 50%;
-                        }
-                        .statut-Confirmé  { background: #e8f5e2; color: #2a6a10; }
-                        .statut-Confirmé .dot  { background: #4caf50; }
-                        .statut-En-attente { background: #fff8e4; color: #a06000; }
-                        .statut-En-attente .dot { background: #ff9800; }
-                        .statut-Pas-encore-pris    { background: #ffe4e4; color: #aa0000; }
-                        .statut-Pas-encore-pris .dot    { background: #e53935; }
-                        .statut-default   { background: #f0f0f0; color: #555; }
-                        .statut-default .dot   { background: #aaa; }
+                        .statut-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+                        .statut-Confirmé      { background: #e8f5e2; color: #2a6a10; }
+                        .statut-Confirmé .dot      { background: #4caf50; }
+                        .statut-En-attente    { background: #fff8e4; color: #a06000; }
+                        .statut-En-attente .dot    { background: #ff9800; }
+                        .statut-Pas-encore-pris { background: #ffe4e4; color: #aa0000; }
+                        .statut-Pas-encore-pris .dot { background: #e53935; }
+                        .statut-default       { background: #f0f0f0; color: #555; }
+                        .statut-default .dot       { background: #aaa; }
 
-                        /* ── Action buttons ── */
-                        .action-btns {
-                            display: flex;
-                            gap: 8px;
-                            align-items: center;
-                        }
-                        .btn-edit, .btn-del {
-                            width: 34px; height: 34px;
-                            border-radius: 10px;
+                        /* ── Boutons action ── */
+                        .action-btns { display: flex; gap: 7px; justify-content: center; }
+                        .btn-act {
+                            width: 32px; height: 32px; border-radius: 9px;
                             display: flex; align-items: center; justify-content: center;
-                            border: none;
-                            cursor: pointer;
-                            transition: 0.2s;
-                            text-decoration: none;
+                            border: none; cursor: pointer; transition: 0.2s;
+                            text-decoration: none; font-size: 12px;
                         }
-                        .btn-edit {
-                            background: #e8f5e2;
-                            color: #2a6a10;
+                        .btn-act-edit { background: #e8f5e2; color: #2a6a10; }
+                        .btn-act-edit:hover { background: #2a6a10; color: white; transform: scale(1.1); }
+                        .btn-act-del  { background: #ffe4e4; color: #aa0000; }
+                        .btn-act-del:hover  { background: #aa0000; color: white; transform: scale(1.1); }
+
+                        /* ── Pied de carte ── */
+                        .card-footer-bar {
+                            padding: 10px 16px;
+                            border-top: 1px solid #f0ece4;
+                            background: #f5f0e8;
+                            display: flex; align-items: center; justify-content: space-between;
                         }
-                        .btn-edit:hover {
-                            background: #2a6a10;
-                            color: white;
-                            transform: scale(1.1);
-                        }
-                        .btn-del {
-                            background: #ffe4e4;
-                            color: #aa0000;
-                        }
-                        .btn-del:hover {
-                            background: #aa0000;
-                            color: white;
-                            transform: scale(1.1);
-                        }
+                        .footer-label { font-size: 11px; color: #aaa; }
+                        .footer-val   { font-size: 12px; font-weight: 500; color: #1a2e1a; }
 
                         /* ── Empty state ── */
-                        .empty-state {
-                            text-align: center;
-                            padding: 60px 20px;
-                        }
-                        .empty-state svg { margin-bottom: 16px; }
+                        .empty-state { text-align: center; padding: 60px 20px; grid-column: 1 / -1; }
                         .empty-state p {
                             font-family: 'DM Serif Display', serif;
-                            font-size: 18px;
-                            color: #bbb;
+                            font-size: 18px; color: #bbb; margin-top: 12px;
                         }
 
-                        /* ── Pagination ── */
-                        .pagination-row {
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            padding: 16px 20px;
-                            border-top: 1px solid #f0ece4;
-                            font-size: 12px;
-                            color: #999;
-                        }
-                        .pag-btns { display: flex; gap: 6px; }
-                        .pag-btn {
-                            width: 32px; height: 32px;
-                            border-radius: 8px;
-                            display: flex; align-items: center; justify-content: center;
-                            font-size: 12px;
-                            border: 1px solid #e8e2d8;
-                            background: #fffdf8;
-                            color: #555;
-                            cursor: pointer;
-                            text-decoration: none;
-                            transition: 0.2s;
-                        }
-                        .pag-btn:hover, .pag-btn.active {
-                            background: #1a2e1a;
-                            color: #a8dc78;
-                            border-color: #1a2e1a;
-                        }
-
-                        /* ── Delete confirm modal ── */
+                        /* ── Modales ── */
                         .modal-overlay {
-                            display: none;
-                            position: fixed;
-                            inset: 0;
-                            background: rgba(0,0,0,0.45);
-                            z-index: 9999;
-                            align-items: center;
-                            justify-content: center;
+                            display: none; position: fixed; inset: 0;
+                            background: rgba(0,0,0,0.45); z-index: 9999;
+                            align-items: center; justify-content: center;
                         }
                         .modal-overlay.active { display: flex; }
                         .modal-box {
-                            background: #fffdf8;
-                            border-radius: 20px;
-                            padding: 36px 32px;
-                            max-width: 380px;
-                            width: 90%;
-                            text-align: center;
-                            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+                            background: #fffdf8; border-radius: 20px;
+                            padding: 36px 32px; max-width: 380px; width: 90%;
+                            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
                         }
                         .modal-icon {
-                            width: 60px; height: 60px;
-                            background: #ffe4e4;
-                            border-radius: 50%;
-                            display: flex; align-items: center; justify-content: center;
-                            margin: 0 auto 16px;
-                            font-size: 24px;
-                            color: #aa0000;
+                            width: 60px; height: 60px; background: #ffe4e4;
+                            border-radius: 50%; display: flex; align-items: center;
+                            justify-content: center; margin: 0 auto 16px;
+                            font-size: 24px; color: #aa0000;
                         }
-                        .modal-title {
-                            font-family: 'DM Serif Display', serif;
-                            font-size: 20px;
-                            color: #1a2e1a;
-                            margin-bottom: 8px;
-                        }
+                        .modal-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: #1a2e1a; margin-bottom: 8px; }
                         .modal-sub { font-size: 13px; color: #999; margin-bottom: 24px; }
                         .modal-actions { display: flex; gap: 10px; justify-content: center; }
                         .modal-cancel {
-                            padding: 10px 24px;
-                            border-radius: 50px;
-                            border: 1px solid #e8e2d8;
-                            background: #fffdf8;
-                            font-size: 13px;
-                            font-family: 'DM Sans', sans-serif;
-                            cursor: pointer;
-                            color: #555;
-                            transition: 0.2s;
+                            padding: 10px 24px; border-radius: 50px;
+                            border: 1px solid #e8e2d8; background: #fffdf8;
+                            font-size: 13px; font-family: 'DM Sans', sans-serif;
+                            cursor: pointer; color: #555; transition: 0.2s;
                         }
                         .modal-cancel:hover { background: #f0ece4; }
                         .modal-confirm {
-                            padding: 10px 24px;
-                            border-radius: 50px;
-                            border: none;
-                            background: #aa0000;
-                            color: white;
-                            font-size: 13px;
-                            font-family: 'DM Sans', sans-serif;
-                            cursor: pointer;
-                            transition: 0.2s;
+                            padding: 10px 24px; border-radius: 50px;
+                            border: none; background: #aa0000; color: white;
+                            font-size: 13px; font-family: 'DM Sans', sans-serif;
+                            cursor: pointer; transition: 0.2s;
                         }
                         .modal-confirm:hover { background: #cc0000; }
-                        .btn-creer {
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 10px;
-                            padding: 13px 24px;
-                            border-radius: 50px;
-                            font-size: 14px;
-                            font-weight: 500;
-                            text-decoration: none;
-                            cursor: pointer;
-                            font-family: 'DM Sans', sans-serif;
 
-                            background: transparent; /* fond transparent */
-                            border: 2px solid #3c8c3c; /* bordure colorée */
-                            color: #3c8c3c; /* texte vert */
-
-                            transition: 0.25s;
-                        }
-                        .btn-creer:hover {
-                            background: rgba(60, 140, 60, 0.08);
-                            color: #2a6a10;
-                            border-color: #2a6a10;
-                            transform: translateY(-2px);
-                            text-decoration: none;
-                        }
-                        .btn-creer .plus-icon {
-                            width: 22px;
-                            height: 22px;
-                            border: 1px solid #3c8c3c;
-                            border-radius: 50%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: transparent;
-                        }
-                        /* ── Create RDV Modal ── */
+                        /* ── Modale création/édition ── */
                         .modal-create-overlay {
-                            display: none;
-                            position: fixed;
-                            inset: 0;
-                            background: rgba(0,0,0,0.45);
-                            z-index: 9999;
-                            align-items: center;
-                            justify-content: center;
+                            display: none; position: fixed; inset: 0;
+                            background: rgba(0,0,0,0.45); z-index: 9999;
+                            align-items: center; justify-content: center;
                         }
                         .modal-create-overlay.active { display: flex; }
                         .modal-create-box {
-                            background: #fffdf8;
-                            border-radius: 20px;
-                            padding: 36px 32px;
-                            max-width: 520px;
-                            width: 95%;
+                            background: #fffdf8; border-radius: 20px;
+                            padding: 36px 32px; max-width: 520px; width: 95%;
                             box-shadow: 0 20px 60px rgba(0,0,0,0.15);
                         }
                         .modal-create-header {
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            margin-bottom: 24px;
+                            display: flex; align-items: center;
+                            justify-content: space-between; margin-bottom: 24px;
                         }
-                        .modal-create-title {
-                            font-family: 'DM Serif Display', serif;
-                            font-size: 22px;
-                            color: #1a2e1a;
-                        }
+                        .modal-create-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: #1a2e1a; }
                         .modal-close-btn {
-                            width: 34px; height: 34px;
-                            border-radius: 10px;
-                            border: 1px solid #e8e2d8;
-                            background: #fffdf8;
-                            cursor: pointer;
-                            display: flex; align-items: center; justify-content: center;
-                            color: #999;
-                            font-size: 16px;
-                            transition: 0.2s;
+                            width: 34px; height: 34px; border-radius: 10px;
+                            border: 1px solid #e8e2d8; background: #fffdf8;
+                            cursor: pointer; display: flex; align-items: center;
+                            justify-content: center; color: #999; font-size: 16px; transition: 0.2s;
                         }
                         .modal-close-btn:hover { background: #ffe4e4; color: #aa0000; border-color: #ffcccc; }
-                        .form-group {
-                            margin-bottom: 16px;
-                        }
+                        .form-group { margin-bottom: 16px; }
                         .form-group label {
-                            display: block;
-                            font-size: 11px;
-                            letter-spacing: 1px;
-                            text-transform: uppercase;
-                            color: #999;
-                            margin-bottom: 6px;
-                            font-weight: 500;
+                            display: block; font-size: 11px; letter-spacing: 1px;
+                            text-transform: uppercase; color: #999; margin-bottom: 6px; font-weight: 500;
                         }
                         .form-group select,
                         .form-group input[type="date"],
                         .form-group input[type="time"] {
-                            width: 100%;
-                            padding: 11px 14px;
-                            border: 1px solid #e8e2d8;
-                            border-radius: 12px;
-                            font-size: 13px;
-                            font-family: 'DM Sans', sans-serif;
-                            background: #fffdf8;
-                            color: #1a2e1a;
-                            outline: none;
-                            transition: border-color 0.2s;
-                            appearance: auto;
+                            width: 100%; padding: 11px 14px;
+                            border: 1px solid #e8e2d8; border-radius: 12px;
+                            font-size: 13px; font-family: 'DM Sans', sans-serif;
+                            background: #fffdf8; color: #1a2e1a;
+                            outline: none; transition: border-color 0.2s; appearance: auto;
                         }
                         .form-group select:focus,
                         .form-group input:focus { border-color: #3c8c3c; }
-                        .form-row {
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 14px;
-                        }
-                        .modal-form-actions {
-                            display: flex;
-                            gap: 10px;
-                            justify-content: flex-end;
-                            margin-top: 24px;
-                        }
+                        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+                        .modal-form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
                         .btn-form-cancel {
-                            padding: 11px 24px;
-                            border-radius: 50px;
-                            border: 1px solid #e8e2d8;
-                            background: #fffdf8;
-                            font-size: 13px;
-                            font-family: 'DM Sans', sans-serif;
-                            cursor: pointer;
-                            color: #555;
-                            transition: 0.2s;
+                            padding: 11px 24px; border-radius: 50px;
+                            border: 1px solid #e8e2d8; background: #fffdf8;
+                            font-size: 13px; font-family: 'DM Sans', sans-serif;
+                            cursor: pointer; color: #555; transition: 0.2s;
                         }
                         .btn-form-cancel:hover { background: #f0ece4; }
                         .btn-form-submit {
-                            padding: 11px 28px;
-                            border-radius: 50px;
-                            border: none;
-                            background: #1a2e1a;
-                            color: #a8dc78;
-                            font-size: 13px;
-                            font-family: 'DM Sans', sans-serif;
-                            cursor: pointer;
-                            transition: 0.2s;
+                            padding: 11px 28px; border-radius: 50px;
+                            border: none; background: #1a2e1a; color: #a8dc78;
+                            font-size: 13px; font-family: 'DM Sans', sans-serif;
+                            cursor: pointer; transition: 0.2s;
                         }
                         .btn-form-submit:hover { background: #2a4e2a; }
-                        /* ── Erreurs de validation ── */
-                        .form-group ul {
-                            list-style: none;
-                            padding: 0;
-                            margin: 4px 0 0;
-                        }
+                        .form-group ul { list-style: none; padding: 0; margin: 4px 0 0; }
                         .form-group ul li {
-                            font-size: 11px;
-                            color: #aa0000;
-                            background: #ffe4e4;
-                            border-radius: 8px;
-                            padding: 5px 10px;
-                            margin-top: 4px;
-                            display: flex;
-                            align-items: center;
-                            gap: 5px;
+                            font-size: 11px; color: #aa0000; background: #ffe4e4;
+                            border-radius: 8px; padding: 5px 10px; margin-top: 4px;
+                            display: flex; align-items: center; gap: 5px;
                         }
-                        .form-group ul li::before {
-                            content: "⚠";
-                            font-size: 11px;
+                        .form-group ul li::before { content: "⚠"; font-size: 11px; }
+
+                        /* ── Carte cachée par filtre ── */
+                        .doc-card.hidden { display: none; }
+                        /* ── Séparateur entre jours ── */
+                        tr.day-separator td {
+                            padding: 0;
+                            height: 6px;
+                            background: #f5f0e8;
+                            border-bottom: 2px solid #e8e2d8;
                         }
+                        /* ── Carte scrollable ── */
+                        .doc-card-body {
+                            max-height: 420px;
+                            overflow-y: auto;
+                            scrollbar-width: thin;
+                            scrollbar-color: #e8e2d8 transparent;
+                        }
+                        .doc-card-body::-webkit-scrollbar { width: 4px; }
+                        .doc-card-body::-webkit-scrollbar-thumb { background: #e8e2d8; border-radius: 4px; }
+
+                        /* ── Ligne pause ── */
+                        .pause-row td {
+                            background: #f5f0e8;
+                            text-align: center;
+                            padding: 5px 14px;
+                            font-size: 10px;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            color: #bbb;
+                            border-bottom: 1px dashed #e8e2d8;
+                        }
+
+                        /* ── Groupe jour : badge aligné verticalement au centre ── */
+                        .td-jour-group {
+                            vertical-align: top;
+                            padding-top: 12px;
+                        }
+
+                        /* ── Lignes dans le même groupe sans bordure entre elles ── */
+                        tr.same-day-row td {
+                            border-top: none !important;
+                        }
+                        tr.same-day-row td:first-child {
+                            visibility: hidden;
+                        }
+
+                        /* ── Première ligne d'un groupe ── */
+                        tr.first-day-row td {
+                            border-top: 2px solid #e8e2d8 !important;
+                        }
+                        tr.first-day-row:first-child td {
+                            border-top: none !important;
+                        }
+                        .status-note {
+    margin-bottom: 22px;
+    padding: 12px 16px;
+    background: #fffdf8;
+    border: 1px solid #e8e2d8;
+    border-left: 4px solid #3c8c3c;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.note-item strong {
+    color: #1a2e1a;
+}
+
+.note-separator {
+    color: #bbb;
+}
                     </style>
 
-                    <div class="liste-wrap">
+                    <div class="horaires-wrap">
 
                         <!-- Header -->
-                        <div class="liste-header">
-                            <div class="liste-header-left">
+                        <div class="horaires-header">
+                            <div>
                                 <div class="page-eyebrow">Nafseyti · Administration</div>
-                                <h2>Liste des <em>Rendez-vous</em></h2>
+                                <h2>Horaires des <em>médecins</em></h2>
                             </div>
                             <button type="button" class="btn-creer" onclick="openCreateModal()">
                                 <span class="plus-icon">
@@ -680,7 +581,7 @@
                             </button>
                         </div>
 
-                        <!-- Stats mini bar -->
+                        <!-- Stats bar -->
                         <div class="stats-bar">
                             <div class="stat-chip">
                                 <div class="stat-chip-icon chip-green">
@@ -691,17 +592,7 @@
                                     <div class="stat-chip-lbl">Total</div>
                                 </div>
                             </div>
-                            <div class="stat-chip">
-                                <div class="stat-chip-icon chip-orange">
-                                    <i class="fa fa-clock-o" style="color:#c05a00;"></i>
-                                </div>
-                                <div>
-                                    <div class="stat-chip-val">
-                                        {{ rendezvous|filter(r => r.statut == 'En attente')|length }}
-                                    </div>
-                                    <div class="stat-chip-lbl">En attente</div>
-                                </div>
-                            </div>
+                         
                             <div class="stat-chip">
                                 <div class="stat-chip-icon chip-blue">
                                     <i class="fa fa-check-circle" style="color:#0050aa;"></i>
@@ -725,14 +616,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="status-note">
+                            <span class="note-item">
+                                ❌ <strong>Confirmé</strong> = Non disponible
+                            </span>
+                            <span class="note-separator">|</span>
+                            <span class="note-item">
+                                ✅ <strong>Pas encore pris</strong> = Disponible
+                            </span>
+                        </div>
 
-                        <!-- Search & Filter -->
+                        <!-- Recherche & Filtre -->
                         <div class="search-row">
                             <div class="search-box">
                                 <i class="fa fa-search search-icon"></i>
-                                <input type="text" id="searchInput" placeholder="Rechercher par patient, médecin, type..." onkeyup="filterTable()" />
+                                <input type="text"
+                                       id="searchInput"
+                                       placeholder="Rechercher par médecin, jour, statut..."
+                                       oninput="filterCards()" />
                             </div>
-                            <select class="filter-select" id="statutFilter" onchange="filterTable()">
+                            <select class="filter-select" id="statutFilter" onchange="filterCards()">
                                 <option value="">Tous les statuts</option>
                                 <option value="Confirmé">Confirmé</option>
                                 <option value="En attente">En attente</option>
@@ -740,148 +643,208 @@
                             </select>
                         </div>
 
-                        <!-- Table -->
-                        <div class="table-card">
-                            <table id="rdvTable">
-                                <thead>
-                                    <tr>
-                                       
-                                        <th>Médecin</th>
-                                        <th>Date</th>
-                                        <th>Horaire</th>
-                                        <th>Type de séance</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for rdv in rendezvous %}
-                                    {% set avatarColors = ['av-1','av-2','av-3','av-4','av-5'] %}
-                                    
-                                    <tr class="rdv-row" data-statut="{{ rdv.statut }}">
+                        <!-- Grille médecins -->
+                        <div class="doctors-grid" id="doctorsGrid">
 
+                            {% set rdvParMedecin = {} %}
+                            {% for rdv in rendezvous %}
+                                {% set medecinKey = 'm' ~ rdv.medecin.id %}
+                                {% if rdvParMedecin[medecinKey] is not defined %}
+                                    {% set rdvParMedecin = rdvParMedecin|merge({
+                                        (medecinKey): { 'medecin': rdv.medecin, 'rdvs': [] }
+                                    }) %}
+                                {% endif %}
+                                {% set rdvParMedecin = rdvParMedecin|merge({
+                                    (medecinKey): {
+                                        'medecin': rdv.medecin,
+                                        'rdvs': rdvParMedecin[medecinKey].rdvs|merge([rdv])
+                                    }
+                                }) %}
+                            {% endfor %}
 
-                                        {# Médecin #}
-                                        <td>
-                                            <div class="td-avatar">
-                                                <div class="av-circle av-3">
-                                                    {{ rdv.medecin.firstname|slice(0,1) }}{{ rdv.medecin.lastname|slice(0,1) }}
-                                                </div>
-                                                <div>
-                                                    <div style="font-weight:500;color:#1a2e1a;">
-                                                        Dr. {{ rdv.medecin.firstname }} {{ rdv.medecin.lastname }}
-                                                    </div>
-                                                    <div style="font-size:11px;color:#aaa;">Psychologue</div>
-                                                </div>
+                            {% for medecinKey, data in rdvParMedecin %}
+                                {% set medecin = data.medecin %}
+                                {% set rdvs    = data.rdvs %}
+
+                                {# Construire les data-attributes pour le filtrage JS #}
+                                {% set statuts = [] %}
+                                {% for rdv in rdvs %}
+                                    {% set statuts = statuts|merge([rdv.statut]) %}
+                                {% endfor %}
+
+                                <div class="doc-card"
+                                     data-medecin="{{ (medecin.firstname ~ ' ' ~ medecin.lastname)|lower }}"
+                                     data-statuts="{{ statuts|join(',')|lower }}">
+
+                                    {# En-tête médecin #}
+                                    <div class="doc-card-header">
+                                        <div class="doc-avatar">
+                                            {{ medecin.firstname|slice(0,1) }}{{ medecin.lastname|slice(0,1) }}
+                                        </div>
+                                        <div>
+                                            <div class="doc-name">Dr. {{ medecin.firstname }} {{ medecin.lastname }}</div>
+                                            <div class="doc-spec">
+                                                {% if 'psychologue' in medecin.role %}
+                                                    Psychologue clinicien
+                                                {% elseif 'coach_vie' in medecin.role %}
+                                                    Coach de vie
+                                                {% else %}
+                                                    Médecin
+                                                {% endif %}
                                             </div>
-                                        </td>
+                                        </div>
+                                    </div>
+                                    {# Tableau des rendez-vous #}
+                                    <div class="doc-card-body">
+                                    <table class="schedule-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Jour</th>
+                                                <th>Créneaux</th>
+                                                <th>Type</th>
+                                                <th>Statut</th>
+                                                <th style="text-align:center;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set joursOrdre = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'] %}
 
-                                        {# Date #}
-                                        <td>
-                                            <span class="date-pill">
-                                                <i class="fa fa-calendar" style="font-size:11px;"></i>
-                                                {{ rdv.dateRendezVous|date('d/m/Y') }}
-                                            </span>
-                                        </td>
+                                            {# Grouper et trier par jour #}
+                                            {% set rdvParJour = {} %}
+                                            {% for rdv in rdvs %}
+                                                {% set jour = rdv.dateRendezVous %}
+                                                {% if rdvParJour[jour] is not defined %}
+                                                    {% set rdvParJour = rdvParJour|merge({ (jour): [] }) %}
+                                                {% endif %}
+                                                {% set rdvParJour = rdvParJour|merge({ (jour): rdvParJour[jour]|merge([rdv]) }) %}
+                                            {% endfor %}
 
-                                        {# Horaire #}
-                                        <td>
-                                            <span class="time-badge">
-                                                {{ rdv.heureDebut|date('H:i') }} – {{ rdv.heureFin|date('H:i') }}
-                                            </span>
-                                        </td>
+                                            {% for jourNom in joursOrdre %}
+                                                {% if rdvParJour[jourNom] is defined %}
+                                                    {% set rdvsJour = rdvParJour[jourNom]|sort((a,b) => a.heureDebut <=> b.heureDebut) %}
+                                                    {% set isPauseInserted = false %}
 
-                                        {# Type séance #}
-                                        <td>
-                                            {% if rdv.typeSeance == 'individuel' %}
-                                                <span class="type-badge type-individuel">Individuel</span>
-                                            {% elseif rdv.typeSeance == 'groupe' %}
-                                                <span class="type-badge type-groupe">Groupe</span>
-                                            {% elseif rdv.typeSeance == 'en_ligne' %}
-                                                <span class="type-badge type-en_ligne">En ligne</span>
-                                            {% else %}
-                                                <span class="type-badge type-default">{{ rdv.typeSeance ?? '—' }}</span>
-                                            {% endif %}
-                                        </td>
+                                                    {% for i, rdv in rdvsJour %}
 
-                                        {# Statut #}
-                                        <td>
-                                            {% if rdv.statut == 'Confirmé' %}
-                                                <span class="statut-badge statut-Confirmé">
-                                                    <span class="dot"></span> Confirmé
-                                                </span>
-                                            {% elseif rdv.statut == 'En attente' %}
-                                                <span class="statut-badge statut-En-attente">
-                                                    <span class="dot"></span> En attente
-                                                </span>
-                                            {% elseif rdv.statut == 'Pas encore pris' %}
-                                                <span class="statut-badge statut-Pas-encore-pris">
-                                                    <span class="dot"></span> Pas encore pris
-                                                </span>
-                                            {% else %}
-                                                <span class="statut-badge statut-default">
-                                                    <span class="dot"></span> {{ rdv.statut ?? '—' }}
-                                                </span>
-                                            {% endif %}
-                                        </td>
+                                                        {# Insérer ligne PAUSE entre 12h et 14h (lundi-vendredi) #}
+                                                        {% if jourNom != 'Samedi' and jourNom != 'Dimanche'
+                                                            and not isPauseInserted
+                                                            and rdv.heureDebut|date('H') >= 14
+                                                            and (i == 0 or rdvsJour[i-1].heureFin|date('H') <= 12) %}
+                                                            <tr class="pause-row">
+                                                                <td colspan="5">☕ Pause — 12:00 · 14:00</td>
+                                                            </tr>
+                                                            {% set isPauseInserted = true %}
+                                                        {% endif %}
 
-                                        {# Actions #}
-                                        <td>
-                                            <div class="action-btns">
-                                                <button class="btn-edit" title="Modifier"
-                                                        onclick="openEditModal({{ rdv.id }})">
-                                                    <i class="fa fa-pencil" style="font-size:13px;"></i>
-                                                </button>
-                                                <button class="btn-del" title="Supprimer"
-                                                        onclick="openDeleteModal({{ rdv.id }})">
-                                                    <i class="fa fa-trash" style="font-size:13px;"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% else %}
-                                    <tr>
-                                        <td colspan="7">
-                                            <div class="empty-state">
-                                                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                                                    <circle cx="32" cy="32" r="30" fill="#f0f0e8" stroke="#ddd" stroke-width="1"/>
-                                                    <rect x="18" y="20" width="28" height="26" rx="4" fill="#ddd"/>
-                                                    <rect x="22" y="26" width="20" height="3" rx="1" fill="white"/>
-                                                    <rect x="22" y="32" width="14" height="3" rx="1" fill="white"/>
-                                                    <rect x="22" y="38" width="16" height="3" rx="1" fill="white"/>
-                                                </svg>
-                                                <p>Aucun rendez-vous trouvé</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                                        <tr class="{{ i == 0 ? 'first-day-row' : 'same-day-row' }}">
 
-                            {% if rendezvous|length > 0 %}
-                            <div class="pagination-row">
-                                <span id="tableCount">{{ rendezvous|length }} rendez-vous au total</span>
-                                <div class="pag-btns">
-                                    <a href="#" class="pag-btn">
-                                        <i class="fa fa-chevron-left" style="font-size:10px;"></i>
-                                    </a>
-                                    <a href="#" class="pag-btn active">1</a>
-                                    <a href="#" class="pag-btn">
-                                        <i class="fa fa-chevron-right" style="font-size:10px;"></i>
-                                    </a>
+                                                            {# Jour — badge seulement sur la 1ère ligne #}
+                                                            <td class="{{ i == 0 ? 'td-jour-group' : '' }}">
+                                                                {% if i == 0 %}
+                                                                    <span class="day-badge {% if jourNom == 'Samedi' or jourNom == 'Dimanche' %}day-sam{% else %}day-work{% endif %}">
+                                                                        {{ jourNom }}
+                                                                    </span>
+                                                                {% endif %}
+                                                            </td>
+
+                                                            {# Créneau #}
+                                                            <td>
+                                                                <span class="slot-pill">
+                                                                    {{ rdv.heureDebut|date('H:i') }}–{{ rdv.heureFin|date('H:i') }}
+                                                                </span>
+                                                            </td>
+
+                                                            {# Type séance #}
+                                                            <td>
+                                                                {% if rdv.typeSeance == 'Présentiel' %}
+                                                                    <span class="type-badge type-individuel">Présentiel</span>
+                                                                {% elseif rdv.typeSeance == 'en_ligne' %}
+                                                                    <span class="type-badge type-en_ligne">en_ligne</span>
+                                                                {% else %}
+                                                                    <span class="type-badge type-default">{{ rdv.typeSeance ?? '—' }}</span>
+                                                                {% endif %}
+                                                            </td>
+
+                                                            {# Statut #}
+                                                            <td>
+                                                                {% if rdv.statut == 'Confirmé' %}
+                                                                    <span class="statut-badge statut-Confirmé"><span class="dot"></span> Confirmé</span>
+                                                                {% elseif rdv.statut == 'En attente' %}
+                                                                    <span class="statut-badge statut-En-attente"><span class="dot"></span> En attente</span>
+                                                                {% elseif rdv.statut == 'Pas encore pris' %}
+                                                                    <span class="statut-badge statut-Pas-encore-pris"><span class="dot"></span> Pas encore pris</span>
+                                                                {% else %}
+                                                                    <span class="statut-badge statut-default"><span class="dot"></span> {{ rdv.statut ?? '—' }}</span>
+                                                                {% endif %}
+                                                            </td>
+
+                                                            {# Actions #}
+                                                            <td style="text-align:center;">
+                                                                <div class="action-btns">
+                                                                    <button class="btn-act btn-act-edit" title="Modifier"
+                                                                            onclick="openEditModal({{ rdv.id }})">
+                                                                        <i class="fa fa-pencil"></i>
+                                                                    </button>
+                                                                    <button class="btn-act btn-act-del" title="Supprimer"
+                                                                            onclick="openDeleteModal({{ rdv.id }})">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+
+                                                    {# Séparateur entre jours #}
+                                                    <tr class="day-separator"><td colspan="5"></td></tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    </div>
+
+                                    {# Pied de carte #}
+                                    <div class="card-footer-bar">
+                                        <span class="footer-label">Total créneaux</span>
+                                        <span class="footer-val">{{ rdvs|length }} plages</span>
+                                    </div>
+
                                 </div>
-                            </div>
-                            {% endif %}
+
+                            {% else %}
+                                <div class="empty-state">
+                                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                        <circle cx="32" cy="32" r="30" fill="#f0f0e8" stroke="#ddd" stroke-width="1"/>
+                                        <rect x="18" y="20" width="28" height="26" rx="4" fill="#ddd"/>
+                                        <rect x="22" y="26" width="20" height="3" rx="1" fill="white"/>
+                                        <rect x="22" y="32" width="14" height="3" rx="1" fill="white"/>
+                                        <rect x="22" y="38" width="16" height="3" rx="1" fill="white"/>
+                                    </svg>
+                                    <p>Aucun rendez-vous trouvé</p>
+                                </div>
+                            {% endfor %}
+
+                        </div>{# fin doctors-grid #}
+
+                        {# Message aucun résultat après filtrage JS #}
+                        <div id="noResults" style="display:none; text-align:center; padding:60px 20px;">
+                            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                <circle cx="32" cy="32" r="30" fill="#f0f0e8" stroke="#ddd" stroke-width="1"/>
+                                <rect x="18" y="20" width="28" height="26" rx="4" fill="#ddd"/>
+                                <rect x="22" y="26" width="20" height="3" rx="1" fill="white"/>
+                                <rect x="22" y="32" width="14" height="3" rx="1" fill="white"/>
+                            </svg>
+                            <p style="font-family:'DM Serif Display',serif; font-size:18px; color:#bbb; margin-top:12px;">
+                                Aucun médecin trouvé
+                            </p>
                         </div>
 
-                    </div>
+                    </div>{# fin horaires-wrap #}
 
-                    <!-- Delete Modal -->
+                    <!-- ── Modal Supprimer ── -->
                     <div class="modal-overlay" id="deleteModal">
                         <div class="modal-box">
-                            <div class="modal-icon">
-                                <i class="fa fa-trash"></i>
-                            </div>
+                            <div class="modal-icon"><i class="fa fa-trash"></i></div>
                             <div class="modal-title">Supprimer ce rendez-vous ?</div>
                             <div class="modal-sub">Cette action est irréversible. Le rendez-vous sera définitivement supprimé.</div>
                             <div class="modal-actions">
@@ -893,222 +856,206 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Create RDV Modal -->
-                        <div class="modal-create-overlay" id="createModal">
-                            <div class="modal-create-box">
-                                <div class="modal-create-header">
-                                    <div class="modal-create-title">Nouveau rendez-vous</div>
-                                    <button class="modal-close-btn" onclick="closeCreateModal()" type="button">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </div>
 
-                                {{ form_start(createForm, {
-                                    'action': path('admin_liste_rendezvous'),
-                                    'method': 'POST',
-                                    'attr': {'novalidate': 'novalidate'}
-                                }) }}
-
-                                    {{ form_errors(createForm) }}
-
-                                    <div class="form-group">
-                                        {{ form_label(createForm.medecin, 'Médecin / Psychologue') }}
-                                        {{ form_widget(createForm.medecin) }}
-                                        {{ form_errors(createForm.medecin) }}
-                                    </div>
-
-                                    <div class="form-group">
-                                        {{ form_label(createForm.dateRendezVous, 'Date') }}
-                                        {{ form_widget(createForm.dateRendezVous) }}
-                                        {{ form_errors(createForm.dateRendezVous) }}
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            {{ form_label(createForm.heureDebut, 'Heure début') }}
-                                            {{ form_widget(createForm.heureDebut) }}
-                                            {{ form_errors(createForm.heureDebut) }}
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(createForm.heureFin, 'Heure fin') }}
-                                            {{ form_widget(createForm.heureFin) }}
-                                            {{ form_errors(createForm.heureFin) }}
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        {{ form_label(createForm.typeSeance, 'Type de séance') }}
-                                        {{ form_widget(createForm.typeSeance) }}
-                                        {{ form_errors(createForm.typeSeance) }}
-                                    </div>
-
-                                    <div class="form-group">
-                                        {{ form_label(createForm.statut, 'Statut') }}
-                                        {{ form_widget(createForm.statut) }}
-                                        {{ form_errors(createForm.statut) }}
-                                    </div>
-
-                                    <div class="modal-form-actions">
-                                        <button type="button" class="btn-form-cancel" onclick="closeCreateModal()">Annuler</button>
-                                        <button type="submit" class="btn-form-submit">
-                                            <i class="fa fa-check" style="margin-right:6px;"></i> Enregistrer
-                                        </button>
-                                    </div>
-
-                                {{ form_end(createForm) }}
+                    <!-- ── Modal Créer ── -->
+                    <div class="modal-create-overlay" id="createModal">
+                        <div class="modal-create-box">
+                            <div class="modal-create-header">
+                                <div class="modal-create-title">Nouveau rendez-vous</div>
+                                <button class="modal-close-btn" onclick="closeCreateModal()" type="button">
+                                    <i class="fa fa-times"></i>
+                                </button>
                             </div>
-                        </div>
-                        <!-- Edit RDV Modal -->
-                <div class="modal-create-overlay" id="editModal">
-                    <div class="modal-create-box">
-                        <div class="modal-create-header">
-                            <div class="modal-create-title">Modifier le rendez-vous</div>
-                            <button class="modal-close-btn" onclick="closeEditModal()" type="button">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
 
-                        {% if editForm is defined %}
-                           {{ form_start(editForm, {
-                                'action': path('admin_rendezvous_edit', {'id': editRdvId}),
+                            {{ form_start(createForm, {
+                                'action': path('admin_liste_rendezvous'),
                                 'method': 'POST',
                                 'attr': {'novalidate': 'novalidate'}
                             }) }}
-                            {{ form_errors(createForm) }}
+                                {{ form_errors(createForm) }}
 
                                 <div class="form-group">
-                                    {{ form_label(editForm.medecin, 'Médecin / Psychologue') }}
-                                    {{ form_widget(editForm.medecin) }}
-                                    {{ form_errors(editForm.medecin) }}
+                                    {{ form_label(createForm.medecin, 'Médecin / Psychologue') }}
+                                    {{ form_widget(createForm.medecin) }}
+                                    {{ form_errors(createForm.medecin) }}
                                 </div>
-
                                 <div class="form-group">
-                                    {{ form_label(editForm.dateRendezVous, 'Date') }}
-                                    {{ form_widget(editForm.dateRendezVous) }}
-                                    {{ form_errors(editForm.dateRendezVous) }}
+                                    {{ form_label(createForm.dateRendezVous, 'Date') }}
+                                    {{ form_widget(createForm.dateRendezVous) }}
+                                    {{ form_errors(createForm.dateRendezVous) }}
                                 </div>
-
                                 <div class="form-row">
                                     <div class="form-group">
-                                        {{ form_label(editForm.heureDebut, 'Heure début') }}
-                                        {{ form_widget(editForm.heureDebut) }}
-                                        {{ form_errors(editForm.heureDebut) }}
+                                        {{ form_label(createForm.heureDebut, 'Heure début') }}
+                                        {{ form_widget(createForm.heureDebut) }}
+                                        {{ form_errors(createForm.heureDebut) }}
                                     </div>
                                     <div class="form-group">
-                                        {{ form_label(editForm.heureFin, 'Heure fin') }}
-                                        {{ form_widget(editForm.heureFin) }}
-                                        {{ form_errors(editForm.heureFin) }}
+                                        {{ form_label(createForm.heureFin, 'Heure fin') }}
+                                        {{ form_widget(createForm.heureFin) }}
+                                        {{ form_errors(createForm.heureFin) }}
                                     </div>
                                 </div>
-
                                 <div class="form-group">
-                                    {{ form_label(editForm.typeSeance, 'Type de séance') }}
-                                    {{ form_widget(editForm.typeSeance) }}
-                                    {{ form_errors(editForm.typeSeance) }}
+                                    {{ form_label(createForm.typeSeance, 'Type de séance') }}
+                                    {{ form_widget(createForm.typeSeance) }}
+                                    {{ form_errors(createForm.typeSeance) }}
                                 </div>
-
                                 <div class="form-group">
-                                    {{ form_label(editForm.statut, 'Statut') }}
-                                    {{ form_widget(editForm.statut) }}
-                                    {{ form_errors(editForm.statut) }}
+                                    {{ form_label(createForm.statut, 'Statut') }}
+                                    {{ form_widget(createForm.statut) }}
+                                    {{ form_errors(createForm.statut) }}
                                 </div>
-
                                 <div class="modal-form-actions">
-                                    <button type="button" class="btn-form-cancel" onclick="closeEditModal()">Annuler</button>
+                                    <button type="button" class="btn-form-cancel" onclick="closeCreateModal()">Annuler</button>
                                     <button type="submit" class="btn-form-submit">
                                         <i class="fa fa-check" style="margin-right:6px;"></i> Enregistrer
                                     </button>
                                 </div>
-
-                            {{ form_end(editForm) }}
-                        {% endif %}
+                            {{ form_end(createForm) }}
+                        </div>
                     </div>
-                </div>
+
+                    <!-- ── Modal Modifier ── -->
+                    <div class="modal-create-overlay" id="editModal">
+                        <div class="modal-create-box">
+                            <div class="modal-create-header">
+                                <div class="modal-create-title">Modifier le rendez-vous</div>
+                                <button class="modal-close-btn" onclick="closeEditModal()" type="button">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+
+                            {% if editForm is defined %}
+                                {{ form_start(editForm, {
+                                    'action': path('admin_rendezvous_edit', {'id': editRdvId}),
+                                    'method': 'POST',
+                                    'attr': {'novalidate': 'novalidate'}
+                                }) }}
+                                    {{ form_errors(editForm) }}
+
+                                    <div class="form-group">
+                                        {{ form_label(editForm.medecin, 'Médecin / Psychologue') }}
+                                        {{ form_widget(editForm.medecin) }}
+                                        {{ form_errors(editForm.medecin) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(editForm.dateRendezVous, 'Date') }}
+                                        {{ form_widget(editForm.dateRendezVous) }}
+                                        {{ form_errors(editForm.dateRendezVous) }}
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            {{ form_label(editForm.heureDebut, 'Heure début') }}
+                                            {{ form_widget(editForm.heureDebut) }}
+                                            {{ form_errors(editForm.heureDebut) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(editForm.heureFin, 'Heure fin') }}
+                                            {{ form_widget(editForm.heureFin) }}
+                                            {{ form_errors(editForm.heureFin) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(editForm.typeSeance, 'Type de séance') }}
+                                        {{ form_widget(editForm.typeSeance) }}
+                                        {{ form_errors(editForm.typeSeance) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(editForm.statut, 'Statut') }}
+                                        {{ form_widget(editForm.statut) }}
+                                        {{ form_errors(editForm.statut) }}
+                                    </div>
+                                    <div class="modal-form-actions">
+                                        <button type="button" class="btn-form-cancel" onclick="closeEditModal()">Annuler</button>
+                                        <button type="submit" class="btn-form-submit">
+                                            <i class="fa fa-check" style="margin-right:6px;"></i> Enregistrer
+                                        </button>
+                                    </div>
+                                {{ form_end(editForm) }}
+                            {% endif %}
+                        </div>
+                    </div>
 
                     <script>
-                    let ajaxTimer = null;
+                        // ── Filtrage des cartes médecins ──
+                        function filterCards() {
+                            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+                            const statut = document.getElementById('statutFilter').value.toLowerCase();
+                            const cards  = document.querySelectorAll('.doc-card');
+                            let visible  = 0;
 
-                    function filterTable() {
-                        const search = document.getElementById('searchInput').value;
-                        const statut = document.getElementById('statutFilter').value;
+                            cards.forEach(function(card) {
+                                const nomMedecin = card.getAttribute('data-medecin') || '';
+                                const statuts    = card.getAttribute('data-statuts')  || '';
 
-                        // Debounce : attend 300ms après la dernière frappe
-                        clearTimeout(ajaxTimer);
-                        ajaxTimer = setTimeout(function () {
-                            const params = new URLSearchParams({ search: search, statut: statut });
+                                const matchSearch = search === '' || nomMedecin.includes(search);
+                                const matchStatut = statut === '' || statuts.includes(statut);
 
-                            fetch('/admin/liste_rendezvous/search?' + params.toString(), {
-                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                            })
-                            .then(response => response.text())
-                            .then(html => {
-                                document.querySelector('#rdvTable tbody').innerHTML = html;
+                                if (matchSearch && matchStatut) {
+                                    card.classList.remove('hidden');
+                                    visible++;
+                                } else {
+                                    card.classList.add('hidden');
+                                }
+                            });
 
-                                // Mettre à jour le compteur
-                                const visible = document.querySelectorAll('.rdv-row').length;
-                                const countEl = document.getElementById('tableCount');
-                                if (countEl) countEl.textContent = visible + ' rendez-vous affichés';
-                            })
-                            .catch(err => console.error('Erreur Ajax:', err));
-                        }, 300);
-                    }
+                            document.getElementById('noResults').style.display = (visible === 0) ? 'block' : 'none';
+                        }
 
-                    // ── Delete ──
-                    function openDeleteModal(id) {
-                        document.getElementById('deleteModal').classList.add('active');
-                        document.getElementById('deleteForm').action = '/admin/rendezvous/' + id + '/delete';
-                        document.getElementById('deleteToken').value = 'delete' + id;
-                    }
-                    function closeDeleteModal() {
-                        document.getElementById('deleteModal').classList.remove('active');
-                    }
-                    document.getElementById('deleteModal').addEventListener('click', function(e) {
-                        if (e.target === this) closeDeleteModal();
-                    });
-
-                    // ── Create ──
-                    function openCreateModal() {
-                        document.getElementById('createModal').classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                    function closeCreateModal() {
-                        document.getElementById('createModal').classList.remove('active');
-                        document.body.style.overflow = '';
-                    }
-                    document.getElementById('createModal').addEventListener('click', function(e) {
-                        if (e.target === this) closeCreateModal();
-                    });
-
-                    // ── Edit ──
-                    function openEditModal(id) {
-                        window.location.href = '/admin/liste_rendezvous/' + id + '/edit';
-                    }
-                    function closeEditModal() {
-                        document.getElementById('editModal').classList.remove('active');
-                        document.body.style.overflow = '';
-                    }
-                    document.getElementById('editModal').addEventListener('click', function(e) {
-                        if (e.target === this) closeEditModal();
-                    });
-
-                    // ── Rouvrir automatiquement si erreurs de validation (création) ──
-                    {% if showCreateModal is defined and showCreateModal %}
-                        document.addEventListener('DOMContentLoaded', function() {
-                            openCreateModal();
+                        // ── Delete ──
+                        function openDeleteModal(id) {
+                            document.getElementById('deleteModal').classList.add('active');
+                            document.getElementById('deleteForm').action = '/admin/rendezvous/' + id + '/delete';
+                            document.getElementById('deleteToken').value = 'delete' + id;
+                        }
+                        function closeDeleteModal() {
+                            document.getElementById('deleteModal').classList.remove('active');
+                        }
+                        document.getElementById('deleteModal').addEventListener('click', function(e) {
+                            if (e.target === this) closeDeleteModal();
                         });
-                    {% endif %}
 
-                    // ── Ouvrir automatiquement la modale édition ──
-                    {% if showEditModal is defined and showEditModal %}
-                        document.addEventListener('DOMContentLoaded', function() {
-                            document.getElementById('editModal').classList.add('active');
+                        // ── Create ──
+                        function openCreateModal() {
+                            document.getElementById('createModal').classList.add('active');
                             document.body.style.overflow = 'hidden';
+                        }
+                        function closeCreateModal() {
+                            document.getElementById('createModal').classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                        document.getElementById('createModal').addEventListener('click', function(e) {
+                            if (e.target === this) closeCreateModal();
                         });
-                    {% endif %}
-                </script>
+
+                        // ── Edit ──
+                        function openEditModal(id) {
+                            window.location.href = '/admin/liste_rendezvous/' + id + '/edit';
+                        }
+                        function closeEditModal() {
+                            document.getElementById('editModal').classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                        document.getElementById('editModal').addEventListener('click', function(e) {
+                            if (e.target === this) closeEditModal();
+                        });
+
+                        // ── Rouvrir si erreurs de validation ──
+                        {% if showCreateModal is defined and showCreateModal %}
+                            document.addEventListener('DOMContentLoaded', function() { openCreateModal(); });
+                        {% endif %}
+
+                        {% if showEditModal is defined and showEditModal %}
+                            document.addEventListener('DOMContentLoaded', function() {
+                                document.getElementById('editModal').classList.add('active');
+                                document.body.style.overflow = 'hidden';
+                            });
+                        {% endif %}
+                    </script>
+
                 </div>
             </div>
-
         </div>
     </div>
 </div>

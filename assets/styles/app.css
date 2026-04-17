@@ -1,3 +1,7 @@
+@import './tests/index.css';
+@import './tests/edit.css';
+@import './tests/new.css';
+@import './tests/show.css';
 body {
     background-color: skyblue;
 }

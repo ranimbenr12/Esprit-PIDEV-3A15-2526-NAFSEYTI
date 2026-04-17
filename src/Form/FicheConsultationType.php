@@ -17,7 +17,7 @@ class FicheConsultationType extends AbstractType
         $builder
             ->add('rendezVous', EntityType::class, [
                 'class'        => RendezVou::class,
-                'choice_label' => fn(RendezVou $r) => $r->getDateRendezVous()->format('d/m/Y')
+                'choice_label' => fn(RendezVou $r) => $r->getDateRendezVous()
                     . ' — Dr. ' . $r->getMedecin()->getFirstname() . ' ' . $r->getMedecin()->getLastname(),
                 'label'       => 'Rendez-vous lié',
                 'placeholder' => '-- Choisir un rendez-vous --',

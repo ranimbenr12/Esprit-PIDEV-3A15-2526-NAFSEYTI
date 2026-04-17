@@ -1228,6 +1228,16 @@
     height: 50px;
     object-fit: contain;
 }
+element.style {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    background: transparent;
+}
     </style>
 
     {% block stylesheets %}{% endblock %}
@@ -1275,22 +1285,110 @@
     <div class="navbar-wrap">
         <div class="navbar-inner">
             <ul class="nav-links">
-                <li><a href="{{ path('app_home') }}" {{ app.request.attributes.get('_route') == 'app_home' ? 'class="active"' }}>Accueil</a></li>
+                <li>
+                    <a href="{{ path('app_home') }}"
+                    {{ app.request.attributes.get('_route') == 'app_home' ? 'class="active"' }}>
+                        Accueil
+                    </a>
+                </li>
+
                 <li><a href="#">Contenu Psychologique</a></li>
-                <li><a href="#">Tests</a></li>
-                <li><a href="{{ path('rdv_index') }}" {{ app.request.attributes.get('_route') == 'rdv_index' ? 'class="active"' }}>Rendez-vous</a></li>
+
+               <li>
+                <a href="{% if app.user and app.user.role == 'etudiant' %}
+                            {{ path('front_test_list') }}
+                        {% else %}
+                            javascript:void(0)
+                        {% endif %}"
+                class="{% if app.request.attributes.get('_route') == 'front_test_list' %}active{% endif %}">
+                    Tests
+                </a>
+            </li>
+
+                <li>
+                    <a href="
+                        {% if app.user %}
+                            {% if app.user.role == 'etudiant' %}
+                                {{ path('rdv_index') }}
+                            {% elseif app.user.role == 'psychologue' or app.user.role == 'coach_vie' %}
+                                {{ path('psy_dashboard') }}
+                            {% else %}
+                                javascript:void(0)
+                            {% endif %}
+                        {% else %}
+                            javascript:void(0)
+                        {% endif %}
+                    "
+                    class="{% if app.request.attributes.get('_route') in ['rdv_index', 'psy_dashboard'] %}active{% endif %}">
+                        Rendez-vous
+                    </a>
+                </li>
+
                 <li><a href="#">Evenements</a></li>
                 <li><a href="#">Suivi Personnel</a></li>
             </ul>
-            {% if app.request.attributes.get('_route') == 'rdv_index' %}
-    <a href="#" class="nav-cta nav-links a" onclick="openReservationsPopup(); return false;">
-         Réservez votre séance 📝
-    </a>
-{% else %}
-    <a href="#!" class="nav-cta nav-links a">Se connecter</a>
-{% endif %}
+            
+            {% if app.user %}
+    <div style="position:relative; display:flex; align-items:center;" id="profileDropdownWrap">
+        <div onclick="toggleProfileDropdown()" 
+             style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 12px; border-radius:8px; transition:background 0.2s;"
+             onmouseover="this.style.background='rgba(0,0,0,0.05)'" 
+             onmouseout="this.style.background='transparent'">
+            
+            {% if app.user.profile_photo %}
+              <img src="{{ asset(app.user.profile_photo) }}"
+     alt="Photo de profil"
+     style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #4a7c3f;">
+            {% else %}
+                <div style="width:38px; height:38px; border-radius:50%; background:#4a7c3f; display:flex; align-items:center; justify-content:center; border:2px solid #4a7c3f;">
+                    <i class="fas fa-user" style="color:white; font-size:1rem;"></i>
+                </div>
+            {% endif %}
+
+            <div style="line-height:1.2;">
+                <div style="font-size:0.85rem; font-weight:600; color:#2d3a1e;">
+                    {{ app.user.firstname }} {{ app.user.lastname }}
+                </div>
+                <div style="font-size:0.7rem; color:#6B7D5A; text-transform:uppercase; letter-spacing:1px;">
+                    {{ app.user.role }}
+                </div>
+            </div>
+            <i class="fas fa-chevron-down" style="font-size:0.7rem; color:#6B7D5A;"></i>
+        </div>
+        </div> 
+
+        <!-- Dropdown -->
+        <div id="profileDropdown"
+             style="display:none; position:absolute; top:calc(100% + 8px); right:0; background:white; border-radius:12px; box-shadow:0 10px 40px rgba(45,80,22,0.15); min-width:200px; overflow:hidden; z-index:9999; border:1px solid #e8e0d0;">
+            
+            <div style="padding:16px 20px; border-bottom:1px solid #f0ebe0; background:#fafaf7;">
+                <div style="font-size:0.75rem; color:#6B7D5A; text-transform:uppercase; letter-spacing:1px;">Connecté en tant que</div>
+                <div style="font-size:0.9rem; font-weight:600; color:#2d3a1e; margin-top:2px;">{{ app.user.firstname }} {{ app.user.lastname }}</div>
+            </div>
+
+            <a href="{{ path('app_profile') }}" 
+               style="display:flex; align-items:center; gap:12px; padding:14px 20px; text-decoration:none; color:#2d3a1e; font-size:0.9rem; transition:background 0.2s;"
+               onmouseover="this.style.background='#f5f0e8'" onmouseout="this.style.background='transparent'">
+                <i class="fas fa-user-circle" style="color:#4a7c3f; width:16px;"></i>
+                Mon Profil
+            </a>
+
+            <a href="{{ path('app_logout') }}" 
+               style="display:flex; align-items:center; gap:12px; padding:14px 20px; text-decoration:none; color:#991b1b; font-size:0.9rem; transition:background 0.2s; border-top:1px solid #f0ebe0;"
+               onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='transparent'">
+                <i class="fas fa-sign-out-alt" style="color:#991b1b; width:16px;"></i>
+                Se déconnecter
+            </a>
         </div>
     </div>
+{% else %}
+    <a href="{{ path('app_login') }}" class="nav-cta nav-links a">Se connecter</a>
+{% endif %}
+        
+            </div>
+        </div>
+
+     
 
     <!-- BODY -->
     {% block body %}{% endblock %}
@@ -1404,6 +1502,19 @@
         }, { threshold: 0.3 });
         document.querySelectorAll('.progress-fill').forEach(el => observer.observe(el));
     </script>
+      <script>
+function toggleProfileDropdown() {
+    const dropdown = document.getElementById('profileDropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('profileDropdownWrap');
+    if (wrap && !wrap.contains(e.target)) {
+        document.getElementById('profileDropdown').style.display = 'none';
+    }
+});
+</script>
 
     {% block javascripts %}{% endblock %}
 </body>

@@ -1,0 +1,170 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Questions — Nafseyti{% endblock %}
+{% block question_active %}active{% endblock %}
+
+{% block admin_content %}
+<div class="nt">
+    <div class="nt-header">
+        <div>
+            <div class="nt-eyebrow">Administration</div>
+            <h1 class="nt-title">Gestion des <em>Questions</em></h1>
+        </div>
+        <a href="{{ path('app_question_new') }}" class="btn-create">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nouvelle question
+        </a>
+    </div>
+
+    <div class="search-panel">
+        <form id="searchForm" class="search-form">
+            <div class="search-field">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="search" id="searchInput" placeholder="Rechercher une question..." value="{{ search }}">
+            </div>
+            <select name="type" id="filterType" class="filter-sel">
+                <option value="">Tous les types</option>
+                <option value="qcm_unique"   {{ type == 'qcm_unique'   ? 'selected' : '' }}>QCM Unique</option>
+                <option value="qcm_multiple" {{ type == 'qcm_multiple' ? 'selected' : '' }}>QCM Multiple</option>
+                <option value="vrai_faux"    {{ type == 'vrai_faux'    ? 'selected' : '' }}>Vrai / Faux</option>
+                <option value="texte_libre"  {{ type == 'texte_libre'  ? 'selected' : '' }}>Texte libre</option>
+            </select>
+            <select name="status" id="filterStatus" class="filter-sel">
+                <option value="">Tous les statuts</option>
+                <option value="actif"   {{ status == 'actif'   ? 'selected' : '' }}>Actif</option>
+                <option value="inactif" {{ status == 'inactif' ? 'selected' : '' }}>Inactif</option>
+            </select>
+            <button type="submit" class="btn-filter">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filtrer
+                <span class="ajax-spinner" id="spinner"></span>
+            </button>
+            <button type="button" id="btnReset" class="btn-reset"
+                    style="{{ (search or type or status) ? '' : 'display:none' }}">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Réinitialiser
+            </button>
+        </form>
+    </div>
+
+    <div id="tableWrapper">
+        <div class="tbl-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:200px">Test associé</th>
+                        <th>Question</th>
+                        <th style="width:140px">Type</th>
+                        <th style="width:80px">Points</th>
+                        <th style="width:100px">Statut</th>
+                        <th style="width:110px;text-align:center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% include 'back/question/_table_rows.html.twig' %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="resultInfo">
+            {% if search or type or status %}
+            <div class="result-info">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <strong>{{ questions|length }}</strong> résultat{{ questions|length > 1 ? 's' : '' }} trouvé{{ questions|length > 1 ? 's' : '' }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function deleteQuestion(id) {
+    Swal.fire({
+        title: 'Supprimer cette question ?',
+        text: 'Cette action est irréversible.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#c0392b',
+        cancelButtonColor: '#2d6a4f',
+        confirmButtonText: 'Supprimer',
+        cancelButtonText: 'Annuler'
+    }).then(function(r){ if(r.isConfirmed) document.getElementById('delete-form-'+id).submit(); });
+}
+
+const ajaxUrl = '{{ path("app_question_search_ajax") }}';
+const searchInput  = document.getElementById('searchInput');
+const filterType   = document.getElementById('filterType');
+const filterStatus = document.getElementById('filterStatus');
+const tableBody    = document.getElementById('tableBody');
+const tableWrapper = document.getElementById('tableWrapper');
+const resultInfo   = document.getElementById('resultInfo');
+const spinner      = document.getElementById('spinner');
+const btnReset     = document.getElementById('btnReset');
+const searchForm   = document.getElementById('searchForm');
+
+let searchTimeout = null;
+
+function doSearch() {
+    var params = new URLSearchParams({
+        search: searchInput.value,
+        type:   filterType.value,
+        status: filterStatus.value,
+    });
+
+    var hasFilters = searchInput.value || filterType.value || filterStatus.value;
+    btnReset.style.display = hasFilters ? 'inline-flex' : 'none';
+
+    spinner.classList.add('visible');
+    tableWrapper.classList.add('loading');
+
+    fetch(ajaxUrl + '?' + params.toString(), {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        tableBody.innerHTML = data.html;
+        if (hasFilters) {
+            var n = data.count;
+            resultInfo.innerHTML =
+                '<div class="result-info">' +
+                '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+                '<strong>' + n + '</strong> résultat' + (n > 1 ? 's' : '') + ' trouvé' + (n > 1 ? 's' : '') +
+                '</div>';
+        } else {
+            resultInfo.innerHTML = '';
+        }
+    })
+    .catch(function() {
+        resultInfo.innerHTML = '<div class="result-info" style="border-color:#f5a99c;background:#fdf0ee;color:#c0392b;">Erreur lors de la recherche.</div>';
+    })
+    .finally(function() {
+        spinner.classList.remove('visible');
+        tableWrapper.classList.remove('loading');
+    });
+}
+
+searchInput.addEventListener('keyup', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(doSearch, 400);
+});
+
+filterType.addEventListener('change', doSearch);
+filterStatus.addEventListener('change', doSearch);
+
+searchForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    doSearch();
+});
+
+btnReset.addEventListener('click', function() {
+    searchInput.value  = '';
+    filterType.value   = '';
+    filterStatus.value = '';
+    doSearch();
+});
+</script>
+{% endblock %}
+
+{% endblock %}

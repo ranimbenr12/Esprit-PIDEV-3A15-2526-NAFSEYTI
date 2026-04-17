@@ -1,0 +1,60 @@
+{% if questions is empty %}
+    <tr><td colspan="6">
+        <div class="empty-state">
+            <div class="empty-circle">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h4>Aucune question trouvée</h4>
+            <p>Créez votre première question ou modifiez les filtres.</p>
+            <a href="{{ path('app_question_new') }}" class="btn-create" style="margin:0 auto;">Créer une question</a>
+        </div>
+    </td></tr>
+{% else %}
+    {% for question in questions %}
+    <tr>
+        <td>
+            {% if question.test %}
+                <a href="{{ path('app_test_show', {'id': question.test.id}) }}" style="text-decoration:none;">
+                    <span class="badge badge-test">{{ question.test.titre|slice(0,28) }}{% if question.test.titre|length > 28 %}…{% endif %}</span>
+                </a>
+            {% else %}
+                <span style="color:var(--ink-soft);font-size:.8rem;">—</span>
+            {% endif %}
+        </td>
+        <td class="q-text">
+            <strong>{{ question.texte|slice(0,70) }}{% if question.texte|length > 70 %}…{% endif %}</strong>
+            {% if question.reponsesPossibles %}
+                <small>{{ question.reponsesPossibles|replace({'|': ' · '})|slice(0,60) }}…</small>
+            {% endif %}
+        </td>
+        <td>
+            {% set typeLabels = {'qcm_unique':'QCM Unique','qcm_multiple':'QCM Multiple','texte_libre':'Texte libre','likert':'Likert','numerique':'Numérique','vrai_faux':'Vrai / Faux'} %}
+            <span class="badge badge-type">{{ typeLabels[question.typeQuestion]|default(question.typeQuestion) }}</span>
+        </td>
+        <td style="color:var(--ink-mid);font-weight:600;">{{ question.points }}</td>
+        <td>
+            {% if question.status == 'actif' %}
+                <span class="badge badge-actif"><svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Actif</span>
+            {% else %}
+                <span class="badge badge-inact"><svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Inactif</span>
+            {% endif %}
+        </td>
+        <td>
+            <div class="actions" style="justify-content:center;">
+                <a href="{{ path('app_question_show', {'id': question.id}) }}" class="btn-act view" title="Voir">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                </a>
+                <a href="{{ path('app_question_edit', {'id': question.id}) }}" class="btn-act edit" title="Modifier">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </a>
+                <button type="button" class="btn-act del" title="Supprimer" onclick="deleteQuestion({{ question.id }})">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                </button>
+            </div>
+            <form id="delete-form-{{ question.id }}" method="post" action="{{ path('app_question_delete', {'id': question.id}) }}" style="display:none;">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete'~question.id) }}">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+{% endif %}

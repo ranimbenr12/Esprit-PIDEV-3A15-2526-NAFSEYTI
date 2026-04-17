@@ -1,0 +1,325 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="{{ path('admin_dashboard') }}">
+                            <img class="logo_icon img-responsive"
+                                 src="{{ asset('back/images/logo/logo_icon1.png') }}"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+    <div class="icon_setting"></div>
+    <div class="user_profle_side">
+        <div class="user_img">
+            
+                <img class="img-responsive"
+                   src="{{ asset('back/images/layout_img/user_img.jpg') }}" 
+                     alt="user"
+                     style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;">
+          
+        </div>
+        <div class="user_info" style="text-align:center;">
+            <h6 style="color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;">
+                {{ app.user.firstname }} {{ app.user.lastname }}
+            </h6>
+            <p style="margin:0;">
+                <span class="online_animation"></span> En ligne
+            </p>
+        </div>
+    </div>
+</div>
+            <div class="sidebar_blog_2">
+            <h4></h4>
+                <ul class="list-unstyled components">
+    <li>
+        <a href="{{ path('admin_dashboard') }}">
+            <i class="fa fa-dashboard yellow_color"></i>
+            <span>Tableau de bord</span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="{{ path('admin_users') }}">
+            <i class="fa fa-users blue1_color"></i>
+            <span>Utilisateurs</span>
+        </a>
+    </li>
+    <li>
+          <a href="{{ path('admin_rendezvous') }}">
+            <i class="fa fa-calendar orange_color"></i>
+            <span>Rendez-vous</span>
+        </a>
+    </li>
+    <li>
+         <a href="{{ path('app_test_index') }}">
+            <i class="fa fa-book purple_color2"></i>
+            <span>Contenu psychologique</span>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <i class="fa fa-check-square green_color"></i>
+            <span>Tests</span>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <i class="fa fa-calendar-check-o red_color"></i>
+            <span>Événements</span>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <i class="fa fa-line-chart yellow_color"></i>
+            <span>Suivi personnel</span>
+        </a>
+    </li>
+</ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="logo_section">
+                            <a href="{{ path('admin_dashboard') }}" style="display:flex; align-items:center; text-decoration:none;">
+                                <img class="img-responsive"
+                                     src="{{ asset('back/images/logo/logo1.png') }}"
+                                     alt="logo"
+                                     style="width:40px; height:40px; margin-right:10px;" />
+                                <span style="font-size:20px; font-weight:bold; color:#3c943c;">Nafseyti</span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul class="user_profile_dd">
+                                    <li>
+                                         <a class="dropdown-toggle" data-toggle="dropdown">
+    <img class="img-responsive rounded-circle"
+         src="{{ asset('back/images/layout_img/user_img.jpg') }}" 
+         alt="photo"
+         style="width:35px; height:35px; object-fit:cover; border-radius:50%;">
+
+    <span class="name_user">
+        {{ app.user.firstname }} {{ app.user.lastname }}
+    </span>
+</a>
+                                        <div class="dropdown-menu">
+    <a class="dropdown-item" href="{{ path('app_profile') }}">
+        <i class="fa fa-user"></i> Mon Profil
+    </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('app_logout') }}">
+        <span>Se déconnecter</span> <i class="fa fa-sign-out"></i>
+    </a>
+</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="midde_cont">
+                <div class="container-fluid">
+
+                    <div class="row column_title">
+                        <div class="col-md-12">
+                            <div class="page_title">
+                                <h2>Gestion des Utilisateurs</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flash messages -->
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">✅ {{ message }}</div>
+                    {% endfor %}
+
+                    <!-- Search & Filters -->
+                    <div class="row" style="margin-bottom:20px;">
+                        <div class="col-md-12">
+                            <div class="white_shd full" style="padding:20px;">
+                                <form method="get" action="{{ path('admin_users') }}" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+                                    
+                                    <div style="flex:2; min-width:200px;">
+                                        <label style="font-size:0.8rem; font-weight:600; color:#555; margin-bottom:4px; display:block;">Rechercher</label>
+                                        <input type="text" name="search" value="{{ search }}"
+                                               placeholder="Nom, prénom, email..."
+                                               style="width:100%; padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;">
+                                    </div>
+
+                                    <div style="flex:1; min-width:140px;">
+                                        <label style="font-size:0.8rem; font-weight:600; color:#555; margin-bottom:4px; display:block;">Rôle</label>
+                                        <select name="role" style="width:100%; padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;">
+                                            <option value="">Tous les rôles</option>
+                                            <option value="etudiant" {{ selectedRole == 'etudiant' ? 'selected' : '' }}>Étudiant</option>
+                                            <option value="enseignant" {{ selectedRole == 'enseignant' ? 'selected' : '' }}>Enseignant</option>
+                                            <option value="psychologue" {{ selectedRole == 'psychologue' ? 'selected' : '' }}>Psychologue</option>
+                                            <option value="coach_vie" {{ selectedRole == 'coach_vie' ? 'selected' : '' }}>Coach de vie</option>
+                                            <option value="administrateur" {{ selectedRole == 'administrateur' ? 'selected' : '' }}>Administrateur</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="flex:1; min-width:140px;">
+                                        <label style="font-size:0.8rem; font-weight:600; color:#555; margin-bottom:4px; display:block;">Statut</label>
+                                        <select name="status" style="width:100%; padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;">
+                                            <option value="">Tous les statuts</option>
+                                            <option value="actif" {{ selectedStatus == 'actif' ? 'selected' : '' }}>Actif</option>
+                                            <option value="inactif" {{ selectedStatus == 'inactif' ? 'selected' : '' }}>Inactif</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="display:flex; gap:8px;">
+                                        <button type="submit"
+                                                style="padding:8px 20px; background:#3c943c; color:white; border:none; border-radius:6px; cursor:pointer; font-size:0.9rem;">
+                                            🔍 Filtrer
+                                        </button>
+                                        <a href="{{ path('admin_users') }}"
+                                           style="padding:8px 20px; background:#f0f0f0; color:#555; border-radius:6px; text-decoration:none; font-size:0.9rem;">
+                                            Réinitialiser
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="white_shd full">
+                                <div style="padding:16px 20px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
+                                    <h4 style="margin:0; font-size:1rem; color:#333;">
+                                        {{ users|length }} utilisateur(s) trouvé(s)
+                                    </h4>
+                                </div>
+                                <div style="overflow-x:auto;">
+                                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                                        <thead>
+                                            <tr style="background:#f8f9fa; border-bottom:2px solid #e9ecef;">
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Photo</th>
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Nom complet</th>
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Email</th>
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Téléphone</th>
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Rôle</th>
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Statut</th>
+                                                <th style="padding:12px 16px; text-align:left; color:#555; font-weight:600;">Membre depuis</th>
+                                                <th style="padding:12px 16px; text-align:center; color:#555; font-weight:600;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in users %}
+                                            <tr style="border-bottom:1px solid #f0f0f0; transition:background 0.2s;"
+                                                onmouseover="this.style.background='#fafafa'"
+                                                onmouseout="this.style.background='white'">
+
+                                                <!-- Photo -->
+                                                <td style="padding:12px 16px;">
+                                                    {% if user.profile_photo %}
+                                                        <img src="{{ asset(user.profile_photo) }}"
+                                                             style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #3c943c;">
+                                                    {% else %}
+                                                        <div style="width:40px; height:40px; background:#3c943c; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                                                            <i class="fa fa-user" style="color:white; font-size:1rem;"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+
+                                                <!-- Name -->
+                                                <td style="padding:12px 16px; font-weight:500; color:#333;">
+                                                    {{ user.firstname }} {{ user.lastname }}
+                                                </td>
+
+                                                <!-- Email -->
+                                                <td style="padding:12px 16px; color:#666;">{{ user.email }}</td>
+
+                                                <!-- Phone -->
+                                                <td style="padding:12px 16px; color:#666;">{{ user.phone_number ?? '—' }}</td>
+
+                                                <!-- Role -->
+                                                <td style="padding:12px 16px;">
+                                                    {% set roleColors = {
+                                                        'etudiant': '#3b82f6',
+                                                        'enseignant': '#8b5cf6',
+                                                        'psychologue': '#ec4899',
+                                                        'coach_vie': '#f59e0b',
+                                                        'administrateur': '#ef4444'
+                                                    } %}
+                                                    <span style="background:{{ roleColors[user.role] ?? '#6b7280' }}20; color:{{ roleColors[user.role] ?? '#6b7280' }}; padding:4px 12px; border-radius:100px; font-size:0.78rem; font-weight:600;">
+                                                        {{ user.role }}
+                                                    </span>
+                                                </td>
+
+                                                <!-- Status -->
+                                                <td style="padding:12px 16px;">
+                                                    {% if user.status == 'actif' %}
+                                                        <span style="background:#dcfce7; color:#166534; padding:4px 12px; border-radius:100px; font-size:0.78rem; font-weight:600;">
+                                                            ● Actif
+                                                        </span>
+                                                    {% else %}
+                                                        <span style="background:#fee2e2; color:#991b1b; padding:4px 12px; border-radius:100px; font-size:0.78rem; font-weight:600;">
+                                                            ● Inactif
+                                                        </span>
+                                                    {% endif %}
+                                                </td>
+
+                                                <!-- Date -->
+                                                <td style="padding:12px 16px; color:#666;">
+                                                    {{ user.created_at|date('d/m/Y') }}
+                                                </td>
+
+                                                <!-- Actions -->
+                                                <td style="padding:12px 16px; text-align:center;">
+                                                    <div style="display:flex; gap:8px; justify-content:center;">
+                                                        <a href="{{ path('admin_user_edit', {id: user.id}) }}"
+                                                           style="padding:6px 14px; background:#3c943c; color:white; border-radius:6px; text-decoration:none; font-size:0.8rem; font-weight:600;">
+                                                            ✏️ Modifier
+                                                        </a>
+                                                        <a href="{{ path('admin_user_toggle', {id: user.id}) }}"
+                                                           onclick="return confirm('Confirmer le changement de statut ?')"
+                                                           style="padding:6px 14px; background:{{ user.status == 'actif' ? '#fee2e2' : '#dcfce7' }}; color:{{ user.status == 'actif' ? '#991b1b' : '#166534' }}; border-radius:6px; text-decoration:none; font-size:0.8rem; font-weight:600;">
+                                                            {{ user.status == 'actif' ? '🔒 Désactiver' : '🔓 Activer' }}
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="8" style="padding:40px; text-align:center; color:#999;">
+                                                    Aucun utilisateur trouvé.
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

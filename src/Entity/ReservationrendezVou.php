@@ -31,6 +31,12 @@ class ReservationrendezVou
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $date_reservation = null;
 
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $date_rdv = null;
+
+    #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en_attente'])]
+    private string $statut = 'en_attente';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,4 +85,25 @@ class ReservationrendezVou
         $this->date_reservation = $date_reservation;
         return $this;
     }
+    public function getDateRdv(): ?\DateTimeInterface
+    {
+        return $this->date_rdv;
+    }
+
+    public function setDateRdv(\DateTimeInterface $date_rdv): self
+    {
+        $this->date_rdv = $date_rdv;
+        return $this;
+    }
+    public function getStatut(): string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
 }

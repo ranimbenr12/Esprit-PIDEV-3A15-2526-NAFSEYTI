@@ -1,0 +1,168 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Nouvelle question — Nafseyti{% endblock %}
+{% block question_active %}active{% endblock %}
+
+{% block admin_content %}
+
+
+<div class="nt">
+    <div class="nt-breadcrumb">
+        <a href="{{ path('app_question_index') }}">Questions</a>
+        <span>/</span>
+        <span>Nouvelle question</span>
+    </div>
+    <div class="nt-header">
+        <div class="nt-eyebrow">Création</div>
+        <h1 class="nt-title">Nouvelle <em>question</em></h1>
+    </div>
+
+    <div class="form-card">
+        <div class="form-card-head">
+            <div class="icon">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h3>Contenu de la question</h3>
+        </div>
+
+        {{ form_start(form, {'attr': {'id': 'questionForm', 'novalidate': 'novalidate'}}) }}
+        <div class="form-body">
+
+            <div class="field-group">
+                <label class="field-label">Test associé <span class="req">*</span></label>
+                {{ form_widget(form.test) }}
+                {{ form_errors(form.test) }}
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">Texte de la question <span class="req">*</span></label>
+                {{ form_widget(form.texte, {'attr': {'rows': 3, 'placeholder': 'Ex : Comment gérez-vous le stress au travail ?'}}) }}
+                {{ form_errors(form.texte) }}
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">Type de question <span class="req">*</span></label>
+                {{ form_widget(form.typeQuestion, {'attr': {'id': 'question_type'}}) }}
+                {{ form_errors(form.typeQuestion) }}
+                <div class="help-box" id="helpBox">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span id="helpText"></span>
+                </div>
+            </div>
+
+            <div class="field-group" id="qcmOptionsGroup" style="display:none;">
+                <label class="field-label">Réponses possibles <span class="req">*</span></label>
+                {{ form_widget(form.reponsesPossibles, {'attr': {'rows': 3, 'id': 'question_reponses', 'placeholder': 'Séparez les options par | — ex : Jamais|Parfois|Souvent|Toujours'}}) }}
+                {{ form_errors(form.reponsesPossibles) }}
+                <span class="field-hint">Séparez chaque option par le symbole <strong>|</strong></span>
+            </div>
+
+            <div class="section-divider"><span>Paramètres</span></div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Points</label>
+                    {{ form_widget(form.points) }}
+                    {{ form_errors(form.points) }}
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Ordre d'affichage</label>
+                    {{ form_widget(form.ordre, {'attr': {'placeholder': 'Auto'}}) }}
+                    <span class="field-hint">Laisser vide = ajouté en dernier</span>
+                    {{ form_errors(form.ordre) }}
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Statut</label>
+                    {{ form_widget(form.status) }}
+                    {{ form_errors(form.status) }}
+                </div>
+                <div class="field-group" style="display:flex;align-items:flex-end;padding-bottom:2px;">
+                    <div class="checkbox-wrap">
+                        {{ form_widget(form.obligatoire) }}
+                        {{ form_label(form.obligatoire) }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn-submit">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Créer la question
+            </button>
+            <a href="{{ path('app_question_index') }}" class="btn-cancel">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Annuler
+            </a>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<script>
+(function() {
+    function initQcm() {
+        var form = document.getElementById('questionForm');
+        if (!form) { setTimeout(initQcm, 50); return; }
+
+        // Chercher le select de type dans le formulaire — tous les ids possibles
+        var typeSelect = form.querySelector('select[id="question_type"]')
+                      || form.querySelector('select[id$="typeQuestion"]')
+                      || form.querySelector('select[id$="type_question"]')
+                      || form.querySelector('select[name*="typeQuestion"]')
+                      || form.querySelector('select[name*="type_question"]');
+
+        var qcmGroup      = document.getElementById('qcmOptionsGroup');
+        var reponsesField = form.querySelector('textarea[id$="reponsesPossibles"]')
+                         || form.querySelector('textarea[id$="reponses_possibles"]')
+                         || form.querySelector('textarea[name*="reponsesPossibles"]');
+
+        if (!typeSelect || !qcmGroup) { setTimeout(initQcm, 50); return; }
+
+        console.log('[QCM] OK - select id=' + typeSelect.id + ' valeur=' + typeSelect.value);
+
+        var helps = {
+            'qcm_unique':   { text: "Sélectionnez une seule réponse parmi les options ci-dessous.", qcm: true },
+            'qcm_multiple': { text: "Plusieurs réponses possibles parmi les options ci-dessous.", qcm: true },
+            'texte_libre':  { text: "Réponse libre, aucune option à configurer.", qcm: false },
+            'numerique':    { text: "Valeur numérique, aucune option à configurer.", qcm: false }
+        };
+
+        function update() {
+            var v   = typeSelect.value;
+            var cfg = helps[v];
+            var helpBox  = document.getElementById('helpBox');
+            var helpText = document.getElementById('helpText');
+            if (cfg) {
+                if (helpText) helpText.textContent = cfg.text;
+                if (helpBox)  helpBox.classList.add('visible');
+                if (cfg.qcm) {
+                    qcmGroup.style.display = 'block';
+                    if (reponsesField) reponsesField.setAttribute('required', 'required');
+                } else {
+                    qcmGroup.style.display = 'none';
+                    if (reponsesField) reponsesField.removeAttribute('required');
+                }
+            } else {
+                if (helpBox) helpBox.classList.remove('visible');
+                qcmGroup.style.display = 'none';
+            }
+        }
+
+        typeSelect.addEventListener('change', update);
+        update();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initQcm);
+    } else {
+        initQcm();
+    }
+    window.addEventListener('load', initQcm);
+})();
+</script>
+{% endblock %}

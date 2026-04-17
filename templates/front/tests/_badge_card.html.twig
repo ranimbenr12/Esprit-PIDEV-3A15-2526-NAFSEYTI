@@ -1,0 +1,32 @@
+{# templates/front/tests/_badge_card.html.twig #}
+{% if badge is defined and badge %}
+<div class="badge-card" style="text-align: center; padding: 25px; background: linear-gradient(135deg, {{ badge.color }}20 0%, {{ badge.color }}10 100%); border-radius: 20px; margin-bottom: 30px; border: 2px solid {{ badge.color }}40;">
+    <div style="font-size: 4.5rem; margin-bottom: 10px; animation: bounce 0.5s ease;">
+        {{ badge.icon }}
+    </div>
+    <h3 style="color: {{ badge.color }}; margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-size: 1.5rem;">
+        🎖️ Badge {{ badge.label }}
+    </h3>
+    <p style="color: #666; margin: 0 0 15px 0; font-size: 0.95rem;">
+        {{ badge.description }}
+    </p>
+    <div style="display: inline-flex; align-items: center; gap: 8px; background: {{ badge.color }}; color: white; padding: 8px 20px; border-radius: 25px; font-size: 0.9rem; font-weight: 600;">
+        <span>⭐</span>
+        +{{ badge.points_xp }} XP
+    </div>
+</div>
+
+<style>
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.badge-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.badge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+</style>
+{% endif %}

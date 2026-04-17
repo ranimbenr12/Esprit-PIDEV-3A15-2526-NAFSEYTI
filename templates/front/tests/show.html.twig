@@ -1,0 +1,301 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Passer le test - {{ test.titre }}{% endblock %}
+{% block nav_tests_active %}active{% endblock %}
+
+{% block body %}
+<section class="hero-section" style="min-height: 30vh; padding: 40px 60px;">
+    <div class="hero-content" style="text-align: center;">
+        <div class="hero-tag" style="justify-content: center;">Test psychologique</div>
+        <h1 class="hero-title" style="font-size: clamp(1.8rem, 4vw, 2.5rem);">
+            {{ test.titre }}
+        </h1>
+        <p class="hero-subtitle" style="max-width: 700px; margin: 0 auto;">
+            {{ test.description }}
+        </p>
+        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
+            <span><i class="fas fa-clock"></i> Durée: {{ test.duree ? test.duree ~ ' minutes' : 'Non spécifiée' }}</span>
+            <span><i class="fas fa-question-circle"></i> {{ questions|length }} questions</span>
+        </div>
+    </div>
+</section>
+
+<section class="donations-section" style="padding-top: 0;">
+    <div class="container-custom">
+        <div class="donate-grid" style="grid-template-columns: 1fr;">
+            <div class="donate-form-side" style="padding: 40px;">
+
+                {# ── WEBCAM ── #}
+                <div id="webcamSection" style="background:white;border-radius:16px;padding:30px;margin-bottom:32px;text-align:center;box-shadow:0 4px 20px rgba(26,61,43,0.08);border:1px solid #e0f0e8;">
+                    <h3 style="font-family:'Playfair Display',serif;color:var(--green-deep);margin-bottom:8px;">
+                        📸 Analyse de votre expression
+                    </h3>
+                    <p style="color:#888;font-size:0.9rem;margin-bottom:20px;">
+                        Pour enrichir votre analyse, nous allons détecter votre émotion avant le test.<br>
+                        <strong>Aucune photo n'est sauvegardée.</strong>
+                    </p>
+
+                    <div id="webcamContainer" style="display:none;margin-bottom:20px;">
+                        <video id="webcamVideo" autoplay playsinline style="width:280px;height:210px;border-radius:12px;object-fit:cover;border:3px solid var(--green-sage);"></video>
+                        <canvas id="webcamCanvas" style="display:none;"></canvas>
+                    </div>
+
+                    <div id="emotionResult" style="display:none;margin-bottom:20px;">
+    <div style="background:#d8f3dc;border-radius:12px;padding:24px 32px;display:inline-block;animation:popIn .4s ease;">
+        <span id="emotionEmoji" style="font-size:3rem;display:block;margin-bottom:8px;"></span>
+        <p style="margin:0;color:var(--green-deep);font-weight:700;font-size:1.1rem;" id="emotionLabel"></p>
+        <p style="margin:8px 0 0 0;color:#888;font-size:0.8rem;">Analyse en cours...</p>
+    </div>
+</div>
+
+                    <div id="webcamError" style="display:none;background:#fdf0ee;color:#c0392b;padding:12px;border-radius:8px;margin-bottom:16px;font-size:0.85rem;">
+                        ⚠️ Caméra non disponible — vous pouvez continuer sans analyse du visage.
+                    </div>
+
+                    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                        <button type="button" id="btnStartCam" onclick="startWebcam()"
+                                style="background:var(--green-deep);color:white;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">
+                            📷 Activer la caméra
+                        </button>
+                        <button type="button" id="btnCapture" onclick="capturePhoto()" style="display:none;background:var(--green-sage);color:white;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">
+                            ✅ Prendre la photo
+                        </button>
+                        <button type="button" id="btnSkip" onclick="skipWebcam()"
+                                style="background:transparent;border:1.5px solid #ccc;color:#888;padding:10px 20px;border-radius:8px;cursor:pointer;">
+                            Passer cette étape
+                        </button>
+                    </div>
+                </div>
+
+                {# ── FORMULAIRE (caché jusqu'à validation webcam) ── #}
+                <div id="testFormSection" style="display:none;">
+                    <form method="post" action="{{ path('front_test_submit', {'id': test.id}) }}" id="testForm">
+                        {% for question in questions %}
+                            <div class="question-item" style="margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--beige-mid);">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text-dark);">
+                                        Question {{ loop.index }}
+                                        {% if question.obligatoire %}
+                                            <span style="color: #e74c3c; font-size: 0.9rem;">*</span>
+                                        {% endif %}
+                                    </h3>
+                                    <span style="background: var(--green-pale); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
+                                        {{ question.points }} point{{ question.points > 1 ? 's' : '' }}
+                                    </span>
+                                </div>
+
+                                <p style="font-size: 1rem; color: var(--text-mid); margin-bottom: 20px; line-height: 1.6;">
+                                    {{ question.texte }}
+                                </p>
+
+                                {% if question.typeQuestion == 'texte_libre' %}
+                                    <textarea
+                                        name="reponse_{{ question.id }}"
+                                        class="form-input-custom"
+                                        rows="4"
+                                        {% if question.obligatoire %}required{% endif %}
+                                        placeholder="Saisissez votre réponse ici..."></textarea>
+
+                                {% elseif question.typeQuestion == 'vrai_faux' %}
+                                    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="radio" name="reponse_{{ question.id }}" value="Vrai"
+                                                {% if question.obligatoire %}required{% endif %}
+                                                style="width: 18px; height: 18px;">
+                                            <span style="font-size: 1rem;">✅ Vrai</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="radio" name="reponse_{{ question.id }}" value="Faux"
+                                                {% if question.obligatoire %}required{% endif %}
+                                                style="width: 18px; height: 18px;">
+                                            <span style="font-size: 1rem;">❌ Faux</span>
+                                        </label>
+                                    </div>
+
+                                {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
+                                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                                        {% set options = question.reponsesPossiblesArray %}
+                                        {% if options is empty %}
+                                            <p style="color: orange; font-style: italic;">Aucune option disponible pour cette question.</p>
+                                        {% else %}
+                                            {% for option in options %}
+                                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                                    <input type="radio" name="reponse_{{ question.id }}" value="{{ option }}"
+                                                        {% if question.obligatoire %}required{% endif %}
+                                                        style="width: 18px; height: 18px;">
+                                                    <span>{{ option }}</span>
+                                                </label>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                {% else %}
+                                    <input type="text" name="reponse_{{ question.id }}" class="form-input-custom"
+                                        {% if question.obligatoire %}required{% endif %}
+                                        placeholder="Saisissez votre réponse">
+                                {% endif %}
+
+                                <div class="help-message" style="margin-top: 10px; font-size: 0.75rem; color: var(--green-sage);">
+                                    <i class="fas fa-info-circle"></i>
+                                    {% if question.typeQuestion == 'texte_libre' %}
+                                        Saisissez votre réponse en texte libre
+                                    {% elseif question.typeQuestion == 'vrai_faux' %}
+                                        Sélectionnez Vrai ou Faux
+                                    {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
+                                        Sélectionnez une seule option
+                                    {% else %}
+                                        Saisissez votre réponse
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                            <a href="{{ path('front_test_list') }}" class="btn-ghost">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="submit-btn" style="width: auto; padding: 15px 40px;">
+                                <i class="fas fa-check"></i> Valider mes réponses
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.question-item {
+    transition: all 0.3s ease;
+}
+.question-item:hover {
+    background: rgba(168, 198, 143, 0.05);
+    padding-left: 15px;
+    margin-left: -15px;
+    padding-right: 15px;
+    margin-right: -15px;
+    border-radius: 8px;
+}
+input[type="radio"]:checked, input[type="checkbox"]:checked {
+    accent-color: var(--green-mid);
+}
+.form-input-custom {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 8px;
+    padding: 12px 16px;
+    width: 100%;
+}
+.form-input-custom:focus {
+    border-color: var(--green-sage);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(122, 160, 91, 0.1);
+}
+</style>
+
+<script>
+const analyseVisageUrl = '{{ path("front_test_analyse_visage", {"id": test.id}) }}';
+let stream = null;
+
+async function startWebcam() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('webcamVideo').srcObject = stream;
+        document.getElementById('webcamContainer').style.display = 'block';
+        document.getElementById('btnStartCam').style.display = 'none';
+        document.getElementById('btnCapture').style.display = 'inline-block';
+    } catch(e) {
+        document.getElementById('webcamError').style.display = 'block';
+        skipWebcam();
+    }
+}
+
+async function capturePhoto() {
+    const video  = document.getElementById('webcamVideo');
+    const canvas = document.getElementById('webcamCanvas');
+    canvas.width  = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+
+    const base64 = canvas.toDataURL('image/jpeg', 0.8);
+
+    // Arrêter la caméra
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    document.getElementById('webcamContainer').style.display = 'none';
+    document.getElementById('btnCapture').style.display = 'none';
+
+    // Envoyer à Face++
+    try {
+        const response = await fetch(analyseVisageUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: base64 })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById('emotionEmoji').textContent = data.emoji;
+            document.getElementById('emotionLabel').textContent = 'Expression détectée : ' + data.label_fr;
+            document.getElementById('emotionResult').style.display = 'block';
+        }
+    } catch(e) {
+        console.log('Analyse visage échouée, on continue');
+    }
+
+    // Afficher le formulaire après 1.5s
+    setTimeout(showForm, 4000);
+}
+
+function skipWebcam() {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    showForm();
+}
+
+function showForm() {
+    document.getElementById('webcamSection').style.display = 'none';
+    document.getElementById('testFormSection').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Validation formulaire
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('testForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let allValid = true;
+            const requiredRadios = form.querySelectorAll('input[type="radio"][required]');
+            const radioGroups = new Set();
+
+            requiredRadios.forEach(radio => radioGroups.add(radio.name));
+
+            radioGroups.forEach(groupName => {
+                const checked = form.querySelector(`input[name="${groupName}"]:checked`);
+                if (!checked) {
+                    allValid = false;
+                    const container = form.querySelector(`input[name="${groupName}"]`).closest('.question-item');
+                    if (container) container.style.borderLeft = '3px solid #e74c3c';
+                }
+            });
+
+            const requiredTexts = form.querySelectorAll('textarea[required]');
+            requiredTexts.forEach(field => {
+                if (field.value.trim() === '') {
+                    allValid = false;
+                    field.style.borderColor = '#e74c3c';
+                    field.closest('.question-item').style.borderLeft = '3px solid #e74c3c';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+
+            if (!allValid) {
+                e.preventDefault();
+                alert('Veuillez répondre à toutes les questions obligatoires.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

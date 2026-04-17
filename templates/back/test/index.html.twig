@@ -1,0 +1,332 @@
+{% extends 'back/admin_base.html.twig' %}
+
+{% block title %}Gestion des Tests{% endblock %}
+{% block test_active %}active{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/tests/index.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+
+<div class="nt-page">
+
+    {# ── HEADER ── #}
+    <div class="nt-header">
+        <div class="nt-header-left">
+            <div class="nt-eyebrow">Administration</div>
+            <h1 class="nt-title">Tests <em>Psychologiques</em></h1>
+        </div>
+        <a href="{{ path('app_test_new') }}" class="btn-create">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nouveau test
+        </a>
+    </div>
+
+    {# ── STATS ── #}
+    <div class="stat-grid">
+        <div class="stat-card total">
+            <div class="stat-icon-wrap">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+            </div>
+            <div>
+                <div class="stat-num">{{ totalTests }}</div>
+                <div class="stat-label">Total des tests</div>
+            </div>
+        </div>
+        <div class="stat-card active">
+            <div class="stat-icon-wrap">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+                <div class="stat-num">{{ testsActifs }}</div>
+                <div class="stat-label">Tests actifs</div>
+            </div>
+        </div>
+        <div class="stat-card inactive">
+            <div class="stat-icon-wrap">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <div>
+                <div class="stat-num">{{ testsInactifs }}</div>
+                <div class="stat-label">Tests inactifs</div>
+            </div>
+        </div>
+    </div>
+
+    {# ── SEARCH PANEL ── #}
+    <div class="search-panel">
+        <form id="searchForm" class="search-form">
+            <div class="search-field">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="search" id="searchInput"
+                       placeholder="Rechercher par titre ou description..."
+                       value="{{ search }}">
+            </div>
+
+            <select name="status" id="filterStatus" class="filter-sel">
+                <option value="">Tous les statuts</option>
+                <option value="actif"   {{ status == 'actif'   ? 'selected' : '' }}>Actif</option>
+                <option value="inactif" {{ status == 'inactif' ? 'selected' : '' }}>Inactif</option>
+            </select>
+
+            <select name="categorie" id="filterCategorie" class="filter-sel">
+                <option value="">Toutes les catégories</option>
+                <option value="personnalite" {{ categorie == 'personnalite' ? 'selected' : '' }}>Personnalité</option>
+                <option value="intelligence" {{ categorie == 'intelligence' ? 'selected' : '' }}>Intelligence</option>
+                <option value="competences"  {{ categorie == 'competences'  ? 'selected' : '' }}>Compétences</option>
+                <option value="aptitudes"    {{ categorie == 'aptitudes'    ? 'selected' : '' }}>Aptitudes</option>
+                <option value="comportement" {{ categorie == 'comportement' ? 'selected' : '' }}>Comportement</option>
+            </select>
+
+            <button type="submit" class="btn-filter">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filtrer
+                <span class="ajax-spinner" id="spinner"></span>
+            </button>
+
+            <button type="button" id="btnReset" class="btn-reset"
+                    style="{{ (search or status or categorie) ? '' : 'display:none' }}">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Réinitialiser
+            </button>
+        </form>
+    </div>
+
+    {# ── TABLE ── #}
+    <div id="tableWrapper">
+        <div class="tbl-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:60px">
+                            <a href="#" class="sort-link {{ sort == 'id' ? 'active' : '' }}"
+                               data-sort="id"
+                               data-order="{{ sort == 'id' and order == 'ASC' ? 'DESC' : 'ASC' }}">
+                                ID <span class="sort-icon {{ sort == 'id' ? 'on' : '' }}">{{ sort == 'id' ? (order == 'ASC' ? '▲' : '▼') : '▲' }}</span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" class="sort-link {{ sort == 'titre' ? 'active' : '' }}"
+                               data-sort="titre"
+                               data-order="{{ sort == 'titre' and order == 'ASC' ? 'DESC' : 'ASC' }}">
+                                Titre <span class="sort-icon {{ sort == 'titre' ? 'on' : '' }}">{{ sort == 'titre' ? (order == 'ASC' ? '▲' : '▼') : '▲' }}</span>
+                            </a>
+                        </th>
+                        <th>Catégorie</th>
+                        <th>Niveau</th>
+                        <th>Durée</th>
+                        <th>Questions</th>
+                        <th>Statut</th>
+                        <th style="width:120px; text-align:center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% for test in tests %}
+                    <tr>
+                        <td><span class="cell-id">#{{ test.id }}</span></td>
+                        <td class="cell-title">
+                            <strong>{{ test.titre }}</strong>
+                            {% if test.description %}
+                                <small>{{ test.description|slice(0,70) }}{% if test.description|length > 70 %}…{% endif %}</small>
+                            {% endif %}
+                        </td>
+                        <td><span class="badge badge-cat">{{ test.categorie|capitalize }}</span></td>
+                        <td><span class="badge badge-niveau">{{ test.niveau|capitalize }}</span></td>
+                        <td style="color:var(--ink-soft); font-weight:500;">
+                            {{ test.duree ? test.duree ~ ' min' : '—' }}
+                        </td>
+                        <td>
+                            <span class="badge badge-q">
+                                {{ test.questions|length }}
+                                {{ test.questions|length > 1 ? 'questions' : 'question' }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if test.status == 'actif' %}
+                                <span class="badge badge-actif">
+                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+                                    Actif
+                                </span>
+                            {% else %}
+                                <span class="badge badge-inact">
+                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+                                    Inactif
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions" style="justify-content:center;">
+                                <a href="{{ path('app_test_show', {'id': test.id}) }}" class="btn-act view" title="Voir">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </a>
+                                <a href="{{ path('app_test_edit', {'id': test.id}) }}" class="btn-act edit" title="Modifier">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </a>
+                                <button type="button" class="btn-act del" title="Supprimer"
+                                        onclick="deleteTest({{ test.id }}, '{{ test.titre|e('js') }}')">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                                </button>
+                            </div>
+                            <form id="delete-form-{{ test.id }}" method="post"
+                                  action="{{ path('app_test_delete', {'id': test.id}) }}"
+                                  style="display:none;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete'~test.id) }}">
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-circle">
+                                    <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
+                                </div>
+                                <h4>Aucun test trouvé</h4>
+                                <p>Commencez par créer votre premier test psychologique.</p>
+                                <a href="{{ path('app_test_new') }}" class="btn-create" style="margin:0 auto;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    Créer un test
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="resultInfo">
+            {% if search or status or categorie %}
+            <div class="result-info">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <strong>{{ tests|length }}</strong> résultat{{ tests|length > 1 ? 's' : '' }} trouvé{{ tests|length > 1 ? 's' : '' }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+function deleteTest(id, titre) {
+    Swal.fire({
+        title: 'Supprimer ce test ?',
+        html: '<span style="color:#4a5060">Le test <strong>' + titre + '</strong> sera définitivement supprimé.</span>',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#c0392b',
+        cancelButtonColor: '#2d6a4f',
+        confirmButtonText: 'Supprimer',
+        cancelButtonText: 'Annuler',
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+
+const ajaxUrl         = '{{ path("app_test_search_ajax") }}';
+const searchInput     = document.getElementById('searchInput');
+const filterStatus    = document.getElementById('filterStatus');
+const filterCategorie = document.getElementById('filterCategorie');
+const tableBody       = document.getElementById('tableBody');
+const tableWrapper    = document.getElementById('tableWrapper');
+const resultInfo      = document.getElementById('resultInfo');
+const spinner         = document.getElementById('spinner');
+const btnReset        = document.getElementById('btnReset');
+const searchForm      = document.getElementById('searchForm');
+
+let searchTimeout = null;
+
+function doSearch() {
+    var params = new URLSearchParams({
+        search:    searchInput.value,
+        status:    filterStatus.value,
+        categorie: filterCategorie.value,
+    });
+
+    var hasFilters = searchInput.value || filterStatus.value || filterCategorie.value;
+    btnReset.style.display = hasFilters ? 'inline-flex' : 'none';
+
+    spinner.classList.add('visible');
+    tableWrapper.classList.add('loading');
+
+    fetch(ajaxUrl + '?' + params.toString(), {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        tableBody.innerHTML = data.html;
+        if (hasFilters) {
+            var n = data.count;
+            resultInfo.innerHTML =
+                '<div class="result-info">' +
+                '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+                '<strong>' + n + '</strong> résultat' + (n > 1 ? 's' : '') + ' trouvé' + (n > 1 ? 's' : '') +
+                '</div>';
+        } else {
+            resultInfo.innerHTML = '';
+        }
+    })
+    .catch(function() {
+        resultInfo.innerHTML = '<div class="result-info" style="border-color:#f5a99c;background:#fdf0ee;color:#c0392b;">Erreur lors de la recherche.</div>';
+    })
+    .finally(function() {
+        spinner.classList.remove('visible');
+        tableWrapper.classList.remove('loading');
+    });
+}
+
+searchInput.addEventListener('keyup', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(doSearch, 400);
+});
+
+filterStatus.addEventListener('change', doSearch);
+filterCategorie.addEventListener('change', doSearch);
+
+searchForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    doSearch();
+});
+
+btnReset.addEventListener('click', function() {
+    searchInput.value     = '';
+    filterStatus.value    = '';
+    filterCategorie.value = '';
+    doSearch();
+});
+
+document.querySelectorAll('.sort-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var params = new URLSearchParams({
+            search:    searchInput.value,
+            status:    filterStatus.value,
+            categorie: filterCategorie.value,
+            sort:      this.dataset.sort,
+            order:     this.dataset.order,
+        });
+        spinner.classList.add('visible');
+        tableWrapper.classList.add('loading');
+        fetch(ajaxUrl + '?' + params.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) { tableBody.innerHTML = data.html; })
+        .finally(function() {
+            spinner.classList.remove('visible');
+            tableWrapper.classList.remove('loading');
+        });
+    });
+});
+
+</script>
+{% endblock %}
+
+{% endblock %}

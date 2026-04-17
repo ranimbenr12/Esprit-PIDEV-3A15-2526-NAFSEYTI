@@ -3,3 +3,15 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+controllers_teste:
+    resource:
+        path: ../src/Controller/teste/
+        namespace: App\Controller\teste
+    type: attribute
+
+controllers_user:
+    resource:
+        path: ../src/Controller/user/
+        namespace: App\Controller\user
+    type: attribute

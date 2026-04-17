@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\RendezVou;
+use App\Repository\UserRepository;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -18,11 +19,28 @@ class RendezVousType extends AbstractType
     {
        $builder
             ->add('medecin', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => fn(User $u) => 'Dr. '.$u->getFirstname().' '.$u->getLastname(),
-                'label' => 'Médecin',
+            'class' => User::class,
+            'choice_label' => fn(User $u) => 'Dr. '.$u->getFirstname().' '.$u->getLastname(),
+            'label' => 'Médecin',
+            'query_builder' => function (UserRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->where('u.role LIKE :psychologue OR u.role LIKE :coach')
+                    ->setParameter('psychologue', '%psychologue%')
+                    ->setParameter('coach', '%coach_vie%');
+            },
+        ])
+            ->add('dateRendezVous', ChoiceType::class, [
+                'choices' => [
+                    'Lundi' => 'Lundi',
+                    'Mardi' => 'Mardi',
+                    'Mercredi' => 'Mercredi',
+                    'Jeudi' => 'Jeudi',
+                    'Vendredi' => 'Vendredi',
+                    'Samedi' => 'Samedi',
+                ],
+                'label' => 'Jour du rendez-vous',
+                'placeholder' => 'Choisir un jour',
             ])
-            ->add('dateRendezVous', null, ['widget' => 'single_text'])
             ->add('heureDebut',     null, ['widget' => 'single_text'])
             ->add('heureFin',       null, ['widget' => 'single_text'])
             ->add('typeSeance', ChoiceType::class, [
@@ -31,12 +49,12 @@ class RendezVousType extends AbstractType
                     'En ligne'   => 'en_ligne',
                 ],
             ])
-            ->add('statut', ChoiceType::class, [
+           ->add('statut', ChoiceType::class, [
                 'choices' => [
-                    'En attente'      => 'En attente',
                     'Confirmé'        => 'Confirmé',
                     'Pas encore pris' => 'Pas encore pris',
                 ],
+                'data' => 'Pas encore pris',
             ]);
     }
 

@@ -12,31 +12,48 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RendezVouRepository;
 use App\Entity\ReservationrendezVou;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\NotificationrendezVou;
 
 #[Route('/rendez-vous', name: 'rdv_')]
 class RendezVousController extends AbstractController
 {
-    #[Route('', name: 'index', methods: ['GET'])]
-    public function index(
-        UserRepository $userRepository,
-        RendezVouRepository $rendezVouRepository
-    ): Response {
-        $professionals = $userRepository->findByRoles(['psychologue', 'coach_vie']);
-
-        // Pour chaque professionnel, récupère ses créneaux "Pas encore pris"
-        $slots = [];
-        foreach ($professionals as $pro) {
-            $slots[$pro->getId()] = $rendezVouRepository->findBy([
-                'medecin' => $pro,
-                'statut'  => 'Pas encore pris',
-            ]);
-        }
-
-        return $this->render('home/rendez_vous.html.twig', [
-            'professionals' => $professionals,
-            'slots'         => $slots,
+   #[Route('', name: 'index', methods: ['GET'])]
+public function index(
+    UserRepository $userRepository,
+    RendezVouRepository $rendezVouRepository,
+    EntityManagerInterface $em
+): Response {
+    $professionals = $userRepository->findByRoles(['psychologue', 'coach_vie']);
+    //tableau vide 
+    $slots = [];
+    //On récupère tous les rendez-vous libres.
+    foreach ($professionals as $pro) {
+        $slots[$pro->getId()] = $rendezVouRepository->findBy([
+            'medecin' => $pro,
+            'statut'  => 'Pas encore pris',
         ]);
     }
+    
+
+    // Récupérer toutes les réservations existantes
+    //“donne-moi toutes les réservations enregistrées dans la base de données”
+    $reservations = $em->getRepository(ReservationrendezVou::class)->findAll();
+    
+    // Construire un tableau : rdv_id => [date1, date2, ...]
+    $reservedDates = [];
+    foreach ($reservations as $res) {
+        if ($res->getDateRdv()) {
+            $rdvId = $res->getRendezVous()->getId();
+            $reservedDates[$rdvId][] = $res->getDateRdv()->format('Y-m-d');
+        }
+    }
+
+    return $this->render('home/rendez_vous.html.twig', [
+        'professionals'  => $professionals,
+        'slots'          => $slots,
+        'reservedDates'  => $reservedDates,
+    ]);
+}
 
     /**
      * Traitement du formulaire de réservation (soumis depuis le modal)
@@ -86,13 +103,14 @@ class RendezVousController extends AbstractController
 
 
 #[Route('/reserve', name: 'reserve', methods: ['POST'])]
+//Request $request Permet de lire les données envoyées par le formulaire.
 public function reserve(
     Request $request,
     EntityManagerInterface $em,
     UserRepository $userRepo,
     RendezVouRepository $rendezVouRepository
 ): Response {
-    $user    = $userRepo->find(1);
+    $user = $this->getUser(); // ← remplace par $this->getUser() quand auth OK
     $medecin = $userRepo->find($request->request->get('pro_id'));
     $rdv     = $rendezVouRepository->find($request->request->get('rdv_id'));
 
@@ -101,38 +119,70 @@ public function reserve(
         return $this->redirectToRoute('rdv_index');
     }
 
-    $reservation = new ReservationrendezVou();
-    $reservation->setUser($user);
-    $reservation->setMedecin($medecin);
-    $reservation->setRendezVous($rdv);
-    $reservation->setDateReservation(new \DateTime());
+    // ── Calculer la vraie date à partir du nom du jour ──
+    // ── Lire la date choisie par le patient depuis le formulaire ──
+$dateRdvStr = $request->request->get('date_rdv');
+$dateRdv = $dateRdvStr
+    ? new \DateTime($dateRdvStr)
+    : $this->getProchainJour($rdv->getDateRendezVous()); // fallback si pas de date
 
-    // ← Changer le statut du créneau
-    $rdv->setStatut('en attente');
+    $patient = $this->getUser();
 
-    $em->persist($reservation);
-    $em->flush();
+$reservation = new ReservationrendezVou();
+$reservation->setUser($patient);
+$reservation->setMedecin($medecin);
+$reservation->setRendezVous($rdv);
+$reservation->setDateReservation(new \DateTime());
+$reservation->setDateRdv($dateRdv);
+
+$em->persist($reservation);
+
+$notif = new NotificationrendezVou();
+$notif->setDestinataire($medecin);
+$notif->setReservation($reservation);
+$notif->setType('rdv');
+
+$message = sprintf(
+    '%s %s a demandé un rendez-vous le %s de %s à %s.',
+    $patient->getFirstname(),
+    $patient->getLastname(),
+    $rdv->getDateRendezVous(),
+    $rdv->getHeureDebut()->format('H:i'),
+    $rdv->getHeureFin()->format('H:i')
+);
+
+$notif->setMessage($message);
+
+$em->persist($notif);
+$em->flush();
+    
 
     $this->addFlash('success', 'Rendez-vous réservé avec succès !');
     return $this->redirectToRoute('rdv_index');
 }
     /////////////////////////////
+    //entitymanager permet de   sauvegarder modifier supprimer lire depuis la base
 #[Route('/mes-reservations', name: 'mes_reservations', methods: ['GET'])]
 public function mesReservations(
     EntityManagerInterface $em,
     UserRepository $userRepo
 ): JsonResponse {
     try {
-        $user = $userRepo->find(1);
+        $user = $this->getUser();
 
         if (!$user) {
-            return new JsonResponse([]);
+            return new JsonResponse([], 401);
         }
 
+        // ← Sans tri pour éviter l'erreur de nom de champ
         $reservations = $em->getRepository(ReservationrendezVou::class)->findBy(
-            ['user' => $user],
-            ['date_reservation' => 'DESC']
+            ['user' => $user]
         );
+
+        // ← Debug : combien de réservations ?
+        if (empty($reservations)) {
+            return new JsonResponse(['debug' => 'aucune réservation pour user id=1', 'count' => 0]);
+        }
 
         $data = [];
         foreach ($reservations as $res) {
@@ -144,27 +194,59 @@ public function mesReservations(
             }
 
             $isCoach = $medecin->getRole() === 'coach_vie';
-            $avatar  = $medecin->getProfile_photo()
-                ? '/uploads/photos/' . $medecin->getProfile_photo()
-                : 'https://ui-avatars.com/api/?name=' . urlencode($medecin->getFirstname() . ' ' . $medecin->getLastname())
-                . '&background=' . ($isCoach ? '6D8B74' : '5F7161') . '&color=fff&size=100';
+            $avatar = $medecin->getProfile_photo()
+            ? '/' . $medecin->getProfile_photo()
+            : 'https://ui-avatars.com/api/?name=' . urlencode($medecin->getFirstname() . ' ' . $medecin->getLastname())
+            . '&background=' . ($isCoach ? '6D8B74' : '5F7161') . '&color=fff&size=100';
 
-           $data[] = [
-            'doctorName'   => $medecin->getFirstname() . ' ' . $medecin->getLastname(),
-            'doctorRole'   => $isCoach ? 'Coach de vie' : 'Psychologue',
-            'doctorAvatar' => $avatar,
-            'date'         => $rdv->getDateRendezVous()?->format('d/m/Y') ?? '—',
-            'debut'        => $rdv->getHeureDebut()?->format('H:i') ?? '—',
-            'fin'          => $rdv->getHeureFin()?->format('H:i') ?? '—',
-            'type'         => $rdv->getTypeSeance(),
-            'reservedAt'   => $res->getDateReservation()?->format('d/m/Y à H:i') ?? '—',
-        ];
+            $data[] = [
+                'doctorName'   => $medecin->getFirstname() . ' ' . $medecin->getLastname(),
+                'doctorRole'   => $isCoach ? 'Coach de vie' : 'Psychologue',
+                'doctorAvatar' => $avatar,
+                'date'         => $res->getDateRdv()?->format('d/m/Y') ?? '—',
+                'jourNom'      => $rdv->getDateRendezVous() ?? '—',
+                'debut'        => $rdv->getHeureDebut()?->format('H:i') ?? '—',
+                'fin'          => $rdv->getHeureFin()?->format('H:i') ?? '—',
+                'type'         => $rdv->getTypeSeance(),
+                'reservedAt'   => $res->getDateReservation()?->format('d/m/Y à H:i') ?? '—',
+                'userName'     => $user->getFirstname() . ' ' . $user->getLastname(),
+                'statut'       => $res->getStatut() ?? 'attente',
+            ];
         }
 
         return new JsonResponse($data);
 
     } catch (\Exception $e) {
-        return new JsonResponse(['error' => $e->getMessage()], 500);
+        return new JsonResponse([
+            'error'   => $e->getMessage(),
+            'file'    => $e->getFile(),
+            'line'    => $e->getLine(),
+        ], 500);
     }
+}
+//transformer un jour comme “Lundi” en vraie date
+private function getProchainJour(string $jourNom): \DateTime
+{
+    $jours = [
+        'Lundi'    => 1,
+        'Mardi'    => 2,
+        'Mercredi' => 3,
+        'Jeudi'    => 4,
+        'Vendredi' => 5,
+        'Samedi'   => 6,
+        'Dimanche' => 0,
+    ];
+
+    $cible      = $jours[$jourNom] ?? 1;
+    $aujourdhui = new \DateTime('today');
+    $jourActuel = (int) $aujourdhui->format('w'); // 0=dim, 1=lun...
+
+    $diff = ($cible - $jourActuel + 7) % 7;
+    if ($diff === 0) $diff = 7; // toujours la semaine prochaine si même jour
+
+    $date = clone $aujourdhui;
+    $date->modify("+{$diff} days");
+
+    return $date;
 }
 }

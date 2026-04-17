@@ -26,13 +26,9 @@ class RendezVou
     #[Assert\NotNull(message: "Le médecin est obligatoire.")]
     private ?User $medecin = null;
 
-    #[ORM\Column(name: "dateRendezVous", type: "date")]
+    #[ORM\Column(name: "dateRendezVous", type: "string", length: 20)]
     #[Assert\NotNull(message: "La date est obligatoire.")]
-    #[Assert\GreaterThanOrEqual(
-        value: "today",
-        message: "La date du rendez-vous ne peut pas être dans le passé."
-    )]
-    private ?\DateTimeInterface $dateRendezVous = null;
+   private ?string $dateRendezVous = null;
 
     #[ORM\Column(name: "heureDebut", type: "time")]
     #[Assert\NotNull(message: "L'heure de début est obligatoire.")]
@@ -91,12 +87,12 @@ class RendezVou
         return $this;
     }
 
-    public function getDateRendezVous(): ?\DateTimeInterface
+   public function getDateRendezVous(): ?string
     {
         return $this->dateRendezVous;
     }
 
-    public function setDateRendezVous(?\DateTimeInterface $dateRendezVous): self
+    public function setDateRendezVous(?string $dateRendezVous): self
     {
         $this->dateRendezVous = $dateRendezVous;
         return $this;
