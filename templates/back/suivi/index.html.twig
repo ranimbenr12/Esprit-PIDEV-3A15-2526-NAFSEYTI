@@ -1,0 +1,672 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Gestion des suivis - Nafseyti{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+        
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar_blog_1">
+                <div class="sidebar-header">
+                    <div class="logo_section">
+                        <a href="#">
+                            <img class="logo_icon img-responsive" src="{{ asset('back/images/logo/logo_icon1.png') }}" alt="logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar_user_info">
+                    <div class="user_profle_side">
+                        <div class="user_img">
+                            <img class="img-responsive" src="{{ asset('back/images/layout_img/user_img.jpg') }}" alt="user" />
+                        </div>
+                        <div class="user_info">
+                            <h6>Amri Sirine</h6>
+                            <p><span class="online_animation"></span> En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar_blog_2">
+            <h4></h4>
+                <ul class="list-unstyled components">
+                    <li><a href="{{ path('back_dashboard') }}"><i class="fa fa-dashboard yellow_color"></i> Tableau de bord</a></li>
+                    <li><a href="{{ path('admin_users') }}"><i class="fa fa-users blue1_color"></i> Utilisateurs</a></li>
+                    <li><a href="{{ path('admin_rendezvous') }}"><i class="fa fa-calendar orange_color"></i> Rendez-vous</a></li>
+                    <li><a href="#"><i class="fa fa-book purple_color2"></i> Contenu psychologique</a></li>
+                    <li><a href="{{ path('app_test_index') }}"><i class="fa fa-check-square green_color"></i> Tests</a></li>
+                    <li><a href="{{ path('admin_events_index') }}"><i class="fa fa-calendar-check-o red_color"></i> Événements</a></li>
+                    <li class="active"><a href="{{ path('back_suivi_index') }}"><i class="fa fa-line-chart yellow_color"></i> Suivi personnel</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id="content">
+             <!-- Topbar -->
+            <div class="topbar">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="full">
+                        <button type="button" id="sidebarCollapse" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="logo_section">
+                            <a href="{{ path('admin_dashboard') }}" style="display:flex; align-items:center; text-decoration:none;">
+                                <img class="img-responsive"
+                                     src="{{ asset('back/images/logo/logo1.png') }}"
+                                     alt="logo"
+                                     style="width:40px; height:40px; margin-right:10px;" />
+                                <span style="font-size:20px; font-weight:bold; color:#3c943c;">
+                                    Nafseyti
+                                </span>
+                            </a>
+                        </div>
+                        <div class="right_topbar">
+                            <div class="icon_info">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                                </ul>
+                                <ul class="user_profile_dd">
+                                    <li>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+    <img class="img-responsive rounded-circle"
+         src="{{ asset('back/images/layout_img/user_img.jpg') }}" 
+         alt="photo"
+         style="width:35px; height:35px; object-fit:cover; border-radius:50%;">
+
+    <span class="name_user">
+        {{ app.user.firstname }} {{ app.user.lastname }}
+    </span>
+</a>
+                                        <div class="dropdown-menu">
+    <a class="dropdown-item" href="{{ path('app_profile') }}">
+        <i class="fa fa-user"></i> Mon Profil
+    </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('app_logout') }}">
+        <span>Se déconnecter</span> <i class="fa fa-sign-out"></i>
+    </a>
+</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="midde_cont">
+                <div class="container-fluid">
+                    
+                    <div class="row column_title">
+                        <div class="col-md-12">
+                            <div class="page_title">
+                                <h2><i class="fa fa-line-chart"></i> Gestion des suivis personnels</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages flash -->
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    <!-- Bouton Ajouter + Recherche -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-success" onclick="resetForm()">
+                                <i class="fa fa-plus"></i> Nouveau suivi
+                            </button>
+                            <button type="button" class="btn btn-success ml-2" onclick="openReductionsPanel()">
+                                <i class="fa fa-tag"></i> Gérer les réductions
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background:#3c943c;color:white;padding:6px 12px;border-radius:4px 0 0 4px;">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                <input type="text" id="searchSuivi" class="form-control" placeholder="Rechercher par titre, type, description…" oninput="filterSuivis(this.value)">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" onclick="document.getElementById('searchSuivi').value=''; filterSuivis('');" title="Effacer">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tableau des suivis -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="white_shd full">
+                                <div class="full graph_head">
+                                    <h2>Liste des suivis</h2>
+                                </div>
+                                <div class="table_section">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Titre</th>
+                                                    <th>Description</th>
+                                                    <th>Type</th>
+                                                    <th>Utilisateur</th>
+                                                    <th>Psychologue</th>
+                                                    <th width="180">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="suiviTableBody">
+                                                {% for suivi in suivis %}
+                                                <tr id="row-{{ suivi.idsuivi }}">
+                                                    <td>{{ suivi.idsuivi }}</td>
+                                                    <td>{{ suivi.titre }}</td>
+                                                    <td>{{ suivi.description|default('')|slice(0, 50) }}{% if suivi.description|length > 50 %}...{% endif %}</td>
+                                                    <td>
+                                                        <span class="badge badge-info">{{ suivi.typeSuivi }}</span>
+                                                    </td>
+                                                    <td>
+                                                        {% if suivi.utilisateur %}
+                                                            {{ suivi.utilisateur.firstname }} {{ suivi.utilisateur.lastname }}
+                                                        {% else %}
+                                                            {{ usersMap[suivi.idutilisateur] ?? '—' }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if suivi.psychologue %}
+                                                            {{ suivi.psychologue.firstname }} {{ suivi.psychologue.lastname }}
+                                                        {% else %}
+                                                            {{ usersMap[suivi.idpsychologue] ?? '—' }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
+                                                            <button class="btn btn-warning btn-sm" onclick="editSuivi({{ suivi.idsuivi }})" title="Modifier">
+                                                                <i class="fa fa-edit"></i> Modifier
+                                                            </button>
+                                                            <button class="btn btn-info btn-sm" onclick="viewObjectifs({{ suivi.idsuivi }})" title="Voir objectifs">
+                                                                <i class="fa fa-tasks"></i> Objectifs
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm" onclick="deleteSuivi({{ suivi.idsuivi }})" title="Supprimer">
+                                                                <i class="fa fa-trash"></i> Supprimer
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr id="emptyRow">
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Formulaire Suivi (Ajouter/Modifier) -->
+<div class="modal fade" id="modalSuivi" tabindex="-1" role="dialog" style="z-index:10500;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Ajouter un suivi</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="suiviForm" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="suiviId" name="id" value="0">
+                    
+                    <div class="form-group">
+                        <label>Titre *</label>
+                        <input type="text" class="form-control" id="titre" name="titre" required>
+                        <span id="err_titre" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        <span id="err_description" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Type de suivi</label>
+                        <select class="form-control" id="type_suivi" name="type_suivi">
+                            <option value="Psychologique">🧠 Psychologique</option>
+                            <option value="Académique">📚 Académique</option>
+                            <option value="Social">🤝 Social</option>
+                            <option value="Comportemental">🎯 Comportemental</option>
+                        </select>
+                        <span id="err_type_suivi" class="text-danger small" style="display:none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Étudiant *</label>
+                        <select class="form-control" id="idutilisateur" name="idutilisateur">
+                            <option value="">— Sélectionner un étudiant —</option>
+                            {% for etudiant in etudiants %}
+                            <option value="{{ etudiant.id }}">{{ etudiant.firstname }} {{ etudiant.lastname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Psychologue *</label>
+                        <select class="form-control" id="idpsychologue" name="idpsychologue">
+                            <option value="">— Sélectionner un psychologue —</option>
+                            {% for psy in psychologues %}
+                            <option value="{{ psy.id }}">{{ psy.firstname }} {{ psy.lastname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Popup confirmation suppression réduction -->
+<div id="deleteOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center;">
+  <div style="background:var(--color-background-primary,#fff);border-radius:12px;border:0.5px solid #ddd;padding:2rem;width:360px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+    <div style="width:56px;height:56px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A32D2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+      </svg>
+    </div>
+    <p style="font-size:16px;font-weight:500;margin:0 0 6px;">Supprimer cette réduction ?</p>
+    <p style="font-size:13px;color:#888;margin:0 0 1.5rem;">Cette action est irréversible. La réduction sera définitivement supprimée.</p>
+    <div style="display:flex;gap:10px;">
+      <button id="deleteCancelBtn" style="flex:1;padding:9px;border:1px solid #ddd;background:#fff;border-radius:8px;cursor:pointer;font-size:14px;">Annuler</button>
+      <button id="deleteConfirmBtn" style="flex:1;padding:9px;background:#A32D2D;border:none;border-radius:8px;cursor:pointer;font-size:14px;color:#F7C1C1;font-weight:500;">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Reset formulaire
+function resetForm() {
+    document.getElementById('modalTitle').innerHTML = 'Ajouter un suivi';
+    document.getElementById('suiviId').value = '0';
+    document.getElementById('titre').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('type_suivi').value = 'Psychologique';
+    document.getElementById('idutilisateur').value = '';
+    document.getElementById('idpsychologue').value = '';
+    clearErrors(['titre', 'description', 'type_suivi']);
+    $('#modalSuivi').modal('show');
+}
+
+// Modifier un suivi
+function editSuivi(id) {
+    // Charger les données du suivi
+    fetch('/back/suivi/' + id + '/show')
+        .then(response => response.text())
+        .then(html => {
+            // Extraire les données du HTML (méthode simple)
+            // Alternative: faire une requête AJAX qui retourne du JSON
+            loadSuiviData(id);
+        });
+}
+
+function loadSuiviData(id) {
+    fetch('/back/suivi/' + id + '/json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('modalTitle').innerHTML = 'Modifier le suivi';
+            document.getElementById('suiviId').value = data.id;
+            document.getElementById('titre').value = data.titre;
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('type_suivi').value = data.type_suivi;
+            document.getElementById('idutilisateur').value = data.idutilisateur || '';
+            document.getElementById('idpsychologue').value = data.idpsychologue || '';
+            $('#modalSuivi').modal('show');
+        })
+        .catch(error => {
+            document.getElementById('modalTitle').innerHTML = 'Modifier le suivi';
+            document.getElementById('suiviId').value = id;
+            $('#modalSuivi').modal('show');
+        });
+}
+
+// Voir les objectifs d'un suivi
+function viewObjectifs(id) {
+    window.location.href = '/back/objectif/suivi/' + id;
+}
+
+// Supprimer un suivi
+function deleteSuivi(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce suivi ? Cette action est irréversible.')) {
+        fetch('/back/suivi/' + id + '/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({_token: '{{ csrf_token("delete") }}'})
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la suppression: ' + error.message);
+        });
+    }
+}
+
+// Soumission du formulaire (Ajouter/Modifier)
+document.getElementById('suiviForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    clearErrors(['titre', 'description', 'type_suivi']);
+
+    var id = parseInt(document.getElementById('suiviId').value) || 0;
+    var url = id > 0 ? '/back/suivi/' + id + '/edit' : '/back/suivi/new';
+
+    var params = new URLSearchParams({
+        titre:          document.getElementById('titre').value,
+        description:    document.getElementById('description').value,
+        type_suivi:     document.getElementById('type_suivi').value,
+        idutilisateur:  document.getElementById('idutilisateur').value,
+        idpsychologue:  document.getElementById('idpsychologue').value,
+    });
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+        body: params.toString()
+    })
+    .then(function(r) {
+        if (!r.ok) { return r.text().then(function(t){ throw new Error('HTTP ' + r.status + ': ' + t.substring(0,200)); }); }
+        return r.json();
+    })
+    .then(function(data) {
+        if (data.success) {
+            $('#modalSuivi').modal('hide');
+            location.reload();
+        } else if (data.errors) {
+            showErrors(data.errors);
+        } else {
+            alert('Erreur : ' + (data.error || JSON.stringify(data)));
+        }
+    })
+    .catch(function(err) { alert('Erreur : ' + err.message); });
+});
+
+function clearErrors(fields) {
+    fields.forEach(function(f) {
+        var el = document.getElementById('err_' + f);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+        var input = document.getElementById(f) || document.querySelector('[name="' + f + '"]');
+        if (input) input.classList.remove('is-invalid');
+    });
+}
+
+function showErrors(errors) {
+    Object.keys(errors).forEach(function(field) {
+        var el = document.getElementById('err_' + field);
+        if (el) { el.textContent = errors[field]; el.style.display = 'block'; }
+        var input = document.getElementById(field) || document.querySelector('[name="' + field + '"]');
+        if (input) input.classList.add('is-invalid');
+        if (field === 'global') { alert(errors[field]); }
+    });
+}
+</script>
+
+<script>
+// Fix backdrop z-index so modal is always interactive
+$(document).on('show.bs.modal', '#modalSuivi', function() {
+    setTimeout(function() {
+        $('.modal-backdrop').css('z-index', '10400');
+        $('#modalSuivi').css('z-index', '10500');
+    }, 10);
+});
+
+function filterSuivis(val) {
+    var q = val.toLowerCase().trim();
+    var rows = document.querySelectorAll('#suiviTableBody tr[id^="row-"]');
+    var visible = 0;
+    rows.forEach(function(row) {
+        var text = row.innerText.toLowerCase();
+        var show = !q || text.indexOf(q) !== -1;
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    var empty = document.getElementById('emptyRow');
+    if (empty) empty.style.display = visible === 0 ? '' : 'none';
+}
+</script>
+
+<style>
+.btn-group-sm .btn {
+    margin: 2px;
+    padding: 5px 10px;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+</style>
+
+<!-- ═══ PANEL RÉDUCTIONS ═══ -->
+<style>
+.btn-red-edit,.btn-red-del,.btn-add-red,.btn-save-red,.red-close{outline:none !important;box-shadow:none !important;}
+.btn-red-edit,.btn-red-del,.btn-add-red,.btn-save-red,.red-close{-webkit-tap-highlight-color:transparent;}
+.btn-red-edit:focus,.btn-red-del:focus,.btn-add-red:focus,.btn-save-red:focus,.red-close:focus{outline:none !important;box-shadow:none !important;}
+#modalReduction{z-index:10500 !important;}
+#modalReduction + .modal-backdrop{z-index:10499 !important;}
+.red-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;}
+.red-backdrop.open{display:block;}
+.red-panel{position:fixed;top:0;right:0;bottom:0;width:560px;background:#fff;z-index:9999;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s ease;box-shadow:-4px 0 20px rgba(0,0,0,.15);}
+.red-panel.open{transform:translateX(0);}
+.red-head{background:linear-gradient(135deg,#2D5016,#4A7C2F);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.red-head h3{color:white;font-size:1.1rem;margin:0;font-weight:600;}
+.red-close{background:rgba(255,255,255,.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;}
+.red-body{flex:1;overflow-y:auto;padding:20px;}
+.red-card{background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+.red-card img{width:50px;height:40px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+.red-card-img-ph{width:50px;height:40px;background:#e9ecef;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#aaa;flex-shrink:0;}
+.red-card-info{flex:1;}
+.red-card-name{font-weight:600;font-size:.9rem;color:#333;}
+.red-card-meta{font-size:.75rem;color:#666;margin-top:2px;}
+.red-card-actions{display:flex;gap:6px;flex-shrink:0;}
+</style>
+
+<div class="red-backdrop" id="redBackdrop" onclick="closeReductionsPanel()"></div>
+<div class="red-panel" id="redPanel">
+    <div class="red-head">
+        <h3><i class="fa fa-tag"></i> Gestion des <em>Réductions</em></h3>
+        <button class="red-close" onclick="closeReductionsPanel()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="red-body">
+        <button class="btn-add-red" style="outline:none;border:none;" onclick="openModalReduction(0)">
+            <i class="fa fa-plus"></i> Ajouter une réduction
+        </button>
+        <div id="redList"><p class="text-muted text-center">Chargement...</p></div>
+    </div>
+</div>
+
+<!-- Modal Réduction -->
+<div class="modal fade" id="modalReduction" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRedTitle">Nouvelle réduction</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="rId" value="0">
+                <div class="form-group"><label>Nom de la marque *</label><input type="text" id="rNom" class="form-control"></div>
+                <div class="form-group"><label>Description *</label><textarea id="rDesc" class="form-control" rows="2"></textarea></div>
+                <div class="form-group"><label>Points requis *</label><input type="number" id="rPoints" class="form-control" value="30" min="1"></div>
+                <div class="form-group"><label>Réduction (%) *</label><input type="number" id="rPct" class="form-control" value="10" min="1" max="100"></div>
+                <div class="form-group"><label>Date d'expiration *</label><input type="date" id="rDate" class="form-control"></div>
+                <div class="form-group"><label>URL image</label><input type="text" id="rImg" class="form-control" placeholder="https://..."></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn-save-red" style="outline:none;border:none;" onclick="saveReduction()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openReductionsPanel() {
+    document.getElementById('redBackdrop').classList.add('open');
+    document.getElementById('redPanel').classList.add('open');
+    loadReductions();
+}
+
+function closeReductionsPanel() {
+    document.getElementById('redBackdrop').classList.remove('open');
+    document.getElementById('redPanel').classList.remove('open');
+}
+
+function loadReductions() {
+    fetch('/back/reductions/list')
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+            var container = document.getElementById('redList');
+            if (!data.length) {
+                container.innerHTML = '<p class="text-muted text-center">Aucune réduction.</p>';
+                return;
+            }
+            var html = '';
+            data.forEach(function(r) {
+                html += '<div class="red-card" id="rcard-' + r.id_reduction + '">';
+                if (r.image_url) {
+                    html += '<img src="' + r.image_url + '" onerror="this.style.display=\'none\'">';
+                } else {
+                    html += '<div class="red-card-img-ph"><i class="fa fa-tag"></i></div>';
+                }
+                html += '<div class="red-card-info">';
+                html += '<div class="red-card-name">' + r.nom_marque + '</div>';
+                html += '<div class="red-card-meta">';
+                html += '<span class="red-badge pts"><i class="fa fa-star"></i> ' + r.points_requis + ' pts</span>';
+                html += '<span class="red-badge pct"><i class="fa fa-percent"></i> -' + r.pourcentage_reduction + '%</span>';
+                html += '<span class="red-badge exp"><i class="fa fa-calendar"></i> ' + r.date_expiration + '</span>';
+                html += '</div></div>';
+                html += '<div class="red-card-actions">';
+                html += '<button style="background:#EDE3D0;color:#3D5C28;border:none;outline:none;width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:.75rem;" onclick="openModalReduction(' + r.id_reduction + ')" title="Modifier"><i class="fa fa-edit"></i></button>';
+                html += '<button style="background:#FEE2E2;color:#991B1B;border:none;outline:none;width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:.75rem;" onclick="deleteReduction(' + r.id_reduction + ')" title="Supprimer"><i class="fa fa-trash"></i></button>';
+                html += '</div></div>';
+            });
+            container.innerHTML = html;
+        });
+}
+
+function openModalReduction(id) {
+    if (id === 0) {
+        document.getElementById('modalRedTitle').textContent = 'Nouvelle réduction';
+        document.getElementById('rId').value = '0';
+        document.getElementById('rNom').value = '';
+        document.getElementById('rDesc').value = '';
+        document.getElementById('rPoints').value = '30';
+        document.getElementById('rPct').value = '10';
+        document.getElementById('rDate').value = '';
+        document.getElementById('rImg').value = '';
+        $('#modalReduction').modal('show');
+    } else {
+        fetch('/back/reductions/' + id + '/json')
+            .then(function(r){ return r.json(); })
+            .then(function(d) {
+                document.getElementById('modalRedTitle').textContent = 'Modifier la réduction';
+                document.getElementById('rId').value = d.id_reduction;
+                document.getElementById('rNom').value = d.nom_marque;
+                document.getElementById('rDesc').value = d.description;
+                document.getElementById('rPoints').value = d.points_requis;
+                document.getElementById('rPct').value = d.pourcentage_reduction;
+                document.getElementById('rDate').value = d.date_expiration;
+                document.getElementById('rImg').value = d.image_url || '';
+                $('#modalReduction').modal('show');
+            });
+    }
+}
+
+function saveReduction() {
+    var id = document.getElementById('rId').value;
+    var url = parseInt(id) > 0 ? '/back/reductions/' + id + '/edit' : '/back/reductions/new';
+    var body = new URLSearchParams({
+        nom_marque: document.getElementById('rNom').value,
+        description: document.getElementById('rDesc').value,
+        points_requis: document.getElementById('rPoints').value,
+        pourcentage_reduction: document.getElementById('rPct').value,
+        date_expiration: document.getElementById('rDate').value,
+        image_url: document.getElementById('rImg').value,
+    });
+    fetch(url, { method: 'POST', body })
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                $('#modalReduction').modal('hide');
+                loadReductions();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+}
+
+var _deleteTarget = null;
+
+document.getElementById('deleteCancelBtn').onclick = function() {
+    document.getElementById('deleteOverlay').style.display = 'none';
+    _deleteTarget = null;
+};
+
+document.getElementById('deleteConfirmBtn').onclick = function() {
+    if (!_deleteTarget) return;
+    var id = _deleteTarget;
+    document.getElementById('deleteOverlay').style.display = 'none';
+    fetch('/back/reductions/' + id + '/delete', { method: 'POST' })
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                var el = document.getElementById('rcard-' + id);
+                if (el) el.remove();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    _deleteTarget = null;
+};
+
+function deleteReduction(id) {
+    _deleteTarget = id;
+    var overlay = document.getElementById('deleteOverlay');
+    overlay.style.display = 'flex';
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,2333 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Événements & Ateliers - NAFSEYTI{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --sidebar-bg: #ece6df;
+        --green-main: #285921;
+        --green-dark: #2e6a28;
+        --green-light: #7ec8a3;
+        --beige: #c9b99b;
+        --sidebar-text: #69685c;
+        --page-bg: linear-gradient(to bottom right, #f5f1ed 0%, #e8efe8 50%, #f0ede5 100%);
+        --card-bg: #ffffff;
+        --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    body { background: #f5f1ed; font-family: 'DM Sans', sans-serif; }
+
+    /* Hide Google Translate banner but keep functionality */
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    }
+    body {
+        top: 0px !important;
+    }
+    .goog-te-gadget {
+        display: none !important;
+    }
+    .goog-te-gadget-simple {
+        display: none !important;
+    }
+    /* IMPORTANT: Don't hide the translate element - just make it invisible but functional */
+    #google_translate_element {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── MAIN ── */
+    .main { flex:1; overflow-y:auto; padding:30px; background:var(--page-bg); }
+
+    /* Header */
+    .page-header { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
+    .header-icon {
+        width:40px; height:40px; border-radius:50%;
+        background:var(--green-main); display:flex; align-items:center; justify-content:center;
+        font-size:22px; color:white;
+        box-shadow:0 4px 12px rgba(40,89,33,.3);
+    }
+    .header-title { font-size:30px; font-weight:bold; color:var(--green-main); margin:0; }
+    .header-sub { font-size:14px; color:#5a6c5a; font-style:italic; margin:4px 0 0; }
+
+    /* Search/sort bar */
+    .search-bar {
+        display:flex; align-items:center; gap:15px; flex-wrap:wrap;
+        background:rgba(255,255,255,.95);
+        border:1.5px solid rgba(40,89,33,.25);
+        border-radius:20px; padding:15px 20px; margin-bottom:30px;
+        box-shadow:0 4px 12px rgba(40,89,33,.12);
+    }
+    .search-input {
+        flex:1; min-width:250px; padding:12px 16px;
+        border:2px solid rgba(40,89,33,.3); border-radius:15px;
+        font-size:14px; background:white; outline:none;
+        transition:border-color .2s;
+    }
+    .search-input:focus { border-color:var(--green-main); }
+
+    .btn-sort, .btn-fav {
+        padding:12px 20px; border:none; border-radius:15px;
+        font-size:14px; font-weight:bold; cursor:pointer; transition:all .2s;
+    }
+    .btn-sort { background:var(--green-light); color:#000; }
+    .btn-sort:hover { background:#5fb88b; transform:translateY(-2px); }
+    .btn-fav { background:var(--beige); color:#000; }
+    .btn-fav:hover { background:#b8a888; transform:translateY(-2px); }
+    .btn-fav.active { background:var(--green-light); }
+
+    /* Translation Button */
+    .btn-translate {
+        padding:12px 20px;
+        border:none;
+        border-radius:15px;
+        font-size:14px;
+        font-weight:bold;
+        cursor:pointer;
+        transition:all .2s;
+        background: #6c5ce7;
+        color: white;
+    }
+    .btn-translate:hover {
+        background: #5b4bc4;
+        transform: translateY(-2px);
+    }
+
+    .btn-calendar {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 15px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all .2s;
+        background: var(--green-main);
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-calendar:hover {
+        background: var(--green-dark);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .event-count {
+        margin-left:auto; padding:10px 18px;
+        background:rgba(40,89,33,.1); border:1.5px solid rgba(40,89,33,.3);
+        border-radius:25px; font-size:13px; font-weight:bold; color:var(--green-main);
+    }
+
+    /* Sort dropdown */
+    .sort-wrap { position:relative; }
+    .sort-menu {
+        display:none; position:absolute; top:110%; left:0; z-index:100;
+        background:white; border:1px solid rgba(40,89,33,.2);
+        border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,.12);
+        min-width:200px; overflow:hidden;
+    }
+    .sort-menu.open { display:block; }
+    .sort-menu a {
+        display:block; padding:12px 18px; font-size:13px;
+        color:#333; text-decoration:none; transition:background .15s;
+    }
+    .sort-menu a:hover { background:#f0f5f0; color:var(--green-main); }
+
+    /* Translation Modal Styles */
+    .translation-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        z-index: 10001;
+        justify-content: center;
+        align-items: center;
+    }
+    .translation-modal-content {
+        background: linear-gradient(145deg, #2a3a2a, #1e2e1e);
+        border-radius: 32px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease-out;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        border: 2px solid rgba(76, 175, 80, 0.4);
+    }
+    .translation-modal-header {
+        background: linear-gradient(135deg, #1a5c1a, #0d3d0d);
+        color: white;
+        padding: 20px 24px;
+        border-radius: 32px 32px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+        position: sticky;
+        top: 0;
+    }
+    .translation-modal-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .translation-close {
+        background: rgba(255,255,255,0.15);
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .translation-close:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+    .translation-options {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .translation-option {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px 20px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .translation-option:hover {
+        background: rgba(76, 175, 80, 0.3);
+        transform: translateX(5px);
+        border-color: rgba(76, 175, 80, 0.5);
+    }
+    .translation-option.active {
+        background: rgba(76, 175, 80, 0.4);
+        border-color: #4CAF50;
+    }
+    .translation-option-icon {
+        font-size: 32px;
+    }
+    .translation-option-info {
+        flex: 1;
+    }
+    .translation-option-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 4px;
+    }
+    .translation-option-desc {
+        font-size: 11px;
+        color: #a0c0a0;
+    }
+    .translation-reset {
+        margin: 10px 20px 20px;
+        padding: 12px;
+        background: rgba(255,255,255,0.15);
+        border: none;
+        border-radius: 30px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+    }
+    .translation-reset:hover {
+        background: rgba(76, 175, 80, 0.4);
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* ========== COLOR BLINDNESS FILTERS ========== */
+    body.normal-vision { filter: none; }
+    body.protanopia { filter: url('#protanopia'); }
+    body.deuteranopia { filter: url('#deuteranopia'); }
+    body.tritanopia { filter: url('#tritanopia'); }
+    body.achromatopsia { filter: grayscale(100%); }
+    body.high-contrast { filter: contrast(150%) brightness(110%); }
+    body.high-contrast .event-card {
+        background: #000 !important;
+        color: #fff !important;
+        border: 2px solid #fff !important;
+    }
+    body.high-contrast .event-title,
+    body.high-contrast .text,
+    body.high-contrast .detail-row .text,
+    body.high-contrast .plan-desc {
+        color: #fff !important;
+    }
+    body.high-contrast .btn-participate {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    /* ========== EVENT STATUS BADGE STYLES ========== */
+    .event-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .status-upcoming {
+        background: rgba(74, 144, 226, 0.15);
+        color: #4A90E2;
+        border: 1px solid rgba(74, 144, 226, 0.3);
+    }
+    .status-ongoing {
+        background: rgba(76, 175, 80, 0.15);
+        color: #4CAF50;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        animation: pulse-status 2s infinite;
+    }
+    .status-completed {
+        background: rgba(158, 158, 158, 0.15);
+        color: #9E9E9E;
+        border: 1px solid rgba(158, 158, 158, 0.3);
+    }
+    .status-cancelled {
+        background: rgba(244, 67, 54, 0.15);
+        color: #f44336;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+    @keyframes pulse-status {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    /* ========== AI RECOMMENDATION BADGE ========== */
+    .badge-recommended {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        font-size: 9px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        animation: glow 2s ease-in-out infinite;
+    }
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); }
+        50% { box-shadow: 0 2px 15px rgba(102, 126, 234, 0.6); }
+    }
+
+    /* ========== COUNTDOWN TIMER STYLES ========== */
+    .countdown-timer {
+        background: linear-gradient(135deg, #f0ede5, #e8e0d4);
+        border-radius: 40px;
+        padding: 8px 15px;
+        margin: 10px 0 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--green-main);
+        border: 1px solid rgba(40,89,33,.15);
+        width: 100%;
+        justify-content: center;
+    }
+    .countdown-timer span {
+        background: white;
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--green-main);
+        min-width: 45px;
+        display: inline-block;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .countdown-timer .countdown-label {
+        background: transparent;
+        padding: 0;
+        font-size: 11px;
+        font-weight: 500;
+        color: #8b9a8b;
+        min-width: auto;
+        box-shadow: none;
+    }
+    .countdown-timer.urgent {
+        background: linear-gradient(135deg, #fff5f0, #ffe8e0);
+        border-color: #ff9800;
+        animation: pulse-urgent 1s ease-in-out infinite;
+    }
+    @keyframes pulse-urgent {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.85; background: linear-gradient(135deg, #ffe0d0, #ffd0c0); }
+    }
+
+    /* ========== SHARE BUTTON STYLES ========== */
+    .btn-share {
+        font-size: 18px;
+        background: rgba(40,89,33,.08);
+        border: none;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 30px;
+        transition: all 0.2s;
+        color: #25D366;
+    }
+    .btn-share:hover {
+        background: #25D366;
+        color: white;
+        transform: scale(1.05);
+    }
+    .share-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .share-menu {
+        display: none;
+        position: absolute;
+        bottom: 45px;
+        right: 0;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        min-width: 180px;
+        z-index: 1000;
+        overflow: hidden;
+        border: 1px solid rgba(40,89,33,.15);
+    }
+    .share-menu a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        transition: background 0.2s;
+    }
+    .share-menu a:hover {
+        background: #f0f5f0;
+    }
+    .share-menu .wa { color: #25D366; }
+    .share-menu .tg { color: #0088cc; }
+    .share-menu .fb { color: #1877f2; }
+    .share-menu .tw { color: #1da1f2; }
+    .share-menu .mail { color: #ea4335; }
+
+    /* ========== CUTE GRID EVENT CARDS ========== */
+    #eventsContainer { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 28px;
+    }
+
+    .event-card {
+        background: white;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(40,89,33,.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(40,89,33,.12);
+    }
+    .event-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 32px -12px rgba(40,89,33,.25);
+        border-color: rgba(40,89,33,.3);
+    }
+
+    .event-image {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+        background: #e8e0d4;
+    }
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    .event-card:hover .event-image img {
+        transform: scale(1.03);
+    }
+
+    .cal-box {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(4px);
+        border-radius: 14px;
+        padding: 6px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 58px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .cal-month {
+        font-size: 10px;
+        font-weight: 700;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .cal-day {
+        font-size: 22px;
+        font-weight: 800;
+        color: white;
+        line-height: 1.2;
+        margin-top: 2px;
+    }
+
+    .event-info {
+        padding: 20px 18px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .event-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+    }
+    .event-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--green-main);
+        margin: 0;
+        letter-spacing: -0.2px;
+        line-height: 1.3;
+    }
+
+    .badge-new {
+        font-size: 9px;
+        font-weight: 700;
+        color: white;
+        background: #e67e22;
+        border-radius: 30px;
+        padding: 3px 10px;
+        letter-spacing: 0.3px;
+    }
+    .badge-plans {
+        font-size: 10px;
+        font-weight: 600;
+        color: white;
+        background: var(--beige);
+        border-radius: 30px;
+        padding: 4px 12px;
+    }
+
+    .event-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 4px 0;
+    }
+    .detail-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+    }
+    .detail-row .icon {
+        font-size: 13px;
+        width: 22px;
+        color: var(--green-main);
+    }
+    .detail-row .text {
+        color: #5a6c5a;
+    }
+    .detail-row .text.green { color: #2e7d32; font-weight: 600; }
+    .detail-row .text.orange { color: #e67e22; font-weight: 600; }
+    .detail-row .text.red { color: #c0392b; font-weight: 600; }
+
+    /* ========== STAR RATING STYLES ========== */
+    .rating-container {
+        margin: 8px 0 4px;
+    }
+    .stars {
+        display: inline-flex;
+        gap: 4px;
+        direction: ltr;
+    }
+    .star {
+        font-size: 20px;
+        cursor: pointer;
+        color: #ddd;
+        transition: all 0.2s ease;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+    .star:hover,
+    .star:hover ~ .star {
+        color: #ffc107 !important;
+    }
+    .star.active {
+        color: #ffc107;
+    }
+    .star-rating-display {
+        display: inline-flex;
+        gap: 2px;
+        margin-left: 8px;
+    }
+    .rating-average {
+        font-size: 12px;
+        color: #ffc107;
+        margin-left: 8px;
+        font-weight: bold;
+    }
+    .rating-count {
+        font-size: 11px;
+        color: #8b9a8b;
+        margin-left: 5px;
+    }
+    .rating-text {
+        font-size: 11px;
+        color: #8b9a8b;
+        margin-left: 8px;
+    }
+    .your-rating {
+        font-size: 10px;
+        color: #4CAF50;
+        margin-left: 8px;
+        font-weight: 500;
+    }
+
+    .action-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+        border-top: 1px solid rgba(40,89,33,.1);
+        padding-top: 14px;
+    }
+
+    .btn-participate {
+        padding: 7px 20px;
+        border: none;
+        border-radius: 40px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--green-main);
+        color: white;
+        flex: 1;
+    }
+    .btn-participate:hover { 
+        background: #3d7e33; 
+        transform: translateY(-1px); 
+    }
+    .btn-participate:disabled { 
+        background: #4CAF50; 
+        cursor: default; 
+        opacity: 0.8;
+    }
+    .btn-participate.full { 
+        background: #b22222; 
+        cursor: default; 
+    }
+
+    .btn-mic {
+        font-size: 18px;
+        background: rgba(40,89,33,.08);
+        border: none;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 30px;
+        transition: all 0.2s;
+        color: var(--green-main);
+    }
+    .btn-mic:hover { 
+        background: rgba(40,89,33,.2); 
+        transform: scale(1.05);
+    }
+    .btn-mic.playing {
+        background: #4CAF50;
+        color: white;
+        animation: pulse 1s infinite;
+    }
+
+    .btn-color-blind {
+        font-size: 18px;
+        background: rgba(40,89,33,.08);
+        border: none;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 30px;
+        transition: all 0.2s;
+        color: var(--green-main);
+    }
+    .btn-color-blind:hover { 
+        background: rgba(40,89,33,.2); 
+        transform: scale(1.05);
+    }
+    .btn-color-blind.active {
+        background: #4CAF50;
+        color: white;
+    }
+
+    /* Share button styles */
+    .btn-share {
+        font-size: 18px;
+        background: rgba(40,89,33,.08);
+        border: none;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 30px;
+        transition: all 0.2s;
+        color: #25D366;
+    }
+    .btn-share:hover {
+        background: #25D366;
+        color: white;
+        transform: scale(1.05);
+    }
+    .share-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+    .share-dropdown {
+        display: none;
+        position: absolute;
+        bottom: 45px;
+        right: 0;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        min-width: 200px;
+        z-index: 1000;
+        overflow: hidden;
+        border: 1px solid rgba(40,89,33,.15);
+    }
+    .share-dropdown.show {
+        display: block;
+    }
+    .share-dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: #333;
+        font-size: 13px;
+        transition: background 0.2s;
+        font-weight: 500;
+    }
+    .share-dropdown a:hover {
+        background: #f0f5f0;
+    }
+    .share-dropdown .wa { color: #25D366; }
+    .share-dropdown .tg { color: #0088cc; }
+    .share-dropdown .fb { color: #1877f2; }
+    .share-dropdown .tw { color: #1da1f2; }
+    .share-dropdown .mail { color: #ea4335; }
+    .share-dropdown .copy { color: #607d8b; }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .btn-heart {
+        font-size: 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px 8px;
+        transition: transform 0.2s;
+        color: #d4af7a;
+    }
+    .btn-heart:hover { 
+        transform: scale(1.15); 
+        color: #e67e22; 
+    }
+
+    .btn-maps {
+        font-size: 15px;
+        background: rgba(40,89,33,.08);
+        border: none;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 30px;
+        transition: all 0.2s;
+    }
+    .btn-maps:hover { 
+        background: rgba(40,89,33,.2); 
+    }
+
+    .plan-separator {
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(40,89,33,.15), transparent);
+        margin: 8px 0 4px;
+    }
+    .plan-title-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 4px 0 2px;
+    }
+    .plan-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--green-main);
+        margin: 0;
+    }
+
+    .plan-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .plan-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(168,230,207,.08);
+        border: 1px solid rgba(40,89,33,.1);
+        border-radius: 14px;
+        padding: 8px 12px;
+    }
+    .plan-num {
+        min-width: 26px;
+        max-width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--green-main);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .plan-desc { 
+        font-size: 11px; 
+        color: #4a5b4a; 
+        font-weight: 500; 
+    }
+    .plan-dur { 
+        font-size: 9px; 
+        color: #7a8c7a; 
+        font-weight: 600; 
+        margin-top: 2px; 
+    }
+
+    /* Color Blindness Modal Styles */
+    .colorblind-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+    }
+    .colorblind-modal-content {
+        background: linear-gradient(145deg, #2a3a2a, #1e2e1e);
+        border-radius: 32px;
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.3s ease-out;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        border: 2px solid rgba(76, 175, 80, 0.4);
+    }
+    .colorblind-modal-header {
+        background: linear-gradient(135deg, #1a5c1a, #0d3d0d);
+        color: white;
+        padding: 20px 24px;
+        border-radius: 32px 32px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+    }
+    .colorblind-modal-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .colorblind-close {
+        background: rgba(255,255,255,0.15);
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .colorblind-close:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+    .colorblind-options {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .colorblind-option {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .colorblind-option:hover {
+        background: rgba(76, 175, 80, 0.3);
+        transform: translateX(5px);
+        border-color: rgba(76, 175, 80, 0.5);
+    }
+    .colorblind-option.active {
+        background: rgba(76, 175, 80, 0.4);
+        border-color: #4CAF50;
+    }
+    .colorblind-option-icon {
+        font-size: 32px;
+    }
+    .colorblind-option-info {
+        flex: 1;
+    }
+    .colorblind-option-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 4px;
+    }
+    .colorblind-option-desc {
+        font-size: 11px;
+        color: #a0c0a0;
+    }
+    .colorblind-reset {
+        margin: 10px 20px 20px;
+        padding: 12px;
+        background: rgba(255,255,255,0.15);
+        border: none;
+        border-radius: 30px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+    }
+    .colorblind-reset:hover {
+        background: rgba(76, 175, 80, 0.4);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 60px 30px;
+        background: rgba(255,255,255,.95);
+        border: 2px solid rgba(40,89,33,.2);
+        border-radius: 32px;
+        grid-column: 1 / -1;
+    }
+    .empty-state .icon { font-size: 64px; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 22px; font-weight: bold; color: var(--green-main); }
+
+    /* Toast */
+    .speech-toast {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--green-main);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 40px;
+        font-size: 13px;
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        white-space: nowrap;
+    }
+    .speech-toast.show {
+        display: flex;
+        animation: fadeInUp 0.3s ease-out;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    #toast {
+        position: fixed; bottom: 25px; right: 25px; z-index: 9999;
+        padding: 12px 24px; border-radius: 40px;
+        font-size: 13px; font-weight: 600; color: white;
+        background: #285921; box-shadow: 0 4px 15px rgba(0,0,0,.2);
+        display: none; animation: fadeInOut .3s ease;
+    }
+    @keyframes fadeInOut { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Responsive */
+    @media (max-width: 780px) {
+        #eventsContainer { gap: 20px; }
+        .event-image { height: 180px; }
+        .event-info { padding: 16px; }
+        .speech-toast { white-space: normal; text-align: center; width: 90%; }
+        .countdown-timer { font-size: 11px; padding: 6px 12px; }
+        .countdown-timer span { font-size: 12px; min-width: 38px; }
+    }
+
+    /* ========== CREATIVE PAGINATION STYLES ========== */
+    .pagination-wrapper {
+        margin-top: 50px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        background: rgba(255,255,255,0.5);
+        padding: 20px 25px;
+        border-radius: 60px;
+        backdrop-filter: blur(4px);
+    }
+
+    .pagination {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pagination li {
+        display: inline-block;
+        perspective: 500px;
+    }
+
+    .pagination a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 14px;
+        background: white;
+        border: 1.5px solid rgba(40, 89, 33, 0.2);
+        border-radius: 50%;
+        color: var(--green-main);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pagination a::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, rgba(40, 89, 33, 0.15), transparent);
+        transform: translate(-50%, -50%);
+        transition: width 0.4s, height 0.4s;
+        border-radius: 50%;
+    }
+
+    .pagination a:hover::before {
+        width: 120%;
+        height: 120%;
+    }
+
+    .pagination a:hover {
+        transform: translateY(-3px) scale(1.05);
+        background: var(--green-light);
+        border-color: var(--green-main);
+        color: white;
+        box-shadow: 0 6px 16px rgba(40, 89, 33, 0.25);
+    }
+
+    .pagination .active a {
+        background: linear-gradient(135deg, var(--green-main), var(--green-dark));
+        color: white;
+        border-color: var(--green-main);
+        transform: scale(1.08);
+        box-shadow: 0 6px 20px rgba(40, 89, 33, 0.4);
+    }
+
+    .pagination .active a::after {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        background: linear-gradient(135deg, #ffd700, #ff9800);
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0.5;
+        animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    .pagination .disabled a {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #f5f5f5;
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* Page info */
+    .page-info {
+        text-align: center;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 40px;
+        font-size: 13px;
+        color: #8b9a8b;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .page-info strong {
+        color: var(--green-main);
+        font-weight: 800;
+        font-size: 15px;
+    }
+
+    /* Items per page selector */
+    .per-page-selector {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: white;
+        padding: 5px 15px 5px 20px;
+        border-radius: 40px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .per-page-selector label {
+        font-size: 13px;
+        color: #5a6c5a;
+        font-weight: 500;
+    }
+
+    .per-page-selector select {
+        padding: 8px 12px;
+        border: 1.5px solid rgba(40, 89, 33, 0.3);
+        border-radius: 30px;
+        background: white;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--green-main);
+        cursor: pointer;
+        transition: all 0.2s;
+        outline: none;
+    }
+
+    .per-page-selector select:hover {
+        border-color: var(--green-main);
+        background: var(--green-light);
+        color: white;
+    }
+
+    /* Responsive pagination */
+    @media (max-width: 768px) {
+        .pagination-wrapper {
+            flex-direction: column;
+            border-radius: 30px;
+            padding: 15px;
+        }
+        
+        .pagination a {
+            min-width: 38px;
+            height: 38px;
+            font-size: 12px;
+            padding: 0 10px;
+        }
+        
+        .per-page-selector {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .page-info {
+            order: 2;
+        }
+    }
+
+    /* Animation for page change */
+    @keyframes pageTransition {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .event-card {
+        animation: pageTransition 0.4s ease-out;
+    }
+</style>
+
+<!-- SVG Filters for Color Blindness Simulation -->
+<svg style="position: absolute; width: 0; height: 0; visibility: hidden;">
+    <defs>
+        <filter id="protanopia" color-interpolation-filters="sRGB">
+            <feColorMatrix type="matrix" values="
+                0.567, 0.433, 0.000, 0, 0
+                0.558, 0.442, 0.000, 0, 0
+                0.000, 0.242, 0.758, 0, 0
+                0, 0, 0, 1, 0"/>
+        </filter>
+        <filter id="deuteranopia" color-interpolation-filters="sRGB">
+            <feColorMatrix type="matrix" values="
+                0.625, 0.375, 0.000, 0, 0
+                0.700, 0.300, 0.000, 0, 0
+                0.000, 0.300, 0.700, 0, 0
+                0, 0, 0, 1, 0"/>
+        </filter>
+        <filter id="tritanopia" color-interpolation-filters="sRGB">
+            <feColorMatrix type="matrix" values="
+                0.950, 0.050, 0.000, 0, 0
+                0.000, 0.433, 0.567, 0, 0
+                0.000, 0.475, 0.525, 0, 0
+                0, 0, 0, 1, 0"/>
+        </filter>
+    </defs>
+</svg>
+
+<!-- Google Translate Element (Keep visible but tiny for functionality) -->
+<div id="google_translate_element" style="position: fixed; bottom: 0; right: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; z-index: -1;"></div>
+
+<div class="layout">
+    <main class="main">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-icon">Ψ</div>
+            <div>
+                <h1 class="header-title">Événements & Ateliers</h1>
+                <p class="header-sub">🌱 Cultivez votre bien-être mental et épanouissement personnel</p>
+            </div>
+        </div>
+
+        <!-- Search / Sort bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input"
+                   placeholder="🔍  Recherchez votre atelier de bien-être...">
+
+            <div class="sort-wrap">
+                <button class="btn-sort" id="sortBtn" onclick="toggleSort()">✨ Trier par</button>
+                <div class="sort-menu" id="sortMenu">
+                    <a href="#" onclick="sortEvents('title'); return false;">📚 Par Titre (A → Z)</a>
+                    <a href="#" onclick="sortEvents('date'); return false;">📅 Par Date (Récent)</a>
+                    <a href="#" onclick="sortEvents('plans'); return false;">🎯 Par Activités</a>
+                </div>
+            </div>
+
+            <button class="btn-fav" id="favBtn" onclick="toggleFav()">💛 Mes Favoris</button>
+            
+            <!-- 🌐 TRANSLATION BUTTON -->
+            <button class="btn-translate" id="translateBtn" onclick="showTranslationModal()">🌐 Traduire</button>
+
+            <!-- 📅 CALENDAR BUTTON -->
+            <a href="{{ path('client_events_calendar') }}" class="btn-calendar">📅 Calendrier</a>
+
+            <span class="event-count" id="eventCount">🎯 {{ events|length }} événement{{ events|length != 1 ? 's' : '' }}</span>
+        </div>
+
+        <!-- Events list -->
+        <div id="eventsContainer">
+            {% if events is empty %}
+                <div class="empty-state">
+                    <div class="icon">🌸</div>
+                    <h3>Aucun événement disponible</h3>
+                    <p>🌱 Revenez bientôt pour découvrir nos prochains ateliers</p>
+                </div>
+            {% else %}
+                {% for event in events %}
+                {% set ratio = event.maxParticipants > 0 ? event.currentParticipants / event.maxParticipants : 0 %}
+                {% set isNew = event.createdAt and date().diff(event.createdAt).days <= 7 %}
+                {% set isFull = event.currentParticipants >= event.maxParticipants %}
+                {% set plansCount = event.planifications|length %}
+                {% set avgRating = event.avgRating ?? 0 %}
+                {% set userRating = event.userRating ?? 0 %}
+
+                <div class="event-card"
+                     data-id="{{ event.id }}"
+                     data-title="{{ event.title|lower }}"
+                     data-date="{{ event.eventDate ? event.eventDate|date('Y-m-d') : '' }}"
+                     data-plans="{{ plansCount }}">
+
+                    <div class="event-image">
+                        {% if event.link %}
+                            <img src="{{ event.link }}" alt="{{ event.title }}"
+                                 onerror="this.src='https://placehold.co/400x200/e8e0d4/5a6c5a?text=Atelier+NAFSEYTI'">
+                        {% else %}
+                            <img src="https://placehold.co/400x200/e8e0d4/5a6c5a?text=Atelier+Bien-%C3%AAtre" alt="Image par défaut">
+                        {% endif %}
+                        
+                        {% if event.eventDate %}
+                        <div class="cal-box">
+                            <div class="cal-month">{{ event.eventDate|date('M')|upper }}</div>
+                            <div class="cal-day">{{ event.eventDate|date('d') }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-info">
+                        <div class="event-title-row">
+                            {% if isNew %}<span class="badge-new">NOUVEAU</span>{% endif %}
+                            <h2 class="event-title">{{ event.title }}</h2>
+                            {% if plansCount > 0 %}
+                                <span class="badge-plans">🎯 {{ plansCount }}</span>
+                            {% endif %}
+                            <!-- ✨ AI RECOMMENDATION BADGE -->
+                            {% if event.isRecommended %}
+                                <span class="badge-recommended">
+                                    ✨ Recommandé pour vous
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- ========== EVENT STATUS BADGE ========== -->
+                        <div class="event-status-badge status-{{ event.status ?? 'upcoming' }}">
+                            {% if event.status == 'ongoing' %}
+                                🟢 En cours
+                            {% elseif event.status == 'completed' %}
+                                ✅ Terminé
+                            {% elseif event.status == 'cancelled' %}
+                                ❌ Annulé
+                            {% else %}
+                                📅 À venir
+                            {% endif %}
+                        </div>
+
+                        <!-- ========== COUNTDOWN TIMER ========== -->
+                        {% if event.eventDate %}
+                            {% if event.status == 'ongoing' %}
+                                <div class="countdown-timer urgent">
+                                    🟢 Événement en cours ! Rejoignez-nous !
+                                </div>
+                            {% elseif event.status == 'completed' %}
+                                <div class="countdown-timer">
+                                    ✅ Événement terminé
+                                </div>
+                            {% elseif event.status == 'cancelled' %}
+                                <div class="countdown-timer">
+                                    ❌ Événement annulé
+                                </div>
+                            {% else %}
+                                {% set daysLeft = (event.eventDate.timestamp - date().timestamp) / 86400 %}
+                                <div class="countdown-timer {% if daysLeft <= 3 %}urgent{% endif %}" 
+                                     data-event-date="{{ event.eventDate|date('Y-m-d H:i:s') }}">
+                                    <span class="countdown-label">⏰</span>
+                                    <span class="days">00</span><span class="countdown-label">j</span>
+                                    <span class="hours">00</span><span class="countdown-label">h</span>
+                                    <span class="minutes">00</span><span class="countdown-label">m</span>
+                                    <span class="seconds">00</span><span class="countdown-label">s</span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        <div class="event-details">
+                            {% if event.location %}
+                            <div class="detail-row">
+                                <span class="icon">📍</span>
+                                <span class="text">{{ event.location }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if event.createdAt %}
+                            <div class="detail-row">
+                                <span class="icon">🕐</span>
+                                <span class="text" style="color:#95a5a6; font-style:italic;">
+                                    {{ event.createdAt|date('d/m/Y') }}
+                                </span>
+                            </div>
+                            {% endif %}
+
+                            <div class="detail-row">
+                                <span class="icon">👥</span>
+                                <span class="text {% if ratio >= 1 %}red{% elseif ratio >= 0.8 %}orange{% else %}green{% endif %}">
+                                    {{ event.currentParticipants }} / {{ event.maxParticipants }} participants
+                                    {% if isFull %} — Complet{% elseif ratio >= 0.8 %} — Presque complet{% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- ========== 5-STAR RATING SYSTEM ========== -->
+                        <div class="rating-container">
+                            <div class="stars" data-event-id="{{ event.id }}">
+                                {% for i in 1..5 %}
+                                    <button class="star {% if userRating >= i %}active{% endif %}" data-value="{{ i }}" onclick="rateEvent({{ event.id }}, {{ i }})">★</button>
+                                {% endfor %}
+                            </div>
+                            <span class="rating-average" id="rating-avg-{{ event.id }}">({{ avgRating }})</span>
+                            <span class="rating-count" id="rating-count-{{ event.id }}">({{ event.ratingCount ?? 0 }} avis)</span>
+                            {% if userRating > 0 %}
+                                <span class="your-rating">Votre note: {{ userRating }}★</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="action-row">
+                            {% if event.status == 'cancelled' %}
+                                <button class="btn-participate full" disabled>❌ Événement annulé</button>
+                            {% elseif event.status == 'completed' %}
+                                <button class="btn-participate full" disabled>✅ Événement terminé</button>
+                            {% elseif event.hasParticipated %}
+                                <button class="btn-participate" disabled>✅ Inscrit</button>
+                            {% elseif isFull %}
+                                <button class="btn-participate full" disabled>Complet</button>
+                            {% else %}
+                                <button class="btn-participate"
+                                        onclick="participate({{ event.id }}, this)">
+                                    🎯 S'inscrire
+                                </button>
+                            {% endif %}
+
+                            <button class="btn-mic" 
+                                    onclick="speakEventDetails({{ event.id }})"
+                                    title="Écouter les détails de l'événement"
+                                    data-event-id="{{ event.id }}">
+                                🎤
+                            </button>
+
+                            <button class="btn-color-blind" 
+                                    onclick="showColorBlindOptions()"
+                                    title="Options pour daltoniens (amélioration des couleurs)">
+                                🎨
+                            </button>
+
+                            <!-- 📤 SHARE BUTTON with dropdown -->
+                            <div class="share-wrapper">
+                                <button class="btn-share" onclick="toggleShareMenu({{ event.id }})" title="Partager l'événement">
+                                    📤
+                                </button>
+                                <div class="share-dropdown" id="share-menu-{{ event.id }}">
+                                    <a href="#" onclick="shareEvent('{{ event.id }}', 'whatsapp'); return false;" class="wa">
+                                        <span>💚</span> WhatsApp
+                                    </a>
+                                    <a href="#" onclick="shareEvent('{{ event.id }}', 'telegram'); return false;" class="tg">
+                                        <span>✈️</span> Telegram
+                                    </a>
+                                    <a href="#" onclick="shareEvent('{{ event.id }}', 'facebook'); return false;" class="fb">
+                                        <span>📘</span> Facebook
+                                    </a>
+                                    <a href="#" onclick="shareEvent('{{ event.id }}', 'twitter'); return false;" class="tw">
+                                        <span>🐦</span> Twitter/X
+                                    </a>
+                                    <a href="#" onclick="shareEvent('{{ event.id }}', 'email'); return false;" class="mail">
+                                        <span>📧</span> Email
+                                    </a>
+                                    <a href="#" onclick="copyEventLink('{{ event.id }}'); return false;" class="copy">
+                                        <span>📋</span> Copier le lien
+                                    </a>
+                                </div>
+                            </div>
+
+                            {% if event.location %}
+                            <button class="btn-maps"
+                                    onclick="showQR({{ event.id }})"
+                                    title="Voir localisation">📍</button>
+                            {% endif %}
+
+                            <button class="btn-heart"
+                                    id="heart-{{ event.id }}"
+                                    onclick="toggleHeart({{ event.id }}, this)">🤍</button>
+                        </div>
+
+                        <div style="display: none;" class="event-speech-data" 
+                             data-title="{{ event.title }}"
+                             data-date="{{ event.eventDate ? event.eventDate|date('d/m/Y') : 'Date non spécifiée' }}"
+                             data-location="{{ event.location ?: 'Lieu non spécifié' }}"
+                             data-participants="{{ event.currentParticipants }}/{{ event.maxParticipants }}"
+                             data-plans-count="{{ plansCount }}"
+                             data-plans="{% for plan in event.planifications %}{{ plan.description }} ({{ plan.duree }}){% if not loop.last %}, {% endif %}{% endfor %}">
+                        </div>
+
+                        {% if plansCount > 0 %}
+                        <div class="plan-separator"></div>
+                        <div class="plan-title-row">
+                            <span>🌱</span>
+                            <h4 class="plan-title">Programme</h4>
+                        </div>
+                        <div class="plan-list">
+                            {% for i, plan in event.planifications|slice(0, 2) %}
+                            <div class="plan-item">
+                                <div class="plan-num">{{ i + 1 }}</div>
+                                <div>
+                                    {% if plan.description %}
+                                        <div class="plan-desc">{{ plan.description|slice(0, 50) }}{% if plan.description|length > 50 %}...{% endif %}</div>
+                                    {% endif %}
+                                    {% if plan.duree %}
+                                        <div class="plan-dur">⏰ {{ plan.duree }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% if plansCount > 2 %}
+                            <div style="font-size: 10px; color: var(--green-main); text-align: center; margin-top: 4px;">
+                                + {{ plansCount - 2 }} autre(s) activité(s)
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- ========== CREATIVE PAGINATION ========== -->
+        {% if events is not empty and totalPages > 1 %}
+        <div class="pagination-wrapper">
+            <div class="per-page-selector">
+                <label>📄 Afficher :</label>
+                <select id="perPageSelect" onchange="changePerPage(this.value)">
+                    <option value="6" {{ currentLimit == 6 ? 'selected' : '' }}>6 par page</option>
+                    <option value="12" {{ currentLimit == 12 ? 'selected' : '' }}>12 par page</option>
+                    <option value="18" {{ currentLimit == 18 ? 'selected' : '' }}>18 par page</option>
+                    <option value="24" {{ currentLimit == 24 ? 'selected' : '' }}>24 par page</option>
+                    <option value="30" {{ currentLimit == 30 ? 'selected' : '' }}>30 par page</option>
+                </select>
+            </div>
+            
+            <div class="pagination">
+                {# Previous page link #}
+                {% if currentPage > 1 %}
+                    <li><a href="{{ path('client_events_index', {page: currentPage - 1, limit: currentLimit}) }}">←</a></li>
+                {% else %}
+                    <li class="disabled"><a href="#">←</a></li>
+                {% endif %}
+                
+                {# First page #}
+                {% if currentPage > 3 %}
+                    <li><a href="{{ path('client_events_index', {page: 1, limit: currentLimit}) }}">1</a></li>
+                    {% if currentPage > 4 %}
+                        <li class="disabled"><a href="#">...</a></li>
+                    {% endif %}
+                {% endif %}
+                
+                {# Page numbers around current page #}
+                {% for p in range(max(1, currentPage - 2), min(totalPages, currentPage + 2)) %}
+                    {% if p == currentPage %}
+                        <li class="active"><a href="#">{{ p }}</a></li>
+                    {% else %}
+                        <li><a href="{{ path('client_events_index', {page: p, limit: currentLimit}) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {# Last page #}
+                {% if currentPage < totalPages - 2 %}
+                    {% if currentPage < totalPages - 3 %}
+                        <li class="disabled"><a href="#">...</a></li>
+                    {% endif %}
+                    <li><a href="{{ path('client_events_index', {page: totalPages, limit: currentLimit}) }}">{{ totalPages }}</a></li>
+                {% endif %}
+                
+                {# Next page link #}
+                {% if currentPage < totalPages %}
+                    <li><a href="{{ path('client_events_index', {page: currentPage + 1, limit: currentLimit}) }}">→</a></li>
+                {% else %}
+                    <li class="disabled"><a href="#">→</a></li>
+                {% endif %}
+            </div>
+            
+            <div class="page-info">
+                📖 Page <strong>{{ currentPage }}</strong> / <strong>{{ totalPages }}</strong>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                🎯 <strong>{{ totalItems }}</strong> événement{{ totalItems > 1 ? 's' : '' }} au total
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+</div>
+
+<!-- Translation Modal -->
+<div id="translationModal" class="translation-modal-overlay">
+    <div class="translation-modal-content">
+        <div class="translation-modal-header">
+            <h3>
+                <span>🌐</span>
+                Traduire la page
+            </h3>
+            <button class="translation-close" onclick="closeTranslationModal()">&times;</button>
+        </div>
+        <div class="translation-options" id="translationOptions">
+            <!-- Languages will be populated by JavaScript -->
+        </div>
+        <div class="translation-reset" onclick="resetTranslation()">
+            🔄 Réinitialiser (Français)
+        </div>
+    </div>
+</div>
+
+<!-- Color Blindness Modal -->
+<div id="colorblindModal" class="colorblind-modal-overlay">
+    <div class="colorblind-modal-content">
+        <div class="colorblind-modal-header">
+            <h3>
+                <span>🎨</span>
+                Options pour Daltoniens
+            </h3>
+            <button class="colorblind-close" onclick="closeColorBlindModal()">&times;</button>
+        </div>
+        <div class="colorblind-options">
+            <div class="colorblind-option" onclick="setColorBlindMode('normal')" id="opt-normal">
+                <div class="colorblind-option-icon">👁️</div>
+                <div class="colorblind-option-info">
+                    <div class="colorblind-option-title">Vision Normale</div>
+                    <div class="colorblind-option-desc">Couleurs standards</div>
+                </div>
+            </div>
+            <div class="colorblind-option" onclick="setColorBlindMode('protanopia')" id="opt-protanopia">
+                <div class="colorblind-option-icon">🔴</div>
+                <div class="colorblind-option-info">
+                    <div class="colorblind-option-title">Protanopie (Daltonien Rouge-Vert)</div>
+                    <div class="colorblind-option-desc">Difficulté à distinguer le rouge et le vert</div>
+                </div>
+            </div>
+            <div class="colorblind-option" onclick="setColorBlindMode('deuteranopia')" id="opt-deuteranopia">
+                <div class="colorblind-option-icon">🟢</div>
+                <div class="colorblind-option-info">
+                    <div class="colorblind-option-title">Deutéranopie (Daltonien Vert-Rouge)</div>
+                    <div class="colorblind-option-desc">Difficulté à distinguer le vert et le rouge</div>
+                </div>
+            </div>
+            <div class="colorblind-option" onclick="setColorBlindMode('tritanopia')" id="opt-tritanopia">
+                <div class="colorblind-option-icon">🔵</div>
+                <div class="colorblind-option-info">
+                    <div class="colorblind-option-title">Tritanopie (Daltonien Bleu-Jaune)</div>
+                    <div class="colorblind-option-desc">Difficulté à distinguer le bleu et le jaune</div>
+                </div>
+            </div>
+            <div class="colorblind-option" onclick="setColorBlindMode('achromatopsia')" id="opt-achromatopsia">
+                <div class="colorblind-option-icon">⚫</div>
+                <div class="colorblind-option-info">
+                    <div class="colorblind-option-title">Achromatopsie (Noir et Blanc)</div>
+                    <div class="colorblind-option-desc">Vision totalement en niveaux de gris</div>
+                </div>
+            </div>
+            <div class="colorblind-option" onclick="setColorBlindMode('high-contrast')" id="opt-high-contrast">
+                <div class="colorblind-option-icon">🌓</div>
+                <div class="colorblind-option-info">
+                    <div class="colorblind-option-title">Contraste Élevé</div>
+                    <div class="colorblind-option-desc">Pour les personnes ayant une basse vision</div>
+                </div>
+            </div>
+        </div>
+        <div class="colorblind-reset" onclick="resetColorBlindMode()">
+            🔄 Réinitialiser les paramètres
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- QR Code Modal -->
+<div id="qrModal" style="display:none; position:fixed; inset:0; z-index:9998;
+     background:rgba(0,0,0,.5); align-items:center; justify-content:center;">
+  <div style="background:#F5F1E6; border-radius:20px; padding:30px; max-width:420px; width:90%;
+              box-shadow:0 10px 40px rgba(0,0,0,.3); text-align:center; position:relative;">
+
+    <button onclick="closeQR()" style="position:absolute; top:15px; right:18px;
+            background:none; border:none; font-size:22px; cursor:pointer; color:#888;">✕</button>
+
+    <h3 id="qrTitle" style="font-size:20px; font-weight:bold; color:#285921; margin-bottom:6px;">
+        📍 Localisation de l'événement
+    </h3>
+    <p id="qrEventName" style="font-size:16px; font-weight:bold; margin-bottom:4px;"></p>
+    <p id="qrLocation" style="font-size:14px; color:#5a6c5a; margin-bottom:18px;"></p>
+
+    <div id="qrSpinner" style="font-size:40px; margin:20px 0;">⏳</div>
+    <div id="qrImage"
+         style="display:none; width:220px; height:220px; margin:0 auto 15px; border-radius:10px;
+                border:2px solid #d2e0cf; background:white; padding:8px;"></div>
+
+    <input id="qrUrl" type="text" readonly
+           style="width:100%; padding:10px; border:1px solid #CFCBB3; border-radius:8px;
+                  background:white; font-size:12px; margin-bottom:8px; text-align:center;">
+
+    <p style="font-size:12px; color:#8b9a8b; margin-bottom:18px;">
+        Scannez ce code QR pour ouvrir la localisation dans Google Maps
+    </p>
+
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button onclick="copyQrUrl()"
+              style="background:#374535; color:white; border:none; padding:10px 22px;
+                     border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold;">
+          📋 Copier le lien
+      </button>
+      <button onclick="closeQR()"
+              style="background:#b22222; color:white; border:none; padding:10px 22px;
+                     border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold;">
+          Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var likedIds = new Set();
+var showingFav = false;
+var currentSpeech = null;
+var activeMicButton = null;
+var translationInterval = null;
+
+// ========== SHARE FUNCTIONS ==========
+function toggleShareMenu(eventId) {
+    var menu = document.getElementById('share-menu-' + eventId);
+    // Close all other share menus
+    document.querySelectorAll('.share-dropdown').forEach(function(el) {
+        if (el.id !== 'share-menu-' + eventId) {
+            el.classList.remove('show');
+        }
+    });
+    menu.classList.toggle('show');
+}
+
+// Close share menu when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.share-wrapper')) {
+        document.querySelectorAll('.share-dropdown').forEach(function(el) {
+            el.classList.remove('show');
+        });
+    }
+});
+
+function shareEvent(eventId, platform) {
+    var card = document.querySelector('.event-card[data-id="' + eventId + '"]');
+    if (!card) return;
+    
+    var title = card.querySelector('.event-title')?.innerText || 'Événement NAFSEYTI';
+    var url = window.location.href.split('?')[0] + '?event=' + eventId;
+    var text = "🌱 " + title + " - Rejoignez-moi à cet atelier bien-être sur NAFSEYTI !";
+    
+    var shareUrls = {
+        whatsapp: 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url),
+        telegram: 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text),
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
+        twitter: 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url),
+        email: 'mailto:?subject=' + encodeURIComponent('Invitation: ' + title) + '&body=' + encodeURIComponent(text + '\n\n' + url)
+    };
+    
+    if (shareUrls[platform]) {
+        window.open(shareUrls[platform], '_blank');
+        showToast('📤 Ouverture du partage vers ' + platform, '#25D366');
+    }
+    
+    // Close the dropdown
+    var menu = document.getElementById('share-menu-' + eventId);
+    if (menu) menu.classList.remove('show');
+}
+
+function copyEventLink(eventId) {
+    var url = window.location.href.split('?')[0] + '?event=' + eventId;
+    navigator.clipboard.writeText(url).then(function() {
+        showToast('📋 Lien copié dans le presse-papier !', '#4CAF50');
+    }).catch(function() {
+        showToast('❌ Impossible de copier le lien', '#b22222');
+    });
+    
+    var menu = document.getElementById('share-menu-' + eventId);
+    if (menu) menu.classList.remove('show');
+}
+
+// ========== COUNTDOWN TIMER FUNCTION ==========
+function updateAllCountdowns() {
+    document.querySelectorAll('.countdown-timer').forEach(function(el) {
+        if (!el.dataset.eventDate) return;
+        
+        var eventDate = new Date(el.dataset.eventDate).getTime();
+        var now = new Date().getTime();
+        var diff = eventDate - now;
+        
+        if (diff < 0) {
+            el.innerHTML = "🎉 Événement en cours !";
+            el.classList.add('urgent');
+            return;
+        }
+        
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (86400000)) / 3600000);
+        var minutes = Math.floor((diff % 3600000) / 60000);
+        var seconds = Math.floor((diff % 60000) / 1000);
+        
+        var daysSpan = el.querySelector('.days');
+        var hoursSpan = el.querySelector('.hours');
+        var minutesSpan = el.querySelector('.minutes');
+        var secondsSpan = el.querySelector('.seconds');
+        
+        if (daysSpan) daysSpan.textContent = days;
+        if (hoursSpan) hoursSpan.textContent = hours.toString().padStart(2, '0');
+        if (minutesSpan) minutesSpan.textContent = minutes.toString().padStart(2, '0');
+        if (secondsSpan) secondsSpan.textContent = seconds.toString().padStart(2, '0');
+        
+        if (days < 3 && days >= 0) {
+            el.classList.add('urgent');
+        } else {
+            el.classList.remove('urgent');
+        }
+    });
+}
+
+setInterval(updateAllCountdowns, 1000);
+setTimeout(updateAllCountdowns, 100);
+
+// ========== STAR RATING FUNCTIONS ==========
+function rateEvent(eventId, rating) {
+    fetch('/events/' + eventId + '/rate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ rating: rating })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data.success) {
+            var starsContainer = document.querySelector('.stars[data-event-id="' + eventId + '"]');
+            if (starsContainer) {
+                var stars = starsContainer.querySelectorAll('.star');
+                for (var i = 0; i < stars.length; i++) {
+                    if (i < rating) {
+                        stars[i].classList.add('active');
+                    } else {
+                        stars[i].classList.remove('active');
+                    }
+                }
+            }
+            
+            var avgSpan = document.getElementById('rating-avg-' + eventId);
+            if (avgSpan) avgSpan.textContent = '(' + data.averageRating + ')';
+            
+            var countSpan = document.getElementById('rating-count-' + eventId);
+            if (countSpan) countSpan.textContent = '(' + data.ratingCount + ' avis)';
+            
+            var ratingContainer = starsContainer ? starsContainer.parentNode : null;
+            if (ratingContainer) {
+                var existingYourRating = ratingContainer.querySelector('.your-rating');
+                if (existingYourRating) existingYourRating.remove();
+                var yourRatingSpan = document.createElement('span');
+                yourRatingSpan.className = 'your-rating';
+                yourRatingSpan.textContent = 'Votre note: ' + rating + '★';
+                ratingContainer.appendChild(yourRatingSpan);
+            }
+            
+            showToast('⭐ Merci pour votre note de ' + rating + ' étoiles!', '#4CAF50');
+        } else {
+            showToast('⚠️ ' + (data.message || 'Erreur'), '#b22222');
+        }
+    })
+    .catch(function(error) {
+        console.error('Error:', error);
+        showToast('❌ Erreur réseau', '#b22222');
+    });
+}
+
+// ========== TRANSLATION FUNCTIONS ==========
+const languages = [
+    { code: 'fr', name: 'Français', flag: '🇫🇷', native: 'Français' },
+    { code: 'en', name: 'English', flag: '🇬🇧', native: 'English' },
+    { code: 'es', name: 'Español', flag: '🇪🇸', native: 'Español' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪', native: 'Deutsch' },
+    { code: 'it', name: 'Italiano', flag: '🇮🇹', native: 'Italiano' },
+    { code: 'pt', name: 'Português', flag: '🇵🇹', native: 'Português' },
+    { code: 'nl', name: 'Nederlands', flag: '🇳🇱', native: 'Nederlands' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺', native: 'Русский' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦', native: 'العربية' },
+    { code: 'zh-CN', name: '中文', flag: '🇨🇳', native: '中文' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵', native: '日本語' },
+    { code: 'ko', name: '한국어', flag: '🇰🇷', native: '한국어' },
+    { code: 'tr', name: 'Türkçe', flag: '🇹🇷', native: 'Türkçe' },
+    { code: 'el', name: 'Ελληνικά', flag: '🇬🇷', native: 'Ελληνικά' },
+    { code: 'hi', name: 'हिन्दी', flag: '🇮🇳', native: 'हिन्दी' }
+];
+
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'fr',
+        includedLanguages: languages.map(l => l.code).join(','),
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+    
+    setTimeout(function() {
+        var googleWidget = document.querySelector('.goog-te-gadget');
+        if (googleWidget) googleWidget.style.display = 'none';
+    }, 500);
+}
+
+function showTranslationModal() {
+    var modal = document.getElementById('translationModal');
+    var optionsContainer = document.getElementById('translationOptions');
+    var currentLang = localStorage.getItem('preferredLanguage') || 'fr';
+    
+    var html = '';
+    languages.forEach(function(lang) {
+        var isActive = (currentLang === lang.code);
+        var activeClass = isActive ? 'active' : '';
+        html += `
+            <div class="translation-option ${activeClass}" onclick="translatePage('${lang.code}')" data-lang="${lang.code}">
+                <div class="translation-option-icon">${lang.flag}</div>
+                <div class="translation-option-info">
+                    <div class="translation-option-title">${lang.name}</div>
+                    <div class="translation-option-desc">${lang.native}</div>
+                </div>
+            </div>
+        `;
+    });
+    optionsContainer.innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+function closeTranslationModal() {
+    document.getElementById('translationModal').style.display = 'none';
+}
+
+function translatePage(langCode) {
+    localStorage.setItem('preferredLanguage', langCode);
+    var selectFrame = document.querySelector('.goog-te-combo');
+    if (selectFrame) {
+        selectFrame.value = langCode;
+        selectFrame.dispatchEvent(new Event('change'));
+        showToast('🌐 Traduction en cours vers ' + getLanguageName(langCode), '#6c5ce7');
+    } else {
+        document.cookie = "googtrans=/fr/" + langCode + "; path=/";
+        window.location.reload();
+    }
+    closeTranslationModal();
+}
+
+function getLanguageName(langCode) {
+    var lang = languages.find(l => l.code === langCode);
+    return lang ? lang.name : langCode;
+}
+
+function resetTranslation() {
+    var selectFrame = document.querySelector('.goog-te-combo');
+    if (selectFrame) {
+        selectFrame.value = 'fr';
+        selectFrame.dispatchEvent(new Event('change'));
+    } else {
+        document.cookie = "googtrans=/fr/fr; path=/";
+        window.location.reload();
+    }
+    localStorage.setItem('preferredLanguage', 'fr');
+    showToast('🌐 Page réinitialisée en français', '#4CAF50');
+    closeTranslationModal();
+}
+
+function loadSavedLanguage() {
+    var savedLang = localStorage.getItem('preferredLanguage');
+    if (savedLang && savedLang !== 'fr') {
+        var checkInterval = setInterval(function() {
+            var selectFrame = document.querySelector('.goog-te-combo');
+            if (selectFrame) {
+                clearInterval(checkInterval);
+                selectFrame.value = savedLang;
+                selectFrame.dispatchEvent(new Event('change'));
+            }
+        }, 500);
+        setTimeout(function() { clearInterval(checkInterval); }, 5000);
+    }
+}
+
+// ========== COLOR BLINDNESS FUNCTIONS ==========
+function showColorBlindOptions() {
+    var modal = document.getElementById('colorblindModal');
+    modal.style.display = 'flex';
+    var currentMode = localStorage.getItem('colorBlindMode') || 'normal';
+    document.querySelectorAll('.colorblind-option').forEach(function(opt) {
+        opt.classList.remove('active');
+    });
+    var activeOpt = document.getElementById('opt-' + currentMode);
+    if (activeOpt) activeOpt.classList.add('active');
+}
+
+function closeColorBlindModal() {
+    document.getElementById('colorblindModal').style.display = 'none';
+}
+
+function setColorBlindMode(mode) {
+    var body = document.body;
+    body.classList.remove('normal-vision', 'protanopia', 'deuteranopia', 'tritanopia', 'achromatopsia', 'high-contrast');
+    if (mode !== 'normal') body.classList.add(mode);
+    localStorage.setItem('colorBlindMode', mode);
+    showToast('🎨 Mode ' + getModeName(mode) + ' activé', '#4CAF50');
+}
+
+function resetColorBlindMode() {
+    var body = document.body;
+    body.classList.remove('protanopia', 'deuteranopia', 'tritanopia', 'achromatopsia', 'high-contrast');
+    localStorage.setItem('colorBlindMode', 'normal');
+    showToast('🎨 Mode réinitialisé à la vision normale', '#285921');
+    closeColorBlindModal();
+}
+
+function getModeName(mode) {
+    var names = {
+        'normal': 'Vision Normale',
+        'protanopia': 'Protanopie',
+        'deuteranopia': 'Deutéranopie',
+        'tritanopia': 'Tritanopie',
+        'achromatopsia': 'Noir et Blanc',
+        'high-contrast': 'Contraste Élevé'
+    };
+    return names[mode] || mode;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var savedMode = localStorage.getItem('colorBlindMode');
+    if (savedMode && savedMode !== 'normal') setColorBlindMode(savedMode);
+    loadSavedLanguage();
+});
+
+document.getElementById('colorblindModal').addEventListener('click', function(e) {
+    if (e.target === this) closeColorBlindModal();
+});
+document.getElementById('translationModal').addEventListener('click', function(e) {
+    if (e.target === this) closeTranslationModal();
+});
+
+// ========== SPEECH SYNTHESIS FUNCTION ==========
+function speakEventDetails(eventId) {
+    var card = document.querySelector('.event-card[data-id="' + eventId + '"]');
+    if (!card) return;
+    var speechData = card.querySelector('.event-speech-data');
+    if (!speechData) return;
+    
+    var title = speechData.dataset.title || "Événement sans titre";
+    var date = speechData.dataset.date || "Date non spécifiée";
+    var location = speechData.dataset.location || "Lieu non spécifié";
+    var participants = speechData.dataset.participants || "0 participants";
+    var plansCount = speechData.dataset.plansCount || "0";
+    var plans = speechData.dataset.plans || "";
+    
+    var textToSpeak = title + ". Date : " + date + ". Lieu : " + location + ". Inscriptions : " + participants + " participants. ";
+    if (parseInt(plansCount) > 0) textToSpeak += "Au programme : " + plans + ". ";
+    textToSpeak += "Rejoignez-nous pour cet atelier bien-être !";
+    
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (activeMicButton) activeMicButton.classList.remove('playing');
+    
+    var micButton = card.querySelector('.btn-mic');
+    if (micButton) {
+        activeMicButton = micButton;
+        micButton.classList.add('playing');
+    }
+    
+    var utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'fr-FR';
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 1;
+    
+    utterance.onend = function() {
+        if (activeMicButton) activeMicButton.classList.remove('playing');
+        activeMicButton = null;
+    };
+    utterance.onerror = function() {
+        if (activeMicButton) activeMicButton.classList.remove('playing');
+        activeMicButton = null;
+        showToast('❌ La synthèse vocale n\'est pas disponible', '#b22222');
+    };
+    window.speechSynthesis.speak(utterance);
+    currentSpeech = utterance;
+    showToast('🔊 Lecture des détails de l\'événement...', '#285921');
+}
+
+// ========== Search ==========
+document.getElementById('searchInput').addEventListener('input', function() {
+    filterCards(this.value.toLowerCase().trim());
+});
+
+function filterCards(q) {
+    var cards = document.querySelectorAll('.event-card');
+    var visible = 0;
+    cards.forEach(function(c) {
+        var title = c.dataset.title || '';
+        var show = !q || title.includes(q);
+        if (showingFav && !likedIds.has(parseInt(c.dataset.id))) show = false;
+        c.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    document.getElementById('eventCount').textContent = '🎯 ' + visible + ' événement' + (visible !== 1 ? 's' : '');
+}
+
+// ========== Sort ==========
+function toggleSort() {
+    document.getElementById('sortMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.sort-wrap')) {
+        document.getElementById('sortMenu').classList.remove('open');
+    }
+});
+
+function sortEvents(by) {
+    document.getElementById('sortMenu').classList.remove('open');
+    var container = document.getElementById('eventsContainer');
+    var cards = Array.from(container.querySelectorAll('.event-card'));
+
+    cards.sort(function(a, b) {
+        if (by === 'title') return (a.dataset.title || '').localeCompare(b.dataset.title || '', 'fr');
+        if (by === 'date') return (a.dataset.date || '').localeCompare(b.dataset.date || '');
+        if (by === 'plans') return parseInt(b.dataset.plans || 0) - parseInt(a.dataset.plans || 0);
+        return 0;
+    });
+
+    cards.forEach(function(c) { container.appendChild(c); });
+}
+
+// ========== Favourites ==========
+function toggleFav() {
+    showingFav = !showingFav;
+    var btn = document.getElementById('favBtn');
+    btn.textContent = showingFav ? '🌟 Tous' : '💛 Mes Favoris';
+    btn.classList.toggle('active', showingFav);
+    filterCards(document.getElementById('searchInput').value.toLowerCase().trim());
+}
+
+function toggleHeart(id, btn) {
+    if (likedIds.has(id)) {
+        likedIds.delete(id);
+        btn.textContent = '🤍';
+    } else {
+        likedIds.add(id);
+        btn.textContent = '💛';
+    }
+    if (showingFav) filterCards(document.getElementById('searchInput').value.toLowerCase().trim());
+}
+
+// ========== Participate ==========
+function participate(id, btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳...';
+    btn.style.background = '#b22222';
+
+    fetch('/events/' + id + '/participate', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                btn.textContent = '✅ Inscrit !';
+                btn.style.background = '#4CAF50';
+                showToast('✅ ' + data.message, '#285921');
+                setTimeout(function() { location.reload(); }, 1500);
+            } else {
+                btn.textContent = '🎯 S\'inscrire';
+                btn.style.background = '#285921';
+                btn.disabled = false;
+                showToast('⚠️ ' + data.message, '#b22222');
+            }
+        })
+        .catch(function() {
+            btn.textContent = '🎯 S\'inscrire';
+            btn.style.background = '#285921';
+            btn.disabled = false;
+            showToast('❌ Erreur réseau', '#b22222');
+        });
+}
+
+// ========== QR Code ==========
+function showQR(id) {
+    var modal = document.getElementById('qrModal');
+    modal.style.display = 'flex';
+    document.getElementById('qrSpinner').style.display = 'block';
+    document.getElementById('qrImage').style.display = 'none';
+    document.getElementById('qrUrl').value = '';
+    document.getElementById('qrEventName').textContent = '';
+    document.getElementById('qrLocation').textContent = '';
+
+    fetch('/events/' + id + '/qrcode')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            document.getElementById('qrEventName').textContent = d.title;
+            document.getElementById('qrLocation').textContent  = d.location;
+            document.getElementById('qrUrl').value             = d.mapsUrl;
+
+            // Generate QR client-side using qrcode.js
+            var container = document.getElementById('qrImage');
+            container.innerHTML = '';
+            container.style.display = 'block';
+            new QRCode(container, {
+                text:          d.mapsUrl,
+                width:         220,
+                height:        220,
+                colorDark:     '#285921',
+                colorLight:    '#ffffff',
+                correctLevel:  QRCode.CorrectLevel.H
+            });
+            document.getElementById('qrSpinner').style.display = 'none';
+        })
+        .catch(function() {
+            document.getElementById('qrSpinner').textContent = '❌ Erreur de chargement';
+        });
+}
+
+function closeQR() {
+    document.getElementById('qrModal').style.display = 'none';
+}
+
+function copyQrUrl() {
+    var url = document.getElementById('qrUrl').value;
+    navigator.clipboard.writeText(url).then(function() {
+        showToast('📋 Lien copié !', '#285921');
+    });
+}
+
+document.getElementById('qrModal').addEventListener('click', function(e) {
+    if (e.target === this) closeQR();
+});
+
+function showToast(msg, color) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = color || '#285921';
+    t.style.display = 'block';
+    setTimeout(function() { t.style.display = 'none'; }, 3000);
+}
+
+var savedLikes = localStorage.getItem('likedEvents');
+if (savedLikes) {
+    likedIds = new Set(JSON.parse(savedLikes));
+    likedIds.forEach(function(id) {
+        var btn = document.getElementById('heart-' + id);
+        if (btn) btn.textContent = '💛';
+    });
+}
+
+function saveFavoritesToLocalStorage() {
+    localStorage.setItem('likedEvents', JSON.stringify([...likedIds]));
+}
+
+var originalToggleHeart = toggleHeart;
+toggleHeart = function(id, btn) {
+    originalToggleHeart(id, btn);
+    saveFavoritesToLocalStorage();
+};
+
+if (!window.speechSynthesis) {
+    document.querySelectorAll('.btn-mic').forEach(function(btn) {
+        btn.style.opacity = '0.5';
+        btn.title = 'Synthèse vocale non disponible';
+    });
+}
+
+// ========== PAGINATION FUNCTIONS ==========
+function changePerPage(limit) {
+    var url = new URL(window.location.href);
+    url.searchParams.set('limit', limit);
+    url.searchParams.set('page', 1);
+    window.location.href = url.toString();
+}
+
+// Smooth scroll to top when changing page
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.pagination a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            if (!this.parentElement.classList.contains('disabled') && this.getAttribute('href') !== '#') {
+                setTimeout(function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        });
+    });
+});
+
+// Keyboard navigation for pagination
+document.addEventListener('keydown', function(e) {
+    var pagination = document.querySelector('.pagination');
+    if (!pagination) return;
+    
+    var nextLink = pagination.querySelector('li:last-child a');
+    var prevLink = pagination.querySelector('li:first-child a');
+    
+    if (e.key === 'ArrowRight' && nextLink && !nextLink.parentElement.classList.contains('disabled')) {
+        window.location.href = nextLink.href;
+    } else if (e.key === 'ArrowLeft' && prevLink && !prevLink.parentElement.classList.contains('disabled')) {
+        window.location.href = prevLink.href;
+    }
+});
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+{% endblock %}
+
+{% endblock %}

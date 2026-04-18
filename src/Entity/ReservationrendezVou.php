@@ -37,6 +37,9 @@ class ReservationrendezVou
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en_attente'])]
     private string $statut = 'en_attente';
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $googleEventId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,4 +109,6 @@ class ReservationrendezVou
         return $this;
     }
 
+    public function getGoogleEventId(): ?string { return $this->googleEventId; }
+    public function setGoogleEventId(?string $id): self { $this->googleEventId = $id; return $this; }
 }

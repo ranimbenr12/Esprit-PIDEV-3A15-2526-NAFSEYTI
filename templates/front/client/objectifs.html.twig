@@ -1,0 +1,339 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes Objectifs — {{ suivi.titre }}{% endblock %}
+
+{# Masquer la navbar avec les boutons Espace Client / Psychologue / Admin #}
+{% block body %}
+<style>
+/* Cacher la navbar entière sur les pages client */
+.navbar-wrap { display: none !important; }
+
+:root{--green-deep:#2D5016;--green-mid:#4A7C2F;--green-sage:#7BA05B;--green-light:#A8C68F;--green-pale:#D4E6C3;--beige-light:#EDE3D0;--beige-cream:#F7F2E8;--beige-white:#FDFAF5;--text-dark:#1A2E0A;--text-mid:#3D5C28;}
+.hero{background:linear-gradient(135deg,var(--green-deep),var(--green-mid));padding:70px 60px 50px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:rgba(168,198,143,.1);}
+.hero-back{display:inline-flex;align-items:center;gap:8px;color:var(--green-light);text-decoration:none;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;position:relative;}
+.hero-back:hover{color:var(--beige-cream);}
+.hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--beige-cream);font-weight:400;position:relative;}
+.hero h1 em{font-style:italic;color:var(--green-light);}
+.hero-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;position:relative;}
+.hero-meta span{font-size:.78rem;color:rgba(237,227,208,.7);display:flex;align-items:center;gap:6px;}
+.hero-meta i{color:var(--green-light);}
+.page{background:var(--beige-white);min-height:60vh;padding:60px;}
+.obj-list{margin-top:36px;display:flex;flex-direction:column;gap:16px;}
+.obj-item{background:white;border:1px solid var(--beige-light);border-radius:8px;padding:24px 28px;transition:all .3s;}
+.obj-item:hover{border-color:var(--green-sage);box-shadow:0 8px 30px rgba(45,80,22,.1);}
+.obj-item.valide{border-left:4px solid var(--green-sage);}
+.obj-item.en-cours{border-left:4px solid #C4A882;}
+.obj-header{display:flex;align-items:flex-start;gap:16px;}
+.obj-check{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;}
+.obj-check.done{background:var(--green-pale);color:var(--green-deep);}
+.obj-check.pending{background:#FFF3CD;color:#856404;}
+.obj-body{flex:1;}
+.obj-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text-dark);margin-bottom:6px;}
+.obj-body p{font-size:.87rem;color:#6B7D5A;line-height:1.6;margin-bottom:10px;}
+.obj-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+.obj-meta span{font-size:.72rem;color:#8A9B7A;display:flex;align-items:center;gap:5px;}
+.obj-meta i{color:var(--green-sage);}
+
+/* Médias uploadés */
+.medias-list{margin-top:12px;display:flex;flex-wrap:wrap;gap:12px;}
+.media-thumb{position:relative;border:1px solid var(--beige-light);border-radius:8px;overflow:hidden;width:110px;text-align:center;background:white;}
+.media-thumb img{width:110px;height:75px;object-fit:cover;display:block;}
+.media-thumb video{width:110px;height:75px;object-fit:cover;display:block;}
+.media-thumb .media-doc{width:110px;height:75px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;font-size:2rem;color:#6c757d;}
+.media-thumb .media-name{display:block;font-size:.65rem;padding:4px 6px;color:var(--green-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.media-thumb .media-actions-row{display:flex;border-top:1px solid var(--beige-light);}
+.media-thumb .media-actions-row a,
+.media-thumb .media-actions-row button{flex:1;border:none;background:none;font-size:.6rem;padding:5px 2px;cursor:pointer;color:#6B7D5A;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:3px;transition:background .2s;}
+.media-thumb .media-actions-row a:hover{background:var(--green-pale);color:var(--green-deep);}
+.media-thumb .media-actions-row button:hover{background:#FEE2E2;color:#991B1B;}
+.media-thumb .media-actions-row .sep{width:1px;background:var(--beige-light);}
+
+/* Upload zone */
+.upload-zone{border:2px dashed var(--green-sage);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;background:var(--beige-cream);margin-top:14px;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--green-mid);background:var(--green-pale);}
+.upload-zone i{font-size:2rem;color:var(--green-sage);margin-bottom:8px;display:block;}
+.upload-zone p{font-size:.82rem;color:var(--text-mid);margin:0;}
+.upload-zone input[type=file]{display:none;}
+
+.progress-bar-wrap{height:6px;background:var(--beige-light);border-radius:100px;overflow:hidden;margin-top:8px;display:none;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green-mid),var(--green-sage));border-radius:100px;width:0%;transition:width .3s;}
+
+.toast-msg{position:fixed;bottom:30px;right:30px;background:var(--green-deep);color:var(--beige-cream);padding:14px 24px;border-radius:8px;font-size:.88rem;z-index:99999;display:none;}
+.empty{text-align:center;padding:60px 40px;color:#6B7D5A;}
+.empty i{font-size:3.5rem;color:var(--green-pale);margin-bottom:16px;display:block;}
+</style>
+
+<!-- Hero -->
+<section class="hero">
+  <a href="{{ path('client_suivi_index') }}" class="hero-back"><i class="fas fa-arrow-left"></i> Retour à mes suivis</a>
+  <h1>Objectifs — <em>{{ suivi.titre }}</em></h1>
+  <div class="hero-meta">
+    <span><i class="fas fa-tag"></i> {{ suivi.typeSuivi }}</span>
+    <span><i class="fas fa-tasks"></i> {{ objectifs|length }} objectif(s)</span>
+    {% set nb_valides = objectifs|filter(o => o.valide)|length %}
+    <span><i class="fas fa-check-circle"></i> {{ nb_valides }} validé(s)</span>
+  </div>
+</section>
+
+<!-- Page -->
+<section class="page">
+  <div>
+    <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:3px;color:var(--green-sage);margin-bottom:6px;">Mes objectifs</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text-dark);font-weight:400;">
+      Partagez vos <em style="font-style:italic;color:var(--green-mid);">progrès</em>
+    </h2>
+    <p style="font-size:.88rem;color:#6B7D5A;margin-top:8px;">
+      Uploadez un fichier (photo, vidéo ou document) pour montrer votre progression à votre psychologue.
+      Vous pouvez le remplacer ou le supprimer avant validation.
+    </p>
+  </div>
+
+  {% if objectifs|length == 0 %}
+  <div class="empty">
+    <i class="fas fa-bullseye"></i>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text-mid);">Aucun objectif pour ce suivi</h3>
+    <p>Votre psychologue n'a pas encore défini d'objectifs.</p>
+  </div>
+  {% else %}
+  <div class="obj-list">
+    {% for objectif in objectifs %}
+    <div class="obj-item {{ objectif.valide ? 'valide' : 'en-cours' }}" id="obj-{{ objectif.idobjectif }}">
+      <div class="obj-header">
+        <div class="obj-check {{ objectif.valide ? 'done' : 'pending' }}">
+          <i class="fas {{ objectif.valide ? 'fa-check' : 'fa-clock' }}"></i>
+        </div>
+        <div class="obj-body">
+          <h3>
+            {{ objectif.titre }}
+            {% if objectif.valide %}
+              <span style="font-size:.7rem;background:#d4edda;color:#155724;padding:3px 10px;border-radius:100px;margin-left:8px;font-family:'DM Sans',sans-serif;">✅ Validé par le psychologue</span>
+            {% endif %}
+          </h3>
+          {% if objectif.description %}<p>{{ objectif.description }}</p>{% endif %}
+          <div class="obj-meta">
+            <span><i class="fas fa-calendar-alt"></i> Créé le {{ objectif.dateCreation|date('d/m/Y') }}</span>
+            {% if objectif.dateEcheance %}
+            <span><i class="fas fa-flag"></i> Échéance : {{ objectif.dateEcheance|date('d/m/Y') }}</span>
+            {% endif %}
+          </div>
+
+          <!-- Médias déjà uploadés -->
+          <div class="medias-list" id="medias-{{ objectif.idobjectif }}">
+            {% for media in objectif.medias %}
+            <div class="media-thumb" id="media-{{ media.idMedia }}">
+              {% if media.typeMedia == 'image' %}
+                <img src="{{ asset(media.cheminFichier) }}" alt="{{ media.nomFichier }}">
+              {% elseif media.typeMedia == 'video' %}
+                <video src="{{ asset(media.cheminFichier) }}" muted></video>
+              {% else %}
+                <div class="media-doc"><i class="fas fa-file-alt"></i></div>
+              {% endif %}
+              <span class="media-name" title="{{ media.nomFichier }}">{{ media.nomFichier|slice(0,14) }}</span>
+              {% if not objectif.valide %}
+              <div class="media-actions-row">
+                <a href="{{ asset(media.cheminFichier) }}" target="_blank" title="Voir"><i class="fas fa-eye"></i></a>
+                <div class="sep"></div>
+                <button onclick="remplacerMedia({{ media.idMedia }}, {{ objectif.idobjectif }})" title="Remplacer"><i class="fas fa-sync-alt"></i></button>
+                <div class="sep"></div>
+                <button onclick="supprimerMedia({{ media.idMedia }}, {{ objectif.idobjectif }})" title="Supprimer"><i class="fas fa-trash"></i></button>
+              </div>
+              {% else %}
+              <div class="media-actions-row">
+                <a href="{{ asset(media.cheminFichier) }}" target="_blank" title="Voir" style="flex:1;"><i class="fas fa-eye"></i> Voir</a>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+
+          {% if not objectif.valide %}
+          <!-- Zone d'upload (plusieurs fichiers possibles) -->
+          <div class="upload-zone" id="zone-{{ objectif.idobjectif }}"
+               ondragover="event.preventDefault();this.classList.add('dragover');"
+               ondragleave="this.classList.remove('dragover');"
+               ondrop="handleDrop(event, {{ objectif.idobjectif }});"
+               onclick="document.getElementById('file-{{ objectif.idobjectif }}').click();">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Glissez un fichier ici ou cliquez pour choisir</p>
+            <p style="font-size:.72rem;color:#999;margin-top:4px;">Image, vidéo ou PDF — max 10 Mo</p>
+            <input type="file" id="file-{{ objectif.idobjectif }}"
+                   accept="image/*,video/*,.pdf,.doc,.docx"
+                   onchange="uploadFichiers({{ objectif.idobjectif }}, this.files)">
+          </div>
+          <!-- Input caché pour le remplacement -->
+          <input type="file" id="replace-file-{{ objectif.idobjectif }}"
+                 accept="image/*,video/*,.pdf,.doc,.docx" style="display:none;"
+                 onchange="doRemplacer({{ objectif.idobjectif }}, this)">
+          <div class="progress-bar-wrap" id="progress-{{ objectif.idobjectif }}">
+            <div class="progress-fill" id="progressfill-{{ objectif.idobjectif }}"></div>
+          </div>
+          {% else %}
+          <p style="font-size:.8rem;color:var(--green-sage);margin-top:10px;">
+            <i class="fas fa-lock"></i> Objectif validé — modification des fichiers désactivée.
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<div class="toast-msg" id="toast"></div>
+
+<script>
+var replaceTargetMediaId = null;
+
+// ── Upload un seul fichier par objectif ────────────────────────────────────
+// Si un fichier existe déjà → on le remplace automatiquement
+function uploadFichiers(objectifId, files) {
+    if (!files || files.length === 0) return;
+    var file = files[0]; // un seul fichier
+
+    // Vérifier s'il y a déjà un média pour cet objectif
+    var container = document.getElementById('medias-' + objectifId);
+    var existing = container ? container.querySelector('.media-thumb') : null;
+
+    if (existing) {
+        // Remplacer : supprimer l'ancien d'abord
+        var mediaId = existing.id.replace('media-', '');
+        fetch('/client/medias/' + mediaId + '/delete', { method: 'POST' })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d.success) {
+                    existing.remove();
+                    doUpload(objectifId, file);
+                } else {
+                    showToast('Erreur lors du remplacement : ' + d.error, true);
+                }
+            });
+    } else {
+        doUpload(objectifId, file);
+    }
+}
+
+function doUpload(objectifId, file) {
+    var progressWrap = document.getElementById('progress-' + objectifId);
+    var progressFill = document.getElementById('progressfill-' + objectifId);
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '30%';
+
+    var formData = new FormData();
+    formData.append('fichier', file);
+
+    fetch('/client/objectifs/' + objectifId + '/upload', { method: 'POST', body: formData })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            progressFill.style.width = '100%';
+            setTimeout(function() { progressWrap.style.display = 'none'; progressFill.style.width = '0%'; }, 600);
+            if (data.success) {
+                ajouterMediaThumb(objectifId, data);
+                // Cacher la zone d'upload après ajout
+                var zone = document.getElementById('zone-' + objectifId);
+                if (zone) zone.style.display = 'none';
+                showToast('Fichier uploadé !');
+            } else {
+                showToast('Erreur : ' + data.error, true);
+            }
+        })
+        .catch(function(err) {
+            progressWrap.style.display = 'none';
+            showToast('Erreur réseau : ' + err, true);
+        });
+}
+
+function handleDrop(event, objectifId) {
+    event.preventDefault();
+    document.getElementById('zone-' + objectifId).classList.remove('dragover');
+    uploadFichiers(objectifId, event.dataTransfer.files);
+}
+
+// ── Remplacer le fichier existant ──────────────────────────────────────────
+function remplacerMedia(mediaId, objectifId) {
+    replaceTargetMediaId = mediaId;
+    var input = document.getElementById('replace-file-' + objectifId);
+    input.dataset.objectifId = objectifId;
+    input.click();
+}
+
+function doRemplacer(objectifId, input) {
+    var file = input.files[0];
+    if (!file || !replaceTargetMediaId) return;
+    fetch('/client/medias/' + replaceTargetMediaId + '/delete', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (d.success) {
+                var old = document.getElementById('media-' + replaceTargetMediaId);
+                if (old) old.remove();
+                doUpload(objectifId, file);
+                replaceTargetMediaId = null;
+                input.value = '';
+            } else {
+                showToast('Erreur : ' + d.error, true);
+            }
+        });
+}
+
+// ── Supprimer le fichier ───────────────────────────────────────────────────
+function supprimerMedia(mediaId, objectifId) {
+    confirmAction('Supprimer ce fichier ?', { type: 'danger', confirmText: 'Supprimer' }).then(function(ok) {
+        if (!ok) return;
+        fetch('/client/medias/' + mediaId + '/delete', { method: 'POST' })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d.success) {
+                    var el = document.getElementById('media-' + mediaId);
+                    if (el) { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(function() { el.remove(); }, 300); }
+                    var zone = document.getElementById('zone-' + objectifId);
+                    if (zone) zone.style.display = '';
+                    showToast('Fichier supprimé.');
+                } else {
+                    showToast('Erreur : ' + d.error, true);
+                }
+            });
+    });
+}
+
+// ── Ajouter le thumb dans la liste ────────────────────────────────────────
+function ajouterMediaThumb(objectifId, data) {
+    var container = document.getElementById('medias-' + objectifId);
+    var div = document.createElement('div');
+    div.className = 'media-thumb';
+    div.id = 'media-' + data.id;
+    var inner = '';
+    if (data.type === 'image') inner = '<img src="/' + data.chemin + '" alt="' + data.nom + '">';
+    else if (data.type === 'video') inner = '<video src="/' + data.chemin + '" muted></video>';
+    else inner = '<div class="media-doc"><i class="fas fa-file-alt"></i></div>';
+    inner += '<span class="media-name">' + data.nom.substring(0, 14) + '</span>';
+    inner += '<div class="media-actions-row">'
+           + '<a href="/' + data.chemin + '" target="_blank" title="Voir"><i class="fas fa-eye"></i></a>'
+           + '<div class="sep"></div>'
+           + '<button onclick="remplacerMedia(' + data.id + ',' + objectifId + ')" title="Remplacer"><i class="fas fa-sync-alt"></i></button>'
+           + '<div class="sep"></div>'
+           + '<button onclick="supprimerMedia(' + data.id + ',' + objectifId + ')" title="Supprimer"><i class="fas fa-trash"></i></button>'
+           + '</div>';
+    div.innerHTML = inner;
+    container.appendChild(div);
+}
+
+function showToast(msg, isError) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = isError ? '#dc3545' : '#2D5016';
+    t.style.display = 'block';
+    setTimeout(function() { t.style.display = 'none'; }, 3000);
+}
+
+// Cacher la zone d'upload si un fichier existe déjà au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.medias-list').forEach(function(container) {
+        var objectifId = container.id.replace('medias-', '');
+        var zone = document.getElementById('zone-' + objectifId);
+        if (zone && container.querySelector('.media-thumb')) {
+            zone.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

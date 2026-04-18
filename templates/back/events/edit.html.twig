@@ -1,0 +1,261 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Modifier un Événement{% endblock %}
+
+{% block body %}
+<style>
+    .form-container {
+        background: #F5F1E6;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .form-header { text-align: center; margin-bottom: 25px; }
+    .form-header h2 { font-size: 24px; font-weight: bold; color: #5c715a; }
+    .form-header hr { border-color: #5c715a; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { font-weight: bold; color: #5c715a; display: block; margin-bottom: 6px; font-size: 13px; }
+    .form-control {
+        width: 100%; padding: 10px; border-radius: 8px;
+        border: 2px solid #d2e0cf; background: white; transition: border-color .2s;
+    }
+    .form-control:focus { border-color: #7f9a7d; outline: none; box-shadow: 0 0 5px rgba(127,154,125,.3); }
+    .field-valid   { border-color: green !important; }
+    .field-warning { border-color: orange !important; }
+    .field-error   { border-color: red !important; }
+    .field-msg { font-size: 11px; margin-top: 3px; }
+    .field-msg.err  { color: red; }
+    .field-msg.warn { color: orange; }
+    .field-msg.ok   { color: green; }
+
+    .btn-update {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        border: none; color: white; font-weight: bold;
+        border-radius: 10px; padding: 13px 35px; font-size: 15px; cursor: pointer; transition: all .3s;
+    }
+    .btn-update:hover { background: linear-gradient(135deg, #45a049, #3d8b40); transform: scale(1.02); }
+    .btn-cancel {
+        background: #b22222; border: none; color: white; font-weight: bold;
+        border-radius: 10px; padding: 13px 35px; font-size: 15px; cursor: pointer; transition: all .3s;
+        text-decoration: none; display: inline-block;
+    }
+    .btn-cancel:hover { background: #8b1a1a; color: white; }
+    .upload-area {
+        border: 2px dashed #c4d4c1; border-radius: 15px; padding: 20px;
+        text-align: center; background: #f0f5f0; cursor: pointer; transition: all .3s;
+    }
+    .upload-area:hover { background: #e8f0e8; border-color: #7f9a7d; }
+    .image-preview { max-width: 200px; max-height: 130px; margin-top: 10px; border-radius: 8px; }
+    .planification-section {
+        background: #f0f5f0; border-radius: 15px; padding: 20px;
+        margin-top: 10px; border: 1px solid #d2e0cf;
+    }
+    .planification-section h4 { color: #5c715a; font-weight: bold; margin-bottom: 15px; font-size: 15px; }
+</style>
+
+<div class="full_container">
+  <div class="inner_container">
+    <div id="content">
+      <div class="midde_cont">
+        <div class="container-fluid">
+          <div class="form-container">
+
+            <div class="form-header">
+              <h2>✏️ MODIFIER L'ÉVÉNEMENT</h2>
+              <hr>
+            </div>
+
+            {% for msg in app.flashes('success') %}
+              <div class="alert alert-success">{{ msg }}</div>
+            {% endfor %}
+            {% for msg in app.flashes('error') %}
+              <div class="alert alert-danger">{{ msg }}</div>
+            {% endfor %}
+
+            <form method="post" action="{{ path('admin_events_update', {'id': event.id}) }}"
+                  enctype="multipart/form-data" id="editForm" novalidate>
+
+              <!-- TITRE -->
+              <div class="form-group">
+                <label>📝 TITRE</label>
+                <input type="text" name="title" id="title" class="form-control field-valid"
+                       value="{{ event.title }}" required>
+                <div class="field-msg" id="titleMsg"></div>
+              </div>
+
+              <!-- LIEU -->
+              <div class="form-group">
+                <label>📍 LIEU</label>
+                <input type="text" name="location" id="location" class="form-control field-valid"
+                       value="{{ event.location }}" required>
+                <div class="field-msg" id="locationMsg"></div>
+              </div>
+
+              <!-- DATE + PARTICIPANTS -->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>📅 DATE</label>
+                    <input type="date" name="eventDate" id="eventDate" class="form-control field-valid"
+                           value="{{ event.eventDate|date('Y-m-d') }}" required>
+                    <div class="field-msg" id="dateMsg"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>👥 PARTICIPANTS MAX</label>
+                    <input type="number" name="maxParticipants" id="maxParticipants" class="form-control field-valid"
+                           value="{{ event.maxParticipants }}" min="1" required>
+                    <div class="field-msg" id="maxMsg"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- IMAGE URL -->
+              <div class="form-group">
+                <label>🖼️ URL IMAGE / LIEN</label>
+                <input type="text" name="link" id="link" class="form-control"
+                       value="{{ event.link ?? '' }}">
+              </div>
+
+              <!-- UPLOAD -->
+              <div class="form-group">
+                <div class="upload-area" id="uploadArea">
+                  <label style="cursor:pointer;">☁️ Cliquez ici pour changer l'image</label>
+                  <input type="file" id="imageFile" name="imageFile" accept="image/*" style="display:none;">
+                  {% if event.link %}
+                    <img id="imagePreview" class="image-preview" src="{{ event.link }}" style="display:block;">
+                  {% else %}
+                    <img id="imagePreview" class="image-preview" style="display:none;">
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- PLANIFICATION -->
+              <div class="planification-section">
+                <h4>📋 PLANIFICATION</h4>
+                <div class="form-group">
+                  <label>Description :</label>
+                  <input type="text" name="planDescription" id="planDescription" class="form-control"
+                         value="{{ planification.description ?? '' }}"
+                         placeholder="Description de la planification">
+                  <div class="field-msg" id="planDescMsg"></div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Durée :</label>
+                  <input type="text" name="planDuree" id="planDuree" class="form-control"
+                         value="{{ planification.duree ?? '' }}"
+                         placeholder="Ex: 2 heures" style="max-width:300px;">
+                  <div class="field-msg" id="planDureeMsg"></div>
+                </div>
+              </div>
+
+              <!-- BOUTONS -->
+              <div class="text-center" style="margin: 28px 0 18px;">
+                <button type="submit" class="btn-update">💾 Mettre à jour</button>
+                <a href="{{ path('admin_events_index') }}" class="btn-cancel" style="margin-left:15px;">✖ Annuler</a>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setField(el, msgEl, state, msg) {
+    el.classList.remove('field-valid','field-warning','field-error');
+    msgEl.className = 'field-msg';
+    if (state === 'ok')   { el.classList.add('field-valid');   msgEl.classList.add('ok');   }
+    if (state === 'warn') { el.classList.add('field-warning'); msgEl.classList.add('warn'); }
+    if (state === 'err')  { el.classList.add('field-error');   msgEl.classList.add('err');  }
+    msgEl.textContent = msg || '';
+}
+
+function validateTitle() {
+    const v = document.getElementById('title').value.trim();
+    const el = document.getElementById('title'), msg = document.getElementById('titleMsg');
+    if (!v)           { setField(el, msg, 'err',  'Le titre est requis.'); return false; }
+    if (v.length < 3) { setField(el, msg, 'warn', 'Minimum 3 caractères.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validateLocation() {
+    const v = document.getElementById('location').value.trim();
+    const el = document.getElementById('location'), msg = document.getElementById('locationMsg');
+    if (!v)           { setField(el, msg, 'err',  'Le lieu est requis.'); return false; }
+    if (v.length < 3) { setField(el, msg, 'warn', 'Minimum 3 caractères.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validateDate() {
+    const v = document.getElementById('eventDate').value;
+    const el = document.getElementById('eventDate'), msg = document.getElementById('dateMsg');
+    if (!v) { setField(el, msg, 'err', 'La date est requise.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validateMax() {
+    const v = document.getElementById('maxParticipants').value.trim();
+    const el = document.getElementById('maxParticipants'), msg = document.getElementById('maxMsg');
+    if (!v) { setField(el, msg, 'err', 'Ce champ est requis.'); return false; }
+    const n = parseInt(v);
+    if (isNaN(n) || n <= 0) { setField(el, msg, 'warn', 'Doit être un nombre positif.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validatePlanification() {
+    const desc  = document.getElementById('planDescription').value.trim();
+    const duree = document.getElementById('planDuree').value.trim();
+    const dEl = document.getElementById('planDescription'), dMsg = document.getElementById('planDescMsg');
+    const uEl = document.getElementById('planDuree'),       uMsg = document.getElementById('planDureeMsg');
+    if (!desc && !duree) { return true; }
+    if (desc && !duree) {
+        setField(dEl, dMsg, 'ok', '');
+        setField(uEl, uMsg, 'err', 'Durée requise si description renseignée.');
+        return false;
+    }
+    if (!desc && duree) {
+        setField(dEl, dMsg, 'err', 'Description requise si durée renseignée.');
+        setField(uEl, uMsg, 'ok', '');
+        return false;
+    }
+    if (desc.length < 4) {
+        setField(dEl, dMsg, 'warn', 'Minimum 4 caractères.');
+        return false;
+    }
+    setField(dEl, dMsg, 'ok', '');
+    setField(uEl, uMsg, 'ok', '');
+    return true;
+}
+
+document.getElementById('title').addEventListener('input', validateTitle);
+document.getElementById('location').addEventListener('input', validateLocation);
+document.getElementById('eventDate').addEventListener('change', validateDate);
+document.getElementById('maxParticipants').addEventListener('input', validateMax);
+document.getElementById('planDescription').addEventListener('input', validatePlanification);
+document.getElementById('planDuree').addEventListener('input', validatePlanification);
+
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    const ok = validateTitle() & validateLocation() & validateDate() & validateMax() & validatePlanification();
+    if (!ok) e.preventDefault();
+});
+
+// Image upload
+document.getElementById('uploadArea').addEventListener('click', function() {
+    document.getElementById('imageFile').click();
+});
+document.getElementById('imageFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        const preview = document.getElementById('imagePreview');
+        preview.src = ev.target.result;
+        preview.style.display = 'block';
+        document.getElementById('link').value = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+</script>
+{% endblock %}

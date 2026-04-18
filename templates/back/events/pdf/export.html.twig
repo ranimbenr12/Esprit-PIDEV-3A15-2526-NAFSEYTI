@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Idées Bien-Être</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, Arial, sans-serif;
+            font-size: 13px;
+            color: #4d604b;
+            background: #f5f3ed;
+            margin: 0;
+            padding: 30px;
+        }
+        .header {
+            background: linear-gradient(135deg, #7f9a7d, #5c715a);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 5px 0;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+        .header p {
+            margin: 0;
+            font-size: 12px;
+            opacity: 0.85;
+        }
+        .separator {
+            border: none;
+            border-top: 2px solid #d2e0cf;
+            margin: 20px 0;
+        }
+        .content {
+            background: #fcfaf7;
+            border: 1px solid #d2e0cf;
+            border-radius: 10px;
+            padding: 20px 25px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.7;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 11px;
+            color: #8a9a87;
+            border-top: 1px solid #d2e0cf;
+            padding-top: 12px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b7c9b5;
+            color: #3d533b;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌿 ASSISTANT BIEN-ÊTRE &amp; ÉVÉNEMENTS</h1>
+        <p>Votre espace de sérénité pour des événements apaisants</p>
+    </div>
+
+    <div class="badge">🌱 NATURE &amp; PAIX</div>
+
+    <hr class="separator">
+
+    <div class="content">{{ content }}</div>
+
+    <div class="footer">
+        Généré par Assistant Bien-Être &bull; {{ date }}
+    </div>
+</body>
+</html>

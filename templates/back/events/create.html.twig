@@ -1,0 +1,532 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Créer un Événement{% endblock %}
+
+{% block body %}
+<style>
+    .form-container {
+        background: #F5F1E6;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .form-header { text-align: center; margin-bottom: 25px; }
+    .form-header h2 { font-size: 24px; font-weight: bold; color: #5c715a; }
+    .form-header hr { border-color: #5c715a; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { font-weight: bold; color: #5c715a; display: block; margin-bottom: 6px; font-size: 13px; }
+    .form-control {
+        width: 100%; padding: 10px; border-radius: 8px;
+        border: 2px solid #d2e0cf; background: white; transition: border-color .2s;
+    }
+    .form-control:focus { border-color: #7f9a7d; outline: none; box-shadow: 0 0 5px rgba(127,154,125,.3); }
+    .field-valid   { border-color: green !important; }
+    .field-warning { border-color: orange !important; }
+    .field-error   { border-color: red !important; }
+    .field-msg { font-size: 11px; margin-top: 3px; }
+    .field-msg.err  { color: red; }
+    .field-msg.warn { color: orange; }
+    .field-msg.ok   { color: green; }
+
+    .btn-save {
+        background: linear-gradient(135deg, #374535, #2a3328);
+        border: none; color: white; font-weight: bold;
+        border-radius: 10px; padding: 13px 35px; font-size: 15px; cursor: pointer; transition: all .3s;
+    }
+    .btn-save:hover { background: linear-gradient(135deg, #4a5a45, #374535); transform: scale(1.02); }
+    .btn-cancel {
+        background: #b7c9b5; border: none; color: white; font-weight: bold;
+        border-radius: 10px; padding: 13px 35px; font-size: 15px; cursor: pointer; transition: all .3s;
+        text-decoration: none; display: inline-block;
+    }
+    .btn-cancel:hover { background: #9ab097; color: white; }
+    .btn-ai {
+        background: #7f9a7d; border: none; color: white; font-weight: bold;
+        border-radius: 8px; padding: 9px 14px; font-size: 12px; cursor: pointer; transition: all .3s;
+        white-space: nowrap;
+    }
+    .btn-ai:hover { background: #5c715a; }
+    .btn-ai:disabled { background: #b7c9b5; cursor: not-allowed; }
+    .btn-correct {
+        background: #2196F3; border: none; color: white; font-weight: bold;
+        border-radius: 8px; padding: 9px 14px; font-size: 12px; cursor: pointer; transition: all .3s;
+        white-space: nowrap;
+    }
+    .btn-correct:hover { background: #1565C0; }
+    .btn-correct:disabled { background: #b0bec5; cursor: not-allowed; }
+    .btn-accept {
+        background: #4CAF50; border: none; color: white; font-weight: bold;
+        border-radius: 8px; padding: 7px 18px; font-size: 13px; cursor: pointer;
+    }
+    .btn-reject {
+        background: #f44336; border: none; color: white; font-weight: bold;
+        border-radius: 8px; padding: 7px 18px; font-size: 13px; cursor: pointer;
+    }
+    .upload-area {
+        border: 2px dashed #c4d4c1; border-radius: 15px; padding: 20px;
+        text-align: center; background: #f0f5f0; cursor: pointer; transition: all .3s;
+    }
+    .upload-area:hover { background: #e8f0e8; border-color: #7f9a7d; }
+    .image-preview { max-width: 200px; max-height: 130px; margin-top: 10px; border-radius: 8px; }
+    .planification-section {
+        background: #f0f5f0; border-radius: 15px; padding: 20px;
+        margin-top: 10px; border: 1px solid #d2e0cf;
+    }
+    .planification-section h4 { color: #5c715a; font-weight: bold; margin-bottom: 15px; font-size: 15px; }
+    .suggestion-badge {
+        color: #4CAF50; font-style: italic; font-weight: bold; font-size: 12px; display: none;
+    }
+    .tips-box { background: rgba(159,185,151,.15); border-radius: 15px; padding: 15px; margin-top: 20px; }
+    .tips-box ul { margin: 8px 0 0 18px; color: #8a9a87; font-size: 12px; }
+    .status-bar {
+        background: rgba(159,185,151,.15); border-radius: 15px;
+        padding: 10px 20px; margin-top: 15px; display: flex; align-items: center; gap: 15px;
+    }
+    .status-dot { width: 10px; height: 10px; background: #7f9a7d; border-radius: 50%; }
+    .spinner {
+        display: none; width: 20px; height: 20px;
+        border: 3px solid #d2e0cf; border-top-color: #7f9a7d;
+        border-radius: 50%; animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .field-suggestion { border-color: #4CAF50 !important; background: #f0fff0 !important; }
+</style>
+
+<div class="full_container">
+  <div class="inner_container">
+    <div id="content">
+      <div class="midde_cont">
+        <div class="container-fluid">
+          <div class="form-container">
+
+            <div class="form-header">
+              <h2>✨ CRÉER UN NOUVEL ÉVÉNEMENT ✨</h2>
+              <hr>
+            </div>
+
+            {% for msg in app.flashes('success') %}
+              <div class="alert alert-success">{{ msg }}</div>
+            {% endfor %}
+            {% for msg in app.flashes('error') %}
+              <div class="alert alert-danger">{{ msg }}</div>
+            {% endfor %}
+
+            <form method="post" action="{{ path('admin_events_create_save') }}" enctype="multipart/form-data" id="createForm">
+
+              <!-- TITRE + boutons IA -->
+              <div class="form-group">
+                <label>📝 TITRE DE L'ÉVÉNEMENT</label>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <input type="text" name="title" id="title"
+                         class="form-control {% if errors.title is defined %}field-error{% elseif old.title is defined and old.title %}field-valid{% endif %}"
+                         placeholder="Ex: Atelier de méditation pour débutants"
+                         value="{{ old.title ?? '' }}"
+                         style="flex:1; min-width:200px;">
+                  <button type="button" class="btn-correct" id="btnCorrectTitle">🔍 Corriger</button>
+                  <button type="button" class="btn-ai" id="btnGenerateAll">✨ Générer planification</button>
+                  <div class="spinner" id="spinnerTitle"></div>
+                </div>
+                <div id="titleMsg" class="field-msg"></div>
+                {% if errors.title is defined %}
+                  <div class="field-msg err">{{ errors.title }}</div>
+                {% endif %}
+              </div>
+
+              <!-- DESCRIPTION + correction -->
+              <div class="form-group">
+                <label>📄 DESCRIPTION DÉTAILLÉE</label>
+                <textarea name="description" id="description" class="form-control" rows="4"
+                          placeholder="Décrivez votre événement en détail...">{{ old.description ?? '' }}</textarea>
+                <div style="text-align:right; margin-top:5px;">
+                  <button type="button" class="btn-correct" id="btnCorrectDesc">🔍 Corriger la description</button>
+                  <div class="spinner" id="spinnerDesc" style="display:inline-block; vertical-align:middle;"></div>
+                </div>
+              </div>
+
+              <!-- LIEU -->
+              <div class="form-group">
+                <label>📍 LIEU</label>
+                <input type="text" name="location" id="location"
+                       class="form-control {% if errors.location is defined %}field-error{% elseif old.location is defined and old.location %}field-valid{% endif %}"
+                       placeholder="Ex: Salle de conférence, Paris"
+                       value="{{ old.location ?? '' }}">
+                {% if errors.location is defined %}
+                  <div class="field-msg err">{{ errors.location }}</div>
+                {% endif %}
+                <div id="locationMsg" class="field-msg"></div>
+              </div>
+
+              <!-- DATE + PARTICIPANTS -->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>📅 DATE</label>
+                    <input type="date" name="eventDate" id="eventDate"
+                           class="form-control {% if errors.eventDate is defined %}field-error{% elseif old.eventDate is defined and old.eventDate %}field-valid{% endif %}"
+                           value="{{ old.eventDate ?? '' }}">
+                    {% if errors.eventDate is defined %}
+                      <div class="field-msg err">{{ errors.eventDate }}</div>
+                    {% endif %}
+                    <div id="dateMsg" class="field-msg"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>👥 PARTICIPANTS MAX</label>
+                    <input type="text" name="maxParticipants" id="maxParticipants"
+                           class="form-control {% if errors.maxParticipants is defined %}field-error{% elseif old.maxParticipants is defined and old.maxParticipants %}field-valid{% endif %}"
+                           placeholder="Ex: 50"
+                           value="{{ old.maxParticipants ?? '' }}">
+                    {% if errors.maxParticipants is defined %}
+                      <div class="field-msg err">{{ errors.maxParticipants }}</div>
+                    {% endif %}
+                    <div id="maxMsg" class="field-msg"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- IMAGE URL -->
+              <div class="form-group">
+                <label>🖼️ IMAGE URL</label>
+                <input type="text" name="link" id="link" class="form-control"
+                       placeholder="URL de l'image ou lien de l'événement"
+                       value="{{ old.link ?? '' }}">
+              </div>
+
+              <!-- UPLOAD -->
+              <div class="form-group">
+                <div class="upload-area" id="uploadArea">
+                  <label style="cursor:pointer;">☁️ Cliquez ici pour uploader une image</label>
+                  <p style="font-size:12px; color:#8a9a87;">(Formats supportés: PNG, JPG, JPEG)</p>
+                  <input type="file" id="imageFile" name="imageFile" accept="image/*" style="display:none;">
+                  <img id="imagePreview" class="image-preview" style="display:none;">
+                </div>
+              </div>
+
+              <!-- PLANIFICATION -->
+              <div class="planification-section">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px;">
+                  <h4 style="margin:0;">📋 PLANIFICATION DE L'ÉVÉNEMENT</h4>
+                  <span class="suggestion-badge" id="suggestionBadge">✨ Suggestion Gemini</span>
+                  <div class="spinner" id="spinnerPlan"></div>
+                </div>
+
+                <div class="form-group">
+                  <label>Description :</label>
+                  <input type="text" name="planDescription" id="planDescription"
+                         class="form-control {% if errors.planDescription is defined %}field-error{% endif %}"
+                         placeholder="Ex: Séance de méditation guidée en pleine conscience"
+                         value="{{ old.planDescription ?? '' }}">
+                  {% if errors.planDescription is defined %}
+                    <div class="field-msg err">{{ errors.planDescription }}</div>
+                  {% endif %}
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Durée :</label>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" name="planDuree" id="planDuree"
+                           class="form-control {% if errors.planDuree is defined %}field-error{% endif %}"
+                           placeholder="Ex: 2 heures"
+                           value="{{ old.planDuree ?? '' }}"
+                           style="max-width:220px;">
+                    <button type="button" class="btn-accept" id="btnAccept" style="display:none;">✓ Accepter</button>
+                    <button type="button" class="btn-reject" id="btnReject" style="display:none;">✗ Rejeter</button>
+                  </div>
+                  {% if errors.planDuree is defined %}
+                    <div class="field-msg err">{{ errors.planDuree }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- BOUTONS -->
+              <div class="text-center" style="margin: 28px 0 18px;">
+                <button type="submit" class="btn-save">💾 Sauvegarder l'événement</button>
+                <a href="{{ path('admin_events_index') }}" class="btn-cancel" style="margin-left:15px;">✖ Annuler</a>
+              </div>
+
+              <!-- TIPS -->
+              <div class="tips-box">
+                <strong>💡 Astuces :</strong>
+                <ul>
+                  <li>Remplissez le titre puis cliquez sur "Générer planification" pour une suggestion automatique</li>
+                  <li>Utilisez les boutons "Corriger" pour améliorer automatiquement votre texte</li>
+                  <li>Les suggestions Gemini apparaissent en vert — acceptez ou rejetez-les</li>
+                </ul>
+              </div>
+
+              <div class="status-bar">
+                <div class="status-dot"></div>
+                <span style="color:#5c715a; font-size:12px; font-weight:bold;">IA Gemini active</span>
+                <div style="flex:1;"></div>
+                <span style="color:#5c715a; font-size:12px;">✨ Prêt à générer</span>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Mini modal (replaces all alert / confirm) ───────────────────────
+(function() {
+    var overlay = document.createElement('div');
+    overlay.id  = 'aiModal';
+    overlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;';
+    overlay.innerHTML =
+        '<div style="background:#fff;border-radius:16px;padding:28px 30px;max-width:420px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<div id="aiModalIcon" style="font-size:28px;text-align:center;margin-bottom:10px;"></div>' +
+          '<div id="aiModalMsg" style="font-size:14px;color:#374535;line-height:1.6;white-space:pre-wrap;margin-bottom:20px;text-align:center;"></div>' +
+          '<div id="aiModalBtns" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>' +
+        '</div>';
+    document.body.appendChild(overlay);
+
+    window.aiAlert = function(msg, icon) {
+        return new Promise(function(resolve) {
+            document.getElementById('aiModalIcon').textContent = icon || 'ℹ️';
+            document.getElementById('aiModalMsg').textContent  = msg;
+            var btns = document.getElementById('aiModalBtns');
+            btns.innerHTML = '';
+            var ok = document.createElement('button');
+            ok.textContent = 'OK';
+            ok.style.cssText = 'background:#5c715a;color:white;border:none;border-radius:8px;padding:9px 28px;font-weight:bold;cursor:pointer;font-size:14px;';
+            ok.onclick = function() { overlay.style.display = 'none'; resolve(); };
+            btns.appendChild(ok);
+            overlay.style.display = 'flex';
+        });
+    };
+
+    window.aiConfirm = function(original, corrected) {
+        return new Promise(function(resolve) {
+            document.getElementById('aiModalIcon').textContent = '✏️';
+            document.getElementById('aiModalMsg').innerHTML =
+                '<strong style="color:#888;font-size:12px;">TEXTE ORIGINAL</strong><br>' +
+                '<span style="color:#c0392b;background:#fff5f5;padding:4px 10px;border-radius:6px;display:inline-block;margin:4px 0 10px;">' + escHtml(original) + '</span><br>' +
+                '<strong style="color:#888;font-size:12px;">CORRECTION PROPOSÉE</strong><br>' +
+                '<span style="color:#2e7d32;background:#f0fff0;padding:4px 10px;border-radius:6px;display:inline-block;margin:4px 0;">' + escHtml(corrected) + '</span>';
+            var btns = document.getElementById('aiModalBtns');
+            btns.innerHTML = '';
+            var yes = document.createElement('button');
+            yes.textContent = '✓ Accepter';
+            yes.style.cssText = 'background:#4CAF50;color:white;border:none;border-radius:8px;padding:9px 22px;font-weight:bold;cursor:pointer;font-size:14px;';
+            yes.onclick = function() { overlay.style.display = 'none'; resolve(true); };
+            var no = document.createElement('button');
+            no.textContent = '✗ Rejeter';
+            no.style.cssText = 'background:#f44336;color:white;border:none;border-radius:8px;padding:9px 22px;font-weight:bold;cursor:pointer;font-size:14px;';
+            no.onclick = function() { overlay.style.display = 'none'; resolve(false); };
+            btns.appendChild(yes);
+            btns.appendChild(no);
+            overlay.style.display = 'flex';
+        });
+    };
+
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+})();
+
+// ── Validation helpers ──────────────────────────────────────────────
+function setField(el, msgEl, state, msg) {
+    el.classList.remove('field-valid','field-warning','field-error','field-suggestion');
+    msgEl.className = 'field-msg';
+    if (state === 'ok')   { el.classList.add('field-valid');   msgEl.classList.add('ok');   }
+    if (state === 'warn') { el.classList.add('field-warning'); msgEl.classList.add('warn'); }
+    if (state === 'err')  { el.classList.add('field-error');   msgEl.classList.add('err');  }
+    msgEl.textContent = msg || '';
+}
+
+function validateTitle() {
+    const v = document.getElementById('title').value.trim();
+    const msg = document.getElementById('titleMsg');
+    const el  = document.getElementById('title');
+    if (!v)        { setField(el, msg, 'err',  'Le titre est requis.'); return false; }
+    if (v.length < 3) { setField(el, msg, 'warn', 'Minimum 3 caractères.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validateLocation() {
+    const v = document.getElementById('location').value.trim();
+    const msg = document.getElementById('locationMsg');
+    const el  = document.getElementById('location');
+    if (!v)        { setField(el, msg, 'err',  'Le lieu est requis.'); return false; }
+    if (v.length < 3) { setField(el, msg, 'warn', 'Minimum 3 caractères.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validateDate() {
+    const v = document.getElementById('eventDate').value;
+    const msg = document.getElementById('dateMsg');
+    const el  = document.getElementById('eventDate');
+    if (!v) { setField(el, msg, 'err', 'La date est requise.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+function validateMax() {
+    const v = document.getElementById('maxParticipants').value.trim();
+    const msg = document.getElementById('maxMsg');
+    const el  = document.getElementById('maxParticipants');
+    if (!v) { setField(el, msg, 'err', 'Ce champ est requis.'); return false; }
+    const n = parseInt(v);
+    if (isNaN(n) || n <= 0) { setField(el, msg, 'warn', 'Doit être un nombre positif.'); return false; }
+    setField(el, msg, 'ok', ''); return true;
+}
+
+document.getElementById('title').addEventListener('input', function() {
+    validateTitle();
+    document.getElementById('btnCorrectTitle').disabled = !this.value.trim();
+});
+document.getElementById('location').addEventListener('input', validateLocation);
+document.getElementById('eventDate').addEventListener('change', validateDate);
+document.getElementById('maxParticipants').addEventListener('input', validateMax);
+document.getElementById('description').addEventListener('input', function() {
+    document.getElementById('btnCorrectDesc').disabled = !this.value.trim();
+});
+
+document.getElementById('createForm').addEventListener('submit', function(e) {
+    const ok = validateTitle() & validateLocation() & validateDate() & validateMax();
+    if (!ok) { e.preventDefault(); }
+});
+
+// ── Image upload ────────────────────────────────────────────────────
+document.getElementById('uploadArea').addEventListener('click', function() {
+    document.getElementById('imageFile').click();
+});
+document.getElementById('imageFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        const preview = document.getElementById('imagePreview');
+        preview.src = ev.target.result;
+        preview.style.display = 'block';
+        document.getElementById('link').value = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+
+// ── Gemini API call via backend proxy ──────────────────────────────
+async function callGemini(prompt) {
+    const resp = await fetch('{{ path("admin_events_gemini") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ prompt })
+    });
+    if (!resp.ok) throw new Error('API error');
+    const data = await resp.json();
+    return data.text || '';
+}
+
+// ── Generate planification ──────────────────────────────────────────
+document.getElementById('btnGenerateAll').addEventListener('click', async function() {
+    const title = document.getElementById('title').value.trim();
+    if (!title) { await aiAlert('Veuillez saisir un titre d\'abord.', '⚠️'); return; }
+
+    this.disabled = true;
+    const spinner = document.getElementById('spinnerPlan');
+    spinner.style.display = 'inline-block';
+    document.getElementById('suggestionBadge').style.display = 'none';
+
+    try {
+        const prompt = `Pour un événement intitulé '${title}', génère une activité avec:\n- Description courte (max 15 mots)\n- Durée (format '2 heures')\n\nFormat EXACT:\nDescription: [description]\nDurée: [durée]`;
+        const response = await callGemini(prompt);
+        const parsed = parsePlanification(response);
+        if (parsed) {
+            document.getElementById('planDescription').value = parsed.description;
+            document.getElementById('planDuree').value = parsed.duree;
+            ['planDescription','planDuree'].forEach(id => {
+                document.getElementById(id).classList.add('field-suggestion');
+            });
+            document.getElementById('suggestionBadge').style.display = 'inline';
+            document.getElementById('btnAccept').style.display = 'inline-block';
+            document.getElementById('btnReject').style.display = 'inline-block';
+        } else {
+            await aiAlert('Format de réponse invalide. Veuillez réessayer.', '⚠️');
+        }
+    } catch(e) {
+        await aiAlert('Erreur de connexion à l\'IA. Veuillez réessayer.', '❌');
+    }
+
+    this.disabled = false;
+    spinner.style.display = 'none';
+});
+
+function parsePlanification(text) {
+    const clean = text.replace(/\*\*/g, '').trim();
+    let description = '', duree = '';
+    clean.split('\n').forEach(line => {
+        const lower = line.toLowerCase();
+        if (lower.includes('description')) description = line.replace(/description\s*:?\s*/i, '').trim();
+        else if (lower.includes('durée') || lower.includes('duree')) duree = line.replace(/dur[eé]e?\s*:?\s*/i, '').trim();
+    });
+    return (description && duree) ? { description, duree } : null;
+}
+
+// Accept / Reject suggestion
+document.getElementById('btnAccept').addEventListener('click', function() {
+    ['planDescription','planDuree'].forEach(id => {
+        document.getElementById(id).classList.remove('field-suggestion');
+        document.getElementById(id).classList.add('field-valid');
+    });
+    this.style.display = 'none';
+    document.getElementById('btnReject').style.display = 'none';
+    document.getElementById('suggestionBadge').style.display = 'none';
+});
+document.getElementById('btnReject').addEventListener('click', function() {
+    document.getElementById('planDescription').value = '';
+    document.getElementById('planDuree').value = '';
+    ['planDescription','planDuree'].forEach(id => {
+        document.getElementById(id).classList.remove('field-suggestion','field-valid');
+        document.getElementById(id).style.cssText = '';
+    });
+    this.style.display = 'none';
+    document.getElementById('btnAccept').style.display = 'none';
+    document.getElementById('suggestionBadge').style.display = 'none';
+});
+
+// ── Correct title ───────────────────────────────────────────────────
+document.getElementById('btnCorrectTitle').addEventListener('click', async function() {
+    const title = document.getElementById('title').value.trim();
+    if (!title) return;
+    this.disabled = true;
+    document.getElementById('spinnerTitle').style.display = 'inline-block';
+    try {
+        const prompt = `Corrige ce mot ou titre français: "${title}". Réponds UNIQUEMENT avec le texte corrigé, sans phrase, sans guillemets.`;
+        const corrected = (await callGemini(prompt)).replace(/^["']|["']$/g,'').trim();
+        if (corrected && corrected.toLowerCase() !== title.toLowerCase()) {
+            const accepted = await aiConfirm(title, corrected);
+            if (accepted) {
+                document.getElementById('title').value = corrected;
+                validateTitle();
+            }
+        } else {
+            await aiAlert('Le titre semble déjà correct ✓', '✅');
+        }
+    } catch(e) { await aiAlert('Erreur de connexion à l\'IA.', '❌'); }
+    this.disabled = false;
+    document.getElementById('spinnerTitle').style.display = 'none';
+});
+
+// ── Correct description ─────────────────────────────────────────────
+document.getElementById('btnCorrectDesc').addEventListener('click', async function() {
+    const desc = document.getElementById('description').value.trim();
+    if (!desc) return;
+    this.disabled = true;
+    document.getElementById('spinnerDesc').style.display = 'inline-block';
+    try {
+        const prompt = `Corrige les fautes d'orthographe dans cette phrase française. Ne change que les mots mal orthographiés.\n\nPhrase: "${desc}"\n\nRéponds UNIQUEMENT avec la phrase corrigée.`;
+        const corrected = (await callGemini(prompt)).replace(/^["']|["']$/g,'').trim();
+        if (corrected && corrected.toLowerCase() !== desc.toLowerCase()) {
+            const accepted = await aiConfirm(desc, corrected);
+            if (accepted) {
+                document.getElementById('description').value = corrected;
+            }
+        } else {
+            await aiAlert('La description semble déjà correcte ✓', '✅');
+        }
+    } catch(e) { await aiAlert('Erreur de connexion à l\'IA.', '❌'); }
+    this.disabled = false;
+    document.getElementById('spinnerDesc').style.display = 'none';
+});
+</script>
+{% endblock %}

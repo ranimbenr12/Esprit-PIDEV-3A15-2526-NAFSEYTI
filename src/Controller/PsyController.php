@@ -465,9 +465,12 @@ public function fichePdf(
         'Attachment' => false,
     ]);
 }
-   #[Route('/reservation/{id}/statut', name: 'reservation_statut', methods: ['POST'])]
-public function updateStatut(int $id, Request $request, EntityManagerInterface $em): JsonResponse
-{
+  #[Route('/reservation/{id}/statut', name: 'reservation_statut', methods: ['POST'])]
+public function updateStatut(
+    int $id,
+    Request $request,
+    EntityManagerInterface $em
+): JsonResponse {
     try {
         $data   = json_decode($request->getContent(), true);
         $statut = $data['statut'] ?? null;
@@ -482,13 +485,52 @@ public function updateStatut(int $id, Request $request, EntityManagerInterface $
             return new JsonResponse(['success' => false, 'message' => 'Réservation introuvable'], 404);
         }
 
-        $user = $this->getUser();
-        if ($reservation->getMedecin() !== $user) {
+        $psy = $this->getUser();
+        if ($reservation->getMedecin() !== $psy) {
             return new JsonResponse(['success' => false, 'message' => 'Non autorisé'], 403);
         }
 
         $reservation->setStatut($statut);
         $em->flush();
+
+        // ── Envoi SMS si confirmé ──
+        if ($statut === 'confirme') {
+            $patient = $reservation->getUser();
+            $rdv     = $reservation->getRendezVous();
+
+            /*
+            // ── DÉCOMMENTER POUR ACTIVER L'ENVOI SMS ──
+            $telephone = $patient->getPhone_number();
+
+            if ($telephone) {
+                try {
+                    $date  = $reservation->getDateRdv()?->format('d/m/Y') ?? '';
+                    $heure = $rdv->getHeureDebut()?->format('H:i') ?? '';
+                    $type  = $rdv->getTypeSeance() === 'en_ligne' ? 'En ligne' : 'Présentiel';
+
+                    $body = "Bonjour {$patient->getFirstname()}, "
+                          . "votre rendez-vous du {$date} a {$heure} ({$type}) est confirme. "
+                          . "Merci de votre confiance.";
+
+                    $twilio = new \Twilio\Rest\Client(
+                        $_ENV['TWILIO_ACCOUNT_SID'],
+                        $_ENV['TWILIO_AUTH_TOKEN']
+                    );
+
+                    $twilio->messages->create(
+                        $telephone,
+                        ['from' => $_ENV['TWILIO_PHONE'], 'body' => $body]
+                    );
+
+                } catch (\Exception $e) {
+                    // SMS échoué, on continue quand même
+                }
+            }
+            // ── FIN BLOC SMS ──
+            */
+
+            return new JsonResponse(['success' => true, 'statut' => $statut]);
+        }
 
         return new JsonResponse(['success' => true, 'statut' => $statut]);
 
@@ -496,8 +538,6 @@ public function updateStatut(int $id, Request $request, EntityManagerInterface $
         return new JsonResponse([
             'success' => false,
             'message' => $e->getMessage(),
-            'file'    => $e->getFile(),
-            'line'    => $e->getLine(),
         ], 500);
     }
 }
@@ -893,8 +933,10 @@ public function googleCallback(
         return $this->redirectToRoute('psy_dashboard');
     }
 
-    // Stocker le token dans la session (ou en BDD selon votre préférence)
-    $request->getSession()->set('google_calendar_token', $token);
+    // ✅ Stocker en BDD au lieu de la session
+    $psy = $this->getUser();
+    $psy->setGoogleCalendarToken($token);
+    $em->flush();
 
     $this->addFlash('success', '✅ Google Calendar connecté avec succès !');
     return $this->redirectToRoute('psy_dashboard', ['section' => 'rendez-vous']);
@@ -914,28 +956,26 @@ public function syncToCalendar(
         return new JsonResponse(['success' => false, 'message' => 'Non autorisé'], 403);
     }
 
-    $token = $request->getSession()->get('google_calendar_token');
+    // ✅ Lire depuis la BDD au lieu de la session
+    $token = $psy->getGoogleCalendarToken();
 
     if (!$token) {
         return new JsonResponse([
-            'success'     => false,
-            'need_auth'   => true,
-            'auth_url'    => $this->generateUrl('psy_google_connect'),
-            'message'     => 'Connexion Google requise',
+            'success'   => false,
+            'need_auth' => true,
+            'auth_url'  => $this->generateUrl('psy_google_connect'),
+            'message'   => 'Connexion Google requise',
         ], 401);
     }
 
     $rdv     = $reservation->getRendezVous();
     $patient = $reservation->getUser();
 
-    // Parser la date (stockée en string dans votre entité)
-    $dateStr = $rdv->getDateRendezVous(); // ex: "2025-06-15" ou "15/06/2025"
-    try {
-        $dateObj = new \DateTime($dateStr);
-        $dateFormatted = $dateObj->format('Y-m-d');
-    } catch (\Exception) {
-        $dateFormatted = date('Y-m-d');
-    }
+    // ✅ Utiliser la vraie date de réservation du patient
+    $dateRdv = $reservation->getDateRdv();
+    $dateFormatted = $dateRdv instanceof \DateTimeInterface
+        ? $dateRdv->format('Y-m-d')
+        : date('Y-m-d');
 
     $summary = sprintf(
         '🧠 Consultation : %s %s',
@@ -952,30 +992,32 @@ public function syncToCalendar(
     );
 
     try {
-        
-        $eventId = $gcal->createEvent(
+        $heureDebut = $rdv->getHeureDebut()?->format('H:i:s') ?? '09:00:00';
+        $heureFin   = $rdv->getHeureFin()?->format('H:i:s')   ?? '10:00:00';
 
+        $eventId = $gcal->createEvent(
             token:        $token,
             summary:      $summary,
             description:  $description,
             date:         $dateFormatted,
-            heureDebut:   $rdv->getHeureDebut()->format('H:i:s'),
-            heureFin:     $rdv->getHeureFin()->format('H:i:s'),
+            heureDebut:   $heureDebut,
+            heureFin:     $heureFin,
             type:         $rdv->getTypeSeance(),
             patientEmail: $patient->getEmail(),
             psyEmail:     $psy->getEmail(),
         );
+    $reservation->setGoogleEventId($eventId);
+    $em->flush(); // ← persister
 
-        // Sauvegarder l'ID de l'event dans la réservation (optionnel)
-        // $reservation->setGoogleEventId($eventId);
-        // $em->flush();
-
-        return new JsonResponse([
-            'success'    => true,
-            'event_id'   => $eventId,
-            'event_link' => 'https://calendar.google.com/calendar/r/eventedit',
-            'message'    => 'Événement ajouté à Google Calendar !',
-        ]);
+ return new JsonResponse([
+    'success'    => true,
+    'event_id'   => $eventId,
+    'event_link' => 'https://calendar.google.com/calendar/u/0/r/day/' 
+        . $dateRdv->format('Y') . '/' 
+        . $dateRdv->format('m') . '/' 
+        . $dateRdv->format('d'),
+    'message'    => 'Événement ajouté à Google Calendar !',
+]);
 
     } catch (\Exception $e) {
         return new JsonResponse([

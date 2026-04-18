@@ -74,6 +74,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', nullable: false)]
     private ?string $email = null;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $googleCalendarToken = null;
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -269,4 +272,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
+
+    public function getGoogleCalendarToken(): ?array
+    {
+        return $this->googleCalendarToken;
+    }
+
+    public function setGoogleCalendarToken(?array $token): self
+    {
+        $this->googleCalendarToken = $token;
+        return $this;
+    }
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $longitude = null;
+
+    public function getLatitude(): ?float { return $this->latitude; }
+    public function setLatitude(?float $latitude): self { $this->latitude = $latitude; return $this; }
+
+    public function getLongitude(): ?float { return $this->longitude; }
+    public function setLongitude(?float $longitude): self { $this->longitude = $longitude; return $this; }
 }

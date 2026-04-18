@@ -1282,6 +1282,7 @@ element.style {
     </div>
 
     <!-- Navbar -->
+    {% block navbar %}
     <div class="navbar-wrap">
         <div class="navbar-inner">
             <ul class="nav-links">
@@ -1324,11 +1325,53 @@ element.style {
                     </a>
                 </li>
 
-                <li><a href="#">Evenements</a></li>
-                <li><a href="#">Suivi Personnel</a></li>
+                <li>
+    <a href="
+        {% if app.user %}
+            {% if app.user.role == 'etudiant' %}
+                {{ path('client_events_index') }}
+            {% elseif app.user.role == 'psychologue' or app.user.role == 'coach_vie' %}
+                {{ path('psycho_events_index') }}
+            {% else %}
+                javascript:void(0)
+            {% endif %}
+        {% else %}
+            javascript:void(0)
+        {% endif %}
+    "
+    class="{% if app.request.attributes.get('_route') in ['client_events_index', 'psycho_events_index'] %}active{% endif %}">
+        Evenements
+    </a>
+</li>
+<li>
+                    <a href="{% if app.user and app.user.role == 'psychologue' %}{{ path('psy_suivi_index') }}{% else %}{{ path('client_suivi_index') }}{% endif %}"
+                       {{ app.request.attributes.get('_route') in ['client_suivi_index','back_suivi_index','client_objectif_index','back_objectif_index','psy_suivi_index','psy_objectif_index'] ? 'class="active"' : '' }}>
+                        Suivi Personnel
+                    </a>
+                </li>
             </ul>
             
             {% if app.user %}
+            <!-- 🔔 Cloche de notifications -->
+    <div style="position:relative; margin-right:8px;" id="notifBellWrap">
+        <button onclick="toggleNotifDropdown(event)" id="notifBell"
+                style="background:none;border:none;cursor:pointer;position:relative;padding:8px;border-radius:8px;transition:background .2s;"
+                onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'"
+                title="Notifications">
+            <i class="fas fa-bell" style="font-size:1.2rem;color:#4a7c3f;"></i>
+            <span id="notifBadge" style="display:none;position:absolute;top:4px;right:4px;background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;font-size:.65rem;font-weight:700;align-items:center;justify-content:center;border:2px solid white;"></span>
+        </button>
+        <div id="notifDropdown"
+             style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:white;border-radius:12px;box-shadow:0 10px 40px rgba(45,80,22,0.15);width:340px;max-height:400px;overflow-y:auto;z-index:9999;border:1px solid #e8e0d0;">
+            <div style="padding:14px 18px;border-bottom:1px solid #f0ebe0;background:#fafaf7;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:.8rem;font-weight:600;color:#2d3a1e;text-transform:uppercase;letter-spacing:1px;">Notifications</span>
+                <button onclick="markAllRead()" style="background:none;border:none;cursor:pointer;font-size:.72rem;color:#4a7c3f;font-weight:600;">Tout marquer lu</button>
+            </div>
+            <div id="notifList" style="padding:8px 0;">
+                <div style="padding:20px;text-align:center;color:#9ca3af;font-size:.85rem;">Chargement...</div>
+            </div>
+        </div>
+    </div>
     <div style="position:relative; display:flex; align-items:center;" id="profileDropdownWrap">
         <div onclick="toggleProfileDropdown()" 
              style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 12px; border-radius:8px; transition:background 0.2s;"
@@ -1387,6 +1430,7 @@ element.style {
         
             </div>
         </div>
+    {% endblock %}
 
      
 
@@ -1475,47 +1519,172 @@ element.style {
     <script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('lib/counterup/counterup.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+<script>
+    // ── Spinner ──
+    window.addEventListener('load', function() {
+        document.getElementById('spinner').classList.remove('show');
+    });
 
-    <script>
-        // Spinner
-        window.addEventListener('load', function() {
-            document.getElementById('spinner').classList.remove('show');
+    // ── Amount buttons ──
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         });
+    });
 
-        // Amount buttons
-        document.querySelectorAll('.amount-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
+    // ── Progress bars on scroll ──
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                const fill = e.target;
+                const target = fill.getAttribute('data-width');
+                fill.style.width = target + '%';
+            }
         });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.progress-fill').forEach(el => observer.observe(el));
 
-        // Animate progress bars on scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    const fill = e.target;
-                    const target = fill.getAttribute('data-width');
-                    fill.style.width = target + '%';
-                }
-            });
-        }, { threshold: 0.3 });
-        document.querySelectorAll('.progress-fill').forEach(el => observer.observe(el));
-    </script>
-      <script>
-function toggleProfileDropdown() {
-    const dropdown = document.getElementById('profileDropdown');
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-}
-
-document.addEventListener('click', function(e) {
-    const wrap = document.getElementById('profileDropdownWrap');
-    if (wrap && !wrap.contains(e.target)) {
-        document.getElementById('profileDropdown').style.display = 'none';
+    // ── Profile dropdown ──
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
     }
-});
+
+    document.addEventListener('click', function(e) {
+        const wrap = document.getElementById('profileDropdownWrap');
+        if (wrap && !wrap.contains(e.target)) {
+            document.getElementById('profileDropdown').style.display = 'none';
+        }
+    });
+
+    // ── Modal de confirmation global ──
+    (function() {
+        var overlay = document.getElementById('globalConfirmOverlay');
+        var msgEl   = document.getElementById('gcMessage');
+        var iconEl  = document.getElementById('gcIcon');
+        var btnOk   = document.getElementById('gcConfirm');
+        var btnNo   = document.getElementById('gcCancel');
+        var _resolve;
+
+        var themes = {
+            danger:  { bg: '#dc2626', icon: '🗑️' },
+            warning: { bg: '#d97706', icon: '⚠️' },
+            success: { bg: '#16a34a', icon: '✅' },
+            info:    { bg: '#2563eb', icon: 'ℹ️' },
+        };
+
+        window.confirmAction = function(message, options) {
+            options = options || {};
+            var type = themes[options.type] || themes.warning;
+            msgEl.textContent      = message;
+            iconEl.textContent     = type.icon;
+            btnOk.textContent      = options.confirmText || 'Confirmer';
+            btnNo.textContent      = options.cancelText  || 'Annuler';
+            btnOk.style.background = type.bg;
+            overlay.style.display  = 'flex';
+
+            return new Promise(function(resolve) {
+                _resolve = resolve;
+            });
+        };
+
+        function close(result) {
+            overlay.style.display = 'none';
+            if (_resolve) { _resolve(result); _resolve = null; }
+        }
+
+        btnOk.addEventListener('click', function() { close(true); });
+        btnNo.addEventListener('click', function() { close(false); });
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) close(false); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(false); });
+    })();
 </script>
 
-    {% block javascripts %}{% endblock %}
+{% block javascripts %}{% endblock %}
+
+{% if app.user %}
+<script>
+    // ── Notifications Bell ──
+    var notifOpen    = false;
+    var notifData    = [];
+    var notifLoading = false;
+    var userRole     = '{{ app.user.role }}';
+    var notifUrl     = userRole === 'psychologue'
+                        ? '{{ path("psy_notifications") }}'
+                        : '{{ path("client_notifications") }}';
+    var readUrl      = userRole === 'psychologue'
+                        ? '/psychologue/notifications/'
+                        : '/client/notifications/';
+
+    function loadNotifications() {
+        if (notifLoading) return;
+        notifLoading = true;
+        fetch(notifUrl)
+            .then(r => r.json())
+            .then(data => {
+                notifLoading = false;
+                notifData = data;
+                var badge = document.getElementById('notifBadge');
+                var list  = document.getElementById('notifList');
+                if (!badge || !list) return;
+
+                if (data.length === 0) {
+                    badge.style.display = 'none';
+                    list.innerHTML = '<div style="padding:20px;text-align:center;color:#9ca3af;font-size:.85rem;">Aucune nouvelle notification</div>';
+                } else {
+                    badge.style.display = 'flex';
+                    badge.textContent = data.length > 9 ? '9+' : data.length;
+                    list.innerHTML = data.map(function(n) {
+                        var date = n.date_creation
+                            ? n.date_creation.substring(0, 16).replace('T', ' ')
+                            : (n.created_at || '');
+                        return '<div onclick="markRead(' + n.id + ', this)" style="padding:14px 18px;border-bottom:1px solid #f5f0e8;cursor:pointer;transition:background .15s;" onmouseover="this.style.background=\'#fafaf5\'" onmouseout="this.style.background=\'transparent\'">'
+                            + '<div style="flex:1;">'
+                            + '<div style="font-size:.83rem;color:#2d3a1e;line-height:1.4;">' + n.message + '</div>'
+                            + '<div style="font-size:.72rem;color:#9ca3af;margin-top:4px;">' + date + '</div>'
+                            + '</div></div>';
+                    }).join('');
+                }
+            })
+            .catch(function() { notifLoading = false; });
+    }
+
+    function markRead(id, el) {
+        fetch(readUrl + id + '/read', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function() {
+                if (el) el.style.opacity = '0.4';
+                loadNotifications();
+            });
+    }
+
+    function markAllRead() {
+        var promises = notifData.map(function(n) {
+            return fetch(readUrl + n.id + '/read', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        });
+        Promise.all(promises).then(function() { loadNotifications(); });
+    }
+
+    function toggleNotifDropdown(e) {
+        if (e) e.stopPropagation();
+        notifOpen = !notifOpen;
+        var dd = document.getElementById('notifDropdown');
+        if (dd) dd.style.display = notifOpen ? 'block' : 'none';
+    }
+
+    document.addEventListener('click', function(e) {
+        var wrap = document.getElementById('notifBellWrap');
+        if (wrap && !wrap.contains(e.target)) {
+            notifOpen = false;
+            var dd = document.getElementById('notifDropdown');
+            if (dd) dd.style.display = 'none';
+        }
+    });
+
+    loadNotifications();
+    setInterval(loadNotifications, 30000);
+</script>
+{% endif %}
+    
 </body>
 </html>

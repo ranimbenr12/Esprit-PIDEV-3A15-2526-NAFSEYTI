@@ -1,0 +1,862 @@
+{# templates/Psychologue/evente/create.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouvel atelier - NAFSEYTI{% endblock %}
+
+{% block navbar %}
+<div class="navbar-wrap">
+    <div class="navbar-inner">
+        <ul class="nav-links">
+            <li><a href="{{ path('psycho_dashboard') }}">Accueil</a></li>
+            <li><a href="#">Contenu Psychologique</a></li>
+            <li><a href="#">Tests</a></li>
+            <li><a href="#">Rendez-vous</a></li>
+            <li><a href="{{ path('psycho_events_index') }}" class="active">Evenements</a></li>
+            <li><a href="#">Suivi Personnel</a></li>
+        </ul>
+        <a href="#!" class="nav-cta nav-links a">Se connecter</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+
+<style>
+    :root {
+        --primary-green: #285921;
+        --primary-green-light: #3d7e33;
+        --secondary-beige: #c9b99b;
+        --background-light: #f8f5f2;
+        --text-dark: #5a6c5a;
+        --text-light: #69685c;
+    }
+
+    .create-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: #F5F1E6;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-label-custom {
+        font-weight: bold;
+        color: #5c715a;
+        min-width: 120px;
+    }
+
+    .form-control-custom {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #d2e0cf;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .form-control-custom:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(40, 89, 33, 0.1);
+        outline: none;
+    }
+
+    .form-control-custom.valid {
+        border-color: green;
+        border-width: 2px;
+    }
+
+    .form-control-custom.invalid {
+        border-color: red;
+        border-width: 2px;
+    }
+
+    .form-control-custom.warning {
+        border-color: orange;
+        border-width: 2px;
+    }
+
+    .btn-correction {
+        background: #2196F3;
+        color: white;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .btn-correction:hover:not(:disabled) {
+        background: #1976D2;
+        transform: translateY(-1px);
+    }
+
+    .btn-correction:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn-generate {
+        background: #7f9a7d;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 13px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-generate:hover {
+        background: #6b8a68;
+        transform: translateY(-1px);
+    }
+
+    .btn-save {
+        background: #7f9a7d;
+        color: white;
+        font-weight: bold;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-save:hover {
+        background: #6b8a68;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(127, 154, 125, 0.4);
+    }
+
+    .btn-cancel {
+        background: #b7c9b5;
+        color: white;
+        font-weight: bold;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #a0b89e;
+        transform: translateY(-2px);
+    }
+
+    .planification-section {
+        background: #fcfaf7;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #d2e0cf;
+    }
+
+    .upload-area {
+        border: 2px dashed #c4d4c1;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: #f0f5f0;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-area:hover {
+        border-color: var(--primary-green);
+        background-color: #e8f0e8;
+    }
+
+    .image-preview {
+        max-width: 200px;
+        max-height: 100px;
+        margin-top: 10px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .suggestion-badge {
+        color: #4CAF50;
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    .correction-badge {
+        color: #2196F3;
+        font-style: italic;
+    }
+
+    .loading-spinner {
+        width: 25px;
+        height: 25px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid var(--primary-green);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .suggestion-field {
+        border-color: #4CAF50;
+        border-width: 2px;
+        background-color: #f0f7f0;
+    }
+
+    hr {
+        background: linear-gradient(90deg, transparent, #5c715a, transparent);
+        height: 1px;
+        border: none;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="create-container">
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h2 class="mb-2" style="font-size: 24px; font-weight: bold; color: #5c715a;">Créer un nouvel atelier</h2>
+        <hr>
+    </div>
+
+    <!-- Title with correction button -->
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-3">
+            <label class="form-label-custom">Titre de l'atelier :</label>
+        </div>
+        <div class="col-md-7">
+            <input type="text" id="titleField" class="form-control-custom" placeholder="Ex: Atelier sur l'égoïsme">
+        </div>
+        <div class="col-md-2">
+            <button type="button" id="btnCorrectTitle" class="btn-correction w-100" disabled>🔍 Corriger</button>
+        </div>
+    </div>
+
+    <!-- Loading indicator & Generate button -->
+    <div class="row mb-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-7">
+            <div class="d-flex align-items-center gap-2">
+                <div id="loadingIndicator" class="loading-spinner" style="display: none;"></div>
+                <button type="button" id="btnGenerateAll" class="btn-generate w-100">✨ Générer la planification</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location field -->
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-3">
+            <label class="form-label-custom">Lieu :</label>
+        </div>
+        <div class="col-md-9">
+            <input type="text" id="locationField" class="form-control-custom" placeholder="Ex: Salle de méditation, Paris">
+        </div>
+    </div>
+
+    <!-- Date and Participants -->
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-3">
+            <label class="form-label-custom">Date :</label>
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="datePicker" class="form-control-custom">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label-custom">Participants max :</label>
+        </div>
+        <div class="col-md-3">
+            <input type="number" id="maxParticipantsField" class="form-control-custom" placeholder="Ex: 20" value="30">
+        </div>
+    </div>
+
+    <!-- Image link -->
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-3">
+            <label class="form-label-custom">Image URL :</label>
+        </div>
+        <div class="col-md-9">
+            <input type="text" id="linkField" class="form-control-custom" placeholder="URL de l'image">
+        </div>
+    </div>
+
+    <!-- Upload image area -->
+    <div class="row mb-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-9">
+            <div id="uploadArea" class="upload-area">
+                <div style="font-size: 16px; color: #7f9a7d; font-weight: bold;">☁️ Cliquez ici pour uploader une image</div>
+                <div style="font-size: 12px; color: #8a9a87;">(Formats supportés: PNG, JPG, JPEG, GIF)</div>
+                <img id="imagePreview" class="image-preview" alt="Aperçu">
+            </div>
+            <input type="file" id="imageUpload" accept="image/png,image/jpeg,image/jpg,image/gif" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Planification section -->
+    <div class="planification-section mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <label class="mb-0" style="font-size: 16px; font-weight: bold; color: #5c715a;">📋 Planification de l'atelier</label>
+            <div>
+                <span id="suggestionLabel" class="suggestion-badge" style="display: none;">(Suggestion IA)</span>
+                <span id="correctionLabel" class="correction-badge" style="display: none;">(Correction proposée)</span>
+            </div>
+        </div>
+
+        <!-- Planification description with correction -->
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label class="form-label-custom">Description :</label>
+            </div>
+            <div class="col-md-7">
+                <input type="text" id="planDescriptionField" class="form-control-custom" placeholder="Ex: Séance de méditation guidée">
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="btnCorrectDescription" class="btn-correction w-100" disabled>🔍 Corriger</button>
+            </div>
+        </div>
+
+        <!-- Planification duration -->
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label class="form-label-custom">Durée :</label>
+            </div>
+            <div class="col-md-9">
+                <input type="text" id="planDureeField" class="form-control-custom" placeholder="Ex: 2 heures">
+            </div>
+        </div>
+
+        <!-- Suggestion action buttons -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" id="btnAcceptSuggestion" class="btn btn-success" style="display: none; padding: 8px 20px;">✓ Accepter la suggestion</button>
+                    <button type="button" id="btnRejectSuggestion" class="btn btn-danger" style="display: none; padding: 8px 20px;">✗ Rejeter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="d-flex justify-content-center gap-4 mt-4">
+        <button type="button" id="btnSave" class="btn-save">💾 Sauvegarder l'atelier</button>
+        <button type="button" id="btnCancel" class="btn-cancel">✖ Annuler</button>
+    </div>
+
+    <!-- Hint text -->
+    <div class="text-center mt-4">
+        <p class="small text-muted fst-italic">
+            💡 Astuce : Remplissez le titre, cliquez sur 'Corriger' pour l'orthographe, puis 'Générer la planification' pour une suggestion automatique !
+        </p>
+    </div>
+</div>
+
+<!-- Correction Dialog -->
+<div id="correctionDialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 15px; padding: 25px; max-width: 500px; width: 90%;">
+        <h4 class="mb-3">Proposition de correction</h4>
+        <div class="mb-3">
+            <label class="fw-bold">📝 Texte original:</label>
+            <div id="originalText" class="p-2 mt-1" style="background: #fff0f0; border-radius: 8px;"></div>
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold">✅ Texte corrigé:</label>
+            <div id="correctedText" class="p-2 mt-1" style="background: #f0fff0; border-radius: 8px; color: #4CAF50;"></div>
+        </div>
+        <div class="d-flex gap-3 justify-content-end">
+            <button id="acceptCorrectionBtn" class="btn btn-success">✓ Accepter</button>
+            <button id="rejectCorrectionBtn" class="btn btn-secondary">✗ Garder l'original</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // DOM Elements
+    const titleField = document.getElementById('titleField');
+    const locationField = document.getElementById('locationField');
+    const datePicker = document.getElementById('datePicker');
+    const maxParticipantsField = document.getElementById('maxParticipantsField');
+    const linkField = document.getElementById('linkField');
+    const planDescriptionField = document.getElementById('planDescriptionField');
+    const planDureeField = document.getElementById('planDureeField');
+    const btnSave = document.getElementById('btnSave');
+    const btnCancel = document.getElementById('btnCancel');
+    const btnGenerateAll = document.getElementById('btnGenerateAll');
+    const btnCorrectTitle = document.getElementById('btnCorrectTitle');
+    const btnCorrectDescription = document.getElementById('btnCorrectDescription');
+    const btnAcceptSuggestion = document.getElementById('btnAcceptSuggestion');
+    const btnRejectSuggestion = document.getElementById('btnRejectSuggestion');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const suggestionLabel = document.getElementById('suggestionLabel');
+    const correctionLabel = document.getElementById('correctionLabel');
+    const uploadArea = document.getElementById('uploadArea');
+    const imageUpload = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
+
+    // Local correction dictionary
+    const localCorrections = {
+        'jalousi': 'jalousie', 'jalousiee': 'jalousie', 'jalouzi': 'jalousie',
+        'egoisme': 'égoïsme', 'egoisne': 'égoïsme', 'égoisme': 'égoïsme',
+        'narsicism': 'narcissisme', 'narsissisme': 'narcissisme',
+        'confience': 'confiance', 'confiancee': 'confiance',
+        'etre': 'être', 'a': 'à', 'ou': 'où', 'pres': 'près',
+        'tres': 'très', 'deja': 'déjà', 'voila': 'voilà',
+        'evenement': 'événement', 'evenment': 'événement',
+        'conference': 'conférence', 'atelie': 'atelier',
+        'meditation': 'méditation'
+    };
+
+    let currentCorrectionCallback = null;
+    let generatedPlanDescription = '';
+    let generatedPlanDuree = '';
+
+    // ==================== VALIDATION FUNCTIONS ====================
+
+    function validateTitle() {
+        const title = titleField.value.trim();
+        if (!title) {
+            titleField.classList.add('invalid');
+            titleField.classList.remove('valid', 'warning');
+            return false;
+        } else if (title.length < 3) {
+            titleField.classList.add('warning');
+            titleField.classList.remove('valid', 'invalid');
+            return false;
+        } else {
+            titleField.classList.add('valid');
+            titleField.classList.remove('invalid', 'warning');
+            return true;
+        }
+    }
+
+    function validateLocation() {
+        const location = locationField.value.trim();
+        if (!location) {
+            locationField.classList.add('invalid');
+            locationField.classList.remove('valid', 'warning');
+            return false;
+        } else if (location.length < 3) {
+            locationField.classList.add('warning');
+            locationField.classList.remove('valid', 'invalid');
+            return false;
+        } else {
+            locationField.classList.add('valid');
+            locationField.classList.remove('invalid', 'warning');
+            return true;
+        }
+    }
+
+    function validateDate() {
+        if (!datePicker.value) {
+            datePicker.classList.add('invalid');
+            datePicker.classList.remove('valid');
+            return false;
+        } else {
+            datePicker.classList.add('valid');
+            datePicker.classList.remove('invalid');
+            return true;
+        }
+    }
+
+    function validateMaxParticipants() {
+        const value = parseInt(maxParticipantsField.value);
+        if (!maxParticipantsField.value || isNaN(value) || value <= 0) {
+            maxParticipantsField.classList.add('invalid');
+            maxParticipantsField.classList.remove('valid', 'warning');
+            return false;
+        } else {
+            maxParticipantsField.classList.add('valid');
+            maxParticipantsField.classList.remove('invalid', 'warning');
+            return true;
+        }
+    }
+
+    function validatePlanification() {
+        const planDesc = planDescriptionField.value.trim();
+        const planDuree = planDureeField.value.trim();
+
+        if (!planDesc && !planDuree) return true;
+        if (planDesc && !planDuree) {
+            planDureeField.classList.add('invalid');
+            return false;
+        }
+        if (!planDesc && planDuree) {
+            planDescriptionField.classList.add('invalid');
+            return false;
+        }
+        if (planDesc.length < 4) {
+            planDescriptionField.classList.add('warning');
+            return false;
+        }
+        return true;
+    }
+
+    function validateAll() {
+        let isValid = true;
+        if (!validateTitle()) isValid = false;
+        if (!validateLocation()) isValid = false;
+        if (!validateDate()) isValid = false;
+        if (!validateMaxParticipants()) isValid = false;
+        if (!validatePlanification()) isValid = false;
+        return isValid;
+    }
+
+    // Add event listeners for validation
+    titleField.addEventListener('input', () => {
+        validateTitle();
+        btnCorrectTitle.disabled = !titleField.value.trim();
+    });
+    locationField.addEventListener('input', validateLocation);
+    datePicker.addEventListener('change', validateDate);
+    maxParticipantsField.addEventListener('input', validateMaxParticipants);
+    planDescriptionField.addEventListener('input', () => {
+        validatePlanification();
+        btnCorrectDescription.disabled = !planDescriptionField.value.trim();
+    });
+    planDureeField.addEventListener('input', validatePlanification);
+
+    // ==================== CORRECTION FUNCTIONS ====================
+
+    function showCorrectionDialog(fieldName, original, corrected, callback) {
+        currentCorrectionCallback = callback;
+        document.getElementById('originalText').innerHTML = original;
+        document.getElementById('correctedText').innerHTML = corrected;
+        document.getElementById('correctionDialog').style.display = 'flex';
+    }
+
+    document.getElementById('acceptCorrectionBtn').addEventListener('click', () => {
+        if (currentCorrectionCallback) currentCorrectionCallback(true);
+        document.getElementById('correctionDialog').style.display = 'none';
+        currentCorrectionCallback = null;
+    });
+
+    document.getElementById('rejectCorrectionBtn').addEventListener('click', () => {
+        if (currentCorrectionCallback) currentCorrectionCallback(false);
+        document.getElementById('correctionDialog').style.display = 'none';
+        currentCorrectionCallback = null;
+    });
+
+    async function correctTitle() {
+        const title = titleField.value.trim();
+        if (!title) return;
+
+        btnCorrectTitle.disabled = true;
+        loadingIndicator.style.display = 'inline-block';
+        correctionLabel.style.display = 'none';
+
+        // Check local corrections first
+        const lowerTitle = title.toLowerCase();
+        if (localCorrections[lowerTitle]) {
+            let corrected = localCorrections[lowerTitle];
+            if (title.charAt(0) === title.charAt(0).toUpperCase()) {
+                corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
+            }
+            loadingIndicator.style.display = 'none';
+            showCorrectionDialog('Titre', title, corrected, (accepted) => {
+                if (accepted) {
+                    titleField.value = corrected;
+                    validateTitle();
+                    showNotification('Correction appliquée !', 'success');
+                }
+                btnCorrectTitle.disabled = false;
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch('/psycho/events/api/correct-text', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: title, type: 'title' })
+            });
+            const data = await response.json();
+
+            if (data.success && data.corrected !== title) {
+                showCorrectionDialog('Titre', title, data.corrected, (accepted) => {
+                    if (accepted) {
+                        titleField.value = data.corrected;
+                        validateTitle();
+                    }
+                });
+            } else if (data.success) {
+                showNotification('Le mot semble déjà correct.', 'info');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Erreur réseau', 'error');
+        } finally {
+            btnCorrectTitle.disabled = false;
+            loadingIndicator.style.display = 'none';
+        }
+    }
+
+    async function correctDescription() {
+        const description = planDescriptionField.value.trim();
+        if (!description) return;
+
+        btnCorrectDescription.disabled = true;
+        loadingIndicator.style.display = 'inline-block';
+        correctionLabel.style.display = 'none';
+
+        // Check local corrections for each word
+        const words = description.split(/\s+/);
+        let correctedDesc = [];
+        let hasCorrection = false;
+        let correctionsList = [];
+
+        for (let word of words) {
+            const punctuation = word.match(/[.,!?;:]$/);
+            const cleanWord = word.replace(/[.,!?;:]$/, '');
+            const lowerWord = cleanWord.toLowerCase();
+            
+            if (localCorrections[lowerWord]) {
+                let corrected = localCorrections[lowerWord];
+                if (cleanWord.charAt(0) === cleanWord.charAt(0).toUpperCase()) {
+                    corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
+                }
+                correctedDesc.push(corrected + (punctuation ? punctuation[0] : ''));
+                correctionsList.push(`"${word}" → "${corrected}"`);
+                hasCorrection = true;
+            } else {
+                correctedDesc.push(word);
+            }
+        }
+
+        if (hasCorrection) {
+            const finalCorrectedDesc = correctedDesc.join(' ');
+            loadingIndicator.style.display = 'none';
+            showCorrectionDialog('Description', description, finalCorrectedDesc, (accepted) => {
+                if (accepted) {
+                    planDescriptionField.value = finalCorrectedDesc;
+                    validatePlanification();
+                    showNotification('Correction appliquée : ' + correctionsList.join(', '), 'success');
+                }
+                btnCorrectDescription.disabled = false;
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch('/psycho/events/api/correct-text', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: description, type: 'description' })
+            });
+            const data = await response.json();
+
+            if (data.success && data.corrected !== description) {
+                showCorrectionDialog('Description', description, data.corrected, (accepted) => {
+                    if (accepted) {
+                        planDescriptionField.value = data.corrected;
+                        validatePlanification();
+                    }
+                });
+            } else if (data.success) {
+                showNotification('La description semble déjà correcte.', 'info');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Erreur réseau', 'error');
+        } finally {
+            btnCorrectDescription.disabled = false;
+            loadingIndicator.style.display = 'none';
+        }
+    }
+
+    // ==================== GENERATION FUNCTIONS ====================
+
+    async function generatePlanification() {
+        const title = titleField.value.trim();
+        if (!title) {
+            showNotification('Veuillez d\'abord saisir un titre pour générer la planification.', 'warning');
+            return;
+        }
+
+        btnGenerateAll.disabled = true;
+        loadingIndicator.style.display = 'inline-block';
+        suggestionLabel.style.display = 'none';
+
+        try {
+            const response = await fetch('/psycho/events/api/generate-planification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: title })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                generatedPlanDescription = data.description;
+                generatedPlanDuree = data.duree;
+
+                planDescriptionField.value = generatedPlanDescription;
+                planDureeField.value = generatedPlanDuree;
+
+                planDescriptionField.classList.add('suggestion-field');
+                planDureeField.classList.add('suggestion-field');
+
+                btnAcceptSuggestion.style.display = 'inline-block';
+                btnRejectSuggestion.style.display = 'inline-block';
+                suggestionLabel.style.display = 'inline-block';
+
+                showNotification('✨ Planification générée avec succès !', 'success');
+            } else {
+                showNotification(data.message || 'Erreur lors de la génération', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Erreur réseau', 'error');
+        } finally {
+            btnGenerateAll.disabled = false;
+            loadingIndicator.style.display = 'none';
+        }
+    }
+
+    function acceptSuggestion() {
+        planDescriptionField.classList.remove('suggestion-field');
+        planDureeField.classList.remove('suggestion-field');
+        btnAcceptSuggestion.style.display = 'none';
+        btnRejectSuggestion.style.display = 'none';
+        suggestionLabel.style.display = 'none';
+        showNotification('✓ Planification acceptée !', 'success');
+    }
+
+    function rejectSuggestion() {
+        planDescriptionField.value = '';
+        planDureeField.value = '';
+        planDescriptionField.classList.remove('suggestion-field');
+        planDureeField.classList.remove('suggestion-field');
+        btnAcceptSuggestion.style.display = 'none';
+        btnRejectSuggestion.style.display = 'none';
+        suggestionLabel.style.display = 'none';
+        showNotification('✗ Suggestions rejetées.', 'info');
+    }
+
+    // ==================== SAVE FUNCTIONS ====================
+
+    async function saveEvent() {
+        if (!validateAll()) {
+            showNotification('Veuillez corriger les champs en erreur.', 'warning');
+            return;
+        }
+
+        const eventData = {
+            title: titleField.value.trim(),
+            location: locationField.value.trim(),
+            eventDate: datePicker.value,
+            link: linkField.value.trim(),
+            maxParticipants: parseInt(maxParticipantsField.value),
+            currentParticipants: 0
+        };
+
+        const planificationData = {
+            description: planDescriptionField.value.trim(),
+            duree: planDureeField.value.trim()
+        };
+
+        try {
+            const eventResponse = await fetch('/psycho/events/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eventData)
+            });
+            const eventResult = await eventResponse.json();
+
+            if (!eventResult.success) {
+                showNotification('Erreur lors de la création de l\'événement', 'error');
+                return;
+            }
+
+            if (planificationData.description && planificationData.duree) {
+                const planResponse = await fetch('/psycho/events/api/planifications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        idEvent: eventResult.id,
+                        description: planificationData.description,
+                        duree: planificationData.duree
+                    })
+                });
+                await planResponse.json();
+            }
+
+            showNotification('✅ Événement créé avec succès !', 'success');
+            setTimeout(() => {
+                window.location.href = '/psycho/events';
+            }, 1500);
+
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Erreur réseau lors de la sauvegarde', 'error');
+        }
+    }
+
+    function cancel() {
+        window.location.href = '/psycho/events';
+    }
+
+    // ==================== IMAGE UPLOAD ====================
+
+    uploadArea.addEventListener('click', () => {
+        imageUpload.click();
+    });
+
+    imageUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+                linkField.value = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // ==================== NOTIFICATION ====================
+
+    function showNotification(message, type) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${type === 'success' ? '#4CAF50' : type === 'warning' ? '#ff9800' : '#f44336'};color:white;padding:12px 24px;border-radius:25px;z-index:10000;`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ==================== BUTTON EVENT LISTENERS ====================
+
+    btnCorrectTitle.addEventListener('click', correctTitle);
+    btnCorrectDescription.addEventListener('click', correctDescription);
+    btnGenerateAll.addEventListener('click', generatePlanification);
+    btnAcceptSuggestion.addEventListener('click', acceptSuggestion);
+    btnRejectSuggestion.addEventListener('click', rejectSuggestion);
+    btnSave.addEventListener('click', saveEvent);
+    btnCancel.addEventListener('click', cancel);
+
+    // Initialize
+    validateTitle();
+    validateLocation();
+    validateDate();
+    validateMaxParticipants();
+    validatePlanification();
+    btnCorrectTitle.disabled = !titleField.value.trim();
+    btnCorrectDescription.disabled = !planDescriptionField.value.trim();
+
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    datePicker.value = today;
+</script>
+{% endblock %}

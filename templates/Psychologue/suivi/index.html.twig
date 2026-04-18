@@ -1,0 +1,533 @@
+﻿{% extends "base.html.twig" %}
+{% block title %}Espace Psychologue — Mes Patients{% endblock %}
+{% block body %}
+<style>
+:root{--gd:#2D5016;--gm:#4A7C2F;--gs:#7BA05B;--gl:#A8C68F;--gp:#D4E6C3;--bl:#EDE3D0;--bc:#F7F2E8;--bw:#FDFAF5;--td:#1A2E0A;--tm:#3D5C28;}
+.psy-hero{background:linear-gradient(135deg,var(--gd),var(--gm));padding:60px;position:relative;overflow:hidden;}
+.psy-hero::before{content:"";position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:rgba(168,198,143,.1);}
+.psy-hero h1{font-family:"Playfair Display",serif;font-size:2.4rem;color:var(--bc);font-weight:400;position:relative;}
+.psy-hero h1 em{font-style:italic;color:var(--gl);}
+.psy-hero p{font-family:"Cormorant Garamond",serif;font-size:1.1rem;color:rgba(237,227,208,.75);margin-top:10px;position:relative;}
+.psy-page{background:var(--bw);min-height:80vh;padding:50px 60px;}
+.toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:32px;}
+.search-bar{display:flex;align-items:center;gap:0;border:1.5px solid var(--bl);border-radius:8px;overflow:hidden;background:white;flex:1;min-width:280px;max-width:520px;box-shadow:0 2px 8px rgba(45,80,22,.06);}
+.search-bar i{padding:0 16px;color:var(--gs);font-size:1rem;}
+.search-bar input{border:none;outline:none;padding:13px 0;font-size:.95rem;color:var(--td);background:transparent;width:100%;}
+.search-bar input::placeholder{color:#aab8a0;}
+.filter-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.filter-btn{padding:10px 20px;border-radius:8px;border:1.5px solid var(--bl);background:white;font-size:.78rem;font-weight:600;letter-spacing:.5px;color:var(--tm);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.filter-btn:hover{border-color:var(--gs);color:var(--gm);}
+.filter-btn.active{background:var(--gm);color:white;border-color:var(--gm);}
+.filter-btn.active-suivis{background:#155724;color:white;border-color:#155724;}
+.filter-btn.active-no{background:var(--gd);color:white;border-color:var(--gd);}
+.students-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
+.student-card{background:white;border:1.5px solid var(--bl);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .3s;position:relative;}
+.student-card:hover{border-color:var(--gs);box-shadow:0 12px 40px rgba(45,80,22,.12);transform:translateY(-4px);}
+.student-card.active{border-color:var(--gm);box-shadow:0 0 0 3px rgba(74,124,47,.2);}
+.student-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--gp);margin:0 auto 14px;display:block;}
+.student-avatar-placeholder{width:80px;height:80px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.8rem;color:var(--gm);}
+.student-name{font-family:"Playfair Display",serif;font-size:1.05rem;color:var(--td);font-weight:600;margin-bottom:4px;}
+.student-email{font-size:.75rem;color:#8A9B7A;margin-bottom:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.student-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gp);color:var(--gd);font-size:.65rem;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:100px;font-weight:600;}
+.student-badge.has-suivis{background:#d4edda;color:#155724;}
+</style>
+
+<!-- Hero -->
+<section class="psy-hero">
+  <h1>Espace <em>Psychologue</em></h1>
+  <p>Bonjour {{ psy.firstname }} — Gérez les suivis de vos patients.</p>
+</section>
+
+<!-- Page -->
+<section class="psy-page">
+  <div style="margin-bottom:24px;">
+    <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:3px;color:var(--gs);margin-bottom:6px;">Patients</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--td);font-weight:400;">
+      {{ etudiants|length }} étudiant(s) disponibles
+    </h2>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Rechercher par nom ou email…" oninput="applyFilters()">
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" id="btn-all" onclick="setFilter('all')">
+        <i class="fas fa-users"></i> Tous
+      </button>
+      <button class="filter-btn" id="btn-suivis" onclick="setFilter('suivis')">
+        <i class="fas fa-check-circle"></i> Avec suivis
+      </button>
+      <button class="filter-btn" id="btn-no" onclick="setFilter('no')">
+        <i class="fas fa-plus-circle"></i> Sans suivi
+      </button>
+    </div>
+  </div>
+
+  {% if etudiants|length == 0 %}
+  <div style="text-align:center;padding:80px;color:#6B7D5A;">
+    <i class="fas fa-users" style="font-size:3rem;color:var(--gp);display:block;margin-bottom:16px;"></i>
+    <p>Aucun étudiant enregistré.</p>
+  </div>
+  {% else %}
+  <div class="students-grid" id="studentsGrid">
+    {% for etudiant in etudiants %}
+    {% set nb = nbSuivisParEtudiant[etudiant.id] ?? 0 %}
+    <div class="student-card" id="card-{{ etudiant.id }}"
+         data-name="{{ (etudiant.firstname ~ ' ' ~ etudiant.lastname)|lower }}"
+         data-email="{{ etudiant.email|lower }}"
+         data-nb="{{ nb }}"
+         onclick="openPanel({{ etudiant.id }})">
+      {% if etudiant.profile_photo %}
+        {% if 'http' in etudiant.profile_photo %}
+          <img class="student-avatar" src="{{ etudiant.profile_photo }}" alt="{{ etudiant.firstname }}">
+        {% else %}
+          <img class="student-avatar" src="{{ asset(etudiant.profile_photo|replace({'\\': '/'}) ) }}" alt="{{ etudiant.firstname }}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="student-avatar-placeholder" style="display:none;"><i class="fas fa-user"></i></div>
+        {% endif %}
+      {% else %}
+        <div class="student-avatar-placeholder"><i class="fas fa-user"></i></div>
+      {% endif %}
+      <div class="student-name">{{ etudiant.firstname }} {{ etudiant.lastname }}</div>
+      <div class="student-email">{{ etudiant.email }}</div>
+      <span class="student-badge {{ nb > 0 ? 'has-suivis' : '' }}">
+        <i class="fas fa-{{ nb > 0 ? 'check-circle' : 'plus-circle' }}"></i>
+        {{ nb }} suivi(s)
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<!-- Side Panel -->
+<style>
+.panel-backdrop{display:none;position:fixed;inset:0;background:rgba(26,46,10,.5);z-index:9998;backdrop-filter:blur(3px);}
+.panel-backdrop.open{display:block;}
+.side-panel{position:fixed;top:0;right:0;bottom:0;width:520px;background:var(--bw);z-index:9999;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow:hidden;box-shadow:-8px 0 40px rgba(26,46,10,.15);}
+.side-panel.open{transform:translateX(0);}
+.sp-head{background:linear-gradient(135deg,var(--gd),var(--gm));padding:28px;flex-shrink:0;}
+.sp-head-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sp-close{background:rgba(255,255,255,.15);border:none;color:white;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.sp-close:hover{background:rgba(255,255,255,.25);}
+.sp-student-row{display:flex;align-items:center;gap:14px;}
+.sp-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.3);flex-shrink:0;}
+.sp-avatar-ph{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:white;flex-shrink:0;}
+.sp-student-name{font-family:"Playfair Display",serif;font-size:1.15rem;color:white;font-weight:600;}
+.sp-student-email{font-size:.75rem;color:rgba(255,255,255,.65);margin-top:2px;}
+.sp-tabs{display:flex;margin-top:16px;border-bottom:1px solid rgba(255,255,255,.15);}
+.sp-tab{flex:1;padding:10px 0;background:transparent;border:none;color:rgba(255,255,255,.5);font-family:"DM Sans",sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
+.sp-tab.active{color:white;border-bottom-color:var(--gl);}
+.sp-body{flex:1;overflow-y:auto;padding:24px;}
+.sp-body::-webkit-scrollbar{width:4px;}
+.sp-body::-webkit-scrollbar-thumb{background:var(--bl);border-radius:4px;}
+.sp-pane{display:none;}
+.sp-pane.active{display:block;}
+.btn-add-suivi{width:100%;background:var(--gm);color:white;border:none;padding:13px;border-radius:6px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;margin-bottom:20px;}
+.btn-add-suivi:hover{background:var(--gd);}
+.suivi-item{background:white;border:1.5px solid var(--bl);border-radius:8px;margin-bottom:12px;overflow:hidden;}
+.suivi-item-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .2s;}
+.suivi-item-head:hover{background:var(--bc);}
+.suivi-item-title{font-family:"Playfair Display",serif;font-size:.95rem;color:var(--td);font-weight:600;}
+.suivi-item-meta{font-size:.72rem;color:#8A9B7A;margin-top:2px;}
+.suivi-badge{font-size:.62rem;background:var(--gp);color:var(--gd);padding:3px 10px;border-radius:100px;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.suivi-item-body{display:none;padding:0 16px 16px;border-top:1px solid var(--bl);}
+.suivi-item-body.open{display:block;}
+.obj-list{margin-top:12px;}
+.obj-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bl);}
+.obj-row:last-child{border-bottom:none;}
+.obj-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;}
+.obj-check.done{background:var(--gp);color:var(--gd);}
+.obj-check.pending{background:#fff3cd;color:#856404;}
+.obj-title{font-size:.85rem;color:var(--td);flex:1;}
+.obj-date{font-size:.7rem;color:#8A9B7A;white-space:nowrap;}
+.btn-add-obj{background:var(--gp);color:var(--gd);border:none;padding:8px 16px;border-radius:4px;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .2s;margin-top:10px;}
+.btn-add-obj:hover{background:var(--gl);}
+.btn-del-suivi{background:#FEE2E2;color:#991B1B;border:none;padding:6px 12px;border-radius:4px;font-size:.68rem;cursor:pointer;font-weight:600;transition:background .2s;}
+.btn-del-suivi:hover{background:#FECACA;}
+.sp-empty{text-align:center;padding:40px 20px;color:#8A9B7A;}
+.sp-empty i{font-size:2.5rem;color:var(--gp);display:block;margin-bottom:12px;}
+.sp-loading{text-align:center;padding:40px;color:#8A9B7A;}
+.sp-loading i{font-size:1.5rem;animation:spin 1s linear infinite;display:block;margin-bottom:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Modal */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(26,46,10,.6);z-index:99999;align-items:center;justify-content:center;}
+.modal-ov.active{display:flex;}
+.modal-bx{background:white;border-radius:12px;padding:36px;width:100%;max-width:480px;position:relative;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-bx h2{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--td);margin-bottom:20px;}
+.modal-close-btn{position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.3rem;color:#aaa;cursor:pointer;}
+.ff{margin-bottom:14px;}
+.ff label{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gm);margin-bottom:6px;font-weight:600;}
+.ff input,.ff textarea,.ff select{width:100%;border:1px solid var(--bl);background:var(--bc);padding:10px 14px;font-family:"DM Sans",sans-serif;font-size:.88rem;color:var(--td);border-radius:4px;outline:none;transition:border-color .3s;}
+.ff input:focus,.ff textarea:focus,.ff select:focus{border-color:var(--gs);background:white;}
+.ff .err{color:#dc3545;font-size:.72rem;margin-top:3px;display:none;}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.btn-cancel{background:var(--bl);color:var(--tm);border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-size:.8rem;font-weight:600;}
+.btn-save{background:var(--gm);color:white;border:none;padding:10px 22px;border-radius:4px;cursor:pointer;font-size:.8rem;font-weight:600;transition:background .2s;}
+.btn-save:hover{background:var(--gd);}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--gd);color:var(--bc);padding:13px 22px;border-radius:8px;font-size:.85rem;z-index:999999;display:none;}
+</style>
+
+<div class="panel-backdrop" id="backdrop" onclick="closePanel()"></div>
+<div class="side-panel" id="sidePanel">
+  <div class="sp-head">
+    <div class="sp-head-top">
+      <div id="spStudentRow" class="sp-student-row">
+        <div class="sp-avatar-ph"><i class="fas fa-user"></i></div>
+        <div><div class="sp-student-name" id="spName">—</div><div class="sp-student-email" id="spEmail">—</div></div>
+      </div>
+      <button class="sp-close" onclick="closePanel()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="sp-tabs">
+      <button class="sp-tab active" onclick="switchTab('suivis')">Suivis</button>
+      <button class="sp-tab" onclick="switchTab('chat')">Conversations</button>
+      <button class="sp-tab" onclick="switchTab('info')">Profil</button>
+    </div>
+  </div>
+  <div class="sp-body">
+    <div class="sp-pane active" id="pane-suivis">
+      <button class="btn-add-suivi" onclick="openModalSuivi()"><i class="fas fa-plus"></i> Ajouter un suivi</button>
+      <div id="suivisList"><div class="sp-loading"><i class="fas fa-spinner"></i>Chargement…</div></div>
+    </div>
+    <div class="sp-pane" id="pane-info">
+      <div id="profileInfo" style="padding:10px 0;"></div>
+    </div>
+    <div class="sp-pane" id="pane-chat">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span style="font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--gs);">Historique chatbot</span>
+        <a id="btnExportChat" href="#" target="_blank"
+           style="font-size:.72rem;background:var(--gp);color:var(--gd);padding:6px 14px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:6px;">
+          <i class="fas fa-download"></i> Télécharger
+        </a>
+      </div>
+      <div id="chatHistoryList" style="display:flex;flex-direction:column;gap:10px;">
+        <p style="color:#aaa;font-size:.82rem;text-align:center;padding:20px;">Chargement...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Suivi -->
+<div class="modal-ov" id="modalSuivi">
+  <div class="modal-bx">
+    <button class="modal-close-btn" onclick="closeModalSuivi()">&times;</button>
+    <h2 id="msTitre">Nouveau suivi</h2>
+    <input type="hidden" id="msSuiviId" value="0">
+    <div class="ff"><label>Titre *</label><input type="text" id="msTitreInput" placeholder="Ex : Gestion du stress"><div class="err" id="err_titre"></div></div>
+    <div class="ff"><label>Description</label><textarea id="msDesc" rows="3" placeholder="Description…"></textarea><div class="err" id="err_description"></div></div>
+    <div class="ff"><label>Type</label>
+      <select id="msType">
+        <option value="Psychologique">Psychologique</option>
+        <option value="Academique">Académique</option>
+        <option value="Social">Social</option>
+        <option value="Comportemental">Comportemental</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModalSuivi()">Annuler</button>
+      <button class="btn-save" onclick="saveSuivi()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Objectif -->
+<div class="modal-ov" id="modalObj">
+  <div class="modal-bx">
+    <button class="modal-close-btn" onclick="closeModalObj()">&times;</button>
+    <h2 id="moModalTitle">Nouvel objectif</h2>
+    <input type="hidden" id="moSuiviId" value="0">
+    <input type="hidden" id="moObjId" value="0">
+    <div class="ff"><label>Titre *</label><input type="text" id="moTitre" placeholder="Ex : Méditer 10 min/jour"><div class="err" id="err_obj_titre"></div></div>
+    <div class="ff"><label>Description</label><textarea id="moDesc" rows="2" placeholder="Description…"></textarea></div>
+    <div class="ff"><label>Date d'échéance</label><input type="date" id="moDate"><div class="err" id="err_obj_date"></div></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModalObj()">Annuler</button>
+      <button class="btn-save" onclick="saveObjectif()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<style>
+.btn-action-sm{padding:5px 9px;border:none;border-radius:4px;cursor:pointer;font-size:.65rem;font-weight:600;display:inline-flex;align-items:center;transition:all .2s;}
+.btn-edit-sm{background:var(--bc);color:var(--tm);}
+.btn-edit-sm:hover{background:var(--bl);}
+.btn-del-sm{background:#FEE2E2;color:#991B1B;}
+.btn-del-sm:hover{background:#FECACA;}
+.btn-ok-sm{background:#d4edda;color:#155724;}
+.btn-ok-sm:hover{background:#c3e6cb;}
+</style>
+
+
+<script>
+var currentEtudiantId = null;
+
+function openPanel(id) {
+  currentEtudiantId = id;
+  document.querySelectorAll('.student-card').forEach(function(c){c.classList.remove('active');});
+  var card = document.getElementById('card-' + id);
+  if (card) card.classList.add('active');
+  document.getElementById('backdrop').classList.add('open');
+  document.getElementById('sidePanel').classList.add('open');
+  switchTab('suivis');
+  reloadPanel();
+}
+
+function reloadPanel() {
+  if (!currentEtudiantId) return;
+  document.getElementById('suivisList').innerHTML = '<div class="sp-loading"><i class="fas fa-spinner"></i> Chargement...</div>';
+  fetch('/psychologue/etudiants/' + currentEtudiantId + '/suivis')
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data) {
+      var e = data.etudiant;
+      var row = document.getElementById('spStudentRow');
+      var src = e.photo ? (e.photo.indexOf('http')===0 ? e.photo : '/'+e.photo.replace(/\\/g,'/')) : null;
+      var ph = src ? '<img class="sp-avatar" src="'+src+'" onerror="this.style.display=\'none\'">' : '<div class="sp-avatar-ph"><i class="fas fa-user"></i></div>';
+      row.innerHTML = ph + '<div><div class="sp-student-name">'+e.nom+'</div><div class="sp-student-email">'+e.email+'</div></div>';
+      document.getElementById('profileInfo').innerHTML = '<p style="font-size:.88rem;color:#6B7D5A;line-height:2;"><i class="fas fa-user" style="color:var(--gs);margin-right:6px;"></i><strong>'+e.nom+'</strong><br><i class="fas fa-envelope" style="color:var(--gs);margin-right:6px;"></i>'+e.email+'<br><i class="fas fa-tasks" style="color:var(--gs);margin-right:6px;"></i>'+data.suivis.length+' suivi(s)<br><i class="fas fa-star" style="color:#f59e0b;margin-right:6px;"></i><strong style="color:#f59e0b;">'+e.points+' point(s)</strong></p>';
+      renderSuivis(data.suivis);
+      updateBadgeDirect(currentEtudiantId, data.suivis.length);
+    })
+    .catch(function(err){
+      document.getElementById('suivisList').innerHTML = '<div class="sp-empty"><i class="fas fa-exclamation-circle"></i><p>Erreur : '+err.message+'</p></div>';
+    });
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/'/g,"&#39;").replace(/"/g,'&quot;'); }
+
+function renderSuivis(suivis) {
+  var c = document.getElementById('suivisList');
+  if (!suivis.length) { c.innerHTML='<div class="sp-empty"><i class="fas fa-seedling"></i><p>Aucun suivi.</p></div>'; return; }
+  var html = '';
+  suivis.forEach(function(s) {
+    html += '<div class="suivi-item" id="si-'+s.id+'">';
+    html += '<div class="suivi-item-head" onclick="toggleSuivi('+s.id+')">';
+    html += '<div><div class="suivi-item-title">'+esc(s.titre)+'</div><div class="suivi-item-meta">'+esc(s.type_suivi)+(s.date?' — '+s.date:'')+'</div></div>';
+    html += '<div style="display:flex;align-items:center;gap:5px;" onclick="event.stopPropagation()">';
+    html += '<span class="suivi-badge">'+s.objectifs.length+' obj.</span>';
+    html += '<button class="btn-action-sm btn-edit-sm" title="Modifier" onclick="editSuivi('+s.id+',\''+esc(s.titre)+'\',\''+esc(s.description||'')+'\',\''+esc(s.type_suivi)+'\')"><i class="fas fa-pen"></i></button>';
+    html += '<button class="btn-action-sm btn-del-sm" title="Supprimer" onclick="delSuivi('+s.id+')"><i class="fas fa-trash"></i></button>';
+    html += '</div></div>';
+    html += '<div class="suivi-item-body" id="body-'+s.id+'">';
+    if (s.objectifs.length) {
+      html += '<div class="obj-list">';
+      s.objectifs.forEach(function(o) {
+        html += '<div class="obj-row" style="flex-wrap:wrap;">';
+        html += '<div class="obj-check '+(o.valide?'done':'pending')+'"><i class="fas fa-'+(o.valide?'check':'clock')+'"></i></div>';
+        html += '<div class="obj-title">'+esc(o.titre)+'</div>';
+        if (o.date_display) html += '<div class="obj-date">'+o.date_display+'</div>';
+        html += '<div style="display:flex;gap:3px;margin-left:4px;">';
+        if (!o.valide) {
+          html += '<button class="btn-action-sm btn-edit-sm" title="Modifier" onclick="editObjectif('+o.id+',\''+esc(o.titre)+'\',\''+esc(o.description||'')+'\',\''+(o.date_echeance||'')+'\')"><i class="fas fa-pen"></i></button>';
+          if (o.nb_medias > 0) {
+            html += '<button class="btn-action-sm btn-ok-sm" title="Valider" onclick="validerObjectif('+o.id+')"><i class="fas fa-check"></i> Valider</button>';
+          } else {
+            html += '<span style="font-size:.65rem;color:#aaa;padding:5px 8px;background:#f8f9fa;border-radius:4px;" title="En attente du document étudiant"><i class="fas fa-lock"></i> Attente doc.</span>';
+          }
+        }
+        html += '<button class="btn-action-sm btn-del-sm" title="Supprimer" onclick="delObjectif('+o.id+')"><i class="fas fa-trash"></i></button>';
+        html += '</div>';
+        // Afficher les documents uploadés par l'étudiant
+        if (o.medias && o.medias.length > 0) {
+          html += '<div style="width:100%;margin-top:8px;padding-top:8px;border-top:1px dashed var(--bl);display:flex;flex-wrap:wrap;gap:8px;">';
+          o.medias.forEach(function(m) {
+            var chemin = m.chemin && !m.chemin.match(/^[A-Za-z]:\\/) ? '/'+m.chemin.replace(/\\/g,'/') : null;
+            if (!chemin) return;
+            if (m.type === 'image') {
+              html += '<a href="'+chemin+'" target="_blank"><img src="'+chemin+'" style="width:56px;height:42px;object-fit:cover;border-radius:4px;border:1px solid var(--bl);" title="'+esc(m.nom)+'"></a>';
+            } else if (m.type === 'video') {
+              html += '<a href="'+chemin+'" target="_blank" style="font-size:.72rem;background:#e3f2fd;color:#1565c0;padding:5px 10px;border-radius:4px;text-decoration:none;"><i class="fas fa-play-circle"></i> '+esc(m.nom.substring(0,14))+'</a>';
+            } else {
+              html += '<a href="'+chemin+'" target="_blank" style="font-size:.72rem;background:var(--gp);color:var(--gd);padding:5px 10px;border-radius:4px;text-decoration:none;"><i class="fas fa-file-alt"></i> '+esc(m.nom.substring(0,14))+'</a>';
+            }
+          });
+          html += '</div>';
+        } else if (!o.valide) {
+          html += '<div style="width:100%;margin-top:6px;font-size:.72rem;color:#aaa;"><i class="fas fa-clock"></i> Aucun document uploadé par l\'étudiant</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    } else { html += '<p style="font-size:.8rem;color:#aaa;margin-top:10px;">Aucun objectif.</p>'; }
+    if (s.objectifs.length >= 3) {
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;">';
+      html += '<i class="fas fa-lock" style="color:#856404;"></i>';
+      html += '<span style="font-size:.82rem;color:#856404;font-weight:600;">Limite atteinte — 3 objectifs maximum par suivi.</span>';
+      html += '</div>';
+    } else {
+      html += '<button class="btn-add-obj" onclick="openModalObj('+s.id+')"><i class="fas fa-plus"></i> Ajouter un objectif ('+(3-s.objectifs.length)+' restant(s))</button>';
+    }
+    html += '</div></div>';
+  });
+  c.innerHTML = html;
+}
+
+function toggleSuivi(id){ var b=document.getElementById('body-'+id); if(b) b.classList.toggle('open'); }
+
+function closePanel(){
+  document.getElementById('backdrop').classList.remove('open');
+  document.getElementById('sidePanel').classList.remove('open');
+  document.querySelectorAll('.student-card').forEach(function(c){c.classList.remove('active');});
+  currentEtudiantId=null;
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.sp-tab').forEach(function(t,i){
+    t.classList.toggle('active',(i===0&&tab==='suivis')||(i===1&&tab==='chat')||(i===2&&tab==='info'));
+  });
+  document.getElementById('pane-suivis').classList.toggle('active',tab==='suivis');
+  document.getElementById('pane-chat').classList.toggle('active',tab==='chat');
+  document.getElementById('pane-info').classList.toggle('active',tab==='info');
+  if (tab==='chat' && currentEtudiantId) loadChatHistory(currentEtudiantId);
+}
+
+// Suivi CRUD
+function openModalSuivi(){ document.getElementById('msTitre').textContent='Nouveau suivi'; document.getElementById('msSuiviId').value='0'; document.getElementById('msTitreInput').value=''; document.getElementById('msDesc').value=''; document.getElementById('msType').value='Psychologique'; clearErrs(['err_titre','err_description']); document.getElementById('modalSuivi').classList.add('active'); }
+function editSuivi(id,titre,desc,type){ document.getElementById('msTitre').textContent='Modifier le suivi'; document.getElementById('msSuiviId').value=id; document.getElementById('msTitreInput').value=titre; document.getElementById('msDesc').value=desc; document.getElementById('msType').value=type; clearErrs(['err_titre','err_description']); document.getElementById('modalSuivi').classList.add('active'); }
+function closeModalSuivi(){ document.getElementById('modalSuivi').classList.remove('active'); }
+
+function saveSuivi(){
+  clearErrs(['err_titre','err_description']);
+  var id=document.getElementById('msSuiviId').value;
+  var url=parseInt(id)>0?'/psychologue/suivis/'+id+'/edit':'/psychologue/suivis/new';
+  var body=new URLSearchParams({titre:document.getElementById('msTitreInput').value,description:document.getElementById('msDesc').value,type_suivi:document.getElementById('msType').value,idutilisateur:currentEtudiantId});
+  fetch(url,{method:'POST',body}).then(function(r){return r.json();}).then(function(data){
+    if(data.success){closeModalSuivi();showToast(parseInt(id)>0?'Suivi modifié !':'Suivi créé !');reloadPanel();}
+    else if(data.errors){Object.keys(data.errors).forEach(function(k){var el=document.getElementById('err_'+k);if(el){el.textContent=data.errors[k];el.style.display='block';}if(k==='global')showToast('Erreur : '+data.errors[k],true);});}
+  });
+}
+
+function delSuivi(id){
+  confirmAction('Supprimer ce suivi et tous ses objectifs ?', { type: 'danger', confirmText: 'Supprimer' }).then(function(ok){
+    if(!ok) return;
+    fetch('/psychologue/suivis/'+id+'/delete',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
+      if(d.success){showToast('Suivi supprimé.');reloadPanel();}else showToast('Erreur : '+d.error,true);
+    });
+  });
+}
+
+// Objectif CRUD
+function openModalObj(suiviId){ document.getElementById('moSuiviId').value=suiviId; document.getElementById('moObjId').value='0'; document.getElementById('moModalTitle').textContent='Nouvel objectif'; document.getElementById('moTitre').value=''; document.getElementById('moDesc').value=''; document.getElementById('moDate').value=''; clearErrs(['err_obj_titre','err_obj_date']); document.getElementById('modalObj').classList.add('active'); }
+function editObjectif(id,titre,desc,date){ document.getElementById('moObjId').value=id; document.getElementById('moModalTitle').textContent="Modifier l'objectif"; document.getElementById('moTitre').value=titre; document.getElementById('moDesc').value=desc; document.getElementById('moDate').value=date; clearErrs(['err_obj_titre','err_obj_date']); document.getElementById('modalObj').classList.add('active'); }
+function closeModalObj(){ document.getElementById('modalObj').classList.remove('active'); }
+
+function saveObjectif(){
+  clearErrs(['err_obj_titre','err_obj_date']);
+  var objId=document.getElementById('moObjId').value;
+  var suiviId=document.getElementById('moSuiviId').value;
+  var url=parseInt(objId)>0?'/psychologue/objectifs/'+objId+'/edit':'/psychologue/suivis/'+suiviId+'/objectifs/new';
+  var body=new URLSearchParams({titre:document.getElementById('moTitre').value,description:document.getElementById('moDesc').value,date_echeance:document.getElementById('moDate').value});
+  fetch(url,{method:'POST',body}).then(function(r){return r.json();}).then(function(data){
+    if(data.success){closeModalObj();showToast(parseInt(objId)>0?'Objectif modifié !':'Objectif ajouté !');reloadPanel();}
+    else if(data.errors){Object.keys(data.errors).forEach(function(k){var el=document.getElementById('err_obj_'+k)||document.getElementById('err_'+k);if(el){el.textContent=data.errors[k];el.style.display='block';}if(k==='global')showToast('⚠️ '+data.errors[k],true);});}
+  });
+}
+
+function delObjectif(id){
+  confirmAction('Supprimer cet objectif ?', { type: 'danger', confirmText: 'Supprimer' }).then(function(ok){
+    if(!ok) return;
+    fetch('/psychologue/objectifs/'+id+'/delete',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
+      if(d.success){showToast('Objectif supprimé.');reloadPanel();}else showToast('Erreur : '+d.error,true);
+    });
+  });
+}
+
+function validerObjectif(id){
+  confirmAction("Valider cet objectif ? L'étudiant gagnera 15 points.", { type: 'success', confirmText: 'Valider' }).then(function(ok){
+    if(!ok) return;
+    fetch('/psychologue/objectifs/'+id+'/validate',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
+      if(d.success){showToast('Objectif validé ! +15 points attribués à l\'étudiant.');reloadPanel();}
+      else showToast('Erreur : '+d.error,true);
+    });
+  });
+}
+
+function updateBadgeDirect(id,nb){
+  var card = document.getElementById('card-'+id);
+  if (card) card.dataset.nb = nb;
+  var badge=document.querySelector('#card-'+id+' .student-badge');
+  if(badge){badge.className='student-badge'+(nb>0?' has-suivis':'');badge.innerHTML='<i class="fas fa-'+(nb>0?'check-circle':'plus-circle')+'"></i> '+nb+' suivi(s)';}
+}
+
+var currentFilter = 'all';
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.className='filter-btn'; });
+  var btn = document.getElementById('btn-' + f);
+  if (btn) {
+    btn.classList.add('active');
+    if (f === 'suivis') btn.classList.add('active-suivis');
+    if (f === 'no') btn.classList.add('active-no');
+  }
+  applyFilters();
+}
+
+function applyFilters() {
+  var q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  document.querySelectorAll('.student-card').forEach(function(c) {
+    var nb = parseInt(c.dataset.nb || '0');
+    var matchSearch = !q || (c.dataset.name||'').includes(q) || (c.dataset.email||'').includes(q);
+    var matchFilter = currentFilter === 'all'
+      || (currentFilter === 'suivis' && nb > 0)
+      || (currentFilter === 'no' && nb === 0);
+    c.style.display = (matchSearch && matchFilter) ? '' : 'none';
+  });
+}
+
+function filterCards(val){ applyFilters(); }
+
+function clearErrs(ids){ ids.forEach(function(id){var el=document.getElementById(id);if(el){el.textContent='';el.style.display='none';}}); }
+
+function showToast(msg,isErr){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=isErr?'#dc3545':'var(--gd)'; t.style.display='block';
+  setTimeout(function(){t.style.display='none';},2800);
+}
+
+document.getElementById('modalSuivi').addEventListener('click',function(e){if(e.target===this)closeModalSuivi();});
+document.getElementById('modalObj').addEventListener('click',function(e){if(e.target===this)closeModalObj();});
+
+// Ouvrir automatiquement le panel d'un patient (depuis une alerte)
+{% if openPatientId is defined and openPatientId > 0 %}
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        openPanel({{ openPatientId }});
+        setTimeout(function() { switchTab('chat'); }, 800);
+    }, 400);
+});
+{% endif %}
+
+function loadChatHistory(id) {
+  document.getElementById('btnExportChat').href = '/client/chatbot/export/' + id;
+  document.getElementById('chatHistoryList').innerHTML = '<p style="color:#aaa;font-size:.82rem;text-align:center;padding:20px;">Chargement...</p>';
+  fetch('/client/chatbot/etudiant/' + id)
+    .then(function(r){ return r.json(); })
+    .then(function(msgs) {
+      var container = document.getElementById('chatHistoryList');
+      if (!msgs.length) {
+        container.innerHTML = '<p style="color:#aaa;font-size:.82rem;text-align:center;padding:20px;"><i class="fas fa-comment-slash"></i><br>Aucune conversation.</p>';
+        return;
+      }
+      var html = '';
+      msgs.forEach(function(m) {
+        var d = new Date(m.date_envoi);
+        var time = d.toLocaleDateString('fr-FR') + ' ' + d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+        html += '<div style="background:white;border:1px solid var(--bl);border-radius:8px;padding:12px;font-size:.82rem;">';
+        html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">';
+        html += '<span style="font-weight:600;color:var(--gm);"><i class="fas fa-user"></i> Étudiant</span>';
+        html += '<span style="color:#aaa;font-size:.7rem;">' + time + '</span></div>';
+        html += '<p style="color:var(--td);margin:0 0 8px;">' + esc(m.message_utilisateur) + '</p>';
+        html += '<div style="background:var(--bc);border-radius:6px;padding:8px;border-left:3px solid var(--gs);">';
+        html += '<span style="font-size:.7rem;color:var(--gs);font-weight:600;"><i class="fas fa-robot"></i> Chatbot</span>';
+        html += '<p style="color:#6B7D5A;margin:4px 0 0;font-size:.82rem;">' + esc(m.reponse_chatbot) + '</p></div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    });
+}
+</script>
+{% endblock %}

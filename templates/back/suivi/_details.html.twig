@@ -1,0 +1,49 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Détails du Suivi{% endblock %}
+
+{% block body %}
+<div class="full_container">
+    <div class="inner_container">
+        {% include 'back/_sidebar.html.twig' ignore missing %}
+        <div id="content">
+            {% include 'back/_topbar.html.twig' ignore missing %}
+            <div class="midde_cont">
+                <div class="container-fluid">
+                    <div class="row column_title">
+                        <div class="col-md-12">
+                            <div class="page_title">
+                                <h2>{{ suivi.titre }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="white_shd full padding_infor_info">
+                                <p><strong>Type :</strong> {{ suivi.typeSuivi }}</p>
+                                <p><strong>Description :</strong> {{ suivi.description ?? '—' }}</p>
+                                <p><strong>Utilisateur :</strong>
+                                    {% if suivi.utilisateur %}
+                                        {{ suivi.utilisateur.firstname }} {{ suivi.utilisateur.lastname }}
+                                    {% else %}—{% endif %}
+                                </p>
+                                <p><strong>Psychologue :</strong>
+                                    {% if suivi.psychologue %}
+                                        {{ suivi.psychologue.firstname }} {{ suivi.psychologue.lastname }}
+                                    {% else %}Non assigné{% endif %}
+                                </p>
+                                <p><strong>Créé le :</strong> {{ suivi.dateCreation ? suivi.dateCreation|date('d/m/Y H:i') : '—' }}</p>
+                                <p><strong>Modifié le :</strong> {{ suivi.dateModification ? suivi.dateModification|date('d/m/Y H:i') : '—' }}</p>
+                                <a href="{{ path('back_objectif_index', {idSuivi: suivi.idsuivi}) }}" class="btn btn-primary">
+                                    <i class="fa fa-list"></i> Voir les objectifs ({{ suivi.objectifs|length }})
+                                </a>
+                                <a href="{{ path('back_suivi_index') }}" class="btn btn-secondary ml-2">Retour</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

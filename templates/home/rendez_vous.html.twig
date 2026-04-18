@@ -5,6 +5,7 @@
 
 {% block stylesheets %}
 {{ parent() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500&display=swap');
 
@@ -153,10 +154,14 @@
 .rdv-toolbar {
   background: var(--white); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 100;
+  margin-top: -20px; /* ← ajuste la valeur selon ton besoin */
 }
 .rdv-toolbar-inner {
-  max-width: 1160px; margin: 0 auto; padding: 0 40px;
+  max-width: 1160px; margin:  auto; padding: 20px 40px;
   display: flex; align-items: center; gap: 24px; height: 64px;
+}
+.rdv-hero {
+  padding: 64px 0 0; /* réduis le 0 final si besoin */
 }
 .rdv-search { position: relative; flex: 1; max-width: 320px; }
 .rdv-search input {
@@ -273,55 +278,22 @@
 }
 .btn-book:hover { background: var(--navy-mid); transform: scale(1.02); color: white; text-decoration: none; }
 .btn-conge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--slate);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px 12px;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-  width: 100%;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Instrument Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+  color: var(--slate); background: none; border: none; cursor: pointer;
+  padding: 8px 12px; transition: all 0.2s ease; border-radius: 8px; width: 100%;
 }
-
-.btn-conge:hover {
-  color: var(--navy);
-  background: rgba(74, 103, 65, 0.08);
-}
-
-.btn-conge i, 
-.btn-conge svg {
-  font-size: 1.1rem;
-  color: var(--sage);
-  transition: color 0.2s;
-}
-
-.btn-conge:hover i,
-.btn-conge:hover svg {
-  color: var(--navy);
-}
+.btn-conge:hover { color: var(--navy); background: rgba(74, 103, 65, 0.08); }
+.btn-conge i, .btn-conge svg { font-size: 1.1rem; color: var(--slate); transition: color 0.2s; }
+.btn-conge:hover i, .btn-conge:hover svg { color: var(--navy); }
 
 .rdv-empty { text-align: center; padding: 80px 0; color: var(--slate); }
 .rdv-empty i { font-size: 2.5rem; color: var(--border); margin-bottom: 16px; display: block; }
 .rdv-empty p { font-size: .95rem; }
 
 /* ════ CRÉNEAUX RÉSERVÉS ════ */
-.slot-reserved {
-  opacity: .5; cursor: not-allowed !important;
-  background: var(--off-white) !important;
-  pointer-events: none;
-}
-.slot-taken {
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-top: 7px; font-size: .62rem; font-weight: 600;
-  padding: 3px 8px; border-radius: 100px;
-  background: #FEF3C7; color: #92400E;
-}
+.slot-reserved { opacity: .5; cursor: not-allowed !important; background: var(--off-white) !important; pointer-events: none; }
+.slot-taken { display: inline-flex; align-items: center; gap: 4px; margin-top: 7px; font-size: .62rem; font-weight: 600; padding: 3px 8px; border-radius: 100px; background: #FEF3C7; color: #92400E; }
 
 /* ════ SECTION PHOTOS ════ */
 .photos-section { padding: 64px 0 80px; background: var(--white); border-top: 1px solid var(--border); }
@@ -361,31 +333,12 @@
 .photos-cta-ghost:hover { border-color: var(--navy); background: var(--off-white); color: var(--navy); text-decoration: none; }
 
 /* ════ SIDE PANEL ════ */
-.panel-backdrop {
-  display: none; position: fixed; inset: 0;
-  background: rgba(13,27,62,.45); backdrop-filter: blur(3px); z-index: 9998;
-}
+.panel-backdrop { display: none; position: fixed; inset: 0; background: rgba(13,27,62,.45); backdrop-filter: blur(3px); z-index: 9998; }
 .panel-backdrop.open { display: block; }
-
-.side-panel {
-  position: fixed; top: 0; right: 0; bottom: 0; width: 480px;
-  background: var(--off-white); z-index: 9999;
-  display: flex; flex-direction: column;
-  transform: translateX(100%);
-  transition: transform .38s cubic-bezier(.4,0,.2,1);
-  overflow: hidden;
-}
+.side-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; background: var(--off-white); z-index: 9999; display: flex; flex-direction: column; transform: translateX(100%); transition: transform .38s cubic-bezier(.4,0,.2,1); overflow: hidden; }
 .side-panel.open { transform: translateX(0); }
-
 .sp-header { background: var(--navy); padding: 28px 28px 0; flex-shrink: 0; position: relative; }
-.sp-close {
-  position: absolute; top: 18px; right: 20px;
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(255,255,255,.12); border: none; color: white;
-  cursor: pointer; font-size: .9rem;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .2s;
-}
+.sp-close { position: absolute; top: 18px; right: 20px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.12); border: none; color: white; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; transition: background .2s; }
 .sp-close:hover { background: rgba(255,255,255,.22); }
 .sp-pro-row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
 .sp-avatar { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.2); flex-shrink: 0; }
@@ -395,14 +348,7 @@
 .sp-meta-chip { display: flex; align-items: center; gap: 5px; font-size: .72rem; color: rgba(255,255,255,.6); font-family: 'Instrument Sans', sans-serif; }
 .sp-meta-chip i { font-size: .68rem; }
 .sp-tabs { display: flex; margin-top: 4px; }
-.sp-tab {
-  flex: 1; padding: 12px 0; background: transparent; border: none;
-  font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase;
-  color: rgba(255,255,255,.45); cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: color .2s, border-color .2s;
-}
+.sp-tab { flex: 1; padding: 12px 0; background: transparent; border: none; font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); cursor: pointer; border-bottom: 3px solid transparent; transition: color .2s, border-color .2s; }
 .sp-tab.active { color: white; border-bottom-color: var(--blue-acc); }
 .sp-body { flex: 1; overflow-y: auto; padding: 28px; }
 .sp-body::-webkit-scrollbar { width: 4px; }
@@ -410,121 +356,25 @@
 .sp-pane { display: none; }
 .sp-pane.active { display: block; }
 .sp-section-label { font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--slate-lt); margin-bottom: 12px; }
-.slots-grid {
-  overflow-x: auto;
-  margin-bottom: 24px;
-}
-.cal-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 340px;
-}
-.cal-table th {
-  text-align: center;
-  padding: 8px 6px 10px;
-  font-family: 'Syne', sans-serif;
-  font-size: .72rem; font-weight: 700;
-  color: var(--navy);
-  border-bottom: 2px solid var(--border);
-}
-.cal-table th .cal-day-name {
-  display: block;
-  font-size: .78rem;
-  color: var(--navy);
-}
-.cal-table th .cal-day-date {
-  display: block;
-  font-size: .68rem;
-  color: var(--slate-lt);
-  font-weight: 400;
-  margin-top: 2px;
-}
-.cal-table td {
-  text-align: center;
-  padding: 4px 5px;
-}
-.slot-time-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 9px 4px;
-  background: #8eba59;
-  color: #1a2e1a;
-  border: 1.5px solid #1a2e1a;
-  border-radius: 8px;
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: .76rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background .15s, border-color .15s, transform .1s;
-  white-space: nowrap;
-}
-.slot-time-btn:hover {
-  background: #8eba59;
-  border-color: #1a2e1a;
-  transform: scale(1.04);
-}
-.slot-time-btn.selected {
-  background: var(--navy);
-  color: white;
-  border-color: var(--navy);
-}
-.slot-time-btn.taken {
-  background: var(--off-white);
-  color: var(--slate-lt);
-  border-color: var(--border);
-  cursor: not-allowed;
-  opacity: .55;
-  font-size: .7rem;
-}
+.slots-grid { overflow-x: auto; margin-bottom: 24px; }
+.cal-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 340px; }
+.cal-table th { text-align: center; padding: 8px 6px 10px; font-family: 'Syne', sans-serif; font-size: .72rem; font-weight: 700; color: var(--navy); border-bottom: 2px solid var(--border); }
+.cal-table th .cal-day-name { display: block; font-size: .78rem; color: var(--navy); }
+.cal-table th .cal-day-date { display: block; font-size: .68rem; color: var(--slate-lt); font-weight: 400; margin-top: 2px; }
+.cal-table td { text-align: center; padding: 4px 5px; }
+.slot-time-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 9px 4px; background: #8eba59; color: #1a2e1a; border: 1.5px solid #1a2e1a; border-radius: 8px; font-family: 'Instrument Sans', sans-serif; font-size: .76rem; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s, transform .1s; white-space: nowrap; }
+.slot-time-btn:hover { background: #8eba59; border-color: #1a2e1a; transform: scale(1.04); }
+.slot-time-btn.selected { background: var(--navy); color: white; border-color: var(--navy); }
+.slot-time-btn.taken { background: var(--off-white); color: var(--slate-lt); border-color: var(--border); cursor: not-allowed; opacity: .55; font-size: .7rem; }
 .cal-empty { color: var(--slate-lt); font-size: 1.1rem; }
-.cal-more-row td {
-  padding-top: 10px;
-}
-.cal-more-btn {
-  background: none;
-  border: none;
-  color: var(--slate);
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: .78rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 0;
-}
+.cal-more-row td { padding-top: 10px; }
+.cal-more-btn { background: none; border: none; color: var(--slate); font-family: 'Instrument Sans', sans-serif; font-size: .78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; padding: 6px 0; }
 .cal-more-btn:hover { color: var(--navy); }
-.cal-nav-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-.cal-nav-btn {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  background: white;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: .75rem; color: var(--navy);
-  transition: background .15s;
-}
+.cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-nav-btn { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .75rem; color: var(--navy); transition: background .15s; }
 .cal-nav-btn:hover { background: var(--blue-light); }
-.cal-week-label {
-  font-family: 'Syne', sans-serif;
-  font-size: .72rem;
-  color: var(--slate);
-  font-weight: 700;
-}
-.slot-card {
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: 12px; padding: 14px 16px;
-  cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .15s;
-  position: relative;
-}
+.cal-week-label { font-family: 'Syne', sans-serif; font-size: .72rem; color: var(--slate); font-weight: 700; }
+.slot-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .15s; position: relative; }
 .slot-card:hover { border-color: var(--navy-mid); box-shadow: 0 4px 16px rgba(95,113,97,.15); transform: translateY(-1px); }
 .slot-card.selected { border-color: var(--navy); background: var(--blue-light); box-shadow: 0 4px 20px rgba(95,113,97,.2); }
 .slot-card.selected::after { content: '✓'; position: absolute; top: 8px; right: 10px; font-size: .7rem; font-weight: 700; color: var(--navy); }
@@ -536,135 +386,282 @@
 .slot-type-badge.enligne    { background: #e3f2fd; color: #1565c0; }
 .sp-no-slots { text-align: center; padding: 40px 0; color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; font-size: .88rem; }
 .sp-no-slots i { font-size: 2rem; display: block; margin-bottom: 10px; color: var(--border); }
-.selected-slot-preview {
-  background: var(--blue-light); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;
-  font-size: .8rem; color: var(--navy);
-  font-family: 'Instrument Sans', sans-serif;
-  display: flex; gap: 10px; align-items: center;
-}
+.selected-slot-preview { background: var(--blue-light); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; font-size: .8rem; color: var(--navy); font-family: 'Instrument Sans', sans-serif; display: flex; gap: 10px; align-items: center; }
 .selected-slot-preview i { color: var(--navy-mid); flex-shrink: 0; }
-.btn-confirm-sp {
-  width: 100%; padding: 14px; background: var(--navy); color: white;
-  border: none; border-radius: 12px;
-  font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700;
-  letter-spacing: .05em; cursor: pointer; margin-top: 8px;
-  transition: background .2s, transform .15s;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-}
+.btn-confirm-sp { width: 100%; padding: 14px; background: var(--navy); color: white; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; letter-spacing: .05em; cursor: pointer; margin-top: 8px; transition: background .2s, transform .15s; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-confirm-sp:hover { background: var(--navy-mid); transform: scale(1.01); }
 
 /* ════ POPUP MES RDV ════ */
-.popup-backdrop {
-  display: none; position: fixed; inset: 0;
-  background: rgba(13,27,62,.5); backdrop-filter: blur(4px);
-  z-index: 10000; align-items: center; justify-content: center;
-}
+.popup-backdrop { display: none; position: fixed; inset: 0; background: rgba(13,27,62,.5); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
 .popup-backdrop.open { display: flex; }
-.popup-box {
-  background: var(--white); border-radius: 20px;
-  width: 100%; max-width: 640px; max-height: 82vh;
-  display: flex; flex-direction: column;
-  box-shadow: 0 32px 80px rgba(13,27,62,.22);
-  animation: popIn .3s cubic-bezier(.34,1.56,.64,1);
-  overflow: hidden; margin: 20px;
-}
-@keyframes popIn {
-  from { opacity: 0; transform: scale(.92) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-.popup-header {
-  background: var(--navy); padding: 24px 28px;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0;
-}
+.popup-box { background: var(--white); border-radius: 20px; width: 100%; max-width: 640px; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 32px 80px rgba(13,27,62,.22); animation: popIn .3s cubic-bezier(.34,1.56,.64,1); overflow: hidden; margin: 20px; }
+@keyframes popIn { from { opacity: 0; transform: scale(.92) translateY(20px); } to   { opacity: 1; transform: scale(1) translateY(0); } }
+.popup-header { background: var(--navy); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
 .popup-header-left { display: flex; align-items: center; gap: 12px; }
-.popup-header-icon {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: rgba(255,255,255,.15);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; color: var(--blue-acc);
-}
+.popup-header-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--blue-acc); }
 .popup-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: white; }
 .popup-subtitle { font-size: .72rem; color: rgba(255,255,255,.6); margin-top: 2px; font-family: 'Instrument Sans', sans-serif; }
-.popup-close {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(255,255,255,.12); border: none; color: white;
-  cursor: pointer; font-size: .9rem;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .2s; flex-shrink: 0;
-}
+.popup-close { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.12); border: none; color: white; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; }
 .popup-close:hover { background: rgba(255,255,255,.25); }
 .popup-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
 .popup-body::-webkit-scrollbar { width: 4px; }
 .popup-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.popup-loading {
-  text-align: center; padding: 48px 0;
-  color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; font-size: .88rem;
-}
+.popup-loading { text-align: center; padding: 48px 0; color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; font-size: .88rem; }
 .popup-loading i { font-size: 1.5rem; display: block; margin-bottom: 10px; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.popup-empty {
-  text-align: center; padding: 48px 0;
-  color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif;
-}
+.popup-empty { text-align: center; padding: 48px 0; color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; }
 .popup-empty i { font-size: 2rem; color: var(--border); display: block; margin-bottom: 12px; }
 .res-list-popup { display: flex; flex-direction: column; gap: 12px; }
-.res-card-popup {
-  background: var(--off-white); border: 1.5px solid var(--border);
-  border-radius: 14px; overflow: hidden;
-  display: grid; grid-template-columns: 5px 1fr;
-  animation: fadeUp .3s ease both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.res-card-popup { background: var(--off-white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 5px 1fr; animation: fadeUp .3s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to   { opacity: 1; transform: translateY(0); } }
 .res-stripe-popup { background: var(--navy-mid); }
-.res-body-popup {
-  padding: 16px 20px; display: flex; align-items: center;
-  gap: 14px; flex-wrap: wrap;
-}
-.res-avatar-popup {
-  width: 46px; height: 46px; border-radius: 50%;
-  object-fit: cover; border: 2px solid var(--border); flex-shrink: 0;
-}
+.res-body-popup { padding: 16px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.res-avatar-popup { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); flex-shrink: 0; }
 .res-info-popup { flex: 1; min-width: 120px; }
 .res-doctor-popup { font-family: 'Syne', sans-serif; font-size: .88rem; font-weight: 700; color: var(--navy); }
 .res-role-popup   { font-size: .72rem; color: var(--navy-mid); margin-top: 2px; }
 .res-meta-popup { display: flex; gap: 10px; flex-wrap: wrap; }
-.res-chip-popup {
-  display: flex; align-items: center; gap: 4px;
-  font-size: .74rem; color: var(--slate);
+.res-chip-popup { display: flex; align-items: center; gap: 4px; font-size: .74rem; color: var(--slate); font-family: 'Instrument Sans', sans-serif; }
+.res-chip-popup i { font-size: .66rem; color: var(--slate-lt); }
+.res-status-popup { display: inline-flex; align-items: center; gap: 5px; font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 5px 11px; border-radius: 100px; background: #FEF3C7; color: #92400E; white-space: nowrap; }
+.res-lock-popup { display: flex; align-items: center; gap: 4px; font-size: .7rem; color: var(--slate-lt); font-family: 'Instrument Sans', sans-serif; white-space: nowrap; }
+.res-status-popup.confirme { background:#dcfce7; color:#166534; }
+.res-status-popup.annule   { background:#fee2e2; color:#991b1b; }
+.res-status-popup.attente  { background:#fef3c7; color:#92400e; }
+
+/* ════ SECTION VIDÉOS BIEN-ÊTRE — NOUVEAU STYLE IA ════ */
+.vb-section {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+/* En-tête section */
+.vb-header {
+  padding: 28px 32px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f5f0 100%);
+  position: relative;
+  overflow: hidden;
+}
+.vb-header-dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.vb-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: #5f7161; background: #eef4ec;
+  border: 1px solid #c1d0b5;
+  padding: 5px 13px; border-radius: 100px; margin-bottom: 10px;
+}
+.vb-eyebrow-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #5f7161;
+  animation: vb-blink 2s ease-in-out infinite;
+}
+@keyframes vb-blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.vb-title {
+  font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800;
+  color: var(--navy); line-height: 1.2; margin-bottom: 6px; letter-spacing: -.02em;
+}
+.vb-title span { color: #6D8B74; }
+.vb-sub { font-size: .85rem; color: var(--slate); line-height: 1.6; max-width: 340px; }
+
+/* Badge IA animé */
+.vb-ai-badge {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 12px 16px;
+  font-size: .75rem; color: var(--slate);
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+.vb-ai-orb {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--navy);
+  position: relative; flex-shrink: 0; overflow: visible;
+}
+.vb-orb-ring {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #8eba59;
+  border-right-color: #6D8B74;
+  animation: vb-spin 2s linear infinite;
+}
+.vb-orb-ring2 {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-bottom-color: rgba(193,208,181,.5);
+  border-left-color: rgba(193,208,181,.3);
+  animation: vb-spin 3.5s linear infinite reverse;
+}
+@keyframes vb-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.vb-orb-inner {
+  position: absolute; inset: 5px; border-radius: 50%;
+  background: #5f7161;
+  display: flex; align-items: center; justify-content: center;
+}
+.vb-orb-bars {
+  display: flex; gap: 2px; align-items: center;
+}
+.vb-orb-bars span {
+  display: block; width: 2.5px;
+  background: #eef4ec; border-radius: 2px;
+  animation: vb-wave 1.2s ease-in-out infinite;
+}
+.vb-orb-bars span:nth-child(1){height:5px;animation-delay:0s}
+.vb-orb-bars span:nth-child(2){height:11px;animation-delay:.15s}
+.vb-orb-bars span:nth-child(3){height:7px;animation-delay:.3s}
+.vb-orb-bars span:nth-child(4){height:13px;animation-delay:.1s}
+.vb-orb-bars span:nth-child(5){height:5px;animation-delay:.25s}
+@keyframes vb-wave { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.25)} }
+.vb-ai-label { font-family: 'Syne', sans-serif; font-size: .72rem; font-weight: 700; color: var(--navy); }
+.vb-ai-sub   { font-size: .68rem; color: var(--slate); margin-top: 2px; }
+
+/* Boutons humeur */
+.vb-moods {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--off-white);
+}
+.vb-mood-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-family: 'Instrument Sans', sans-serif; font-size: .82rem; font-weight: 500;
+  color: var(--navy); cursor: pointer;
+  transition: all .2s;
+}
+.vb-mood-btn:hover { border-color: #6D8B74; background: #eef4ec; }
+.vb-mood-btn.active { background: var(--navy); color: #eef4ec; border-color: var(--navy); }
+
+/* Zone résultat */
+.vb-result { padding: 24px 32px; }
+
+/* Box conseil */
+.vb-conseil-box {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: #f0f7ee; border: 1px solid #c1d0b5;
+  border-radius: 12px; padding: 14px 18px; margin-bottom: 24px;
+  font-size: .85rem; color: #2d4a1e; line-height: 1.65;
+  animation: vb-fadeIn .4s ease;
+}
+.vb-conseil-icon {
+  width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+}
+@keyframes vb-fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* Grille vidéos */
+.vb-videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+.vb-video-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  cursor: pointer;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  animation: vb-cardIn .4s ease both;
+}
+.vb-video-card:hover { border-color: #6D8B74; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(95,113,97,.15); }
+@keyframes vb-cardIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.vb-video-card:nth-child(1){animation-delay:.05s}
+.vb-video-card:nth-child(2){animation-delay:.12s}
+.vb-video-card:nth-child(3){animation-delay:.19s}
+.vb-video-card:nth-child(4){animation-delay:.26s}
+
+/* Miniature */
+.vb-thumb {
+  height: 110px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.vb-play-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2; transition: transform .2s;
+  box-shadow: 0 4px 12px rgba(13,27,62,.15);
+}
+.vb-video-card:hover .vb-play-btn { transform: scale(1.12); }
+.vb-play-arrow { width:0; height:0; border-style:solid; border-width:7px 0 7px 14px; border-color:transparent transparent transparent #4a331e; margin-left:2px; }
+.vb-waveform {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 30px; display: flex; align-items: flex-end;
+  justify-content: center; gap: 2.5px; padding: 0 12px 6px;
+  opacity: .55;
+}
+.vb-waveform-bar {
+  width: 3px; background: rgba(255,255,255,.75); border-radius: 2px;
+  animation: vb-wave 1.2s ease-in-out infinite;
+}
+
+/* Corps carte */
+.vb-video-body { padding: 12px 14px; }
+.vb-video-tag {
+  display: inline-block; font-size: .62rem; font-weight: 600;
+  padding: 3px 9px; border-radius: 100px; margin-bottom: 7px; letter-spacing: .04em;
+}
+.vb-video-title {
+  font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 5px; line-height: 1.35;
+}
+.vb-video-meta {
+  font-size: .7rem; color: var(--slate);
+  display: flex; align-items: center; gap: 5px;
+}
+.vb-video-link {
+  display: block; margin-top: 8px; font-size: .7rem;
+  color: var(--navy-mid); text-decoration: none;
   font-family: 'Instrument Sans', sans-serif;
 }
-.res-chip-popup i { font-size: .66rem; color: var(--slate-lt); }
-.res-status-popup {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700;
-  letter-spacing: .07em; text-transform: uppercase;
-  padding: 5px 11px; border-radius: 100px;
-  background: #FEF3C7; color: #92400E; white-space: nowrap;
+.vb-video-link:hover { text-decoration: underline; }
+
+/* États loading / empty */
+.vb-loading {
+  padding: 48px 0; text-align: center;
+  color: var(--slate); font-size: .85rem;
 }
-.res-lock-popup {
-  display: flex; align-items: center; gap: 4px;
-  font-size: .7rem; color: var(--slate-lt);
-  font-family: 'Instrument Sans', sans-serif; white-space: nowrap;
+.vb-loading-orb { width: 52px; height: 52px; margin: 0 auto 16px; position: relative; }
+.vb-loading-ring1 { position:absolute;inset:0;border-radius:50%;border:2px solid var(--border);border-top-color:#6D8B74;animation:vb-spin 1.2s linear infinite; }
+.vb-loading-ring2 { position:absolute;inset:6px;border-radius:50%;border:2px solid var(--border);border-bottom-color:#8eba59;animation:vb-spin 1.8s linear infinite reverse; }
+.vb-loading-core { position:absolute;inset:14px;border-radius:50%;background:#eef4ec; }
+.vb-typing { display:flex;gap:4px;justify-content:center;margin-top:12px; }
+.vb-typing-dot { width:6px;height:6px;border-radius:50%;background:#6D8B74;animation:vb-type 1.2s ease-in-out infinite; }
+.vb-typing-dot:nth-child(2){animation-delay:.2s}
+.vb-typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes vb-type { 0%,100%{opacity:.3;transform:translateY(0)} 50%{opacity:1;transform:translateY(-4px)} }
+
+.vb-empty {
+  padding: 36px 0; text-align: center;
+  color: var(--slate); font-size: .85rem;
 }
-.res-status-popup.confirme{
-   background:#dcfce7;
-   color:#166534;
+.vb-empty-icon {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: var(--off-white); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
 }
 
-.res-status-popup.annule{
-   background:#fee2e2;
-   color:#991b1b;
-}
-
-.res-status-popup.attente{
-   background:#fef3c7;
-   color:#92400e;
-}
+/* ════ OVERLAY GLOBAL ════ */
+.rdv-overlay { display: flex; position: fixed; inset: 0; background: rgba(13, 27, 62, 0.5); backdrop-filter: blur(4px); z-index: 10001; align-items: center; justify-content: center; }
 
 /* ════ RESPONSIVE ════ */
 @media (max-width: 900px) {
@@ -684,22 +681,240 @@
   .photos-inner { padding: 0 20px; }
   .side-panel { width: 100%; }
   .slots-grid { grid-template-columns: 1fr; }
+  .vb-header { padding: 20px; }
+  .vb-moods { padding: 16px 20px; }
+  .vb-result { padding: 20px; }
+  .vb-videos-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) {
   .rdv-steps-bar-inner { grid-template-columns: 1fr; }
   .popup-box { margin: 12px; border-radius: 16px; }
   .res-body-popup { gap: 10px; }
+  .vb-videos-grid { grid-template-columns: 1fr; }
+  .vb-ai-badge { display: none; }
 }
-/* ════ OVERLAY GLOBAL ════ */
-.rdv-overlay {
+
+/* ════ MUSIC PLAYER — NOUVEAU ════ */
+.music-section {
+  margin-bottom: 40px;
+}
+.music-player-card {
+  background: linear-gradient(135deg, #2d3e2d 0%, #4a5b3e 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.music-player-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.music-visualizer {
+  height: 80px;
+  background: rgba(0,0,0,0.2);
   display: flex;
-  position: fixed;
-  inset: 0;
-  background: rgba(13, 27, 62, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 10001;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  padding: 16px;
+  cursor: pointer;
+}
+.vis-bar {
+  width: 4px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 2px;
+  transition: height 0.05s ease;
+}
+.vis-bar.playing {
+  background: #8eba59;
+  box-shadow: 0 0 8px #8eba59;
+}
+.music-info {
+  padding: 16px 20px;
+  display: flex;
+ align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+.music-text {
+  flex: 1;
+}
+.music-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+.music-artist {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.7);
+  font-family: 'Instrument Sans', sans-serif;
+}
+.music-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.music-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.music-btn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
+}
+.music-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.music-volume input {
+  width: 80px;
+  height: 3px;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
+  outline: none;
+}
+.music-volume input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #8eba59;
+  cursor: pointer;
+}
+.music-playlist {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+}
+.music-playlist.open {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.playlist-item {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.playlist-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+.playlist-item.active {
+  background: rgba(142,186,89,0.2);
+  border-left: 3px solid #8eba59;
+}
+.playlist-icon {
+  width: 30px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+.playlist-info {
+  flex: 1;
+}
+.playlist-title {
+  font-size: 0.8rem;
+  color: white;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.playlist-artist {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.6);
+}
+.playlist-duration {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.5);
+}
+.music-toggle-playlist {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s;
+}
+.music-toggle-playlist:hover {
+  color: white;
+}
+.music-toggle-playlist.rotated {
+  transform: rotate(180deg);
+}
+/* ════ MUSIC SEARCH & CATEGORIES ════ */
+.music-search-bar {
+  padding: 12px 20px;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.music-search-input {
+  flex: 1;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 0.8rem;
+  outline: none;
+}
+.music-search-input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+.music-search-input:focus {
+  background: rgba(255,255,255,0.25);
+}
+.music-categories {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.music-cat-btn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.music-cat-btn:hover {
+  background: rgba(142,186,89,0.5);
+  border-color: #8eba59;
+}
+.music-cat-btn.active {
+  background: #8eba59;
+  border-color: #8eba59;
+  color: #1a2e1a;
+}
+.music-results-count {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  padding: 0 10px;
 }
 </style>
 {% endblock %}
@@ -761,6 +976,160 @@
   </div>
 </section>
 
+
+
+{# ════ BARRE LOCALISATION — GEOAPIFY ════ #}
+<div style="background:white;border-bottom:1px solid var(--border);padding:14px 40px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+  <i class="fas fa-map-marker-alt" style="color:var(--navy);font-size:1rem;"></i>
+  <input id="mapsAddressInput" type="text"
+    placeholder="Entrez votre ville pour trouver les pros près de vous..."
+    style="flex:1;min-width:240px;padding:10px 16px;border:1.5px solid var(--border);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:.88rem;outline:none;"
+    onkeydown="if(event.key==='Enter') rechercherProximite()">
+  <select id="mapsRayon" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:'Instrument Sans',sans-serif;color:var(--navy);">
+    <option value="10">10 km</option>
+    <option value="25">25 km</option>
+    <option value="50">50 km</option>
+    <option value="100">100 km</option>
+    <option value="200" selected>200 km</option>  {# ← ajoute ça #}
+    <option value="500">Toute la Tunisie</option>  {# ← et ça #}
+</select>
+  <button onclick="rechercherProximite()"
+    style="padding:10px 22px;background:var(--navy);color:white;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;">
+    <i class="fas fa-search"></i> Rechercher
+  </button>
+  <button onclick="geolocateMe()"
+    style="padding:10px 14px;background:var(--off-white);color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;cursor:pointer;">
+    📍 Me localiser
+  </button>
+  <span id="mapsStatus" style="font-size:.78rem;color:var(--slate);font-family:'Instrument Sans',sans-serif;"></span>
+</div>
+
+<div id="mapsContainer" style="display:none;">
+  <div id="leafletMap" style="height:420px;width:100%;z-index:1;"></div>
+  <div id="mapsResults" style="padding:20px 40px;background:var(--off-white);border-bottom:1px solid var(--border);"></div>
+</div>
+
+{# ════ CONTENT ════ #}
+<div class="rdv-content">
+
+  {% for msg in app.flashes('success') %}
+    <div class="rdv-flash success"><i class="fas fa-circle-check"></i> {{ msg }}</div>
+  {% endfor %}
+  {% for msg in app.flashes('error') %}
+    <div class="rdv-flash error"><i class="fas fa-circle-exclamation"></i> {{ msg }}</div>
+  {% endfor %}
+
+  
+
+  {# ════ MUSIC PLAYER — ANTI-STRESS AVEC RECHERCHE ════ #}
+<div class="music-section">
+  <div class="music-player-card">
+    <!-- Barre de recherche et catégories -->
+    <div class="music-search-bar">
+      <input type="text" id="musicSearchInput" class="music-search-input" placeholder="🔍 Rechercher une musique anti-stress... (ex: pluie, méditation, piano)">
+      <div class="music-categories" id="musicCategories">
+        <button class="music-cat-btn active" data-cat="all">🎵 Toutes</button>
+        <button class="music-cat-btn" data-cat="meditation">🧘 Méditation</button>
+        <button class="music-cat-btn" data-cat="nature">🌿 Nature</button>
+        <button class="music-cat-btn" data-cat="piano">🎹 Piano</button>
+        <button class="music-cat-btn" data-cat="ambient">🌊 Ambient</button>
+        <button class="music-cat-btn" data-cat="sleep">😴 Sommeil</button>
+      </div>
+      <span id="musicResultsCount" class="music-results-count">5 titres</span>
+    </div>
+    
+    <div class="music-visualizer" id="musicVisualizer" onclick="togglePlay()"></div>
+    
+    <div class="music-info">
+      <div class="music-text">
+        <div class="music-title" id="currentTrackTitle">Musique anti-stress</div>
+        <div class="music-artist" id="currentTrackArtist">Bien-être & relaxation</div>
+      </div>
+      <div class="music-controls">
+        <button class="music-btn" onclick="togglePlay()" id="playPauseBtn">
+          <i class="fas fa-play"></i>
+        </button>
+        <button class="music-btn" onclick="nextTrack()">
+          <i class="fas fa-forward"></i>
+        </button>
+        <button class="music-btn" onclick="prevTrack()">
+          <i class="fas fa-backward"></i>
+        </button>
+        <div class="music-volume">
+          <i class="fas fa-volume-up" style="color:white;font-size:0.8rem;"></i>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <button class="music-toggle-playlist" id="togglePlaylistBtn" onclick="togglePlaylist()">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="music-playlist" id="playlistContainer"></div>
+  </div>
+</div>
+
+  {# ════ SECTION VIDÉOS BIEN-ÊTRE — NOUVEAU STYLE IA ════ #}
+  <div class="vb-section">
+
+    {# En-tête #}
+    <div class="vb-header">
+      <div class="vb-header-dots"></div>
+      <div style="position:relative;z-index:1;">
+        <div class="vb-eyebrow">
+          <div class="vb-eyebrow-dot"></div>
+          Vidéos bien-être · IA
+        </div>
+        <h2 class="vb-title">
+          Comment vous sentez-vous<br><span>en ce moment ?</span>
+        </h2>
+        <p class="vb-sub">
+          Choisissez votre humeur — l'IA sélectionne des vidéos adaptées à votre profil.
+        </p>
+      </div>
+
+      {# Badge IA animé #}
+      <div class="vb-ai-badge">
+        <div class="vb-ai-orb">
+          <div class="vb-orb-ring"></div>
+          <div class="vb-orb-ring2"></div>
+          <div class="vb-orb-inner">
+            <div class="vb-orb-bars">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="vb-ai-label">IA active</div>
+          <div class="vb-ai-sub">Analyse en cours</div>
+        </div>
+      </div>
+    </div>
+
+    {# Boutons humeur #}
+    <div class="vb-moods" id="vbHumeurBtns">
+      <button class="vb-mood-btn" data-humeur="anxieux" onclick="choisirHumeur(this)">😰 Anxieux</button>
+      <button class="vb-mood-btn" data-humeur="triste"  onclick="choisirHumeur(this)">😔 Triste</button>
+      <button class="vb-mood-btn" data-humeur="stresse" onclick="choisirHumeur(this)">😤 Stressé</button>
+      <button class="vb-mood-btn" data-humeur="fatigue" onclick="choisirHumeur(this)">😴 Fatigué</button>
+      <button class="vb-mood-btn" data-humeur="bien"    onclick="choisirHumeur(this)">😊 Bien</button>
+    </div>
+
+    {# Zone résultat #}
+    <div class="vb-result" id="vbResultZone">
+      <div class="vb-empty">
+        <div class="vb-empty-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.81 3.94 12 5C12.19 3.94 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z" fill="#c1d0b5"/>
+          </svg>
+        </div>
+        Sélectionnez votre humeur pour découvrir vos vidéos personnalisées.
+      </div>
+    </div>
+
+  </div>{# /vb-section #}
+
+
 {# ════ TOOLBAR ════ #}
 <div class="rdv-toolbar">
   <div class="rdv-toolbar-inner">
@@ -779,18 +1148,7 @@
   </div>
 </div>
 
-
-{# ════ CONTENT ════ #}
-<div class="rdv-content">
-
-  {% for msg in app.flashes('success') %}
-    <div class="rdv-flash success"><i class="fas fa-circle-check"></i> {{ msg }}</div>
-  {% endfor %}
-  {% for msg in app.flashes('error') %}
-    <div class="rdv-flash error"><i class="fas fa-circle-exclamation"></i> {{ msg }}</div>
-  {% endfor %}
-
-  {# ── Bouton Mes réservations ── #}
+  {# ── Boutons haut ── #}
   <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
     <button class="btn-my-rdv" onclick="openReservationsPopup()">
       <i class="fas fa-calendar-check"></i>
@@ -803,6 +1161,8 @@
     </button>
   </div>
 
+
+  {# ════ LISTE PROFESSIONNELS ════ #}
   <div class="pro-list" id="proList">
     {% for user in professionals %}
       {% set isCoach = (user.role == 'coach_vie') %}
@@ -966,31 +1326,30 @@
       </div>
     </div>
 
-      <div class="sp-pane" id="pane-book">
-  <div id="slotPreview" class="selected-slot-preview" style="display:none;">
-    <i class="fas fa-clock"></i>
-    <span id="slotPreviewText">—</span>
-  </div>
+    <div class="sp-pane" id="pane-book">
+      <div id="slotPreview" class="selected-slot-preview" style="display:none;">
+        <i class="fas fa-clock"></i>
+        <span id="slotPreviewText">—</span>
+      </div>
 
-  <form action="{{ path('rdv_reserve') }}" method="post" id="bookForm">
-    <input type="hidden" name="pro_id" id="spProId">
-    <input type="hidden" name="rdv_id" id="spRdvId">
-    <input type="hidden" name="date_rdv" id="spDateRdvHidden">
-    
-    <div id="bookPrompt" style="display:none;">
-      <button type="button" class="btn-confirm-sp" onclick="submitBooking()">
-        <i class="fas fa-calendar-check"></i>
-        Confirmer la réservation
-      </button>
+      <form action="{{ path('rdv_reserve') }}" method="post" id="bookForm">
+        <input type="hidden" name="pro_id" id="spProId">
+        <input type="hidden" name="rdv_id" id="spRdvId">
+        <input type="hidden" name="date_rdv" id="spDateRdvHidden">
+
+        <div id="bookPrompt" style="display:none;">
+          <button type="button" class="btn-confirm-sp" onclick="submitBooking()">
+            <i class="fas fa-calendar-check"></i>
+            Confirmer la réservation
+          </button>
+        </div>
+      </form>
+
+      <div id="bookNoSlot" style="text-align:center;padding:40px 0;color:var(--slate-lt);font-size:.88rem;">
+        <i class="fas fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:10px;color:var(--border);"></i>
+        Veuillez d'abord sélectionner un créneau dans le calendrier.
+      </div>
     </div>
-  </form>
-
-  <div id="bookNoSlot" style="text-align:center;padding:40px 0;color:var(--slate-lt);font-size:.88rem;">
-    <i class="fas fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:10px;color:var(--border);"></i>
-    Veuillez d'abord sélectionner un créneau dans le calendrier.
-  </div>
-</div>	
-
   </div>
 </div>
 
@@ -1044,7 +1403,7 @@ const PROS_DATA = {
     email:    "{{ pro.email|default('')|e('html_attr') }}",
     phone:    "{{ pro.phone_number|default('')|e('html_attr') }}",
     location: "{{ pro.location|default('')|e('html_attr') }}",
-    avatar: "{{ pro.profile_photo ? asset(pro.profile_photo) : '' }}"
+    avatar:   "{{ pro.profile_photo ? asset(pro.profile_photo) : '' }}"
   }{{ not loop.last ? ',' : '' }}
   {% endfor %}
 };
@@ -1055,22 +1414,163 @@ const PROS_DATA = {
 {% block javascripts %}
 {{ parent() }}
 
-
-
-{# ── 1. Script Twig : expose les URLs générées côté serveur ── #}
 <script>
   const RDV_RESERVATIONS_URL = '{{ path("rdv_mes_reservations") }}';
 </script>
 
-{# ── 2. Tout le JS pur dans verbatim (les backticks ne posent plus de problème) ── #}
 {% verbatim %}
 <script>
+/* ══════════════════════════════════════════
+   SECTION VIDÉOS BIEN-ÊTRE — LOGIQUE IA
+══════════════════════════════════════════ */
+
+/**
+ * Couleurs par humeur pour les miniatures et tags
+ */
+const VB_COLORS = {
+  anxieux: { bg:'#e8f0fe', grad:'#3b6dd1', tagBg:'#e8f0fe', tagColor:'#1a4db5' },
+  triste:  { bg:'#f0ebfb', grad:'#7c5cbf', tagBg:'#ede9f7', tagColor:'#5a3ea0' },
+  stresse: { bg:'#fff3e8', grad:'#c05a00', tagBg:'#fde8d0', tagColor:'#a04800' },
+  fatigue: { bg:'#eef4ec', grad:'#5f7161', tagBg:'#dbecd7', tagColor:'#3a5c3d' },
+  bien:    { bg:'#e1f5ee', grad:'#1d9e75', tagBg:'#c5ead9', tagColor:'#0d6b4f' },
+};
+
+/**
+ * Génère des hauteurs de barres pseudo-aléatoires (waveform)
+ */
+function makeWaveBars(count) {
+  const bars = [];
+  for (let i = 0; i < count; i++) {
+    bars.push(4 + Math.floor(Math.random() * 12));
+  }
+  return bars;
+}
+
+/**
+ * Sélectionner une humeur et déclencher l'appel API
+ */
+async function choisirHumeur(btn) {
+  document.querySelectorAll('.vb-mood-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const humeur = btn.dataset.humeur;
+
+  /* Afficher le loader */
+  document.getElementById('vbResultZone').innerHTML = `
+    <div class="vb-loading">
+      <div class="vb-loading-orb">
+        <div class="vb-loading-ring1"></div>
+        <div class="vb-loading-ring2"></div>
+        <div class="vb-loading-core"></div>
+      </div>
+      <div>L'IA analyse votre profil et cherche les meilleures vidéos…</div>
+      <div class="vb-typing">
+        <div class="vb-typing-dot"></div>
+        <div class="vb-typing-dot"></div>
+        <div class="vb-typing-dot"></div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const formData = new FormData();
+    formData.append('humeur', humeur);
+
+    const res  = await fetch('/rendez-vous/videos-humeur', { method: 'POST', body: formData });
+    const json = await res.json();
+
+    if (!json.success || !json.data) {
+      showVbError();
+      return;
+    }
+
+    renderVbVideos(humeur, json.data);
+
+  } catch (e) {
+    showVbError();
+    console.error(e);
+  }
+}
+
+function showVbError() {
+  document.getElementById('vbResultZone').innerHTML = `
+    <div class="vb-empty">
+      <div class="vb-empty-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 8v4m0 4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" stroke="#c1d0b5" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      Impossible de charger les vidéos. Veuillez réessayer.
+    </div>
+  `;
+}
+
+/**
+ * Rendu des vidéos retournées par l'API
+ */
+function renderVbVideos(humeur, d) {
+  const c = VB_COLORS[humeur] || VB_COLORS['bien'];
+
+  /* Conseil */
+  const conseilHtml = `
+    <div class="vb-conseil-box">
+      <div class="vb-conseil-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#eef4ec"/>
+        </svg>
+      </div>
+      <div>${d.conseil}</div>
+    </div>
+  `;
+
+  /* Grille vidéos */
+  const videosHtml = (d.videos || []).map((v, i) => {
+    const bars = makeWaveBars(15);
+    const barsHtml = bars.map((h, bi) =>
+      `<div class="vb-waveform-bar" style="height:${h}px;animation-delay:${(bi * 0.07).toFixed(2)}s;"></div>`
+    ).join('');
+
+    return `
+      <div class="vb-video-card" style="animation-delay:${0.05 + i * 0.08}s;" onclick="window.open('${v.url}','_blank')">
+        <div class="vb-thumb" style="background:linear-gradient(135deg,${c.grad}22,${c.grad}55);">
+          <div class="vb-play-btn">
+            <div class="vb-play-arrow"></div>
+          </div>
+          <div class="vb-waveform">${barsHtml}</div>
+        </div>
+        <div class="vb-video-body">
+          <span class="vb-video-tag" style="background:${c.tagBg};color:${c.tagColor};">${v.tag}</span>
+          <div class="vb-video-title">${v.titre}</div>
+          <div class="vb-video-meta">
+            <span style="font-size:10px;">▶</span>
+            <span>${v.duree}</span>
+          </div>
+          <a class="vb-video-link" href="${v.url}" target="_blank" onclick="event.stopPropagation()">
+            <i class="fas fa-external-link-alt" style="font-size:.65rem;margin-right:4px;"></i>Voir sur YouTube
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('vbResultZone').innerHTML = `
+    <div style="animation:vb-fadeIn .35s ease;">
+      ${conseilHtml}
+      <div class="vb-videos-grid">${videosHtml}</div>
+    </div>
+  `;
+}
+
+
+/* ══════════════════════════════════════════
+   SIDE PANEL
+══════════════════════════════════════════ */
+
 const FALLBACK = (name, isCoach) => {
   const c = isCoach ? '6D8B74' : '5F7161';
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${c}&color=fff&size=120`;
 };
 
-/* ══ Open panel ══ */
 function openPanel(proId) {
   const pro = PROS_DATA[proId];
   if (!pro) return;
@@ -1096,7 +1596,7 @@ function openPanel(proId) {
   const none  = document.getElementById('noSlots');
   grid.innerHTML = '';
 
- if (slots.length === 0) {
+  if (slots.length === 0) {
     none.style.display = 'block';
   } else {
     none.style.display = 'none';
@@ -1108,50 +1608,45 @@ function openPanel(proId) {
   document.getElementById('sidePanel').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
 function buildCalendar(slots, container, weekOffset) {
   container.innerHTML = '';
 
   const today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
 
   const dayNames = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
   const months   = ['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
 
-  // ── Regrouper les slots par nom de jour ──
   const slotsByNom = {};
   slots.forEach(slot => {
     if (!slotsByNom[slot.date]) slotsByNom[slot.date] = [];
     slotsByNom[slot.date].push(slot);
   });
 
-  // ── Appliquer les règles de filtrage ──
   const jourToDow = {
     'Dimanche':0,'Lundi':1,'Mardi':2,'Mercredi':3,'Jeudi':4,'Vendredi':5,'Samedi':6
   };
   Object.keys(slotsByNom).forEach(jourNom => {
     const dow = jourToDow[jourNom] ?? -1;
     slotsByNom[jourNom] = slotsByNom[jourNom].filter(slot => {
-  const [hh, mm] = slot.debut.split(':').map(Number);
-  const minutes = hh * 60 + mm;
-
-  if (dow === 0) return false; // dimanche fermé
-  if (dow >= 1 && dow <= 5) return !(minutes >= 720 && minutes < 840);
-  if (dow === 6) return minutes < 720;
-
-  return true;
-});
+      const [hh, mm] = slot.debut.split(':').map(Number);
+      const minutes = hh * 60 + mm;
+      if (dow === 0) return false;
+      if (dow >= 1 && dow <= 5) return !(minutes >= 720 && minutes < 840);
+      if (dow === 6) return minutes < 720;
+      return true;
+    });
   });
 
-  // ── Générer les 5 jours à afficher (skip dimanche) ──
   const days = [];
   let d = new Date(today);
   d.setDate(today.getDate() + weekOffset * 5);
   while (days.length < 7) {
-  days.push(new Date(d));
-  d.setDate(d.getDate() + 1);
-}
+    days.push(new Date(d));
+    d.setDate(d.getDate() + 1);
+  }
 
-  // ── Mapper les slots aux jours affichés ──
   const dowToNom = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
   const slotsByDow = {};
   days.forEach(day => {
@@ -1159,7 +1654,6 @@ function buildCalendar(slots, container, weekOffset) {
     slotsByDow[day.getDay()] = slotsByNom[nom] || [];
   });
 
-  // ── Vérifier s'il reste des créneaux après filtrage ──
   const totalVisible = Object.values(slotsByDow).reduce((s, a) => s + a.length, 0);
   if (totalVisible === 0) {
     document.getElementById('noSlots').style.display = 'block';
@@ -1167,7 +1661,6 @@ function buildCalendar(slots, container, weekOffset) {
   }
   document.getElementById('noSlots').style.display = 'none';
 
-  // ── Nav row ──
   const navRow = document.createElement('div');
   navRow.className = 'cal-nav-row';
   navRow.innerHTML = `
@@ -1177,7 +1670,6 @@ function buildCalendar(slots, container, weekOffset) {
   `;
   container.appendChild(navRow);
 
-  // ── Table ──
   const table = document.createElement('table');
   table.className = 'cal-table';
 
@@ -1185,24 +1677,16 @@ function buildCalendar(slots, container, weekOffset) {
   const headRow = document.createElement('tr');
   days.forEach(day => {
     const th = document.createElement('th');
-   const isSam = day.getDay() === 6;
-  const isSun = day.getDay() === 0;
+    const isSam = day.getDay() === 6;
+    const isSun = day.getDay() === 0;
     th.innerHTML = `
-  <span class="cal-day-name" style="${
-    isSun ? 'color:#c0392b' :
-    isSam ? 'color:#c05a00' : ''
-  }">
-    ${dayNames[day.getDay()]}
-  </span>
-  <span class="cal-day-date">${day.getDate()} ${months[day.getMonth()]}</span>
-  ${
-    isSun
-      ? '<span style="display:block;font-size:.58rem;color:#c0392b;margin-top:2px;">pas de travail</span>'
-      : isSam
-      ? '<span style="display:block;font-size:.58rem;color:#c05a00;margin-top:2px;">jusqu\\\'à 12h</span>'
-      : ''
-  }
-`;
+      <span class="cal-day-name" style="${isSun?'color:#c0392b':isSam?'color:#c05a00':''}">
+        ${dayNames[day.getDay()]}
+      </span>
+      <span class="cal-day-date">${day.getDate()} ${months[day.getMonth()]}</span>
+      ${isSun ? '<span style="display:block;font-size:.58rem;color:#c0392b;margin-top:2px;">pas de travail</span>' : ''}
+      ${isSam ? '<span style="display:block;font-size:.58rem;color:#c05a00;margin-top:2px;">jusqu\'à 12h</span>' : ''}
+    `;
     headRow.appendChild(th);
   });
   thead.appendChild(headRow);
@@ -1212,45 +1696,42 @@ function buildCalendar(slots, container, weekOffset) {
   const maxRows = 3;
   const showMore = {};
   days.forEach(day => {
-    const dow = day.getDay();
-    showMore[dow] = (slotsByDow[dow] || []).length > maxRows;
+    showMore[day.getDay()] = (slotsByDow[day.getDay()] || []).length > maxRows;
   });
   const expandedCols = {};
-function makeSlotBtn(slot, day) {
-  const reservedDatesForSlot = RESERVED_DATES[slot.id] || [];
-  const isoDate =
-  day.getFullYear() + '-' +
-  String(day.getMonth() + 1).padStart(2, '0') + '-' +
-  String(day.getDate()).padStart(2, '0');
-  const reserved = reservedDatesForSlot.includes(isoDate);
-  const btn = document.createElement('button');
-  btn.className = 'slot-time-btn' + (reserved ? ' taken' : '');
-  btn.textContent = slot.debut;
-  btn.disabled = reserved;
-  if (!reserved) {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.slot-time-btn.selected').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      document.getElementById('spRdvId').value = slot.id;
-      const typeLabel = slot.type === 'en_ligne' ? 'En ligne' : 'Présentiel';
-      const dateStr = `${day.getDate()} ${months[day.getMonth()]} ${day.getFullYear()}`;
-      document.getElementById('slotPreviewText').textContent =
-        `${dateStr}  •  ${slot.debut} – ${slot.fin}  •  ${typeLabel}`;
-      document.getElementById('slotPreview').style.display = 'flex';
-      document.getElementById('bookPrompt').style.display  = 'block';
-      document.getElementById('bookNoSlot').style.display  = 'none';
-      document.getElementById('spDateRdvHidden').value = isoDate; // ← seule ligne date restante
-      setTimeout(() => switchTab('book'), 260);
-    });
+
+  function makeSlotBtn(slot, day) {
+    const reservedDatesForSlot = RESERVED_DATES[slot.id] || [];
+    const isoDate =
+      day.getFullYear() + '-' +
+      String(day.getMonth() + 1).padStart(2, '0') + '-' +
+      String(day.getDate()).padStart(2, '0');
+    const reserved = reservedDatesForSlot.includes(isoDate);
+    const btn = document.createElement('button');
+    btn.className = 'slot-time-btn' + (reserved ? ' taken' : '');
+    btn.textContent = slot.debut;
+    btn.disabled = reserved;
+    if (!reserved) {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.slot-time-btn.selected').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('spRdvId').value = slot.id;
+        const typeLabel = slot.type === 'en_ligne' ? 'En ligne' : 'Présentiel';
+        const dateStr = `${day.getDate()} ${months[day.getMonth()]} ${day.getFullYear()}`;
+        document.getElementById('slotPreviewText').textContent =
+          `${dateStr}  •  ${slot.debut} – ${slot.fin}  •  ${typeLabel}`;
+        document.getElementById('slotPreview').style.display = 'flex';
+        document.getElementById('bookPrompt').style.display  = 'block';
+        document.getElementById('bookNoSlot').style.display  = 'none';
+        document.getElementById('spDateRdvHidden').value = isoDate;
+        setTimeout(() => switchTab('book'), 260);
+      });
+    }
+    return btn;
   }
-  return btn;
-}
 
   function renderRows(expanded) {
     tbody.innerHTML = '';
-
-    // ── Ligne "pause" visible entre les créneaux matin/après-midi ──
-    // (uniquement informatif dans le header, pas besoin d'une ligne séparée)
 
     for (let row = 0; row < maxRows; row++) {
       const tr = document.createElement('tr');
@@ -1259,17 +1740,13 @@ function makeSlotBtn(slot, day) {
         const daySlots = slotsByDow[dow] || [];
         const slot = daySlots[row];
         const td = document.createElement('td');
-        if (slot) {
-          td.appendChild(makeSlotBtn(slot, day));
-        } else {
-          td.innerHTML = '<span class="cal-empty">–</span>';
-        }
+        if (slot) td.appendChild(makeSlotBtn(slot, day));
+        else td.innerHTML = '<span class="cal-empty">–</span>';
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
     }
 
-    // ── Lignes supplémentaires si expand ──
     if (Object.keys(expanded).length > 0) {
       const maxExtra = Math.max(
         ...days.map(day => {
@@ -1291,7 +1768,6 @@ function makeSlotBtn(slot, day) {
       }
     }
 
-    // ── Bouton "Plus de disponibilités" ──
     const hasMore = days.some(day => showMore[day.getDay()] && !expanded[day.getDay()]);
     if (hasMore) {
       const moreRow = document.createElement('tr');
@@ -1315,17 +1791,15 @@ function makeSlotBtn(slot, day) {
   table.appendChild(tbody);
   container.appendChild(table);
 
-  // ── Légende pause ──
   const legend = document.createElement('div');
   legend.style.cssText = 'margin-top:12px;padding:8px 12px;background:#f5f0e8;border-radius:8px;font-size:.7rem;color:#9a7a4a;font-family:Instrument Sans,sans-serif;display:flex;gap:12px;flex-wrap:wrap;';
   legend.innerHTML = `
-  <span>☕ Lun–Ven : pause 12h–14h</span>
-  <span>🕛 Samedi : fermeture à 12h</span>
-  <span>🚫 Dimanche : pas de travail</span>
-`;
+    <span>☕ Lun–Ven : pause 12h–14h</span>
+    <span>🕛 Samedi : fermeture à 12h</span>
+    <span>🚫 Dimanche : pas de travail</span>
+  `;
   container.appendChild(legend);
 
-  // ── Navigation ──
   container.querySelector('#calPrev').addEventListener('click', () => {
     if (weekOffset > 0) buildCalendar(slots, container, weekOffset - 1);
   });
@@ -1333,78 +1807,19 @@ function makeSlotBtn(slot, day) {
     buildCalendar(slots, container, weekOffset + 1);
   });
 }
-/* ══ Close panel ══ */
+
 function closePanel() {
   document.getElementById('panelBackdrop').classList.remove('open');
   document.getElementById('sidePanel').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-/* ══ Select slot (nouvelle version par ligne) ══ */
-
-
-/* ══ Calculer la prochaine date d'un jour nommé (côté JS) ══ */
-function getProchainJourDate(jourNom) {
-  const jours = {
-    'Lundi': 1, 'Mardi': 2, 'Mercredi': 3,
-    'Jeudi': 4, 'Vendredi': 5, 'Samedi': 6, 'Dimanche': 0
-  };
-  const cible = jours[jourNom] ?? 1;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const jourActuel = today.getDay();
-  let diff = (cible - jourActuel + 7) % 7;
-  if (diff === 0) diff = 7;
-  const result = new Date(today);
-  result.setDate(today.getDate() + diff);
-  return result.toISOString().split('T')[0];
-}
-
-/* ══ Valider que la date choisie correspond au bon jour ══ */
-function validateDate(jourNom) {
-  const jours = {
-    'Lundi': 1, 'Mardi': 2, 'Mercredi': 3,
-    'Jeudi': 4, 'Vendredi': 5, 'Samedi': 6, 'Dimanche': 0
-  };
-  const input  = document.getElementById('spDateRdv');
-  const errDiv = document.getElementById('dateError');
-  const errMsg = document.getElementById('dateErrorMsg');
-
-  if (!input.value) return false;
-
-  const selected    = new Date(input.value);
-  const selectedDay = selected.getDay();
-  const cible       = jours[jourNom];
-
-  if (selectedDay !== cible) {
-    errMsg.textContent = `Ce créneau est un ${jourNom}. Veuillez choisir un ${jourNom}.`;
-    errDiv.style.display    = 'block';
-    input.style.borderColor = '#DC2626';
-    return false;
-  }
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  if (selected < today) {
-    errMsg.textContent = 'La date ne peut pas être dans le passé.';
-    errDiv.style.display    = 'block';
-    input.style.borderColor = '#DC2626';
-    return false;
-  }
-
-  errDiv.style.display    = 'none';
-  input.style.borderColor = '#22C55E';
-  return true;
-}
-
-/* ══ Soumettre le formulaire avec validation ══ */
 function submitBooking() {
   const dateVal = document.getElementById('spDateRdvHidden').value;
   if (!dateVal) return;
   document.getElementById('bookForm').submit();
 }
 
-/* ══ Switch tabs ══ */
 function switchTab(name) {
   document.querySelectorAll('.sp-tab').forEach((t, i) => {
     t.classList.toggle('active', (i === 0 && name === 'slots') || (i === 1 && name === 'book'));
@@ -1413,7 +1828,11 @@ function switchTab(name) {
   document.getElementById('pane-book').classList.toggle('active',  name === 'book');
 }
 
-/* ══ Popup Mes Réservations ══ */
+
+/* ══════════════════════════════════════════
+   POPUP MES RÉSERVATIONS
+══════════════════════════════════════════ */
+
 async function openReservationsPopup() {
   document.getElementById('popupBackdrop').classList.add('open');
   document.getElementById('popupBody').innerHTML =
@@ -1422,7 +1841,6 @@ async function openReservationsPopup() {
   document.body.style.overflow = 'hidden';
 
   try {
-    // ✅ On utilise la variable JS définie avant le bloc verbatim
     const res  = await fetch(RDV_RESERVATIONS_URL);
     const data = await res.json();
 
@@ -1449,8 +1867,8 @@ async function openReservationsPopup() {
             <div class="res-role-popup">${r.doctorRole}</div>
           </div>
           <div style="font-size:.75rem;color:var(--slate);margin-bottom:6px;font-family:'Instrument Sans',sans-serif;">
-              <i class="fas fa-user" style="color:var(--slate-lt);margin-right:4px;"></i>
-              Réservé par <strong style="color:var(--navy);">${r.userName}</strong>
+            <i class="fas fa-user" style="color:var(--slate-lt);margin-right:4px;"></i>
+            Réservé par <strong style="color:var(--navy);">${r.userName}</strong>
           </div>
           <div class="res-meta-popup">
             <div class="res-chip-popup"><i class="fas fa-calendar"></i>${r.date}</div>
@@ -1463,20 +1881,8 @@ async function openReservationsPopup() {
             <div class="res-chip-popup"><i class="fas fa-calendar-plus"></i>Réservé le ${r.reservedAt}</div>
           </div>
           <span class="res-status-popup ${r.statut}">
-            <i class="fas fa-${
-                r.statut === 'confirme'
-                ? 'check-circle'
-                : r.statut === 'annule'
-                ? 'times-circle'
-                : 'hourglass-half'
-            }"></i>
-            ${
-                r.statut === 'confirme'
-                ? 'Confirmé'
-                : r.statut === 'annule'
-                ? 'Annulé'
-                : 'En attente'
-            }
+            <i class="fas fa-${r.statut==='confirme'?'check-circle':r.statut==='annule'?'times-circle':'hourglass-half'}"></i>
+            ${r.statut==='confirme'?'Confirmé':r.statut==='annule'?'Annulé':'En attente'}
           </span>
           <div class="res-lock-popup"><i class="fas fa-lock"></i> Non modifiable</div>
         </div>
@@ -1497,14 +1903,16 @@ function closeReservationsPopup(e) {
   document.body.style.overflow = '';
 }
 
-/* ══ Badge au chargement ══ */
-// ✅ On utilise la variable JS définie avant le bloc verbatim
+
+/* ══════════════════════════════════════════
+   BADGE & FILTRE
+══════════════════════════════════════════ */
+
 fetch(RDV_RESERVATIONS_URL)
   .then(r => r.json())
   .then(d => { document.getElementById('rdvBadgeCount').textContent = d.length; })
   .catch(() => { document.getElementById('rdvBadgeCount').textContent = '0'; });
 
-/* ══ Filter & Search ══ */
 document.querySelectorAll('.rdv-filter-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.rdv-filter-btn').forEach(b => b.classList.remove('active'));
@@ -1527,6 +1935,648 @@ function filterCards() {
   document.getElementById('rdvCount').innerHTML =
     `<strong>${visible}</strong> professionnel${visible > 1 ? 's' : ''} disponible${visible > 1 ? 's' : ''}`;
 }
+
+/* ══════════════════════════════════════════
+   MUSIC PLAYER — ANTI-STRESS AVEC RECHERCHE
+══════════════════════════════════════════ */
+
+// Playlist de musiques anti-stress avec catégories
+const PLAYLIST = [
+  {
+    title: "Pluie apaisante",
+    artist: "Sons de la nature",
+    url: "#",
+    duration: "8:30",
+    category: "nature",
+    mood: "calme",
+    tags: ["pluie", "détente", "relaxation"]
+  },
+  {
+    title: "Méditation profonde",
+    artist: "Zen Music",
+    url: "#",
+    duration: "10:15",
+    category: "meditation",
+    mood: "apaisant",
+    tags: ["méditation", "zen", "calme"]
+  },
+  {
+    title: "Piano serein",
+    artist: "Classic Relax",
+    url: "#",
+    duration: "5:45",
+    category: "piano",
+    mood: "doux",
+    tags: ["piano", "classique", "relaxant"]
+  },
+  {
+    title: "Vagues de l'océan",
+    artist: "Ocean Sounds",
+    url: "#",
+    duration: "12:00",
+    category: "nature",
+    mood: "calme",
+    tags: ["océan", "vagues", "nature"]
+  },
+  {
+    title: "Ambiance céleste",
+    artist: "Ambient Dreams",
+    url: "#",
+    duration: "7:20",
+    category: "ambient",
+    mood: "spatial",
+    tags: ["ambient", "espace", "relaxation"]
+  },
+  {
+    title: "Forêt enchantée",
+    artist: "Forest Therapy",
+    url: "#",
+    duration: "9:15",
+    category: "nature",
+    mood: "apaisant",
+    tags: ["forêt", "oiseaux", "nature"]
+  },
+  {
+    title: "Alpha ondes",
+    artist: "Brainwave Music",
+    url: "#",
+    duration: "15:00",
+    category: "meditation",
+    mood: "profond",
+    tags: ["ondes alpha", "méditation", "concentration"]
+  },
+  {
+    title: "Nuit étoilée",
+    artist: "Sleep Music",
+    url: "#",
+    duration: "11:30",
+    category: "sleep",
+    mood: "calme",
+    tags: ["sommeil", "nuit", "relaxation"]
+  },
+  {
+    title: "Cascade relaxante",
+    artist: "Water Sounds",
+    url: "#",
+    duration: "7:45",
+    category: "nature",
+    mood: "rafraîchissant",
+    tags: ["eau", "cascade", "nature"]
+  },
+  {
+    title: "Mantra tibétain",
+    artist: "Tibetan Bowls",
+    url: "#",
+    duration: "14:00",
+    category: "meditation",
+    mood: "spirituel",
+    tags: ["méditation", "bols tibétains", "mantra"]
+  }
+];
+
+let currentTrackIndex = 0;
+let isPlaying = false;
+let audio = null;
+let visualizerInterval = null;
+let currentFilter = "all";
+let currentSearchTerm = "";
+
+// Fonction pour filtrer la playlist
+function getFilteredPlaylist() {
+  let filtered = PLAYLIST;
+  
+  // Filtre par catégorie
+  if (currentFilter !== "all") {
+    filtered = filtered.filter(track => track.category === currentFilter);
+  }
+  
+  // Filtre par recherche
+  if (currentSearchTerm.trim() !== "") {
+    const term = currentSearchTerm.toLowerCase();
+    filtered = filtered.filter(track => 
+      track.title.toLowerCase().includes(term) ||
+      track.artist.toLowerCase().includes(term) ||
+      track.tags.some(tag => tag.toLowerCase().includes(term))
+    );
+  }
+  
+  return filtered;
+}
+
+// Mettre à jour le compteur
+function updateResultsCount() {
+  const count = getFilteredPlaylist().length;
+  document.getElementById('musicResultsCount').textContent = `${count} titre${count > 1 ? 's' : ''}`;
+}
+
+// Initialisation du lecteur
+function initMusicPlayer() {
+  createVisualizer();
+  setupAudio();
+  setupVolumeControl();
+  setupSearchAndFilters();
+  updatePlaylist();
+  loadTrack(0);
+}
+
+
+
+function setupSearchAndFilters() {
+  // Recherche
+  const searchInput = document.getElementById('musicSearchInput');
+  searchInput.addEventListener('input', (e) => {
+    currentSearchTerm = e.target.value;
+    updateResultsCount();
+    updatePlaylist();
+    
+    // Vérifier si le morceau actuel est toujours dans les résultats
+    const filtered = getFilteredPlaylist();
+    const currentStillExists = filtered.some(track => 
+      track.title === PLAYLIST[currentTrackIndex].title
+    );
+    
+    if (!currentStillExists && filtered.length > 0) {
+      // Trouver le premier morceau correspondant
+      const newIndex = PLAYLIST.findIndex(t => t.title === filtered[0].title);
+      if (newIndex !== -1) {
+        selectTrack(newIndex);
+      }
+    }
+  });
+  
+  // Catégories
+  document.querySelectorAll('.music-cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.music-cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.cat;
+      updateResultsCount();
+      updatePlaylist();
+      
+      // Vérifier si le morceau actuel est toujours dans les résultats
+      const filtered = getFilteredPlaylist();
+      const currentStillExists = filtered.some(track => 
+        track.title === PLAYLIST[currentTrackIndex].title
+      );
+      
+      if (!currentStillExists && filtered.length > 0) {
+        const newIndex = PLAYLIST.findIndex(t => t.title === filtered[0].title);
+        if (newIndex !== -1) {
+          selectTrack(newIndex);
+        }
+      }
+    });
+  });
+}
+
+function createVisualizer() {
+  const container = document.getElementById('musicVisualizer');
+  container.innerHTML = '';
+  for (let i = 0; i < 40; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'vis-bar';
+    bar.style.height = '3px';
+    container.appendChild(bar);
+  }
+}
+
+function updatePlaylist() {
+  const container = document.getElementById('playlistContainer');
+  const filtered = getFilteredPlaylist();
+  
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: rgba(255,255,255,0.5);">
+        <i class="fas fa-search"></i> Aucun résultat pour "${currentSearchTerm}"
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = filtered.map((track, idx) => {
+    const originalIndex = PLAYLIST.findIndex(t => t.title === track.title);
+    const isActive = originalIndex === currentTrackIndex;
+    const categoryIcon = {
+      meditation: "🧘",
+      nature: "🌿",
+      piano: "🎹",
+      ambient: "🌊",
+      sleep: "😴"
+    }[track.category] || "🎵";
+    
+    return `
+      <div class="playlist-item ${isActive ? 'active' : ''}" onclick="selectTrack(${originalIndex})">
+        <div class="playlist-icon">${categoryIcon}</div>
+        <div class="playlist-info">
+          <div class="playlist-title">${track.title}</div>
+          <div class="playlist-artist">${track.artist}</div>
+        </div>
+        <div class="playlist-duration">${track.duration}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function setupAudio() {
+  audio = new Audio();
+  audio.src = PLAYLIST[currentTrackIndex].url;
+  audio.volume = 0.5;
+  
+  audio.addEventListener('timeupdate', updateVisualizer);
+  audio.addEventListener('ended', () => {
+    nextTrack();
+  });
+  audio.addEventListener('play', () => {
+    isPlaying = true;
+    updatePlayPauseButton();
+    startVisualizerAnimation();
+  });
+  audio.addEventListener('pause', () => {
+    isPlaying = false;
+    updatePlayPauseButton();
+    stopVisualizerAnimation();
+  });
+}
+
+function setupVolumeControl() {
+  const volumeSlider = document.getElementById('volumeSlider');
+  volumeSlider.addEventListener('input', (e) => {
+    if (audio) {
+      audio.volume = parseFloat(e.target.value);
+    }
+  });
+}
+
+function loadTrack(index) {
+  currentTrackIndex = index;
+  const track = PLAYLIST[currentTrackIndex];
+  
+  document.getElementById('currentTrackTitle').textContent = track.title;
+  document.getElementById('currentTrackArtist').textContent = track.artist;
+  
+  if (audio) {
+    const wasPlaying = isPlaying;
+    audio.pause();
+    audio.src = track.url;
+    if (wasPlaying) {
+      audio.play().catch(e => console.log('Auto-play bloqué par navigateur'));
+    }
+  }
+  
+  updatePlaylist();
+}
+
+function togglePlay() {
+  if (!audio) return;
+  
+  if (isPlaying) {
+    audio.pause();
+  } else {
+    audio.play().catch(e => {
+      console.log('Lecture automatique bloquée');
+    });
+  }
+}
+
+function nextTrack() {
+  const filtered = getFilteredPlaylist();
+  if (filtered.length === 0) return;
+  
+  const currentFilteredIndex = filtered.findIndex(t => t.title === PLAYLIST[currentTrackIndex].title);
+  const nextFilteredIndex = (currentFilteredIndex + 1) % filtered.length;
+  const nextOriginalIndex = PLAYLIST.findIndex(t => t.title === filtered[nextFilteredIndex].title);
+  
+  selectTrack(nextOriginalIndex);
+}
+
+function prevTrack() {
+  const filtered = getFilteredPlaylist();
+  if (filtered.length === 0) return;
+  
+  const currentFilteredIndex = filtered.findIndex(t => t.title === PLAYLIST[currentTrackIndex].title);
+  const prevFilteredIndex = (currentFilteredIndex - 1 + filtered.length) % filtered.length;
+  const prevOriginalIndex = PLAYLIST.findIndex(t => t.title === filtered[prevFilteredIndex].title);
+  
+  selectTrack(prevOriginalIndex);
+}
+
+function selectTrack(index) {
+  currentTrackIndex = index;
+  loadTrack(currentTrackIndex);
+  if (isPlaying) audio.play();
+}
+
+function updatePlayPauseButton() {
+  const btn = document.getElementById('playPauseBtn');
+  if (btn) {
+    btn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+  }
+}
+
+function updateVisualizer() {
+  if (!audio || !audio.currentTime) return;
+  
+  const time = audio.currentTime;
+  const bars = document.querySelectorAll('.vis-bar');
+  
+  bars.forEach((bar, i) => {
+    const frequency = Math.sin(time * 5 + i * 0.3) * 0.5 + 0.5;
+    const intensity = isPlaying ? 8 + frequency * 20 : 3;
+    bar.style.height = `${intensity}px`;
+    
+    if (isPlaying) {
+      bar.classList.add('playing');
+    } else {
+      bar.classList.remove('playing');
+    }
+  });
+}
+
+function startVisualizerAnimation() {
+  if (visualizerInterval) clearInterval(visualizerInterval);
+  visualizerInterval = setInterval(() => {
+    if (isPlaying && audio) {
+      updateVisualizer();
+    }
+  }, 50);
+}
+
+function stopVisualizerAnimation() {
+  if (visualizerInterval) {
+    clearInterval(visualizerInterval);
+    visualizerInterval = null;
+  }
+  
+  const bars = document.querySelectorAll('.vis-bar');
+  bars.forEach(bar => {
+    bar.style.height = '3px';
+    bar.classList.remove('playing');
+  });
+}
+
+function togglePlaylist() {
+  const playlist = document.getElementById('playlistContainer');
+  const btn = document.getElementById('togglePlaylistBtn');
+  
+  playlist.classList.toggle('open');
+  btn.classList.toggle('rotated');
+}
+
+// Lier la musique à l'humeur sélectionnée
+function playMusicForMood(humeur) {
+  const moodCategoryMap = {
+    'anxieux': 'meditation',
+    'triste': 'piano',
+    'stresse': 'nature',
+    'fatigue': 'sleep',
+    'bien': 'ambient'
+  };
+  
+  const targetCategory = moodCategoryMap[humeur];
+  if (targetCategory) {
+    // Changer le filtre actif
+    document.querySelectorAll('.music-cat-btn').forEach(btn => {
+      if (btn.dataset.cat === targetCategory) {
+        btn.click();
+      }
+    });
+  }
+  
+  if (!isPlaying) {
+    togglePlay();
+  }
+}
+
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', () => {
+  initMusicPlayer();
+});
+
+/* ══════════════════════════════════════════
+   CARTE — LEAFLET + GEOAPIFY (CLÉ API GRATUITE)
+══════════════════════════════════════════ */
+
+const GEOAPIFY_KEY = '598a68002dde4d0f8efb17679aa53ea7'; // ← collez votre clé ici
+
+let leafletMap    = null;
+let leafletMarkers = [];
+
+function initLeafletMap() {
+  if (leafletMap) return;
+
+  leafletMap = L.map('leafletMap').setView([36.8065, 10.1815], 11);
+
+  // Tuiles Geoapify — avec votre clé API
+  L.tileLayer(
+    `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_KEY}`,
+    {
+      attribution: '© <a href="https://www.geoapify.com/">Geoapify</a> | © OpenStreetMap',
+      maxZoom: 20
+    }
+  ).addTo(leafletMap);
+}
+
+function makeProIcon(color) {
+  return L.divIcon({
+    className: '',
+    html: `
+      <div style="
+        width: 36px; height: 36px;
+        border-radius: 50% 50% 50% 0;
+        background: ${color};
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,.3);
+        transform: rotate(-45deg);
+      "></div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -36]
+  });
+}
+
+function makeUserIcon() {
+  return L.divIcon({
+    className: '',
+    html: `
+      <div style="
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        background: #4a331e;
+        border: 3px solid white;
+        box-shadow: 0 0 0 6px rgba(74,51,30,.2);
+      "></div>`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9]
+  });
+}
+
+async function rechercherProximite() {
+  const address = document.getElementById('mapsAddressInput').value.trim();
+  if (!address) {
+    document.getElementById('mapsStatus').textContent = '⚠ Entrez une adresse ou une ville.';
+    return;
+  }
+
+  document.getElementById('mapsStatus').textContent = '🔍 Recherche en cours…';
+
+  try {
+    // Geocoding via Geoapify API
+    const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&lang=fr&limit=1&apiKey=${GEOAPIFY_KEY}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (!data.features || data.features.length === 0) {
+      document.getElementById('mapsStatus').textContent = '❌ Adresse introuvable. Essayez avec une ville.';
+      return;
+    }
+
+    const [lng, lat] = data.features[0].geometry.coordinates;
+    const label      = data.features[0].properties.formatted || address;
+    document.getElementById('mapsStatus').textContent = '✅ ' + label.split(',').slice(0, 2).join(',');
+
+    await loadProsProches(lat, lng);
+
+  } catch (e) {
+    document.getElementById('mapsStatus').textContent = '❌ Erreur réseau. Réessayez.';
+    console.error(e);
+  }
+}
+
+function geolocateMe() {
+  if (!navigator.geolocation) {
+    alert('Géolocalisation non supportée par votre navigateur.');
+    return;
+  }
+
+  document.getElementById('mapsStatus').textContent = '📡 Localisation en cours…';
+
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      document.getElementById('mapsAddressInput').value = 'Ma position actuelle';
+      document.getElementById('mapsStatus').textContent = '✅ Position trouvée';
+      await loadProsProches(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => {
+      document.getElementById('mapsStatus').textContent = '❌ Localisation refusée. Entrez votre adresse manuellement.';
+    }
+  );
+}
+
+async function loadProsProches(lat, lng) {
+  document.getElementById('mapsContainer').style.display = 'block';
+  document.getElementById('mapsResults').innerHTML =
+    '<p style="color:var(--slate);font-size:.85rem;padding:10px 0;">⏳ Chargement des professionnels…</p>';
+
+  initLeafletMap();
+  leafletMap.setView([lat, lng], 12);
+  setTimeout(() => leafletMap.invalidateSize(), 150);
+
+  // Supprimer anciens marqueurs
+  leafletMarkers.forEach(m => leafletMap.removeLayer(m));
+  leafletMarkers = [];
+
+  // Marqueur utilisateur
+  const userMarker = L.marker([lat, lng], { icon: makeUserIcon() })
+    .addTo(leafletMap)
+    .bindPopup('<strong>📍 Vous êtes ici</strong>');
+  leafletMarkers.push(userMarker);
+
+  // Cercle rayon
+  const rayon = parseInt(document.getElementById('mapsRayon').value);
+  const circle = L.circle([lat, lng], {
+    radius:      rayon * 1000,
+    color:       '#4a331e',
+    fillColor:   '#4a331e',
+    fillOpacity: 0.05,
+    weight:      1.5,
+    dashArray:   '6 4'
+  }).addTo(leafletMap);
+  leafletMarkers.push(circle);
+
+  try {
+    const res   = await fetch(`/rendez-vous/pros-proches?lat=${lat}&lng=${lng}&rayon=${rayon}`);
+const json  = await res.json();
+
+if (!json.success) {
+    document.getElementById('mapsResults').innerHTML =
+        `<p style="color:#DC2626;font-size:.85rem;">❌ ${json.error || 'Erreur serveur.'}</p>`;
+    return;
+}
+
+const pros = json.data || [];
+
+    // Marqueurs professionnels
+    pros.forEach(pro => {
+      const color  = pro.role.includes('Coach') ? '#6D8B74' : '#4a331e';
+      const marker = L.marker([pro.lat, pro.lng], { icon: makeProIcon(color) })
+        .addTo(leafletMap);
+
+      marker.bindPopup(`
+        <div style="font-family:'Instrument Sans',sans-serif;min-width:190px;padding:4px;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;color:#4a331e;margin-bottom:4px;">
+            ${pro.name}
+          </div>
+          <div style="font-size:.75rem;color:#6B705C;margin-bottom:3px;">
+            ${pro.role}
+          </div>
+          <div style="font-size:.72rem;color:#A5A58D;margin-bottom:6px;">
+            📍 ${pro.distance} km · ${pro.location || ''}
+          </div>
+          <button onclick="openPanel(${pro.id})"
+            style="width:100%;padding:8px;background:#4a331e;color:white;
+            border:none;border-radius:6px;font-size:.75rem;
+            cursor:pointer;font-weight:600;letter-spacing:.03em;">
+            📅 Voir les créneaux
+          </button>
+        </div>
+      `);
+
+      marker.on('mouseover', () => marker.openPopup());
+      leafletMarkers.push(marker);
+    });
+
+    // Résultats sous la carte
+    if (pros.length === 0) {
+      document.getElementById('mapsResults').innerHTML = `
+        <p style="color:var(--slate);font-size:.9rem;">
+          Aucun professionnel trouvé dans un rayon de <strong>${rayon} km</strong>.
+          Essayez d'augmenter le rayon.
+        </p>`;
+    } else {
+      const cards = pros.map(p => `
+        <div onclick="openPanel(${p.id})"
+          style="display:inline-flex;align-items:center;gap:10px;
+          background:white;border:1.5px solid var(--border);
+          border-radius:12px;padding:10px 16px;
+          margin:6px 6px 0 0;cursor:pointer;
+          transition:all .2s;vertical-align:top;"
+          onmouseover="this.style.borderColor='#4a331e';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 14px rgba(74,51,30,.12)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+          <img src="${p.avatar}"
+            style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:#4a331e;">
+              ${p.name}
+            </div>
+            <div style="font-size:.72rem;color:#6B705C;">${p.role}</div>
+            <div style="font-size:.7rem;color:#A5A58D;margin-top:2px;">📍 ${p.distance} km</div>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('mapsResults').innerHTML = `
+        <p style="margin:0 0 10px;font-size:.8rem;color:var(--slate);font-family:'Instrument Sans',sans-serif;">
+          <strong style="color:#4a331e;">${pros.length}</strong>
+          professionnel(s) trouvé(s) dans un rayon de ${rayon} km
+        </p>${cards}`;
+    }
+
+  } catch (e) {
+    document.getElementById('mapsResults').innerHTML =
+      '<p style="color:#DC2626;font-size:.85rem;">❌ Erreur lors du chargement. Réessayez.</p>';
+    console.error(e);
+  }
+}
 </script>
 {% endverbatim %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 {% endblock %}

@@ -13,6 +13,8 @@ use App\Repository\RendezVouRepository;
 use App\Entity\ReservationrendezVou;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\NotificationrendezVou;
+use App\Repository\FicheConsultationRepository;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/rendez-vous', name: 'rdv_')]
 class RendezVousController extends AbstractController
@@ -248,5 +250,167 @@ private function getProchainJour(string $jourNom): \DateTime
     $date->modify("+{$diff} days");
 
     return $date;
+}
+
+
+    #[Route('/videos-humeur', name: 'videos_humeur', methods: ['POST'])]
+public function videosHumeur(
+    Request $request,
+    EntityManagerInterface $em,
+    FicheConsultationRepository $ficheRepo,
+    HttpClientInterface $httpClient
+): JsonResponse {
+    $patient = $this->getUser();
+
+    // Récupérer la dernière fiche du patient
+    $reservation = $em->getRepository(ReservationrendezVou::class)
+        ->findOneBy(['user' => $patient], ['id' => 'DESC']);
+
+    $diagnostic = '';
+    $recommandations = '';
+
+    if ($reservation) {
+        $fiche = $ficheRepo->findOneBy(
+            ['rendezVous' => $reservation->getRendezVous()],
+            ['created_at' => 'DESC']
+        );
+        if ($fiche) {
+            $diagnostic      = $fiche->getDiagnostic() ?? '';
+            $recommandations = $fiche->getRecommandations() ?? '';
+        }
+    }
+
+    $humeur = $request->request->get('humeur', 'stresse');
+    $apiKey = $_ENV['OPENROUTER_API_KEY'] ?? '';
+
+    $prompt = "Tu es un assistant bien-être pour étudiants en psychologie.
+Humeur actuelle du patient : {$humeur}.
+Diagnostic de sa dernière fiche : {$diagnostic}.
+Recommandations du psy : {$recommandations}.
+
+Propose 3 vidéos YouTube réelles et adaptées à son état.
+Réponds UNIQUEMENT en JSON valide :
+{
+  \"conseil\": \"Un conseil court et bienveillant\",
+  \"videos\": [
+    {
+      \"titre\": \"Titre de la vidéo\",
+      \"url\": \"https://www.youtube.com/watch?v=XXXXX\",
+      \"duree\": \"8 min\",
+      \"tag\": \"Respiration\"
+    }
+  ]
+}";
+
+    try {
+        $response = $httpClient->request('POST',
+            'https://openrouter.ai/api/v1/chat/completions', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type'  => 'application/json',
+            ],
+            'json' => [
+                'model'    => 'anthropic/claude-3.7-sonnet',
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Réponds uniquement en JSON valide.'],
+                    ['role' => 'user',   'content' => $prompt]
+                ],
+                'max_tokens'  => 800,
+                'temperature' => 0.4,
+            ]
+        ]);
+
+        $result   = $response->toArray();
+        $jsonBrut = $result['choices'][0]['message']['content'] ?? '{}';
+        $jsonBrut = preg_replace('/^```json\s*/i', '', trim($jsonBrut));
+        $jsonBrut = preg_replace('/```$/', '', $jsonBrut);
+        $data     = json_decode($jsonBrut, true);
+
+        return new JsonResponse(['success' => true, 'data' => $data]);
+
+    } catch (\Exception $e) {
+        return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+}
+
+   #[Route('/pros-proches', name: 'pros_proches', methods: ['GET'])]
+public function prosProches(
+    Request $request,
+    UserRepository $userRepo,
+    EntityManagerInterface $em
+): JsonResponse {
+    try {
+        $lat   = (float) $request->query->get('lat');
+        $lng   = (float) $request->query->get('lng');
+        $rayon = (float) ($request->query->get('rayon', 50));
+
+        $professionals = $userRepo->findByRoles(['psychologue', 'coach_vie']);
+        $geoapifyKey   = '598a68002dde4d0f8efb17679aa53ea7';
+
+        $data = [];
+        foreach ($professionals as $pro) {
+            $proLat = $pro->getLatitude();
+            $proLng = $pro->getLongitude();
+
+            // ── Auto-géocodage si coords manquantes ──
+            if ((!$proLat || !$proLng) && $pro->getLocation()) {
+                $geoUrl = 'https://api.geoapify.com/v1/geocode/search?text='
+                    . urlencode($pro->getLocation())
+                    . '&lang=fr&limit=1&apiKey=' . $geoapifyKey;
+
+                $geoRes  = file_get_contents($geoUrl);
+                $geoData = json_decode($geoRes, true);
+
+                if (!empty($geoData['features'][0]['geometry']['coordinates'])) {
+                    [$proLng, $proLat] = $geoData['features'][0]['geometry']['coordinates'];
+                    $pro->setLatitude($proLat);
+                    $pro->setLongitude($proLng);
+                    $em->flush(); // ← sauvegarde en base pour la prochaine fois
+                }
+            }
+
+            if (!$proLat || !$proLng) continue;
+
+            $distance = $this->haversine($lat, $lng, $proLat, $proLng);
+
+            if ($distance <= $rayon) {
+                $isCoach = $pro->getRole() === 'coach_vie';
+                $data[] = [
+                    'id'       => $pro->getId(),
+                    'name'     => $pro->getFirstname() . ' ' . $pro->getLastname(),
+                    'role'     => $isCoach ? 'Coach de vie' : 'Psychologue',
+                    'location' => $pro->getLocation(),
+                    'lat'      => $proLat,
+                    'lng'      => $proLng,
+                    'distance' => round($distance, 1),
+                    'avatar'   => $pro->getProfile_photo()
+                        ? '/' . $pro->getProfile_photo()
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($pro->getFirstname() . ' ' . $pro->getLastname())
+                          . '&background=' . ($isCoach ? '6D8B74' : '5F7161') . '&color=fff&size=100',
+                ];
+            }
+        }
+
+        usort($data, fn($a, $b) => $a['distance'] <=> $b['distance']);
+
+        return new JsonResponse(['success' => true, 'data' => $data]);
+
+    } catch (\Exception $e) {
+        return new JsonResponse([
+            'error' => $e->getMessage(),
+            'file'  => $e->getFile(),
+            'line'  => $e->getLine(),
+        ], 500);
+    }
+}
+private function haversine(float $lat1, float $lng1, float $lat2, float $lng2): float
+{
+    $R = 6371; // Rayon Terre en km
+    $dLat = deg2rad($lat2 - $lat1);
+    $dLng = deg2rad($lng2 - $lng1);
+    $a = sin($dLat/2) * sin($dLat/2)
+       + cos(deg2rad($lat1)) * cos(deg2rad($lat2))
+       * sin($dLng/2) * sin($dLng/2);
+    return $R * 2 * atan2(sqrt($a), sqrt(1-$a));
 }
 }

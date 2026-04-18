@@ -559,4 +559,62 @@
     </div>
 </section>
 
+{% if alertes is defined and alertes|length > 0 %}
+<style>
+.alerte-popup{position:fixed;top:20px;right:20px;z-index:99999;max-width:400px;display:flex;flex-direction:column;gap:12px;}
+.alerte-card{border-radius:12px;padding:16px 20px;box-shadow:0 8px 30px rgba(0,0,0,.2);animation:slideInRight .4s ease;display:flex;align-items:flex-start;gap:12px;}
+.alerte-card.critique{background:#7f1d1d;color:white;border-left:4px solid #ef4444;}
+.alerte-card.urgent{background:#78350f;color:white;border-left:4px solid #f59e0b;}
+.alerte-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.alerte-body{flex:1;}
+.alerte-title{font-weight:700;font-size:.88rem;margin-bottom:4px;}
+.alerte-msg{font-size:.8rem;opacity:.9;line-height:1.5;margin-bottom:8px;}
+.alerte-date{font-size:.7rem;opacity:.65;}
+.alerte-btns{display:flex;gap:8px;margin-top:8px;}
+.alerte-btn{background:rgba(255,255,255,.2);border:none;color:white;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600;}
+.alerte-btn:hover{background:rgba(255,255,255,.3);}
+.alerte-btn-primary{background:white;color:#7f1d1d;text-decoration:none;display:inline-block;}
+.alerte-btn-primary:hover{background:#f5f5f5;color:#7f1d1d;}
+@keyframes slideInRight{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+
+<div class="alerte-popup" id="alertePopup">
+{% for alerte in alertes %}
+<div class="alerte-card {{ alerte.type }}" id="alerte-{{ alerte.id }}">
+    <div class="alerte-icon">{{ alerte.type == 'critique' ? '🚨' : '⚠️' }}</div>
+    <div class="alerte-body">
+        <div class="alerte-title">
+            {% if alerte.type == 'critique' %}ALERTE CRITIQUE{% else %}MESSAGE URGENT{% endif %}
+            — {{ alerte.firstname }} {{ alerte.lastname }}
+        </div>
+        <div class="alerte-msg">{{ alerte.message }}</div>
+        <div class="alerte-date">{{ alerte.date_creation|date('d/m/Y à H:i') }}</div>
+        <div class="alerte-btns">
+            <button class="alerte-btn" onclick="dismissAlerte({{ alerte.id }})">Compris</button>
+            <a href="{{ path('psy_suivi_index') }}?patient={{ alerte.patient_id }}" class="alerte-btn alerte-btn-primary" onclick="dismissAlerte({{ alerte.id }})">
+                Voir la conversation
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<script>
+function dismissAlerte(id) {
+    fetch('/psychologue/notifications/' + id + '/read', { method: 'POST' });
+    var el = document.getElementById('alerte-' + id);
+    if (el) { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(function(){ el.remove(); }, 300); }
+}
+setTimeout(function() {
+    document.querySelectorAll('[id^="alerte-"]').forEach(function(el) {
+        el.style.opacity='0'; el.style.transition='opacity .5s';
+        setTimeout(function(){ el.remove(); }, 500);
+    });
+}, 15000);
+</script>
+
+{% endif %}
+
+
 {% endblock %}

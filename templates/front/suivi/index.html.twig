@@ -1,0 +1,422 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Suivi Personnel — Nafseyti{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --green-deep: #2D5016;
+        --green-mid: #4A7C2F;
+        --green-sage: #7BA05B;
+        --green-light: #A8C68F;
+        --green-pale: #D4E6C3;
+        --beige-dark: #C4A882;
+        --beige-mid: #D9C4A0;
+        --beige-light: #EDE3D0;
+        --beige-cream: #F7F2E8;
+        --beige-white: #FDFAF5;
+        --text-dark: #1A2E0A;
+        --text-mid: #3D5C28;
+    }
+
+    .suivi-hero {
+        background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+        padding: 80px 60px 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    .suivi-hero::before {
+        content: '';
+        position: absolute;
+        top: -80px; right: -80px;
+        width: 400px; height: 400px;
+        border-radius: 50%;
+        background: rgba(168,198,143,0.1);
+    }
+    .suivi-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.8rem;
+        color: var(--beige-cream);
+        font-weight: 400;
+        position: relative;
+    }
+    .suivi-hero h1 em { font-style: italic; color: var(--green-light); }
+    .suivi-hero p {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.15rem;
+        color: rgba(237,227,208,0.75);
+        margin-top: 12px;
+        font-weight: 300;
+        position: relative;
+    }
+
+    .suivi-page { background: var(--beige-white); min-height: 60vh; padding: 60px; }
+
+    .btn-add-suivi {
+        background: var(--green-mid);
+        color: var(--beige-cream);
+        border: none;
+        padding: 14px 32px;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .btn-add-suivi:hover { background: var(--green-deep); transform: translateY(-2px); }
+
+    .suivis-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 24px;
+        margin-top: 40px;
+    }
+
+    .suivi-card {
+        background: white;
+        border: 1px solid var(--beige-light);
+        border-radius: 8px;
+        padding: 28px;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .suivi-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 4px; height: 100%;
+        background: var(--green-sage);
+    }
+    .suivi-card:hover {
+        border-color: var(--green-sage);
+        box-shadow: 0 12px 40px rgba(45,80,22,0.12);
+        transform: translateY(-4px);
+    }
+
+    .suivi-type-badge {
+        display: inline-block;
+        background: var(--green-pale);
+        color: var(--green-deep);
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 100px;
+        margin-bottom: 14px;
+    }
+
+    .suivi-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .suivi-card p {
+        font-size: 0.88rem;
+        color: #6B7D5A;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .suivi-card-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-card {
+        padding: 9px 18px;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+    }
+    .btn-card-primary { background: var(--green-mid); color: white; }
+    .btn-card-primary:hover { background: var(--green-deep); color: white; }
+    .btn-card-outline { background: transparent; color: var(--green-mid); border: 1px solid var(--green-sage); }
+    .btn-card-outline:hover { background: var(--green-pale); }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        color: #6B7D5A;
+    }
+    .empty-state i { font-size: 4rem; color: var(--green-pale); margin-bottom: 20px; display: block; }
+    .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-mid); margin-bottom: 10px; }
+
+    /* Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(26,46,10,0.6);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        width: 100%;
+        max-width: 520px;
+        position: relative;
+        animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+    .modal-box h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--text-dark);
+        margin-bottom: 24px;
+    }
+    .modal-close {
+        position: absolute;
+        top: 16px; right: 20px;
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        color: #999;
+        cursor: pointer;
+    }
+    .form-field { margin-bottom: 18px; }
+    .form-field label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--green-mid);
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+        width: 100%;
+        border: 1px solid var(--beige-mid);
+        background: var(--beige-cream);
+        padding: 12px 16px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+        border-radius: 4px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus { border-color: var(--green-sage); background: white; }
+    .modal-footer-btns {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+    }
+    .btn-cancel {
+        background: var(--beige-light);
+        color: var(--text-mid);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+    .btn-save {
+        background: var(--green-mid);
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+    .btn-save:hover { background: var(--green-deep); }
+
+    .toast-msg {
+        position: fixed;
+        bottom: 30px; right: 30px;
+        background: var(--green-deep);
+        color: var(--beige-cream);
+        padding: 14px 24px;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        z-index: 99999;
+        display: none;
+        animation: fadeInUp 0.3s ease;
+    }
+    @keyframes fadeInUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+</style>
+
+<!-- Hero -->
+<section class="suivi-hero">
+    <h1>Mon <em>Suivi Personnel</em></h1>
+    <p>Gérez vos suivis psychologiques et vos objectifs de bien-être.</p>
+</section>
+
+<!-- Page content -->
+<section class="suivi-page">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:3px;color:var(--green-sage);margin-bottom:6px;">
+                <span style="display:inline-block;width:24px;height:1px;background:var(--green-sage);vertical-align:middle;margin-right:8px;"></span>
+                Tableau de bord
+            </div>
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--text-dark);font-weight:400;">
+                Mes suivis <em style="font-style:italic;color:var(--green-mid);">({{ suivis|length }})</em>
+            </h2>
+        </div>
+        <button class="btn-add-suivi" onclick="openModal()">
+            <i class="fas fa-plus"></i> Nouveau suivi
+        </button>
+    </div>
+
+    {% if suivis|length == 0 %}
+    <div class="empty-state">
+        <i class="fas fa-seedling"></i>
+        <h3>Aucun suivi pour le moment</h3>
+        <p>Commencez par créer votre premier suivi personnel.</p>
+    </div>
+    {% else %}
+    <div class="suivis-grid">
+        {% for suivi in suivis %}
+        <div class="suivi-card" id="card-{{ suivi.idsuivi }}">
+            <span class="suivi-type-badge">{{ suivi.typeSuivi }}</span>
+            <h3>{{ suivi.titre }}</h3>
+            <p>{{ suivi.description|default('Aucune description.')|slice(0, 120) }}{% if suivi.description|length > 120 %}…{% endif %}</p>
+            <div class="suivi-card-actions">
+                <a href="{{ path('front_objectif_index', {idSuivi: suivi.idsuivi}) }}" class="btn-card btn-card-primary">
+                    <i class="fas fa-tasks"></i> Objectifs
+                </a>
+                <button class="btn-card btn-card-outline" onclick="editSuivi({{ suivi.idsuivi }})">
+                    <i class="fas fa-pen"></i> Modifier
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<!-- Modal Ajouter / Modifier -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <h2 id="modalTitle">Nouveau suivi</h2>
+        <form id="suiviForm">
+            <input type="hidden" id="suiviId" value="0">
+            <div class="form-field">
+                <label>Titre *</label>
+                <input type="text" id="fTitre" placeholder="Ex : Gestion du stress académique" required>
+            </div>
+            <div class="form-field">
+                <label>Description</label>
+                <textarea id="fDescription" rows="3" placeholder="Décrivez votre suivi…"></textarea>
+            </div>
+            <div class="form-field">
+                <label>Type de suivi</label>
+                <select id="fType">
+                    <option value="Psychologique">🧠 Psychologique</option>
+                    <option value="Académique">📚 Académique</option>
+                    <option value="Social">🤝 Social</option>
+                    <option value="Comportemental">🎯 Comportemental</option>
+                </select>
+            </div>
+            <div class="modal-footer-btns">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Annuler</button>
+                <button type="submit" class="btn-save">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast-msg" id="toast"></div>
+
+<script>
+function openModal() {
+    document.getElementById('modalTitle').textContent = 'Nouveau suivi';
+    document.getElementById('suiviId').value = '0';
+    document.getElementById('fTitre').value = '';
+    document.getElementById('fDescription').value = '';
+    document.getElementById('fType').value = 'Psychologique';
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function editSuivi(id) {
+    fetch('/suivi/' + id + '/json')
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('modalTitle').textContent = 'Modifier le suivi';
+            document.getElementById('suiviId').value = data.id;
+            document.getElementById('fTitre').value = data.titre;
+            document.getElementById('fDescription').value = data.description || '';
+            document.getElementById('fType').value = data.type_suivi;
+            document.getElementById('modalOverlay').classList.add('active');
+        });
+}
+
+document.getElementById('suiviForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = document.getElementById('suiviId').value;
+    const url = id > 0 ? '/suivi/' + id + '/edit' : '/suivi/new';
+    const body = new URLSearchParams({
+        titre: document.getElementById('fTitre').value,
+        description: document.getElementById('fDescription').value,
+        type_suivi: document.getElementById('fType').value,
+        idutilisateur: 1,
+        idpsychologue: 1,
+    });
+    fetch(url, { method: 'POST', body })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                closeModal();
+                showToast(id > 0 ? 'Suivi modifié avec succès !' : 'Suivi créé avec succès !');
+                setTimeout(() => location.reload(), 900);
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+});
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+</script>
+{% endblock %}
