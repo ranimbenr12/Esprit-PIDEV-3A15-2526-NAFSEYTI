@@ -403,6 +403,7 @@ public function prosProches(
         ], 500);
     }
 }
+//map
 private function haversine(float $lat1, float $lng1, float $lat2, float $lng2): float
 {
     $R = 6371; // Rayon Terre en km
