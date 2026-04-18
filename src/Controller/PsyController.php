@@ -941,7 +941,7 @@ public function googleCallback(
     $this->addFlash('success', '✅ Google Calendar connecté avec succès !');
     return $this->redirectToRoute('psy_dashboard', ['section' => 'rendez-vous']);
 }
-//calendrier
+//calendrier + twilio dans confirmer
 #[Route('/reservation/{id}/sync-calendar', name: 'reservation_sync_calendar', methods: ['POST'])]
 public function syncToCalendar(
     int $id,
