@@ -2,10 +2,10 @@ framework:
     rate_limiter:
         test_submission:
             policy: 'fixed_window'
-            limit: 31
-            interval: '1 hour'
+            limit: 1
+            interval: '1 minute'
 
         test_view:
             policy: 'fixed_window'
-            limit: 100
+            limit: 1
             interval: '1 minute'

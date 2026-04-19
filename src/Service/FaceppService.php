@@ -27,7 +27,7 @@ class FaceppService
                 'https://api-us.faceplusplus.com/facepp/v3/detect',
                 [
                     'body' => [
-                        'api_key'           => $this->apiKey,
+                        'api_key'           => $this->apiKey, //les donnees d'authentification pour l'API Face++
                         'api_secret'        => $this->apiSecret,
                         'image_base64'      => $imageData,
                         'return_attributes' => 'emotion,gender,age',
@@ -46,17 +46,17 @@ class FaceppService
 
             // Trouver l'émotion dominante
             arsort($emotions);
-            $emotionDominante = array_key_first($emotions);
-            $scoreEmotion     = round($emotions[$emotionDominante]);
+            $emotionDominante = array_key_first($emotions);// Récupérer le score de l'émotion dominante
+            $scoreEmotion     = round($emotions[$emotionDominante]);// Arrondir le score à l'entier le plus proche
 
             return [
-                'success'           => true,
-                'emotion_dominante' => $emotionDominante,
-                'score'             => $scoreEmotion,
+                'success'           => true,// Indique que l'analyse a réussi
+                'emotion_dominante' => $emotionDominante,// L'émotion dominante détectée
+                'score'             => $scoreEmotion,// Le score de l'émotion dominante
                 'toutes_emotions'   => $emotions,
                 'age'               => $attributes['age']['value'] ?? null,
                 'genre'             => $attributes['gender']['value'] ?? null,
-                'label_fr'          => $this->traduireEmotion($emotionDominante),
+                'label_fr'          => $this->traduireEmotion($emotionDominante),// La traduction de l'émotion dominante
                 'emoji'             => $this->emotionEmoji($emotionDominante),
             ];
 
@@ -90,7 +90,7 @@ class FaceppService
             'disgust'   => '😞',
             'neutral'   => '😐',
         ];
-        return $map[$emotion] ?? '😐';
+        return $map[$emotion] ?? '😐'; // Retourne l'emoji par défaut si l'émotion n'est pas trouvée
     }
 
     private function defaultEmotion(): array

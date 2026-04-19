@@ -18,13 +18,15 @@ services:
 
     App\Service\GeminiService:
         arguments:
-            $geminiApiKey: '%env(GEMINI_API_KEY)%'
+              $nafseytiAiKey: '%env(NAFSEYTI_AI_KEY)%'
 
     App\Service\FaceppService:
         arguments:
             $faceppApiKey:    '%env(FACEPP_API_KEY)%'
             $faceppApiSecret: '%env(FACEPP_API_SECRET)%'
 
-    App\Service\PdfService:
+  # ✅ CORRECT - arguments indenté sous le service
+    App\Service\SpotifyService:
         arguments:
-            $projectDir: '%kernel.project_dir%'
+            $spotifyClientId:     '%env(SPOTIFY_CLIENT_ID)%'
+            $spotifyClientSecret: '%env(SPOTIFY_CLIENT_SECRET)%'

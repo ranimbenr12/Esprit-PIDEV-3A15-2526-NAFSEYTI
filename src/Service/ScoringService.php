@@ -180,7 +180,7 @@ class ScoringService
         // Extraire min/max depuis reponses_possibles (format "0:100" ou "min:max")
         $possibles = $question->getReponsesPossibles();
         if ($possibles && str_contains($possibles, ':')) {
-            [$min, $max] = explode(':', $possibles);
+            [$min, $max] = explode(':', $possibles); // Convertir en float
             $min = (float) $min;
             $max = (float) $max;
 

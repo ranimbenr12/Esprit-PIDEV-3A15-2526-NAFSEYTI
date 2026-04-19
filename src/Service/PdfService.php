@@ -2,32 +2,23 @@
 
 namespace App\Service;
 
-use Dompdf\Dompdf;
-use Dompdf\Options;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 
 class PdfService
 {
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
-    {
-        $this->projectDir = $projectDir;
-    }
+    // ✅ Plus de $projectDir
+    // ✅ DompdfWrapperInterface injecté automatiquement par Symfony
+    public function __construct(
+        private DompdfWrapperInterface $dompdf
+    ) {}
 
     public function genererRapportTest(array $data): string
     {
-        $options = new Options();
-        $options->set('defaultFont', 'DejaVu Sans');
-        $options->set('isRemoteEnabled', false);
-        $options->set('isHtml5ParserEnabled', true);
+        $html = $this->genererHtml($data);
 
-        $dompdf = new Dompdf($options);
-        $html   = $this->genererHtml($data);
-        $dompdf->loadHtml($html, 'UTF-8');
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
-        return $dompdf->output();
+        // ✅ Le bundle gère Options, loadHtml, render, output
+        // Une seule ligne au lieu de 6
+       return $this->dompdf->getPdf($html);
     }
 
     private function genererHtml(array $data): string
@@ -182,7 +173,7 @@ class PdfService
         </div>
     </div>
 
-    <!-- GEMINI -->
+    <!-- IA ANALYSE -->
     <div style='margin:20px 40px 0;'>
         <div style='font-size:13px;font-weight:bold;color:#1a3d2b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #d8f3dc;'>
             Analyse par Intelligence Artificielle
@@ -191,8 +182,8 @@ class PdfService
             <table style='width:100%;margin-bottom:14px;'>
                 <tr>
                     <td style='vertical-align:middle;'>
-                        <span style='font-size:13px;font-weight:bold;color:#1a3d2b;'>Analyse Gemini AI</span><br>
-                        <span style='font-size:9px;color:#888;'>Powered by Google Gemini</span>
+                        <span style='font-size:13px;font-weight:bold;color:#1a3d2b;'>Analyse IA</span><br>
+                        <span style='font-size:9px;color:#888;'>Powered by OpenRouter AI</span>
                     </td>
                     <td style='text-align:right;vertical-align:middle;'>
                         <span style='display:inline-block;background:{$risqueBg};color:{$risqueColor};padding:4px 12px;border-radius:20px;font-size:10px;font-weight:bold;'>

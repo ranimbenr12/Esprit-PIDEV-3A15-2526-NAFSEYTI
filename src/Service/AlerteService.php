@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use \DateTimeImmutable;  
 
 class AlerteService
 {
@@ -20,50 +19,80 @@ class AlerteService
         private string $adminEmail
     ) {}
 
-    /**
-     * Crée une alerte critique
-     * @param User|null $user L'utilisateur concerné (peut être null si non connecté)
-     * @param Test $test Le test passé
-     * @param array $questionsReponses Les questions et réponses
-     */
-    public function creerAlerte(?User $user, Test $test, array $questionsReponses): void  // ← Ajoute ? avant User
+    public function creerAlerte(?User $user, Test $test, array $questionsReponses): void
     {
         // 1. Construire le résumé des réponses
         $resume = '';
         foreach ($questionsReponses as $qr) {
             $resume .= $qr['question'] . ': ' . $qr['reponse'] . "\n\n";
         }
-   $existingAlerte = $this->em->getRepository(AlerteCritique::class)->findOneBy([
-        'test' => $test,
-        'utilisateur' => $user,
-        'statut' => ['nouveau', 'en_cours'] // Évite de créer un doublon si déjà traité
-    ]);
 
-    if ($existingAlerte) {
-        // Une alerte existe déjà, ne pas en créer une nouvelle
-        return;
-    }
-        // 2. Créer l'alerte
+        // 2. Vérifier doublon avec une vraie requête DQL (findOneBy ne supporte pas IN)
+        $existingAlerte = $this->em->getRepository(AlerteCritique::class)
+            ->createQueryBuilder('a')
+            ->where('a.test = :test')
+            ->andWhere('a.utilisateur ' . ($user ? '= :user' : 'IS NULL'))
+            ->andWhere('a.statut IN (:statuts)')
+            ->setParameter('test', $test)
+            ->setParameter('statuts', ['nouveau', 'en_cours'])
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($user) {
+            $existingAlerte = $this->em->getRepository(AlerteCritique::class)
+                ->createQueryBuilder('a')
+                ->where('a.test = :test')
+                ->andWhere('a.utilisateur = :user')
+                ->andWhere('a.statut IN (:statuts)')
+                ->setParameter('test', $test)
+                ->setParameter('user', $user)
+                ->setParameter('statuts', ['nouveau', 'en_cours'])
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } else {
+            $existingAlerte = $this->em->getRepository(AlerteCritique::class)
+                ->createQueryBuilder('a')
+                ->where('a.test = :test')
+                ->andWhere('a.utilisateur IS NULL')
+                ->andWhere('a.statut IN (:statuts)')
+                ->setParameter('test', $test)
+                ->setParameter('statuts', ['nouveau', 'en_cours'])
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
+        if ($existingAlerte) {
+            $this->logger->info('Alerte déjà existante, pas de doublon créé', [
+                'alerte_id' => $existingAlerte->getId(),
+                'test_id'   => $test->getId(),
+            ]);
+            return;
+        }
+
+        // 3. Créer l'alerte
         $alerte = new AlerteCritique();
-        $alerte->setUtilisateur($user);  // $user peut être null
+        $alerte->setUtilisateur($user);
         $alerte->setTest($test);
         $alerte->setStatut('nouveau');
         $alerte->setReponsesResume($resume);
-     $alerte->setCreatedAt(new \DateTime()); 
+        $alerte->setCreatedAt(new \DateTime());
 
         $this->em->persist($alerte);
         $this->em->flush();
 
-        // 3. Logger l'alerte
+        // 4. Logger
         $this->logger->warning('Alerte critique créée', [
-            'alerte_id' => $alerte->getId(),
-            'user_id' => $user?->getId(),
-            'user_email' => $user?->getEmail(),
-            'test_id' => $test->getId(),
-            'test_titre' => $test->getTitre(),
+            'alerte_id'   => $alerte->getId(),
+            'user_id'     => $user?->getId(),
+            'user_email'  => $user?->getEmail(),
+            'test_id'     => $test->getId(),
+            'test_titre'  => $test->getTitre(),
         ]);
 
-        // 4. Envoyer un email à l'admin
+        // 5. Email admin
         try {
             $email = (new Email())
                 ->from('noreply@nafseyti.com')
@@ -79,8 +108,8 @@ class AlerteService
 
     private function renderEmailContent(AlerteCritique $alerte, ?User $user): string
     {
-        $userInfo = $user ? 
-            "{$user->getFirstname()} {$user->getLastname()} ({$user->getEmail()})" : 
+        $userInfo = $user ?
+            "{$user->getFirstname()} {$user->getLastname()} ({$user->getEmail()})" :
             'Utilisateur non connecté (anonyme)';
 
         return "

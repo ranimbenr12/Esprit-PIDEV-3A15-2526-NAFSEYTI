@@ -7,6 +7,7 @@ use App\Entity\Test;
 use App\Repository\TestRepository;
 use App\Service\GeminiService;
 use App\Service\FaceppService;
+use App\Service\SpotifyService; 
 use App\Service\PdfService;
 use App\Service\AlerteService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +22,8 @@ use App\Service\ScoringService;
 class FrontTestController extends AbstractController
 {
       public function __construct(
-        private AlerteService $alerteService  // ← AJOUTE CETTE LIGNE
+        private AlerteService $alerteService,
+          private SpotifyService $spotify,  // ← AJOUTE CETTE LIGNE
     ) {
     }
     #[Route('/', name: 'front_test_list')]
@@ -86,7 +88,7 @@ class FrontTestController extends AbstractController
         $limiter    = $testSubmissionLimiter->create($identifier);
         $limit      = $limiter->consume(1);
 
-       if (false && !$limit->isAccepted())if (false && !$limit->isAccepted()) {
+       if ( !$limit->isAccepted()) {
             $retryAfter = $limit->getRetryAfter()->getTimestamp() - time();
             $minutes    = ceil($retryAfter / 60);
 
@@ -130,7 +132,7 @@ class FrontTestController extends AbstractController
         'question'   => $question,
         'reponse'    => $reponseText,
         'score'      => $score,
-        'score_max'  => $scoreMax,   // ← ajouté
+        'score_max'  => $scoreMax,
         'points_max' => $scoreMax,
     ];
 
@@ -160,8 +162,7 @@ class FrontTestController extends AbstractController
         $percentage     = $maxScore > 0 ? round(($totalScore / $maxScore) * 100) : 0;
         $interpretation = $this->getInterpretation($percentage, $totalScore, $maxScore);
         $badge      = $scoringService->calculerNiveauBadge($percentage);
-$categories = $scoringService->calculerScoresParCategorie($reponsesData);
-
+        $categories = $scoringService->calculerScoresParCategorie($reponsesData);
 
         // ── Appel Gemini ──
         $analyseGemini = $gemini->analyserReponses(
@@ -171,38 +172,23 @@ $categories = $scoringService->calculerScoresParCategorie($reponsesData);
         );
         $motsCritiques = $gemini->detecterMotsCritiques($questionsReponses);
         $isCritique    = $motsCritiques || ($analyseGemini['niveau_risque'] ?? 'normal') === 'critique';
+        $niveauRisque  = $analyseGemini['niveau_risque'] ?? 'normal';
+        $spotifyData   = $this->spotify->getPlaylistsSelonEtat($niveauRisque, $percentage);
 
-// 🚨 DEBUG
-error_log('=== AVANT IF ===');
-error_log('isCritique value: ' . ($isCritique ? 'true' : 'false'));
-
-if ($isCritique) {
-    error_log('=== DANS LE IF ===');
-    $this->alerteService->creerAlerte(null, $test, $questionsReponses);
-    $this->addFlash('warning', '⚠️ Alerte critique détectée et envoyée à l\'administrateur !');
-    error_log('=== FLASH AJOUTÉ ===');
-} else {
-    error_log('=== PAS DANS LE IF ===');
-}
-
+        // ── Alerte critique ──
         if ($isCritique) {
-    error_log('CRÉATION ALERTE - Début');
-    try {
-        $this->alerteService->creerAlerte(
-            null,  // Pas d'utilisateur pour l'instant
-            $test,
-            $questionsReponses
-        );
-        error_log('CRÉATION ALERTE - Succès');
-        error_log('=== DEBUG ALERTE ===');
-error_log('isCritique: ' . ($isCritique ? 'true' : 'false'));
-error_log('motsCritiques: ' . ($motsCritiques ? 'true' : 'false'));
-error_log('niveau_risque: ' . ($analyseGemini['niveau_risque'] ?? 'normal'));
-        $this->addFlash('warning', 'Une alerte critique a été détectée et signalée.');
-    } catch (\Exception $e) {
-        error_log('CRÉATION ALERTE - Erreur: ' . $e->getMessage());
-    }
-}
+            try {
+                $this->alerteService->creerAlerte(
+                    $this->getUser(),
+                    $test,
+                    $questionsReponses
+                );
+                $this->addFlash('warning', 'Une alerte critique a été détectée et signalée.');
+            } catch (\Exception $e) {
+                error_log('CRÉATION ALERTE - Erreur: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());
+            }
+        }
+
         // ── Sauvegarder pour le PDF ──
         $request->getSession()->set('rapport_test_' . $test->getId(), [
             'test'           => $test,
@@ -223,9 +209,9 @@ error_log('niveau_risque: ' . ($analyseGemini['niveau_risque'] ?? 'normal'));
             'reponses'       => $reponsesData,
             'gemini'         => $analyseGemini,
             'isCritique'     => $isCritique,
-             'badge'          => $badge,
-              'categories'     => $categories,
-
+            'badge'          => $badge,
+            'categories'     => $categories,
+            'spotify'        => $spotifyData,
         ]);
     }
 

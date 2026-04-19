@@ -1,214 +1,1075 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Passer le test - {{ test.titre }}{% endblock %}
+{% block title %}Passer le test — {{ test.titre }}{% endblock %}
 {% block nav_tests_active %}active{% endblock %}
 
+{% block stylesheets %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,200;0,400;0,700;1,200;1,400&family=Cabinet+Grotesk:wght@300;400;500;700&display=swap');
+
+    :root {
+        --ink:        #1A2E0A;
+        --moss:       #2D5016;
+        --fern:       #4A7C2F;
+        --sage:       #7BA05B;
+        --mist:       #A8C68F;
+        --dew:        #D4E6C3;
+        --parchment:  #F7F2E8;
+        --cream:      #FDFAF5;
+        --sand:       #C4A882;
+        --linen:      #EDE3D0;
+        --error:      #C0392B;
+        --error-bg:   #FDF0EE;
+    }
+
+    /* ── HERO ── */
+    .test-hero {
+        background: var(--moss);
+        padding: 64px 60px 56px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .test-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 70% 80% at 80% 50%, rgba(168,198,143,0.12) 0%, transparent 70%),
+            radial-gradient(circle at 5% 80%, rgba(196,168,130,0.1) 0%, transparent 40%);
+    }
+
+    .test-hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(168,198,143,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(168,198,143,0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+    .test-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 820px;
+    }
+
+    .test-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--sage);
+        margin-bottom: 24px;
+    }
+
+    .test-breadcrumb a {
+        color: var(--sage);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .test-breadcrumb a:hover { color: var(--mist); }
+    .test-breadcrumb i { font-size: 0.5rem; }
+
+    .test-hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(168,198,143,0.12);
+        border: 1px solid rgba(168,198,143,0.25);
+        border-radius: 100px;
+        padding: 6px 16px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 20px;
+    }
+
+    .test-hero-tag::before {
+        content: '';
+        width: 5px; height: 5px;
+        background: var(--sage);
+        border-radius: 50%;
+    }
+
+    .test-hero-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        color: var(--parchment);
+        font-weight: 200;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+    }
+
+    .test-hero-desc {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.95rem;
+        color: rgba(212,230,195,0.65);
+        line-height: 1.8;
+        max-width: 600px;
+        margin-bottom: 32px;
+        font-weight: 300;
+    }
+
+    .test-hero-meta {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .test-meta-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(168,198,143,0.2);
+        border-radius: 100px;
+        padding: 8px 18px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.75rem;
+        color: var(--mist);
+    }
+
+    .test-meta-chip i {
+        color: var(--sage);
+        font-size: 0.7rem;
+    }
+
+    /* ── PROGRESS ── */
+    .test-progress-bar-wrap {
+        background: var(--fern);
+        height: 4px;
+        position: sticky;
+        top: 64px;
+        z-index: 100;
+    }
+
+    .test-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--mist), var(--dew));
+        width: 0%;
+        transition: width 0.4s ease;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .test-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 60px 100px;
+        background: var(--parchment);
+        align-items: start;
+    }
+
+    /* ── WEBCAM CARD ── */
+    .webcam-card {
+        background: var(--cream);
+        border: 1px solid var(--linen);
+        border-radius: 4px;
+        padding: 44px;
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeSlideUp 0.5s ease both;
+    }
+
+    .webcam-card-icon {
+        width: 64px; height: 64px;
+        background: var(--dew);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 1.4rem;
+        color: var(--moss);
+    }
+
+    .webcam-card h3 {
+        font-family: 'Fraunces', serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--ink);
+        margin-bottom: 8px;
+    }
+
+    .webcam-card p {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.88rem;
+        color: #6B7D5A;
+        line-height: 1.7;
+        margin-bottom: 0;
+    }
+
+    .webcam-privacy-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--dew);
+        color: var(--fern);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 5px 14px;
+        border-radius: 100px;
+        margin: 16px 0 28px;
+    }
+
+    #webcamContainer {
+        margin-bottom: 24px;
+    }
+
+    #webcamVideo {
+        width: 300px;
+        height: 225px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid var(--mist);
+        display: block;
+        margin: 0 auto;
+    }
+
+    .webcam-btn-group {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .webcam-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--moss);
+        color: var(--parchment);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background 0.25s;
+    }
+
+    .webcam-btn-primary:hover { background: var(--fern); }
+
+    .webcam-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--sage);
+        color: var(--parchment);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background 0.25s;
+    }
+
+    .webcam-btn-secondary:hover { background: var(--fern); }
+
+    .webcam-btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: var(--sage);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 12px 20px;
+        border: 1px solid var(--linen);
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.25s;
+    }
+
+    .webcam-btn-ghost:hover {
+        border-color: var(--mist);
+        color: var(--fern);
+    }
+
+    .emotion-result {
+        background: var(--dew);
+        border: 1px solid var(--mist);
+        border-radius: 8px;
+        padding: 24px 32px;
+        display: inline-block;
+        margin-bottom: 20px;
+        animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .emotion-emoji {
+        font-size: 2.8rem;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .emotion-label {
+        font-family: 'Fraunces', serif;
+        font-size: 1.1rem;
+        font-weight: 400;
+        color: var(--moss);
+        margin: 0 0 4px;
+    }
+
+    .emotion-note {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.75rem;
+        color: var(--sage);
+        margin: 0;
+    }
+
+    .webcam-error {
+        background: var(--error-bg);
+        color: var(--error);
+        border: 1px solid rgba(192,57,43,0.2);
+        border-radius: 4px;
+        padding: 12px 16px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.82rem;
+        margin-bottom: 16px;
+        text-align: left;
+    }
+
+    /* ── FORM SECTION ── */
+    #testFormSection {
+        animation: fadeSlideUp 0.5s ease both;
+    }
+
+    /* ── QUESTION CARDS ── */
+    .question-card {
+        background: var(--cream);
+        border: 1px solid var(--linen);
+        border-radius: 4px;
+        padding: 36px 40px;
+        margin-bottom: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .question-card::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 3px;
+        background: var(--linen);
+        transition: background 0.3s;
+    }
+
+    .question-card:focus-within {
+        border-color: var(--mist);
+        box-shadow: 0 4px 20px rgba(45,80,22,0.07);
+    }
+
+    .question-card:focus-within::before { background: var(--sage); }
+    .question-card.has-error { border-color: rgba(192,57,43,0.4); }
+    .question-card.has-error::before { background: var(--error); }
+
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .question-num {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--sage);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .question-required {
+        color: var(--error);
+        font-size: 0.7rem;
+    }
+
+    .question-points-badge {
+        background: var(--dew);
+        color: var(--fern);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-weight: 700;
+    }
+
+    .question-text {
+        font-family: 'Fraunces', serif;
+        font-size: 1.15rem;
+        color: var(--ink);
+        font-weight: 400;
+        line-height: 1.55;
+        margin-bottom: 24px;
+    }
+
+    /* ── INPUT STYLES ── */
+    .q-textarea {
+        width: 100%;
+        background: var(--parchment);
+        border: 1px solid var(--linen);
+        border-radius: 3px;
+        padding: 14px 18px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.9rem;
+        color: var(--ink);
+        resize: vertical;
+        min-height: 120px;
+        outline: none;
+        transition: border-color 0.25s, background 0.25s;
+        line-height: 1.6;
+    }
+
+    .q-textarea:focus {
+        border-color: var(--sage);
+        background: white;
+    }
+
+    .q-text-input {
+        width: 100%;
+        background: var(--parchment);
+        border: 1px solid var(--linen);
+        border-radius: 3px;
+        padding: 13px 18px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.9rem;
+        color: var(--ink);
+        outline: none;
+        transition: border-color 0.25s, background 0.25s;
+    }
+
+    .q-text-input:focus {
+        border-color: var(--sage);
+        background: white;
+    }
+
+    /* ── RADIO OPTIONS ── */
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        padding: 14px 18px;
+        border: 1px solid var(--linen);
+        border-radius: 3px;
+        background: var(--parchment);
+        transition: all 0.2s;
+        position: relative;
+    }
+
+    .radio-option:hover {
+        border-color: var(--mist);
+        background: var(--cream);
+    }
+
+    .radio-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0; height: 0;
+    }
+
+    .radio-custom {
+        width: 18px; height: 18px;
+        border: 1.5px solid var(--mist);
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .radio-custom::after {
+        content: '';
+        width: 8px; height: 8px;
+        background: var(--moss);
+        border-radius: 50%;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .radio-option input[type="radio"]:checked ~ .radio-custom {
+        border-color: var(--moss);
+    }
+
+    .radio-option input[type="radio"]:checked ~ .radio-custom::after {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .radio-option:has(input:checked) {
+        border-color: var(--mist);
+        background: rgba(212,230,195,0.2);
+    }
+
+    .radio-option-text {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.9rem;
+        color: var(--ink);
+        line-height: 1.4;
+    }
+
+    /* Vrai/Faux specifique */
+    .bool-group {
+        display: flex;
+        gap: 12px;
+    }
+
+    .bool-option {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 16px;
+        border: 1.5px solid var(--linen);
+        border-radius: 3px;
+        background: var(--parchment);
+        transition: all 0.25s;
+        position: relative;
+    }
+
+    .bool-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .bool-option:has(input:checked) {
+        border-color: var(--sage);
+        background: rgba(212,230,195,0.25);
+    }
+
+    .bool-option:hover {
+        border-color: var(--mist);
+        background: var(--cream);
+    }
+
+    .bool-option-text {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--fern);
+    }
+
+    .bool-icon { font-size: 1.1rem; }
+
+    /* ── HELP HINT ── */
+    .question-hint {
+        margin-top: 12px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.72rem;
+        color: var(--sage);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* ── FORM ACTIONS ── */
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 32px 0 0;
+        margin-top: 16px;
+        border-top: 1px solid var(--linen);
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: var(--fern);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 12px 20px;
+        border: 1px solid var(--linen);
+        border-radius: 3px;
+        text-decoration: none;
+        transition: all 0.25s;
+    }
+
+    .btn-back:hover {
+        border-color: var(--mist);
+        color: var(--moss);
+        background: var(--dew);
+    }
+
+    .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--moss);
+        color: var(--parchment);
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 16px 36px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-submit::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--fern);
+        transform: translateX(-101%);
+        transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .btn-submit:hover::before { transform: translateX(0); }
+
+    .btn-submit span,
+    .btn-submit .submit-icon { position: relative; z-index: 1; }
+
+    .submit-icon {
+        width: 28px; height: 28px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+    }
+
+    /* ── SIDEBAR ── */
+    .test-sidebar {
+        position: sticky;
+        top: 84px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .sidebar-card {
+        background: var(--cream);
+        border: 1px solid var(--linen);
+        border-radius: 4px;
+        padding: 28px;
+    }
+
+    .sidebar-card-title {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--sand);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .sidebar-card-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--linen);
+    }
+
+    .progress-counter {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        margin-bottom: 12px;
+    }
+
+    .progress-current {
+        font-family: 'Fraunces', serif;
+        font-size: 2.4rem;
+        color: var(--moss);
+        font-weight: 400;
+        line-height: 1;
+    }
+
+    .progress-sep {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.9rem;
+        color: var(--sand);
+    }
+
+    .progress-total {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.9rem;
+        color: var(--fern);
+    }
+
+    .sidebar-progress-bar {
+        height: 4px;
+        background: var(--linen);
+        border-radius: 100px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+    .sidebar-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--sage), var(--mist));
+        border-radius: 100px;
+        transition: width 0.4s ease;
+        width: 0%;
+    }
+
+    .sidebar-progress-label {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.75rem;
+        color: var(--fern);
+    }
+
+    .sidebar-tips {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sidebar-tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-size: 0.8rem;
+        color: #6B7D5A;
+        line-height: 1.6;
+    }
+
+    .tip-icon {
+        width: 22px; height: 22px;
+        background: var(--dew);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--sage);
+        font-size: 0.6rem;
+        margin-top: 1px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: scale(0.8); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+        .test-layout {
+            grid-template-columns: 1fr;
+            padding: 40px 24px 80px;
+        }
+        .test-sidebar { position: static; }
+        .test-hero { padding: 48px 24px 40px; }
+    }
+</style>
+{% endblock %}
+
 {% block body %}
-<section class="hero-section" style="min-height: 30vh; padding: 40px 60px;">
-    <div class="hero-content" style="text-align: center;">
-        <div class="hero-tag" style="justify-content: center;">Test psychologique</div>
-        <h1 class="hero-title" style="font-size: clamp(1.8rem, 4vw, 2.5rem);">
-            {{ test.titre }}
-        </h1>
-        <p class="hero-subtitle" style="max-width: 700px; margin: 0 auto;">
-            {{ test.description }}
-        </p>
-        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
-            <span><i class="fas fa-clock"></i> Durée: {{ test.duree ? test.duree ~ ' minutes' : 'Non spécifiée' }}</span>
-            <span><i class="fas fa-question-circle"></i> {{ questions|length }} questions</span>
+
+{# ── HERO ── #}
+<header class="test-hero">
+    <div class="test-hero-grid"></div>
+    <div class="test-hero-inner">
+        <div class="test-breadcrumb">
+            <a href="{{ path('front_test_list') }}">Tests</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>{{ test.titre|slice(0,30) }}{{ test.titre|length > 30 ? '…' : '' }}</span>
         </div>
-    </div>
-</section>
-
-<section class="donations-section" style="padding-top: 0;">
-    <div class="container-custom">
-        <div class="donate-grid" style="grid-template-columns: 1fr;">
-            <div class="donate-form-side" style="padding: 40px;">
-
-                {# ── WEBCAM ── #}
-                <div id="webcamSection" style="background:white;border-radius:16px;padding:30px;margin-bottom:32px;text-align:center;box-shadow:0 4px 20px rgba(26,61,43,0.08);border:1px solid #e0f0e8;">
-                    <h3 style="font-family:'Playfair Display',serif;color:var(--green-deep);margin-bottom:8px;">
-                        📸 Analyse de votre expression
-                    </h3>
-                    <p style="color:#888;font-size:0.9rem;margin-bottom:20px;">
-                        Pour enrichir votre analyse, nous allons détecter votre émotion avant le test.<br>
-                        <strong>Aucune photo n'est sauvegardée.</strong>
-                    </p>
-
-                    <div id="webcamContainer" style="display:none;margin-bottom:20px;">
-                        <video id="webcamVideo" autoplay playsinline style="width:280px;height:210px;border-radius:12px;object-fit:cover;border:3px solid var(--green-sage);"></video>
-                        <canvas id="webcamCanvas" style="display:none;"></canvas>
-                    </div>
-
-                    <div id="emotionResult" style="display:none;margin-bottom:20px;">
-    <div style="background:#d8f3dc;border-radius:12px;padding:24px 32px;display:inline-block;animation:popIn .4s ease;">
-        <span id="emotionEmoji" style="font-size:3rem;display:block;margin-bottom:8px;"></span>
-        <p style="margin:0;color:var(--green-deep);font-weight:700;font-size:1.1rem;" id="emotionLabel"></p>
-        <p style="margin:8px 0 0 0;color:#888;font-size:0.8rem;">Analyse en cours...</p>
-    </div>
-</div>
-
-                    <div id="webcamError" style="display:none;background:#fdf0ee;color:#c0392b;padding:12px;border-radius:8px;margin-bottom:16px;font-size:0.85rem;">
-                        ⚠️ Caméra non disponible — vous pouvez continuer sans analyse du visage.
-                    </div>
-
-                    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                        <button type="button" id="btnStartCam" onclick="startWebcam()"
-                                style="background:var(--green-deep);color:white;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">
-                            📷 Activer la caméra
-                        </button>
-                        <button type="button" id="btnCapture" onclick="capturePhoto()" style="display:none;background:var(--green-sage);color:white;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">
-                            ✅ Prendre la photo
-                        </button>
-                        <button type="button" id="btnSkip" onclick="skipWebcam()"
-                                style="background:transparent;border:1.5px solid #ccc;color:#888;padding:10px 20px;border-radius:8px;cursor:pointer;">
-                            Passer cette étape
-                        </button>
-                    </div>
-                </div>
-
-                {# ── FORMULAIRE (caché jusqu'à validation webcam) ── #}
-                <div id="testFormSection" style="display:none;">
-                    <form method="post" action="{{ path('front_test_submit', {'id': test.id}) }}" id="testForm">
-                        {% for question in questions %}
-                            <div class="question-item" style="margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--beige-mid);">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text-dark);">
-                                        Question {{ loop.index }}
-                                        {% if question.obligatoire %}
-                                            <span style="color: #e74c3c; font-size: 0.9rem;">*</span>
-                                        {% endif %}
-                                    </h3>
-                                    <span style="background: var(--green-pale); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">
-                                        {{ question.points }} point{{ question.points > 1 ? 's' : '' }}
-                                    </span>
-                                </div>
-
-                                <p style="font-size: 1rem; color: var(--text-mid); margin-bottom: 20px; line-height: 1.6;">
-                                    {{ question.texte }}
-                                </p>
-
-                                {% if question.typeQuestion == 'texte_libre' %}
-                                    <textarea
-                                        name="reponse_{{ question.id }}"
-                                        class="form-input-custom"
-                                        rows="4"
-                                        {% if question.obligatoire %}required{% endif %}
-                                        placeholder="Saisissez votre réponse ici..."></textarea>
-
-                                {% elseif question.typeQuestion == 'vrai_faux' %}
-                                    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                            <input type="radio" name="reponse_{{ question.id }}" value="Vrai"
-                                                {% if question.obligatoire %}required{% endif %}
-                                                style="width: 18px; height: 18px;">
-                                            <span style="font-size: 1rem;">✅ Vrai</span>
-                                        </label>
-                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                            <input type="radio" name="reponse_{{ question.id }}" value="Faux"
-                                                {% if question.obligatoire %}required{% endif %}
-                                                style="width: 18px; height: 18px;">
-                                            <span style="font-size: 1rem;">❌ Faux</span>
-                                        </label>
-                                    </div>
-
-                                {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
-                                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                                        {% set options = question.reponsesPossiblesArray %}
-                                        {% if options is empty %}
-                                            <p style="color: orange; font-style: italic;">Aucune option disponible pour cette question.</p>
-                                        {% else %}
-                                            {% for option in options %}
-                                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                                    <input type="radio" name="reponse_{{ question.id }}" value="{{ option }}"
-                                                        {% if question.obligatoire %}required{% endif %}
-                                                        style="width: 18px; height: 18px;">
-                                                    <span>{{ option }}</span>
-                                                </label>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-
-                                {% else %}
-                                    <input type="text" name="reponse_{{ question.id }}" class="form-input-custom"
-                                        {% if question.obligatoire %}required{% endif %}
-                                        placeholder="Saisissez votre réponse">
-                                {% endif %}
-
-                                <div class="help-message" style="margin-top: 10px; font-size: 0.75rem; color: var(--green-sage);">
-                                    <i class="fas fa-info-circle"></i>
-                                    {% if question.typeQuestion == 'texte_libre' %}
-                                        Saisissez votre réponse en texte libre
-                                    {% elseif question.typeQuestion == 'vrai_faux' %}
-                                        Sélectionnez Vrai ou Faux
-                                    {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
-                                        Sélectionnez une seule option
-                                    {% else %}
-                                        Saisissez votre réponse
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
-                            <a href="{{ path('front_test_list') }}" class="btn-ghost">
-                                <i class="fas fa-arrow-left"></i> Retour
-                            </a>
-                            <button type="submit" class="submit-btn" style="width: auto; padding: 15px 40px;">
-                                <i class="fas fa-check"></i> Valider mes réponses
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
+        <div class="test-hero-tag">Test psychologique</div>
+        <h1 class="test-hero-title">{{ test.titre }}</h1>
+        <p class="test-hero-desc">{{ test.description }}</p>
+        <div class="test-hero-meta">
+            <div class="test-meta-chip">
+                <i class="fas fa-clock"></i>
+                {{ test.duree ? test.duree ~ ' minutes' : 'Environ 10 min' }}
+            </div>
+            <div class="test-meta-chip">
+                <i class="fas fa-list-ul"></i>
+                {{ questions|length }} questions
+            </div>
+            <div class="test-meta-chip">
+                <i class="fas fa-lock"></i>
+                Confidentiel
             </div>
         </div>
     </div>
-</section>
+</header>
 
-<style>
-.question-item {
-    transition: all 0.3s ease;
-}
-.question-item:hover {
-    background: rgba(168, 198, 143, 0.05);
-    padding-left: 15px;
-    margin-left: -15px;
-    padding-right: 15px;
-    margin-right: -15px;
-    border-radius: 8px;
-}
-input[type="radio"]:checked, input[type="checkbox"]:checked {
-    accent-color: var(--green-mid);
-}
-.form-input-custom {
-    background: white;
-    border: 1px solid var(--beige-mid);
-    border-radius: 8px;
-    padding: 12px 16px;
-    width: 100%;
-}
-.form-input-custom:focus {
-    border-color: var(--green-sage);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(122, 160, 91, 0.1);
-}
-</style>
+{# ── PROGRESS BAR ── #}
+<div class="test-progress-bar-wrap">
+    <div class="test-progress-fill" id="topProgress"></div>
+</div>
+
+{# ── MAIN ── #}
+<div class="test-layout" style="background: var(--parchment);">
+
+    {# ── FORM COLUMN ── #}
+    <div class="test-main-col">
+
+        {# ── WEBCAM ── #}
+        <div id="webcamSection" class="webcam-card">
+            <div class="webcam-card-icon">
+                <i class="fas fa-camera"></i>
+            </div>
+            <h3>Analyse de votre expression</h3>
+            <p>Pour enrichir votre analyse, nous allons détecter votre émotion avant le test.</p>
+            <div class="webcam-privacy-note">
+                <i class="fas fa-shield-alt" style="font-size:0.6rem;"></i>
+                Aucune photo n'est sauvegardée
+            </div>
+
+            <div id="webcamContainer" style="display:none;">
+                <video id="webcamVideo" autoplay playsinline></video>
+                <canvas id="webcamCanvas" style="display:none;"></canvas>
+            </div>
+
+            <div id="emotionResult" style="display:none;">
+                <div class="emotion-result">
+                    <span class="emotion-emoji" id="emotionEmoji"></span>
+                    <p class="emotion-label" id="emotionLabel"></p>
+                    <p class="emotion-note">Expression détectée avant le test</p>
+                </div>
+            </div>
+
+            <div id="webcamError" class="webcam-error" style="display:none;">
+                <i class="fas fa-exclamation-triangle" style="margin-right:6px;"></i>
+                Caméra non disponible — vous pouvez continuer sans analyse du visage.
+            </div>
+
+            <div class="webcam-btn-group">
+                <button type="button" id="btnStartCam" onclick="startWebcam()" class="webcam-btn-primary">
+                    <i class="fas fa-camera"></i> Activer la caméra
+                </button>
+                <button type="button" id="btnCapture" onclick="capturePhoto()" class="webcam-btn-secondary" style="display:none;">
+                    <i class="fas fa-check"></i> Prendre la photo
+                </button>
+                <button type="button" onclick="skipWebcam()" class="webcam-btn-ghost">
+                    Passer cette étape
+                </button>
+            </div>
+        </div>
+
+        {# ── FORMULAIRE ── #}
+        <div id="testFormSection" style="display:none;">
+            <form method="post" action="{{ path('front_test_submit', {'id': test.id}) }}" id="testForm">
+
+                {% for question in questions %}
+                    <div class="question-card" id="qcard-{{ loop.index }}" data-question="{{ loop.index }}">
+
+                        <div class="question-header">
+                            <span class="question-num">
+                                Question {{ loop.index }}
+                                {% if question.obligatoire %}
+                                    <span class="question-required">*</span>
+                                {% endif %}
+                            </span>
+                            <span class="question-points-badge">
+                                {{ question.points }} pt{{ question.points > 1 ? 's' : '' }}
+                            </span>
+                        </div>
+
+                        <p class="question-text">{{ question.texte }}</p>
+
+                        {# ── TEXT LIBRE ── #}
+                        {% if question.typeQuestion == 'texte_libre' %}
+                            <textarea
+                                name="reponse_{{ question.id }}"
+                                class="q-textarea"
+                                rows="4"
+                                {% if question.obligatoire %}required{% endif %}
+                                placeholder="Exprimez-vous librement…"></textarea>
+                            <div class="question-hint">
+                                <i class="fas fa-pen" style="font-size:0.55rem;"></i>
+                                Réponse libre — soyez honnête avec vous-même
+                            </div>
+
+                        {# ── VRAI / FAUX ── #}
+                        {% elseif question.typeQuestion == 'vrai_faux' %}
+                            <div class="bool-group">
+                                <label class="bool-option">
+                                    <input type="radio" name="reponse_{{ question.id }}" value="Vrai"
+                                        {% if question.obligatoire %}required{% endif %}>
+                                    <span class="bool-icon">✓</span>
+                                    <span class="bool-option-text">Vrai</span>
+                                </label>
+                                <label class="bool-option">
+                                    <input type="radio" name="reponse_{{ question.id }}" value="Faux"
+                                        {% if question.obligatoire %}required{% endif %}>
+                                    <span class="bool-icon">✗</span>
+                                    <span class="bool-option-text">Faux</span>
+                                </label>
+                            </div>
+                            <div class="question-hint">
+                                <i class="fas fa-circle" style="font-size:0.4rem;"></i>
+                                Sélectionnez une seule réponse
+                            </div>
+
+                        {# ── QCM ── #}
+                        {% elseif question.typeQuestion == 'qcm_unique' or question.typeQuestion == 'qcm' %}
+                            {% set options = question.reponsesPossiblesArray %}
+                            {% if options is empty %}
+                                <p style="color:var(--sand);font-family:'Cabinet Grotesk',sans-serif;font-size:0.85rem;font-style:italic;">
+                                    Aucune option disponible.
+                                </p>
+                            {% else %}
+                                <div class="radio-group">
+                                    {% for option in options %}
+                                        <label class="radio-option">
+                                            <input type="radio" name="reponse_{{ question.id }}" value="{{ option }}"
+                                                {% if question.obligatoire %}required{% endif %}>
+                                            <span class="radio-custom"></span>
+                                            <span class="radio-option-text">{{ option }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="question-hint">
+                                <i class="fas fa-circle" style="font-size:0.4rem;"></i>
+                                Sélectionnez une seule option
+                            </div>
+
+                        {# ── TEXTE SIMPLE ── #}
+                        {% else %}
+                            <input type="text" name="reponse_{{ question.id }}" class="q-text-input"
+                                {% if question.obligatoire %}required{% endif %}
+                                placeholder="Votre réponse…">
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <a href="{{ path('front_test_list') }}" class="btn-back">
+                        <i class="fas fa-arrow-left" style="font-size:0.65rem;"></i>
+                        Retour aux tests
+                    </a>
+                    <button type="submit" class="btn-submit">
+                        <span>Valider mes réponses</span>
+                        <div class="submit-icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    {# ── SIDEBAR ── #}
+    <aside class="test-sidebar" id="testSidebar" style="display:none;">
+
+        {# Progression #}
+        <div class="sidebar-card">
+            <div class="sidebar-card-title">Progression</div>
+            <div class="progress-counter">
+                <span class="progress-current" id="answeredCount">0</span>
+                <span class="progress-sep">/</span>
+                <span class="progress-total">{{ questions|length }}</span>
+            </div>
+            <div class="sidebar-progress-bar">
+                <div class="sidebar-progress-fill" id="sidebarProgress"></div>
+            </div>
+            <span class="sidebar-progress-label" id="progressLabel">Commencez à répondre</span>
+        </div>
+
+        {# Conseils #}
+        <div class="sidebar-card">
+            <div class="sidebar-card-title">Conseils</div>
+            <div class="sidebar-tips">
+                <div class="sidebar-tip">
+                    <div class="tip-icon"><i class="fas fa-heart"></i></div>
+                    Répondez instinctivement, sans trop réfléchir.
+                </div>
+                <div class="sidebar-tip">
+                    <div class="tip-icon"><i class="fas fa-lock"></i></div>
+                    Vos réponses sont strictement confidentielles.
+                </div>
+                <div class="sidebar-tip">
+                    <div class="tip-icon"><i class="fas fa-redo"></i></div>
+                    Vous pouvez revenir en arrière à tout moment.
+                </div>
+            </div>
+        </div>
+
+        {# Durée estimée #}
+        <div class="sidebar-card" style="background: var(--moss); border-color: var(--fern);">
+            <div class="sidebar-card-title" style="color: var(--sage);">Durée estimée</div>
+            <div style="font-family:'Fraunces',serif;font-size:2rem;color:var(--parchment);font-weight:200;line-height:1;">
+                {{ test.duree ? test.duree : '10' }}<span style="font-size:0.9rem;color:var(--mist);margin-left:4px;font-family:'Cabinet Grotesk',sans-serif;">min</span>
+            </div>
+            <p style="font-family:'Cabinet Grotesk',sans-serif;font-size:0.75rem;color:var(--sage);margin-top:6px;">
+                Prenez votre temps, il n'y a pas de limite.
+            </p>
+        </div>
+
+    </aside>
+
+</div>
 
 <script>
 const analyseVisageUrl = '{{ path("front_test_analyse_visage", {"id": test.id}) }}';
+const totalQuestions = {{ questions|length }};
 let stream = null;
 
+/* ── WEBCAM ── */
 async function startWebcam() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         document.getElementById('webcamVideo').srcObject = stream;
         document.getElementById('webcamContainer').style.display = 'block';
         document.getElementById('btnStartCam').style.display = 'none';
-        document.getElementById('btnCapture').style.display = 'inline-block';
+        document.getElementById('btnCapture').style.display = 'inline-flex';
     } catch(e) {
         document.getElementById('webcamError').style.display = 'block';
-        skipWebcam();
+        setTimeout(skipWebcam, 2000);
     }
 }
 
@@ -218,34 +1079,27 @@ async function capturePhoto() {
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
-
     const base64 = canvas.toDataURL('image/jpeg', 0.8);
 
-    // Arrêter la caméra
     if (stream) stream.getTracks().forEach(t => t.stop());
     document.getElementById('webcamContainer').style.display = 'none';
     document.getElementById('btnCapture').style.display = 'none';
 
-    // Envoyer à Face++
     try {
-        const response = await fetch(analyseVisageUrl, {
+        const res  = await fetch(analyseVisageUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image: base64 })
         });
-        const data = await response.json();
-
+        const data = await res.json();
         if (data.success) {
             document.getElementById('emotionEmoji').textContent = data.emoji;
-            document.getElementById('emotionLabel').textContent = 'Expression détectée : ' + data.label_fr;
+            document.getElementById('emotionLabel').textContent = 'Expression : ' + data.label_fr;
             document.getElementById('emotionResult').style.display = 'block';
         }
-    } catch(e) {
-        console.log('Analyse visage échouée, on continue');
-    }
+    } catch(e) {}
 
-    // Afficher le formulaire après 1.5s
-    setTimeout(showForm, 4000);
+    setTimeout(showForm, 3500);
 }
 
 function skipWebcam() {
@@ -256,46 +1110,68 @@ function skipWebcam() {
 function showForm() {
     document.getElementById('webcamSection').style.display = 'none';
     document.getElementById('testFormSection').style.display = 'block';
+    document.getElementById('testSidebar').style.display = 'flex';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Validation formulaire
+/* ── PROGRESS ── */
+function updateProgress() {
+    const form = document.getElementById('testForm');
+    if (!form) return;
+
+    const answered = new Set();
+    form.querySelectorAll('input[type="radio"]:checked').forEach(r => answered.add(r.name));
+    form.querySelectorAll('textarea').forEach(t => { if (t.value.trim()) answered.add(t.name); });
+    form.querySelectorAll('input[type="text"]').forEach(i => { if (i.value.trim()) answered.add(i.name); });
+
+    const count = answered.size;
+    const pct   = totalQuestions > 0 ? Math.round((count / totalQuestions) * 100) : 0;
+
+    document.getElementById('answeredCount').textContent = count;
+    document.getElementById('sidebarProgress').style.width = pct + '%';
+    document.getElementById('topProgress').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent =
+        pct === 100 ? 'Tout est complété ✓' :
+        pct > 0     ? pct + '% complété' :
+                      'Commencez à répondre';
+}
+
+/* ── VALIDATION ── */
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('testForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            let allValid = true;
-            const requiredRadios = form.querySelectorAll('input[type="radio"][required]');
-            const radioGroups = new Set();
+    if (!form) return;
 
-            requiredRadios.forEach(radio => radioGroups.add(radio.name));
+    form.addEventListener('change', updateProgress);
+    form.addEventListener('input',  updateProgress);
 
-            radioGroups.forEach(groupName => {
-                const checked = form.querySelector(`input[name="${groupName}"]:checked`);
-                if (!checked) {
-                    allValid = false;
-                    const container = form.querySelector(`input[name="${groupName}"]`).closest('.question-item');
-                    if (container) container.style.borderLeft = '3px solid #e74c3c';
-                }
-            });
+    form.addEventListener('submit', function(e) {
+        let allValid = true;
+        document.querySelectorAll('.question-card').forEach(card => card.classList.remove('has-error'));
 
-            const requiredTexts = form.querySelectorAll('textarea[required]');
-            requiredTexts.forEach(field => {
-                if (field.value.trim() === '') {
-                    allValid = false;
-                    field.style.borderColor = '#e74c3c';
-                    field.closest('.question-item').style.borderLeft = '3px solid #e74c3c';
-                } else {
-                    field.style.borderColor = '';
-                }
-            });
-
-            if (!allValid) {
-                e.preventDefault();
-                alert('Veuillez répondre à toutes les questions obligatoires.');
+        const radioGroups = new Set();
+        form.querySelectorAll('input[type="radio"][required]').forEach(r => radioGroups.add(r.name));
+        radioGroups.forEach(name => {
+            if (!form.querySelector(`input[name="${name}"]:checked`)) {
+                allValid = false;
+                const el = form.querySelector(`input[name="${name}"]`);
+                if (el) el.closest('.question-card').classList.add('has-error');
             }
         });
-    }
+
+        form.querySelectorAll('textarea[required]').forEach(t => {
+            if (!t.value.trim()) {
+                allValid = false;
+                t.closest('.question-card').classList.add('has-error');
+            }
+        });
+
+        if (!allValid) {
+            e.preventDefault();
+            const firstError = form.querySelector('.has-error');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
 });
 </script>
+
 {% endblock %}
