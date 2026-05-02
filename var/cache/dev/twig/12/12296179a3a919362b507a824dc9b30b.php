@@ -1,0 +1,1240 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* home/conge_modal_patient.html.twig */
+class __TwigTemplate_8c86ebe828be43080206b3f77125deae extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/conge_modal_patient.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/conge_modal_patient.html.twig"));
+
+        // line 5
+        yield "
+";
+        // line 18
+        yield "
+";
+        // line 20
+        yield "<div id=\"congeModal\" class=\"rdv-overlay\" style=\"display:none;\" onclick=\"if(event.target===this)closeCongeModal()\">
+  <div class=\"conge-modal\">
+
+    ";
+        // line 24
+        yield "    <div class=\"conge-modal-header\">
+      <div class=\"conge-modal-icon\"><i class=\"fas fa-file-medical-alt\"></i></div>
+      <div>
+        <h2 class=\"conge-modal-title\">Demande de congé maladie</h2>
+        <p class=\"conge-modal-sub\" id=\"congeModalSub\">Chargement…</p>
+      </div>
+      <button class=\"conge-close\" onclick=\"closeCongeModal()\"><i class=\"fas fa-times\"></i></button>
+    </div>
+
+    ";
+        // line 34
+        yield "    <div id=\"congeCheckState\" class=\"conge-state\">
+      <div class=\"conge-spinner\"><i class=\"fas fa-circle-notch fa-spin\"></i></div>
+      <p>Vérification de votre éligibilité…</p>
+    </div>
+
+    ";
+        // line 40
+        yield "    <div id=\"congeIneligibleState\" class=\"conge-state\" style=\"display:none\">
+      <div class=\"conge-state-icon ineligible\"><i class=\"fas fa-ban\"></i></div>
+      <p id=\"congeIneligibleMsg\" class=\"conge-state-msg\"></p>
+      <button class=\"conge-btn-secondary\" onclick=\"closeCongeModal()\">Fermer</button>
+    </div>
+
+    ";
+        // line 47
+        yield "    <div id=\"congeFormState\" style=\"display:none\">
+      <form id=\"congeForm\" onsubmit=\"submitConge(event)\">
+        <input type=\"hidden\" id=\"congePsyId\" name=\"psy_id\">
+
+        <div class=\"conge-form-grid\">
+          <div class=\"conge-field\">
+            <label><i class=\"fas fa-calendar-day\"></i> Date de début</label>
+            <input type=\"date\" name=\"date_debut\" id=\"congeDebut\" required
+                   min=\"";
+        // line 55
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate("now", "Y-m-d"), "html", null, true);
+        yield "\">
+            <span class=\"conge-field-hint\">Aujourd'hui ou dans le futur</span>
+          </div>
+          <div class=\"conge-field\">
+            <label><i class=\"fas fa-calendar-check\"></i> Date de fin</label>
+            <input type=\"date\" name=\"date_fin\" id=\"congeFin\" required>
+            <span class=\"conge-field-hint\">Maximum 30 jours après le début</span>
+          </div>
+        </div>
+
+        <div class=\"conge-duration-preview\" id=\"congeDurationPreview\" style=\"display:none\">
+          <i class=\"fas fa-hourglass-half\"></i>
+          Durée : <strong id=\"congeDurationText\">—</strong>
+        </div>
+
+        <div class=\"conge-field conge-field-full\">
+          <label><i class=\"fas fa-notes-medical\"></i> Motif médical</label>
+          <textarea name=\"motif\" id=\"congeMotif\" required rows=\"4\"
+                    maxlength=\"1000\"
+                    placeholder=\"Décrivez brièvement la raison médicale de votre demande…\"></textarea>
+          <div class=\"conge-char-count\"><span id=\"congeCharCount\">0</span> / 1000</div>
+        </div>
+
+        <div class=\"conge-info-box\">
+          <i class=\"fas fa-info-circle\"></i>
+          <div>
+            <strong>Information :</strong> Votre demande sera examinée par votre psychologue.
+            Vous recevrez sa réponse par email. Vous pouvez annuler la demande tant qu'elle
+            n'a pas été traitée.
+          </div>
+        </div>
+
+        <div class=\"conge-form-actions\">
+          <button type=\"button\" class=\"conge-btn-secondary\" onclick=\"closeCongeModal()\">Annuler</button>
+          <button type=\"submit\" class=\"conge-btn-primary\" id=\"congeSubmitBtn\">
+            <i class=\"fas fa-paper-plane\"></i> Envoyer la demande
+          </button>
+        </div>
+
+        <div id=\"congeFormError\" class=\"conge-form-error\" style=\"display:none\"></div>
+      </form>
+    </div>
+
+    ";
+        // line 99
+        yield "    <div id=\"congeSuccessState\" class=\"conge-state\" style=\"display:none\">
+      <div class=\"conge-state-icon success\"><i class=\"fas fa-check-circle\"></i></div>
+      <h3>Demande envoyée !</h3>
+      <p class=\"conge-state-msg\">Votre psychologue examinera votre demande et vous répondra par email.</p>
+      <button class=\"conge-btn-primary\" onclick=\"closeCongeModal()\">Fermer</button>
+    </div>
+
+  </div>
+</div>
+
+";
+        // line 110
+        yield "<div id=\"mesCongesPopup\" class=\"rdv-overlay\" style=\"display:none;\" onclick=\"if(event.target===this)closeMesConges()\">
+  <div class=\"conge-popup\">
+    <div class=\"conge-popup-header\">
+      <h3><i class=\"fas fa-file-medical-alt\"></i> Mes demandes de congé</h3>
+      <button onclick=\"closeMesConges()\"><i class=\"fas fa-times\"></i></button>
+    </div>
+    <div id=\"mesCongesContent\" class=\"conge-popup-body\">
+      <div class=\"conge-spinner\"><i class=\"fas fa-circle-notch fa-spin\"></i></div>
+    </div>
+  </div>
+</div>
+
+
+";
+        // line 126
+        yield "<style>
+/* ── Modal Congé ────────────────────────────────────────────────────── */
+/* ════ OVERLAY GLOBAL ════ */
+.rdv-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 62, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10001;
+  align-items: center;
+  justify-content: center;
+}
+.conge-modal {
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  width: min(640px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0;
+  box-shadow: 0 25px 60px rgba(0,0,0,.18);
+  animation: congeSlideIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes congeSlideIn {
+  from { opacity:0; transform: translateY(24px) scale(.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+
+.conge-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border, #e8e8e8);
+  position: sticky; top: 0;
+  background: inherit;
+  z-index: 2;
+}
+.conge-modal-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.conge-modal-title { margin: 0; font-size: 18px; font-weight: 700; }
+.conge-modal-sub   { margin: 2px 0 0; font-size: 13px; color: var(--text-muted, #888); }
+.conge-close {
+  margin-left: auto;
+  border: none; background: none;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  cursor: pointer; font-size: 16px; color: #888;
+  display: grid; place-items: center;
+  transition: background .15s;
+}
+.conge-close:hover { background: var(--bg-soft, #f5f5f5); color: #333; }
+
+/* ── States ── */
+.conge-state {
+  padding: 48px 28px;
+  text-align: center;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
+}
+.conge-spinner { font-size: 32px; color: #667eea; }
+.conge-state-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 28px;
+}
+.conge-state-icon.success  { background: #e8f5e9; color: #388e3c; }
+.conge-state-icon.ineligible { background: #fce4ec; color: #c62828; }
+.conge-state-msg { color: #555; max-width: 380px; line-height: 1.6; }
+
+/* ── Form ── */
+#congeFormState { padding: 24px 28px 28px; }
+.conge-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media(max-width:500px){ .conge-form-grid { grid-template-columns: 1fr; } }
+
+.conge-field { display: flex; flex-direction: column; gap: 6px; }
+.conge-field-full { margin-bottom: 16px; }
+.conge-field label {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-muted, #555);
+  display: flex; align-items: center; gap: 6px;
+}
+.conge-field input,
+.conge-field textarea {
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: border-color .2s;
+  font-family: inherit;
+  resize: vertical;
+}
+.conge-field input:focus,
+.conge-field textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.12);
+}
+.conge-field-hint { font-size: 11px; color: #aaa; }
+.conge-char-count { font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+
+.conge-duration-preview {
+  background: linear-gradient(135deg, #667eea18, #764ba218);
+  border: 1px solid #667eea33;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #4a4a7d;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.conge-info-box {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #795548;
+  display: flex; gap: 10px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.conge-info-box i { color: #f9a825; flex-shrink: 0; margin-top: 2px; }
+
+.conge-form-actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+}
+.conge-btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff; border: none;
+  padding: 11px 22px; border-radius: 10px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  transition: opacity .2s, transform .15s;
+}
+.conge-btn-primary:hover   { opacity: .9; transform: translateY(-1px); }
+.conge-btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.conge-btn-secondary {
+  background: var(--bg-soft, #f5f5f5);
+  color: #555; border: 1px solid var(--border, #ddd);
+  padding: 11px 20px; border-radius: 10px;
+  font-size: 14px; cursor: pointer;
+  transition: background .15s;
+}
+.conge-btn-secondary:hover { background: #ebebeb; }
+
+.conge-form-error {
+  background: #fce4ec; color: #c62828;
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; margin-top: 14px;
+}
+
+/* ── Popup Mes Congés ── */
+.conge-popup {
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  width: min(700px, 95vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0,0,0,.18);
+  animation: congeSlideIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.conge-popup-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border, #eee);
+  position: sticky; top: 0; background: inherit; z-index: 2;
+}
+.conge-popup-header h3 { margin: 0; font-size: 17px; }
+.conge-popup-header button {
+  border: none; background: none;
+  font-size: 18px; color: #888; cursor: pointer;
+}
+.conge-popup-body { padding: 20px 24px; }
+
+/* Carte congé patient */
+.conge-patient-card {
+  border: 1.5px solid var(--border, #eee);
+  border-radius: 14px; padding: 16px;
+  margin-bottom: 12px;
+  position: relative; overflow: hidden;
+}
+.conge-patient-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+}
+.conge-patient-card.en_attente::before   { background: #f59e0b; }
+.conge-patient-card.valide::before       { background: #10b981; }
+.conge-patient-card.refuse::before       { background: #ef4444; }
+.conge-patient-card.annule_patient::before { background: #9ca3af; }
+.conge-patient-card.termine::before      { background: #6366f1; }
+
+.conge-card-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 10px;
+}
+.conge-card-psy  { font-weight: 600; font-size: 15px; }
+.conge-card-date { font-size: 12px; color: #888; margin-top: 2px; }
+
+.conge-status-badge {
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.conge-status-badge.en_attente   { background:#fff8e1; color:#f59e0b; }
+.conge-status-badge.valide       { background:#e8f5e9; color:#10b981; }
+.conge-status-badge.refuse       { background:#fce4ec; color:#ef4444; }
+.conge-status-badge.annule_patient { background:#f3f4f6; color:#6b7280; }
+.conge-status-badge.termine      { background:#ede9fe; color:#6366f1; }
+
+.conge-card-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 10px;
+}
+.conge-chip {
+  background: var(--bg-soft, #f8f8f8);
+  border: 1px solid var(--border, #eee);
+  border-radius: 20px; padding: 4px 10px;
+  font-size: 12px; color: #555;
+  display: flex; align-items: center; gap: 5px;
+}
+.conge-card-motif { font-size: 13px; color: #555; line-height: 1.5; }
+.conge-card-reponse {
+  margin-top: 10px;
+  background: #f8faff;
+  border-left: 3px solid #667eea;
+  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  font-size: 13px; color: #444;
+}
+.conge-card-actions { margin-top: 12px; }
+.conge-cancel-btn {
+  background: #fce4ec; color: #c62828;
+  border: none; border-radius: 8px;
+  padding: 7px 14px; font-size: 13px;
+  cursor: pointer; font-weight: 600;
+  transition: background .15s;
+}
+.conge-cancel-btn:hover { background: #f8bbd0; }
+
+.conge-empty {
+  text-align: center; padding: 40px;
+  color: #aaa;
+}
+.conge-empty i { font-size: 40px; margin-bottom: 12px; display: block; }
+</style>
+
+
+";
+        // line 391
+        yield "<script>
+// ── Congé : état courant ──────────────────────────────────────────────────────
+let _congePsyId   = null;
+let _congePsyName = '';
+
+function openCongeModal(psyId, psyName) {
+  _congePsyId   = psyId;
+  _congePsyName = psyName;
+
+  document.getElementById('congePsyId').value  = psyId;
+  document.getElementById('congeModalSub').textContent = 'avec ' + psyName;
+
+  // Reset
+  setCongeState('check');
+  document.getElementById('congeModal').style.display = 'flex';
+
+  // Vérifier éligibilité
+  fetch(`/conge/check-eligibilite/\${psyId}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.eligible) {
+        setCongeState('form');
+        // Initialiser les contraintes de dates
+        const today = new Date().toISOString().split('T')[0];
+        const debutInput = document.getElementById('congeDebut');
+        const finInput   = document.getElementById('congeFin');
+        debutInput.min = today;
+        debutInput.value = '';
+        finInput.value   = '';
+        document.getElementById('congeDurationPreview').style.display = 'none';
+      } else {
+        document.getElementById('congeIneligibleMsg').textContent = data.message;
+        setCongeState('ineligible');
+      }
+    })
+    .catch(() => {
+      document.getElementById('congeIneligibleMsg').textContent = 'Erreur lors de la vérification. Veuillez réessayer.';
+      setCongeState('ineligible');
+    });
+}
+
+function closeCongeModal() {
+  document.getElementById('congeModal').style.display = 'none';
+}
+
+function setCongeState(state) {
+  const states = { check: 'congeCheckState', ineligible: 'congeIneligibleState', form: 'congeFormState', success: 'congeSuccessState' };
+  Object.entries(states).forEach(([k, id]) => {
+    document.getElementById(id).style.display = k === state ? '' : 'none';
+  });
+}
+
+// Calcul durée dynamique
+document.addEventListener('DOMContentLoaded', () => {
+  const debutInput = document.getElementById('congeDebut');
+  const finInput   = document.getElementById('congeFin');
+  const preview    = document.getElementById('congeDurationPreview');
+  const durationTxt = document.getElementById('congeDurationText');
+  const motifTA    = document.getElementById('congeMotif');
+  const charCount  = document.getElementById('congeCharCount');
+
+  function updateDuration() {
+    if (!debutInput.value) return;
+    // Contrainte : date fin >= date début
+    finInput.min = debutInput.value;
+    // Contrainte : fin <= debut + 30 jours
+    const maxFin = new Date(debutInput.value);
+    maxFin.setDate(maxFin.getDate() + 29);
+    finInput.max = maxFin.toISOString().split('T')[0];
+
+    if (debutInput.value && finInput.value) {
+      const d1 = new Date(debutInput.value);
+      const d2 = new Date(finInput.value);
+      const diff = Math.round((d2 - d1) / 86400000) + 1;
+      if (diff > 0) {
+        durationTxt.textContent = diff + ' jour' + (diff > 1 ? 's' : '');
+        preview.style.display = 'flex';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+  }
+
+  if (debutInput) debutInput.addEventListener('change', updateDuration);
+  if (finInput)   finInput.addEventListener('change', updateDuration);
+  if (motifTA)    motifTA.addEventListener('input', () => {
+    charCount.textContent = motifTA.value.length;
+  });
+});
+
+async function submitConge(e) {
+  e.preventDefault();
+  const btn = document.getElementById('congeSubmitBtn');
+  const errDiv = document.getElementById('congeFormError');
+  errDiv.style.display = 'none';
+  btn.disabled = true;
+  btn.innerHTML = '<i class=\"fas fa-circle-notch fa-spin\"></i> Envoi…';
+
+  const fd = new FormData(e.target);
+
+  try {
+    const r = await fetch('/conge/soumettre', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (data.success) {
+      setCongeState('success');
+    } else {
+      errDiv.textContent = data.message || 'Erreur inconnue.';
+      errDiv.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<i class=\"fas fa-paper-plane\"></i> Envoyer la demande';
+    }
+  } catch {
+    errDiv.textContent = 'Erreur réseau. Veuillez réessayer.';
+    errDiv.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<i class=\"fas fa-paper-plane\"></i> Envoyer la demande';
+  }
+}
+
+// ── Popup Mes congés (patient) ────────────────────────────────────────────────
+function openMesCongesPopup() {
+  document.getElementById('mesCongesPopup').style.display = 'flex';
+  loadMesConges();
+}
+function closeMesConges() {
+  document.getElementById('mesCongesPopup').style.display = 'none';
+}
+
+async function loadMesConges() {
+  const container = document.getElementById('mesCongesContent');
+  container.innerHTML = '<div class=\"conge-spinner\"><i class=\"fas fa-circle-notch fa-spin\"></i></div>';
+
+  try {
+    const r = await fetch('/conge/mes-conges');
+    const data = await r.json();
+
+    if (!data.length) {
+      container.innerHTML = `<div class=\"conge-empty\">
+        <i class=\"fas fa-file-medical-alt\"></i>
+        <p>Aucune demande de congé pour le moment.</p>
+      </div>`;
+      return;
+    }
+
+    const statusLabel = {
+      en_attente: 'En attente', valide: 'Validé', refuse: 'Refusé',
+      annule_patient: 'Annulé', termine: 'Terminé'
+    };
+
+    container.innerHTML = data.map(c => `
+      <div class=\"conge-patient-card \${c.statut}\" id=\"congeCard\${c.id}\">
+        <div class=\"conge-card-top\">
+          <div>
+            <div class=\"conge-card-psy\"><i class=\"fas fa-user-md\"></i> \${c.psyName}</div>
+            <div class=\"conge-card-date\">Soumis le \${c.createdAt}</div>
+          </div>
+          <span class=\"conge-status-badge \${c.statut}\">\${statusLabel[c.statut] || c.statut}</span>
+        </div>
+        <div class=\"conge-card-chips\">
+          <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${c.dateDebut} → \${c.dateFin}</span>
+          <span class=\"conge-chip\"><i class=\"fas fa-hourglass-half\"></i> \${c.duree} jour\${c.duree > 1 ? 's' : ''}</span>
+        </div>
+        <div class=\"conge-card-motif\">\${c.motif}</div>
+        \${c.reponse ? `<div class=\"conge-card-reponse\"><strong>Réponse :</strong> \${c.reponse}</div>` : ''}
+        \${c.canCancel ? `
+          <div class=\"conge-card-actions\">
+            <button class=\"conge-cancel-btn\" onclick=\"annulerConge(\${c.id})\">
+              <i class=\"fas fa-times\"></i> Annuler la demande
+            </button>
+          </div>` : ''}
+      </div>
+    `).join('');
+  } catch {
+    container.innerHTML = '<p style=\"color:#c62828;padding:20px;\">Erreur lors du chargement.</p>';
+  }
+}
+
+async function annulerConge(id) {
+  if (!confirm('Annuler cette demande de congé ?')) return;
+
+  const r = await fetch(`/conge/\${id}/annuler`, { method: 'POST' });
+  const data = await r.json();
+
+  if (data.success) {
+    loadMesConges(); // Recharger la liste
+  } else {
+    alert(data.message || 'Erreur lors de l\\'annulation.');
+  }
+}
+</script>
+";
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "home/conge_modal_patient.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  432 => 391,  168 => 126,  153 => 110,  141 => 99,  95 => 55,  85 => 47,  77 => 40,  70 => 34,  59 => 24,  54 => 20,  51 => 18,  48 => 5,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{# ═══════════════════════════════════════════════════════════════════════════
+   PATIENT — MODAL DEMANDE DE CONGÉ MALADIE
+   À inclure dans rendez_vous.html.twig (après le modal réservation)
+   ═══════════════════════════════════════════════════════════════════════════ #}
+
+{# ── Bouton sur chaque carte pro (remplace le btn-conge existant) ── #}
+{#
+  Dans la boucle {% for user in professionals %}, remplace :
+    <button class=\"btn-conge\">…</button>
+  par :
+    <button class=\"btn-conge\"
+            onclick=\"openCongeModal({{ user.id }}, '{{ user.firstname }} {{ user.lastname }}')\"
+            data-psy-id=\"{{ user.id }}\">
+      <i class=\"fas fa-file-medical\"></i>
+      <span>Demander un congé</span>
+    </button>
+#}
+
+{# ── Modal Congé ── #}
+<div id=\"congeModal\" class=\"rdv-overlay\" style=\"display:none;\" onclick=\"if(event.target===this)closeCongeModal()\">
+  <div class=\"conge-modal\">
+
+    {# Header #}
+    <div class=\"conge-modal-header\">
+      <div class=\"conge-modal-icon\"><i class=\"fas fa-file-medical-alt\"></i></div>
+      <div>
+        <h2 class=\"conge-modal-title\">Demande de congé maladie</h2>
+        <p class=\"conge-modal-sub\" id=\"congeModalSub\">Chargement…</p>
+      </div>
+      <button class=\"conge-close\" onclick=\"closeCongeModal()\"><i class=\"fas fa-times\"></i></button>
+    </div>
+
+    {# État : vérification éligibilité #}
+    <div id=\"congeCheckState\" class=\"conge-state\">
+      <div class=\"conge-spinner\"><i class=\"fas fa-circle-notch fa-spin\"></i></div>
+      <p>Vérification de votre éligibilité…</p>
+    </div>
+
+    {# État : non éligible #}
+    <div id=\"congeIneligibleState\" class=\"conge-state\" style=\"display:none\">
+      <div class=\"conge-state-icon ineligible\"><i class=\"fas fa-ban\"></i></div>
+      <p id=\"congeIneligibleMsg\" class=\"conge-state-msg\"></p>
+      <button class=\"conge-btn-secondary\" onclick=\"closeCongeModal()\">Fermer</button>
+    </div>
+
+    {# État : formulaire #}
+    <div id=\"congeFormState\" style=\"display:none\">
+      <form id=\"congeForm\" onsubmit=\"submitConge(event)\">
+        <input type=\"hidden\" id=\"congePsyId\" name=\"psy_id\">
+
+        <div class=\"conge-form-grid\">
+          <div class=\"conge-field\">
+            <label><i class=\"fas fa-calendar-day\"></i> Date de début</label>
+            <input type=\"date\" name=\"date_debut\" id=\"congeDebut\" required
+                   min=\"{{ \"now\"|date(\"Y-m-d\") }}\">
+            <span class=\"conge-field-hint\">Aujourd'hui ou dans le futur</span>
+          </div>
+          <div class=\"conge-field\">
+            <label><i class=\"fas fa-calendar-check\"></i> Date de fin</label>
+            <input type=\"date\" name=\"date_fin\" id=\"congeFin\" required>
+            <span class=\"conge-field-hint\">Maximum 30 jours après le début</span>
+          </div>
+        </div>
+
+        <div class=\"conge-duration-preview\" id=\"congeDurationPreview\" style=\"display:none\">
+          <i class=\"fas fa-hourglass-half\"></i>
+          Durée : <strong id=\"congeDurationText\">—</strong>
+        </div>
+
+        <div class=\"conge-field conge-field-full\">
+          <label><i class=\"fas fa-notes-medical\"></i> Motif médical</label>
+          <textarea name=\"motif\" id=\"congeMotif\" required rows=\"4\"
+                    maxlength=\"1000\"
+                    placeholder=\"Décrivez brièvement la raison médicale de votre demande…\"></textarea>
+          <div class=\"conge-char-count\"><span id=\"congeCharCount\">0</span> / 1000</div>
+        </div>
+
+        <div class=\"conge-info-box\">
+          <i class=\"fas fa-info-circle\"></i>
+          <div>
+            <strong>Information :</strong> Votre demande sera examinée par votre psychologue.
+            Vous recevrez sa réponse par email. Vous pouvez annuler la demande tant qu'elle
+            n'a pas été traitée.
+          </div>
+        </div>
+
+        <div class=\"conge-form-actions\">
+          <button type=\"button\" class=\"conge-btn-secondary\" onclick=\"closeCongeModal()\">Annuler</button>
+          <button type=\"submit\" class=\"conge-btn-primary\" id=\"congeSubmitBtn\">
+            <i class=\"fas fa-paper-plane\"></i> Envoyer la demande
+          </button>
+        </div>
+
+        <div id=\"congeFormError\" class=\"conge-form-error\" style=\"display:none\"></div>
+      </form>
+    </div>
+
+    {# État : succès #}
+    <div id=\"congeSuccessState\" class=\"conge-state\" style=\"display:none\">
+      <div class=\"conge-state-icon success\"><i class=\"fas fa-check-circle\"></i></div>
+      <h3>Demande envoyée !</h3>
+      <p class=\"conge-state-msg\">Votre psychologue examinera votre demande et vous répondra par email.</p>
+      <button class=\"conge-btn-primary\" onclick=\"closeCongeModal()\">Fermer</button>
+    </div>
+
+  </div>
+</div>
+
+{# ── Popup : Mes congés (patient) ── #}
+<div id=\"mesCongesPopup\" class=\"rdv-overlay\" style=\"display:none;\" onclick=\"if(event.target===this)closeMesConges()\">
+  <div class=\"conge-popup\">
+    <div class=\"conge-popup-header\">
+      <h3><i class=\"fas fa-file-medical-alt\"></i> Mes demandes de congé</h3>
+      <button onclick=\"closeMesConges()\"><i class=\"fas fa-times\"></i></button>
+    </div>
+    <div id=\"mesCongesContent\" class=\"conge-popup-body\">
+      <div class=\"conge-spinner\"><i class=\"fas fa-circle-notch fa-spin\"></i></div>
+    </div>
+  </div>
+</div>
+
+
+{# ═══════════════════════════════════════════════
+   CSS — À ajouter dans le <style> de la page
+   ═══════════════════════════════════════════════ #}
+<style>
+/* ── Modal Congé ────────────────────────────────────────────────────── */
+/* ════ OVERLAY GLOBAL ════ */
+.rdv-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 62, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10001;
+  align-items: center;
+  justify-content: center;
+}
+.conge-modal {
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  width: min(640px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0;
+  box-shadow: 0 25px 60px rgba(0,0,0,.18);
+  animation: congeSlideIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes congeSlideIn {
+  from { opacity:0; transform: translateY(24px) scale(.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+
+.conge-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border, #e8e8e8);
+  position: sticky; top: 0;
+  background: inherit;
+  z-index: 2;
+}
+.conge-modal-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.conge-modal-title { margin: 0; font-size: 18px; font-weight: 700; }
+.conge-modal-sub   { margin: 2px 0 0; font-size: 13px; color: var(--text-muted, #888); }
+.conge-close {
+  margin-left: auto;
+  border: none; background: none;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  cursor: pointer; font-size: 16px; color: #888;
+  display: grid; place-items: center;
+  transition: background .15s;
+}
+.conge-close:hover { background: var(--bg-soft, #f5f5f5); color: #333; }
+
+/* ── States ── */
+.conge-state {
+  padding: 48px 28px;
+  text-align: center;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
+}
+.conge-spinner { font-size: 32px; color: #667eea; }
+.conge-state-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 28px;
+}
+.conge-state-icon.success  { background: #e8f5e9; color: #388e3c; }
+.conge-state-icon.ineligible { background: #fce4ec; color: #c62828; }
+.conge-state-msg { color: #555; max-width: 380px; line-height: 1.6; }
+
+/* ── Form ── */
+#congeFormState { padding: 24px 28px 28px; }
+.conge-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media(max-width:500px){ .conge-form-grid { grid-template-columns: 1fr; } }
+
+.conge-field { display: flex; flex-direction: column; gap: 6px; }
+.conge-field-full { margin-bottom: 16px; }
+.conge-field label {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-muted, #555);
+  display: flex; align-items: center; gap: 6px;
+}
+.conge-field input,
+.conge-field textarea {
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: border-color .2s;
+  font-family: inherit;
+  resize: vertical;
+}
+.conge-field input:focus,
+.conge-field textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.12);
+}
+.conge-field-hint { font-size: 11px; color: #aaa; }
+.conge-char-count { font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+
+.conge-duration-preview {
+  background: linear-gradient(135deg, #667eea18, #764ba218);
+  border: 1px solid #667eea33;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #4a4a7d;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.conge-info-box {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #795548;
+  display: flex; gap: 10px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.conge-info-box i { color: #f9a825; flex-shrink: 0; margin-top: 2px; }
+
+.conge-form-actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+}
+.conge-btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff; border: none;
+  padding: 11px 22px; border-radius: 10px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  transition: opacity .2s, transform .15s;
+}
+.conge-btn-primary:hover   { opacity: .9; transform: translateY(-1px); }
+.conge-btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.conge-btn-secondary {
+  background: var(--bg-soft, #f5f5f5);
+  color: #555; border: 1px solid var(--border, #ddd);
+  padding: 11px 20px; border-radius: 10px;
+  font-size: 14px; cursor: pointer;
+  transition: background .15s;
+}
+.conge-btn-secondary:hover { background: #ebebeb; }
+
+.conge-form-error {
+  background: #fce4ec; color: #c62828;
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; margin-top: 14px;
+}
+
+/* ── Popup Mes Congés ── */
+.conge-popup {
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  width: min(700px, 95vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0,0,0,.18);
+  animation: congeSlideIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.conge-popup-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border, #eee);
+  position: sticky; top: 0; background: inherit; z-index: 2;
+}
+.conge-popup-header h3 { margin: 0; font-size: 17px; }
+.conge-popup-header button {
+  border: none; background: none;
+  font-size: 18px; color: #888; cursor: pointer;
+}
+.conge-popup-body { padding: 20px 24px; }
+
+/* Carte congé patient */
+.conge-patient-card {
+  border: 1.5px solid var(--border, #eee);
+  border-radius: 14px; padding: 16px;
+  margin-bottom: 12px;
+  position: relative; overflow: hidden;
+}
+.conge-patient-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+}
+.conge-patient-card.en_attente::before   { background: #f59e0b; }
+.conge-patient-card.valide::before       { background: #10b981; }
+.conge-patient-card.refuse::before       { background: #ef4444; }
+.conge-patient-card.annule_patient::before { background: #9ca3af; }
+.conge-patient-card.termine::before      { background: #6366f1; }
+
+.conge-card-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 10px;
+}
+.conge-card-psy  { font-weight: 600; font-size: 15px; }
+.conge-card-date { font-size: 12px; color: #888; margin-top: 2px; }
+
+.conge-status-badge {
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.conge-status-badge.en_attente   { background:#fff8e1; color:#f59e0b; }
+.conge-status-badge.valide       { background:#e8f5e9; color:#10b981; }
+.conge-status-badge.refuse       { background:#fce4ec; color:#ef4444; }
+.conge-status-badge.annule_patient { background:#f3f4f6; color:#6b7280; }
+.conge-status-badge.termine      { background:#ede9fe; color:#6366f1; }
+
+.conge-card-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 10px;
+}
+.conge-chip {
+  background: var(--bg-soft, #f8f8f8);
+  border: 1px solid var(--border, #eee);
+  border-radius: 20px; padding: 4px 10px;
+  font-size: 12px; color: #555;
+  display: flex; align-items: center; gap: 5px;
+}
+.conge-card-motif { font-size: 13px; color: #555; line-height: 1.5; }
+.conge-card-reponse {
+  margin-top: 10px;
+  background: #f8faff;
+  border-left: 3px solid #667eea;
+  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  font-size: 13px; color: #444;
+}
+.conge-card-actions { margin-top: 12px; }
+.conge-cancel-btn {
+  background: #fce4ec; color: #c62828;
+  border: none; border-radius: 8px;
+  padding: 7px 14px; font-size: 13px;
+  cursor: pointer; font-weight: 600;
+  transition: background .15s;
+}
+.conge-cancel-btn:hover { background: #f8bbd0; }
+
+.conge-empty {
+  text-align: center; padding: 40px;
+  color: #aaa;
+}
+.conge-empty i { font-size: 40px; margin-bottom: 12px; display: block; }
+</style>
+
+
+{# ═══════════════════════════════════════════════
+   JS — À ajouter en fin de page (avant </body>)
+   ═══════════════════════════════════════════════ #}
+<script>
+// ── Congé : état courant ──────────────────────────────────────────────────────
+let _congePsyId   = null;
+let _congePsyName = '';
+
+function openCongeModal(psyId, psyName) {
+  _congePsyId   = psyId;
+  _congePsyName = psyName;
+
+  document.getElementById('congePsyId').value  = psyId;
+  document.getElementById('congeModalSub').textContent = 'avec ' + psyName;
+
+  // Reset
+  setCongeState('check');
+  document.getElementById('congeModal').style.display = 'flex';
+
+  // Vérifier éligibilité
+  fetch(`/conge/check-eligibilite/\${psyId}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.eligible) {
+        setCongeState('form');
+        // Initialiser les contraintes de dates
+        const today = new Date().toISOString().split('T')[0];
+        const debutInput = document.getElementById('congeDebut');
+        const finInput   = document.getElementById('congeFin');
+        debutInput.min = today;
+        debutInput.value = '';
+        finInput.value   = '';
+        document.getElementById('congeDurationPreview').style.display = 'none';
+      } else {
+        document.getElementById('congeIneligibleMsg').textContent = data.message;
+        setCongeState('ineligible');
+      }
+    })
+    .catch(() => {
+      document.getElementById('congeIneligibleMsg').textContent = 'Erreur lors de la vérification. Veuillez réessayer.';
+      setCongeState('ineligible');
+    });
+}
+
+function closeCongeModal() {
+  document.getElementById('congeModal').style.display = 'none';
+}
+
+function setCongeState(state) {
+  const states = { check: 'congeCheckState', ineligible: 'congeIneligibleState', form: 'congeFormState', success: 'congeSuccessState' };
+  Object.entries(states).forEach(([k, id]) => {
+    document.getElementById(id).style.display = k === state ? '' : 'none';
+  });
+}
+
+// Calcul durée dynamique
+document.addEventListener('DOMContentLoaded', () => {
+  const debutInput = document.getElementById('congeDebut');
+  const finInput   = document.getElementById('congeFin');
+  const preview    = document.getElementById('congeDurationPreview');
+  const durationTxt = document.getElementById('congeDurationText');
+  const motifTA    = document.getElementById('congeMotif');
+  const charCount  = document.getElementById('congeCharCount');
+
+  function updateDuration() {
+    if (!debutInput.value) return;
+    // Contrainte : date fin >= date début
+    finInput.min = debutInput.value;
+    // Contrainte : fin <= debut + 30 jours
+    const maxFin = new Date(debutInput.value);
+    maxFin.setDate(maxFin.getDate() + 29);
+    finInput.max = maxFin.toISOString().split('T')[0];
+
+    if (debutInput.value && finInput.value) {
+      const d1 = new Date(debutInput.value);
+      const d2 = new Date(finInput.value);
+      const diff = Math.round((d2 - d1) / 86400000) + 1;
+      if (diff > 0) {
+        durationTxt.textContent = diff + ' jour' + (diff > 1 ? 's' : '');
+        preview.style.display = 'flex';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+  }
+
+  if (debutInput) debutInput.addEventListener('change', updateDuration);
+  if (finInput)   finInput.addEventListener('change', updateDuration);
+  if (motifTA)    motifTA.addEventListener('input', () => {
+    charCount.textContent = motifTA.value.length;
+  });
+});
+
+async function submitConge(e) {
+  e.preventDefault();
+  const btn = document.getElementById('congeSubmitBtn');
+  const errDiv = document.getElementById('congeFormError');
+  errDiv.style.display = 'none';
+  btn.disabled = true;
+  btn.innerHTML = '<i class=\"fas fa-circle-notch fa-spin\"></i> Envoi…';
+
+  const fd = new FormData(e.target);
+
+  try {
+    const r = await fetch('/conge/soumettre', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (data.success) {
+      setCongeState('success');
+    } else {
+      errDiv.textContent = data.message || 'Erreur inconnue.';
+      errDiv.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<i class=\"fas fa-paper-plane\"></i> Envoyer la demande';
+    }
+  } catch {
+    errDiv.textContent = 'Erreur réseau. Veuillez réessayer.';
+    errDiv.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<i class=\"fas fa-paper-plane\"></i> Envoyer la demande';
+  }
+}
+
+// ── Popup Mes congés (patient) ────────────────────────────────────────────────
+function openMesCongesPopup() {
+  document.getElementById('mesCongesPopup').style.display = 'flex';
+  loadMesConges();
+}
+function closeMesConges() {
+  document.getElementById('mesCongesPopup').style.display = 'none';
+}
+
+async function loadMesConges() {
+  const container = document.getElementById('mesCongesContent');
+  container.innerHTML = '<div class=\"conge-spinner\"><i class=\"fas fa-circle-notch fa-spin\"></i></div>';
+
+  try {
+    const r = await fetch('/conge/mes-conges');
+    const data = await r.json();
+
+    if (!data.length) {
+      container.innerHTML = `<div class=\"conge-empty\">
+        <i class=\"fas fa-file-medical-alt\"></i>
+        <p>Aucune demande de congé pour le moment.</p>
+      </div>`;
+      return;
+    }
+
+    const statusLabel = {
+      en_attente: 'En attente', valide: 'Validé', refuse: 'Refusé',
+      annule_patient: 'Annulé', termine: 'Terminé'
+    };
+
+    container.innerHTML = data.map(c => `
+      <div class=\"conge-patient-card \${c.statut}\" id=\"congeCard\${c.id}\">
+        <div class=\"conge-card-top\">
+          <div>
+            <div class=\"conge-card-psy\"><i class=\"fas fa-user-md\"></i> \${c.psyName}</div>
+            <div class=\"conge-card-date\">Soumis le \${c.createdAt}</div>
+          </div>
+          <span class=\"conge-status-badge \${c.statut}\">\${statusLabel[c.statut] || c.statut}</span>
+        </div>
+        <div class=\"conge-card-chips\">
+          <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${c.dateDebut} → \${c.dateFin}</span>
+          <span class=\"conge-chip\"><i class=\"fas fa-hourglass-half\"></i> \${c.duree} jour\${c.duree > 1 ? 's' : ''}</span>
+        </div>
+        <div class=\"conge-card-motif\">\${c.motif}</div>
+        \${c.reponse ? `<div class=\"conge-card-reponse\"><strong>Réponse :</strong> \${c.reponse}</div>` : ''}
+        \${c.canCancel ? `
+          <div class=\"conge-card-actions\">
+            <button class=\"conge-cancel-btn\" onclick=\"annulerConge(\${c.id})\">
+              <i class=\"fas fa-times\"></i> Annuler la demande
+            </button>
+          </div>` : ''}
+      </div>
+    `).join('');
+  } catch {
+    container.innerHTML = '<p style=\"color:#c62828;padding:20px;\">Erreur lors du chargement.</p>';
+  }
+}
+
+async function annulerConge(id) {
+  if (!confirm('Annuler cette demande de congé ?')) return;
+
+  const r = await fetch(`/conge/\${id}/annuler`, { method: 'POST' });
+  const data = await r.json();
+
+  if (data.success) {
+    loadMesConges(); // Recharger la liste
+  } else {
+    alert(data.message || 'Erreur lors de l\\'annulation.');
+  }
+}
+</script>
+", "home/conge_modal_patient.html.twig", "C:\\Users\\DELL\\Downloads\\psy\\templates\\home\\conge_modal_patient.html.twig");
+    }
+}

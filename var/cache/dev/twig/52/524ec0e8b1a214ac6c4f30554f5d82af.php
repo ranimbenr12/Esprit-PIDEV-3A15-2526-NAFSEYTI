@@ -1,0 +1,1827 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* back/events/AIAssitant.html.twig */
+class __TwigTemplate_63ebddc54469442a6b1bf94038ae4965 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'title' => [$this, 'block_title'],
+            'body' => [$this, 'block_body'],
+            'javascripts' => [$this, 'block_javascripts'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 1
+        return "back/base.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "back/events/AIAssitant.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "back/events/AIAssitant.html.twig"));
+
+        $this->parent = $this->load("back/base.html.twig", 1);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 3
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        yield "Assistant Bien-être - Planification d'Événements Apaisants";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 5
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 6
+        yield "<style>
+        :root {
+            --primary-green: #5c715a;
+            --secondary-green: #7f9a7d;
+            --light-green: #9cb39b;
+            --pale-green: #a5b8a3;
+            --soft-green: #b7c9b5;
+            --bg-light: #f5f3ed;
+            --card-bg: #fcfaf7;
+            --border-green: #d2e0cf;
+            --input-bg: #f0f1ec;
+            --text-dark: #4d604b;
+            --text-muted: #8a9a87;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Segoe UI', 'Georgia', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--input-bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-green);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-green);
+        }
+
+        /* Main Container */
+        .ai-container {
+            background: linear-gradient(135deg, #f3efe9, #e8e3db);
+            min-height: 100vh;
+            padding: 25px;
+        }
+
+        /* Header Avatar */
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--light-green), var(--secondary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(127, 154, 125, 0.3);
+        }
+
+        .avatar-circle span {
+            font-size: 45px;
+        }
+
+        /* Badges */
+        .nature-badge {
+            background: linear-gradient(135deg, var(--soft-green), var(--pale-green));
+            padding: 8px 20px;
+            border-radius: 25px;
+            color: #3d533b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Banner */
+        .banner-wellness {
+            background: rgba(159, 185, 151, 0.15);
+            border-radius: 20px;
+            padding: 15px 20px;
+        }
+
+        /* Form Controls */
+        .form-control-nature, .form-select-nature {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 25px;
+            padding: 10px 15px;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        .form-control-nature:focus, .form-select-nature:focus {
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 0.2rem rgba(127, 154, 125, 0.25);
+            background-color: var(--card-bg);
+            outline: none;
+        }
+
+        .form-control-nature::placeholder {
+            color: var(--pale-green);
+        }
+
+        /* Buttons */
+        .btn-nature {
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            color: white;
+            border: none;
+            border-radius: 35px;
+            padding: 18px 60px;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(127, 154, 125, 0.3);
+            cursor: pointer;
+        }
+
+        .btn-nature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(127, 154, 125, 0.4);
+            color: white;
+        }
+
+        .btn-nature-secondary {
+            background: var(--input-bg);
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            border-radius: 35px;
+            padding: 18px 40px;
+            font-size: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-nature-secondary:hover {
+            background: var(--border-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-nature-outline {
+            background: #e2f0e0;
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            border-radius: 25px;
+            padding: 8px 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-nature-outline:hover {
+            background: var(--secondary-green);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Quick Action Buttons */
+        .btn-quick {
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-quick-idea { background: var(--light-green); }
+        .btn-quick-budget { background: var(--secondary-green); }
+        .btn-quick-planning { background: var(--pale-green); }
+        .btn-quick-share { background: var(--soft-green); }
+
+        .btn-quick:hover {
+            transform: translateY(-2px);
+            filter: brightness(0.95);
+            color: white;
+        }
+
+        /* Tabs */
+        .nav-tabs-nature {
+            border-bottom: 2px solid var(--border-green);
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs-nature .nav-link {
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 15px 15px 0 0;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .nav-tabs-nature .nav-link:hover {
+            color: var(--primary-green);
+            background: rgba(127, 154, 125, 0.1);
+        }
+
+        .nav-tabs-nature .nav-link.active {
+            color: var(--primary-green);
+            background: var(--card-bg);
+            border-bottom: 3px solid var(--secondary-green);
+        }
+
+        .tab-content-nature {
+            background: var(--card-bg);
+            border-radius: 0 0 25px 25px;
+            border: 1px solid var(--border-green);
+            border-top: none;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        /* Text Area */
+        .textarea-nature {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-size: 14px;
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .textarea-nature:focus {
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 0.2rem rgba(127, 154, 125, 0.25);
+            background-color: var(--card-bg);
+            outline: none;
+        }
+
+        /* Result Area */
+        .result-area {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-family: 'Georgia', 'Serif';
+            font-size: 15px;
+            min-height: 400px;
+            width: 100%;
+            padding: 15px;
+            resize: vertical;
+        }
+
+        .result-area:focus {
+            border-color: var(--secondary-green);
+            box-shadow: none;
+            outline: none;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            background: var(--card-bg);
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: rgba(159, 185, 151, 0.15);
+            border-radius: 15px;
+            padding: 12px 20px;
+        }
+
+        /* Filter Section */
+        .filter-section, .toolbar-section {
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border-green);
+            padding: 25px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .ai-container { padding: 15px; }
+            .btn-nature, .btn-nature-secondary { padding: 12px 30px; font-size: 16px; }
+            .nav-tabs-nature .nav-link { padding: 8px 12px; font-size: 12px; }
+        }
+        
+        /* Card style */
+        .card-nature {
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border-green);
+            box-shadow: 0 5px 15px rgba(93, 120, 87, 0.1);
+        }
+    </style>
+<div class=\"ai-container\">
+    <div class=\"container-fluid\">
+        <!-- Header -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"d-flex align-items-center justify-content-between flex-wrap gap-3\">
+                    <div class=\"d-flex align-items-center gap-4\">
+                        <a href=\"";
+        // line 335
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_events_index");
+        yield "\"
+                           style=\"background:var(--input-bg); border:1px solid var(--border-green); color:var(--primary-green);
+                                  border-radius:25px; padding:10px 20px; text-decoration:none; font-weight:bold; font-size:14px;
+                                  display:flex; align-items:center; gap:6px;\">
+                            ← Retour aux événements
+                        </a>
+                        <div class=\"avatar-circle\">
+                            <span>🌿</span>
+                        </div>
+                        <div>
+                            <h1 class=\"display-4 fw-bold\" style=\"color: var(--primary-green);\">ASSISTANT BIEN-ÊTRE</h1>
+                            <p class=\"lead\" style=\"color: var(--text-muted);\">Votre espace de sérénité pour des événements apaisants</p>
+                        </div>
+                    </div>
+                    <div class=\"nature-badge\">
+                        🌱 NATURE &amp; PAIX
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"banner-wellness d-flex justify-content-between align-items-center flex-wrap gap-3\">
+                    <div class=\"d-flex align-items-center gap-2\">
+                        <span class=\"fs-3\">🍃</span>
+                        <span class=\"fw-bold\" style=\"color: var(--primary-green);\">+420 séances de bien-être planifiées cette semaine</span>
+                    </div>
+                    <div class=\"d-flex align-items-center gap-2\">
+                        <span class=\"fs-3\">🌺</span>
+                        <span style=\"color: var(--primary-green);\">Harmonie intérieure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"filter-section\">
+                    <h5 class=\"mb-3\" style=\"color: var(--primary-green); font-weight: bold;\">🔍 FILTRES BIEN-ÊTRE</h5>
+                    <div class=\"row g-3\">
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--secondary-green);\">TYPE D'EXPÉRIENCE</label>
+                            <select class=\"form-select form-select-nature\" id=\"eventTypeCombo\">
+                                <option value=\"\">Sélectionner</option>
+                                <option value=\"🧘 Bien-être & Méditation\">🧘 Bien-être & Méditation</option>
+                                <option value=\"🌿 Retraite & Nature\">🌿 Retraite & Nature</option>
+                                <option value=\"🌸 Ateliers & Cercles de parole\">🌸 Ateliers & Cercles de parole</option>
+                                <option value=\"🎯 Conférences & Séminaires\">🎯 Conférences & Séminaires</option>
+                                <option value=\"💼 Team Building & Entreprise\">💼 Team Building & Entreprise</option>
+                                <option value=\"🎉 Célébrations & Événements\">🎉 Célébrations & Événements</option>
+                                <option value=\"✨ Surprise-moi!\">✨ Surprise-moi!</option>
+                            </select>
+                        </div>
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--secondary-green);\">BUDGET</label>
+                            <select class=\"form-select form-select-nature\" id=\"budgetCombo\">
+                                <option value=\"\">Sélectionner</option>
+                                <option value=\"💰 Moins de 500 €\">💰 Moins de 500 €</option>
+                                <option value=\"💰 500 € - 2 000 €\">💰 500 € - 2 000 €</option>
+                                <option value=\"💰 2 000 € - 5 000 €\">💰 2 000 € - 5 000 €</option>
+                                <option value=\"💰 5 000 € - 10 000 €\">💰 5 000 € - 10 000 €</option>
+                                <option value=\"💰 10 000 € +\">💰 10 000 € +</option>
+                            </select>
+                        </div>
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--secondary-green);\">PARTICIPANTS</label>
+                            <select class=\"form-select form-select-nature\" id=\"audienceSizeCombo\">
+                                <option value=\"\">Sélectionner</option>
+                                <option value=\"👥 Intime (moins de 20)\">👥 Intime (moins de 20)</option>
+                                <option value=\"👥 Petit (20-50)\">👥 Petit (20-50)</option>
+                                <option value=\"👥 Moyen (50-150)\">👥 Moyen (50-150)</option>
+                                <option value=\"👥 Grand (150-300)\">👥 Grand (150-300)</option>
+                                <option value=\"👥 Très grand (300+)\">👥 Très grand (300+)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"toolbar-section\">
+                    <div class=\"row align-items-end g-3\">
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--primary-green);\">TYPE D'ACCOMPAGNEMENT</label>
+                            <select class=\"form-select form-select-nature\" id=\"helpTypeCombo\">
+                                <option value=\"🎯 Idées de thèmes\">🎯 Idées de thèmes</option>
+                                <option value=\"💰 Planification budgétaire\">💰 Planification budgétaire</option>
+                                <option value=\"✨ Suggestions d'activités\">✨ Suggestions d'activités</option>
+                                <option value=\"📢 Stratégie de partage\">📢 Stratégie de partage</option>
+                                <option value=\"🏛️ Suggestions de lieux\">🏛️ Suggestions de lieux</option>
+                                <option value=\"📅 Planification temporelle\">📅 Planification temporelle</option>
+                                <option value=\"🎨 Idées de décoration\">🎨 Idées de décoration</option>
+                                <option value=\"🍽️ Idées de restauration\">🍽️ Idées de restauration</option>
+                                <option value=\"📋 Plan complet\">📋 Plan complet</option>
+                            </select>
+                        </div>
+                        <div class=\"col-md-8\">
+                            <div class=\"d-flex gap-2 flex-wrap justify-content-md-end\">
+                                <button class=\"btn-quick btn-quick-idea\" onclick=\"handleQuickIdea()\">🌿 IDÉE VERTE</button>
+                                <button class=\"btn-quick btn-quick-budget\" onclick=\"handleBudgetHelp()\">🍃 BUDGET NATURE</button>
+                                <button class=\"btn-quick btn-quick-planning\" onclick=\"handleTimelineHelp()\">🌱 PLANNING DOUX</button>
+                                <button class=\"btn-quick btn-quick-share\" onclick=\"handleMarketingHelp()\">🕊️ PARTAGE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <ul class=\"nav nav-tabs-nature\" id=\"aiTabs\" role=\"tablist\">
+                    <li class=\"nav-item\"><button class=\"nav-link active\" data-tab=\"themes\">🎯 THÈMES</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"budget\">💰 BUDGET</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"activities\">✨ ACTIVITÉS</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"marketing\">📢 PARTAGE</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"venue\">🏛️ LIEUX</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"timeline\">📅 TIMELINE</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"decor\">🎨 DÉCOR</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"catering\">🍽️ RESTAURATION</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"complete\">📋 PLAN COMPLET</button></li>
+                </ul>
+                <div class=\"tab-content-nature\">
+                    <div id=\"tabContent\">
+                        <p style=\"color: var(--text-muted);\">Sélectionnez un thème pour obtenir des conseils personnalisés...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"card-nature p-4\">
+                    <label class=\"fw-bold mb-2\" style=\"color: var(--primary-green);\">VOTRE INTENTION</label>
+                    <textarea id=\"eventDescriptionArea\" class=\"textarea-nature\" rows=\"4\" 
+                        placeholder=\"Décrivez votre événement en toute sérénité... (ex: 'Je souhaite organiser un atelier de méditation pour 30 personnes')\"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12 text-center\">
+                <div class=\"d-flex justify-content-center gap-4 flex-wrap\">
+                    <button id=\"generateButton\" class=\"btn-nature\" onclick=\"generateIdeas()\">
+                        <span style=\"font-size: 24px;\">🌿</span> GÉNÉRER
+                    </button>
+                    <button id=\"clearButton\" class=\"btn-nature-secondary\" onclick=\"clearFields()\">
+                        <span style=\"font-size: 18px;\">🍃</span> Effacer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id=\"loadingOverlay\" class=\"loading-overlay\">
+            <div class=\"loading-spinner\">
+                <div class=\"spinner-border text-success\" role=\"status\">
+                    <span class=\"visually-hidden\">Chargement...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"card-nature p-4\">
+                    <div class=\"d-flex justify-content-between align-items-center mb-3\">
+                        <div class=\"d-flex align-items-center gap-3\">
+                            <div style=\"width: 16px; height: 16px; background: linear-gradient(135deg, var(--secondary-green), var(--primary-green)); border-radius: 50%;\"></div>
+                            <h5 class=\"mb-0\" style=\"color: var(--primary-green);\">VOTRE ESPACE DE RÉFLEXION</h5>
+                        </div>
+                        <span id=\"tokenCountLabel\" style=\"color: var(--pale-green); font-size: 14px;\">0 mots</span>
+                    </div>
+                    
+                    <textarea id=\"resultArea\" class=\"result-area\" readonly rows=\"20\"></textarea>
+                    
+                    <div class=\"d-flex justify-content-end gap-2 mt-3 flex-wrap\">
+                        <button class=\"btn-nature-outline\" onclick=\"copyToClipboard()\">📋 Copier</button>
+                        <button class=\"btn-nature-outline\" onclick=\"showHistory()\">📚 Historique</button>
+                        <button class=\"btn-nature-outline\" onclick=\"showFavorites()\">⭐ Mes Favoris</button>
+                        <button class=\"btn-nature-outline\" onclick=\"exportToFile()\">📄 Exporter</button>
+                        <button class=\"btn-nature-outline\" onclick=\"shareResults()\">📤 Partager</button>
+                        <button class=\"btn-nature-outline\" onclick=\"saveToFavorites()\">➕ Ajouter</button>
+                        <button class=\"btn-nature-outline\" style=\"background: var(--soft-green); color: white;\" onclick=\"closeWindow()\">✕ Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class=\"row fade-in\">
+            <div class=\"col-12\">
+                <div class=\"status-bar d-flex align-items-center justify-content-between flex-wrap gap-3\">
+                    <div class=\"d-flex align-items-center gap-2\">
+                        <div style=\"width: 12px; height: 12px; background: var(--secondary-green); border-radius: 50%;\"></div>
+                        <span style=\"color: var(--primary-green); font-size: 13px;\">Connexion établie</span>
+                    </div>
+                    <div class=\"d-flex align-items-center gap-3\">
+                        <span id=\"modelLabel\" style=\"color: var(--primary-green); font-size: 13px;\">🌿 Modèle: gemini-1.5-flash</span>
+                        <span style=\"color: var(--pale-green);\">•</span>
+                        <span id=\"timeLabel\" style=\"color: var(--primary-green); font-size: 13px;\">🍃 00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type=\"hidden\" id=\"csrf_token\" value=\"";
+        // line 552
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("ai_assistant"), "html", null, true);
+        yield "\">
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 555
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_javascripts(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+
+        // line 556
+        yield from $this->yieldParentBlock("javascripts", $context, $blocks);
+        yield "
+<script>
+        let currentResult = '';
+        var GENERATE_URL = '";
+        // line 559
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_ai_assistant_generate");
+        yield "';
+
+        /* ── Styled notification (replaces all alert/prompt) ── */
+        function showMsg(msg, type) {
+            var existing = document.getElementById('ai-msg-bar');
+            if (existing) existing.remove();
+            var bar = document.createElement('div');
+            bar.id = 'ai-msg-bar';
+            var colors = { info:'#7f9a7d', warn:'#e0a800', error:'#c0392b', ok:'#2e7d32' };
+            bar.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);'
+                + 'background:' + (colors[type]||colors.info) + ';color:white;padding:14px 28px;'
+                + 'border-radius:25px;z-index:10001;font-size:15px;font-weight:bold;'
+                + 'box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:90vw;text-align:center;'
+                + 'animation:fadeIn .3s ease;';
+            bar.textContent = msg;
+            document.body.appendChild(bar);
+            setTimeout(function(){ if(bar.parentNode) bar.remove(); }, 3500);
+        }
+
+        function showToast(msg) { showMsg(msg, 'ok'); }
+
+        /* ── Show friendly message in result area ── */
+        function showResultMsg(msg) {
+            document.getElementById('resultArea').value = msg;
+            updateWordCount();
+        }
+
+        function setWelcomeMessage() {
+            showResultMsg(
+                '╔══════════════════════════════════════════════════════════════╗\\n'
+              + '║         🧘  ASSISTANT BIEN-ÊTRE & ÉVÉNEMENTS  🧘            ║\\n'
+              + '╚══════════════════════════════════════════════════════════════╝\\n\\n'
+              + '✨ Bienvenue dans votre espace de sérénité.\\n\\n'
+              + '🌱 Je peux vous aider à :\\n'
+              + '🎯 Trouver l\\'inspiration — Des thèmes uniques et apaisants\\n'
+              + '💰 Planifier votre budget — Une répartition harmonieuse\\n'
+              + '✨ Créer des activités — Des moments qui comptent\\n'
+              + '📢 Partager votre vision — Toucher les cœurs\\n'
+              + '🏛️ Choisir un lieu — Des espaces qui respirent\\n'
+              + '📅 Organiser le temps — En toute quiétude\\n'
+              + '🎨 Imaginer la décoration — Une ambiance douce\\n'
+              + '🍽️ Prévoir la restauration — Des saveurs qui nourrissent l\\'âme\\n\\n'
+              + '🔍 Décrivez votre intention ci-dessous...'
+            );
+        }
+
+        function updateTime() {
+            var now = new Date();
+            document.getElementById('timeLabel').innerHTML = '🍃 ' + now.toLocaleTimeString('fr-FR');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function updateWordCount() {
+            var text = document.getElementById('resultArea').value;
+            var words = text.trim().split(/\\s+/).filter(function(w){ return w.length > 0; });
+            document.getElementById('tokenCountLabel').textContent = '📝 ' + words.length + ' mots';
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function applyQuickFilters() {
+            var eventType = document.getElementById('eventTypeCombo').value;
+            var budget    = document.getElementById('budgetCombo').value;
+            var audience  = document.getElementById('audienceSizeCombo').value;
+            var filterText = '';
+            if (eventType) filterText += eventType.replace(/[🧘🌿🌸🎯💼🎉✨]/g, '').trim();
+            if (budget)    filterText += ' avec ' + budget.replace('💰', '').trim();
+            if (audience)  filterText += ' pour ' + audience.replace('👥', '').trim();
+            if (filterText) document.getElementById('eventDescriptionArea').value = filterText.toLowerCase();
+        }
+
+        async function generateIdeas() {
+            var description  = document.getElementById('eventDescriptionArea').value.trim();
+            var eventType    = document.getElementById('eventTypeCombo').value;
+            var budget       = document.getElementById('budgetCombo').value;
+            var audienceSize = document.getElementById('audienceSizeCombo').value;
+            var helpType     = document.getElementById('helpTypeCombo').value;
+            if (!description) { showMsg('Veuillez decrire votre evenement avant de generer.', 'warn'); document.getElementById('eventDescriptionArea').focus(); return; }
+            showLoading(true);
+            showResultMsg('Generation en cours...');
+            try {
+                var resp = await fetch(GENERATE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+                    body: JSON.stringify({ description: description, event_type: eventType, budget: budget, audience_size: audienceSize, help_type: helpType })
+                });
+                var data = await resp.json();
+                if (data.success && data.result) { showResultMsg(data.result); currentResult = data.result; }
+                else { showResultMsg('Votre demande n a pas pu etre traitee. Veuillez reessayer.'); showMsg('Generation indisponible.', 'warn'); }
+            } catch(e) {
+                showResultMsg('La connexion est temporairement indisponible. Veuillez reessayer.');
+                showMsg('Service indisponible.', 'warn');
+            } finally { showLoading(false); updateWordCount(); }
+        }
+
+        function clearFields() {
+            document.getElementById('eventDescriptionArea').value = '';
+            document.getElementById('eventTypeCombo').value = '';
+            document.getElementById('budgetCombo').value = '';
+            document.getElementById('audienceSizeCombo').value = '';
+            document.getElementById('helpTypeCombo').value = '🎯 Idées de thèmes';
+            setWelcomeMessage();
+        }
+
+        async function copyToClipboard() {
+            var text = document.getElementById('resultArea').value;
+            if (!text || text.includes('Bienvenue')) { showMsg('🌿 Rien à copier pour le moment.', 'info'); return; }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('✨ Copié dans le presse-papiers !');
+            } catch (e) {
+                showMsg('La copie n\\'est pas disponible dans ce navigateur.', 'warn');
+            }
+        }
+
+        async function exportToFile() {
+            var content = document.getElementById('resultArea').value;
+            if (!content || content.includes('Bienvenue')) { showMsg('🌿 Générez d\\'abord des idées avant d\\'exporter.', 'info'); return; }
+
+            /* Inline format picker — no prompt() */
+            var existing = document.getElementById('ai-format-picker');
+            if (existing) { existing.remove(); return; }
+            var picker = document.createElement('div');
+            picker.id = 'ai-format-picker';
+            picker.style.cssText = 'position:fixed;bottom:80px;right:20px;background:var(--card-bg);border:1px solid var(--border-green);border-radius:20px;padding:16px;z-index:10002;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;gap:10px;';
+            ['txt','doc','pdf'].forEach(function(fmt) {
+                var btn = document.createElement('button');
+                btn.textContent = fmt.toUpperCase();
+                btn.style.cssText = 'background:var(--secondary-green);color:white;border:none;border-radius:15px;padding:8px 18px;cursor:pointer;font-weight:bold;';
+                btn.onclick = function() {
+                    picker.remove();
+                    doExport(content, fmt);
+                };
+                picker.appendChild(btn);
+            });
+            document.body.appendChild(picker);
+            setTimeout(function(){ if(picker.parentNode) picker.remove(); }, 8000);
+        }
+
+        async function doExport(content, format) {
+            showLoading(true);
+            try {
+                var response = await fetch('";
+        // line 704
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_ai_assistant_export");
+        yield "', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+                    body: JSON.stringify({ content: content, format: format })
+                });
+                if (response.ok) {
+                    var blob = await response.blob();
+                    var a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'idees_bien_etre_' + new Date().toISOString().slice(0,19) + '.' + format;
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    URL.revokeObjectURL(a.href);
+                    showToast('✅ Fichier exporté !');
+                } else {
+                    showMsg('L\\'export n\\'a pas pu être effectué.', 'warn');
+                }
+            } catch (e) {
+                showMsg('Export indisponible pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function shareResults() {
+            var content = document.getElementById('resultArea').value;
+            if (!content || content.includes('Bienvenue')) { showMsg('🌿 Rien à partager pour le moment.', 'info'); return; }
+            if (navigator.share) {
+                try { await navigator.share({ title: 'Assistant Bien-être', text: content }); }
+                catch (e) { /* cancelled */ }
+            } else {
+                await copyToClipboard();
+            }
+        }
+
+        async function saveToFavorites() {
+            var content = document.getElementById('resultArea').value;
+            if (!content || content.includes('Bienvenue')) { showMsg('🌿 Rien à sauvegarder pour le moment.', 'info'); return; }
+            showLoading(true);
+            try {
+                var response = await fetch('";
+        // line 743
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_ai_assistant_save_favorite");
+        yield "', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+                    body: JSON.stringify({ content: content, description: document.getElementById('eventDescriptionArea').value.substring(0, 100) })
+                });
+                var data = await response.json();
+                if (data.success) showToast('⭐ Ajouté aux favoris !');
+                else showMsg('Impossible de sauvegarder pour le moment.', 'warn');
+            } catch (e) {
+                showMsg('Service indisponible pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function showHistory() {
+            showLoading(true);
+            try {
+                var response = await fetch('";
+        // line 761
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_ai_assistant_history");
+        yield "');
+                var data = await response.json();
+                if (data.success && data.history.length > 0) {
+                    var txt = '=== HISTORIQUE DES CONVERSATIONS ===\\n\\n';
+                    data.history.forEach(function(item, i) {
+                        txt += '[' + (i+1) + '] ' + item.created_at + '\\nType: ' + item.type + '\\nQuestion: ' + item.question.substring(0,100) + '...\\nRéponse: ' + item.result.substring(0,200) + '...\\n' + '-'.repeat(50) + '\\n\\n';
+                    });
+                    showResultMsg(txt);
+                } else {
+                    showResultMsg('🌿 Aucune conversation enregistrée pour le moment.\\nVos prochaines générations apparaîtront ici.');
+                }
+            } catch (e) {
+                showMsg('Historique indisponible pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function showFavorites() {
+            showLoading(true);
+            try {
+                var response = await fetch('";
+        // line 782
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_ai_assistant_favorites");
+        yield "');
+                var data = await response.json();
+                if (data.success && data.favorites.length > 0) {
+                    var txt = '=== MES FAVORIS ===\\n\\n';
+                    data.favorites.forEach(function(item, i) {
+                        txt += '[' + (i+1) + '] ' + item.created_at + '\\nDescription: ' + (item.description || 'Sans description') + '\\nContenu: ' + item.content.substring(0,300) + '...\\n' + '-'.repeat(50) + '\\n\\n';
+                    });
+                    showResultMsg(txt);
+                } else {
+                    showResultMsg('🌿 Aucun favori enregistré pour le moment.\\nCliquez sur ➕ Ajouter pour sauvegarder une génération.');
+                }
+            } catch (e) {
+                showMsg('Favoris indisponibles pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function handleQuickIdea()     { document.getElementById('eventDescriptionArea').value = 'Je cherche l\\'inspiration pour un événement doux et apaisant'; document.getElementById('helpTypeCombo').value = '🎯 Idées de thèmes'; generateIdeas(); }
+        function handleBudgetHelp()    { document.getElementById('eventDescriptionArea').value = 'Comment planifier un budget avec sérénité pour mon événement ?'; document.getElementById('helpTypeCombo').value = '💰 Planification budgétaire'; generateIdeas(); }
+        function handleTimelineHelp()  { document.getElementById('eventDescriptionArea').value = 'Quel calendrier apaisant pour mon événement ?'; document.getElementById('helpTypeCombo').value = '📅 Planification temporelle'; generateIdeas(); }
+        function handleMarketingHelp() { document.getElementById('eventDescriptionArea').value = 'Comment partager mon événement avec bienveillance ?'; document.getElementById('helpTypeCombo').value = '📢 Stratégie de partage'; generateIdeas(); }
+
+        document.querySelectorAll('#aiTabs .nav-link').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#aiTabs .nav-link').forEach(function(b){ b.classList.remove('active'); });
+                this.classList.add('active');
+                var map = { themes:'🎯 Idées de thèmes', budget:'💰 Planification budgétaire', activities:'✨ Suggestions d\\'activités', marketing:'📢 Stratégie de partage', venue:'🏛️ Suggestions de lieux', timeline:'📅 Planification temporelle', decor:'🎨 Idées de décoration', catering:'🍽️ Idées de restauration', complete:'📋 Plan complet' };
+                var val = map[this.getAttribute('data-tab')];
+                if (val) document.getElementById('helpTypeCombo').value = val;
+            });
+        });
+
+        document.getElementById('eventTypeCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('budgetCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('audienceSizeCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('resultArea').addEventListener('input', updateWordCount);
+
+        function closeWindow() { window.location.href = '";
+        // line 820
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_events_index");
+        yield "'; }
+
+        setWelcomeMessage();
+    </script>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "back/events/AIAssitant.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  960 => 820,  919 => 782,  895 => 761,  874 => 743,  832 => 704,  684 => 559,  678 => 556,  665 => 555,  652 => 552,  432 => 335,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{% extends 'back/base.html.twig' %}
+
+{% block title %}Assistant Bien-être - Planification d'Événements Apaisants{% endblock %}
+
+{% block body %}
+<style>
+        :root {
+            --primary-green: #5c715a;
+            --secondary-green: #7f9a7d;
+            --light-green: #9cb39b;
+            --pale-green: #a5b8a3;
+            --soft-green: #b7c9b5;
+            --bg-light: #f5f3ed;
+            --card-bg: #fcfaf7;
+            --border-green: #d2e0cf;
+            --input-bg: #f0f1ec;
+            --text-dark: #4d604b;
+            --text-muted: #8a9a87;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Segoe UI', 'Georgia', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--input-bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-green);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-green);
+        }
+
+        /* Main Container */
+        .ai-container {
+            background: linear-gradient(135deg, #f3efe9, #e8e3db);
+            min-height: 100vh;
+            padding: 25px;
+        }
+
+        /* Header Avatar */
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--light-green), var(--secondary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(127, 154, 125, 0.3);
+        }
+
+        .avatar-circle span {
+            font-size: 45px;
+        }
+
+        /* Badges */
+        .nature-badge {
+            background: linear-gradient(135deg, var(--soft-green), var(--pale-green));
+            padding: 8px 20px;
+            border-radius: 25px;
+            color: #3d533b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Banner */
+        .banner-wellness {
+            background: rgba(159, 185, 151, 0.15);
+            border-radius: 20px;
+            padding: 15px 20px;
+        }
+
+        /* Form Controls */
+        .form-control-nature, .form-select-nature {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 25px;
+            padding: 10px 15px;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        .form-control-nature:focus, .form-select-nature:focus {
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 0.2rem rgba(127, 154, 125, 0.25);
+            background-color: var(--card-bg);
+            outline: none;
+        }
+
+        .form-control-nature::placeholder {
+            color: var(--pale-green);
+        }
+
+        /* Buttons */
+        .btn-nature {
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            color: white;
+            border: none;
+            border-radius: 35px;
+            padding: 18px 60px;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(127, 154, 125, 0.3);
+            cursor: pointer;
+        }
+
+        .btn-nature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(127, 154, 125, 0.4);
+            color: white;
+        }
+
+        .btn-nature-secondary {
+            background: var(--input-bg);
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            border-radius: 35px;
+            padding: 18px 40px;
+            font-size: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-nature-secondary:hover {
+            background: var(--border-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-nature-outline {
+            background: #e2f0e0;
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            border-radius: 25px;
+            padding: 8px 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-nature-outline:hover {
+            background: var(--secondary-green);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Quick Action Buttons */
+        .btn-quick {
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-quick-idea { background: var(--light-green); }
+        .btn-quick-budget { background: var(--secondary-green); }
+        .btn-quick-planning { background: var(--pale-green); }
+        .btn-quick-share { background: var(--soft-green); }
+
+        .btn-quick:hover {
+            transform: translateY(-2px);
+            filter: brightness(0.95);
+            color: white;
+        }
+
+        /* Tabs */
+        .nav-tabs-nature {
+            border-bottom: 2px solid var(--border-green);
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs-nature .nav-link {
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 15px 15px 0 0;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .nav-tabs-nature .nav-link:hover {
+            color: var(--primary-green);
+            background: rgba(127, 154, 125, 0.1);
+        }
+
+        .nav-tabs-nature .nav-link.active {
+            color: var(--primary-green);
+            background: var(--card-bg);
+            border-bottom: 3px solid var(--secondary-green);
+        }
+
+        .tab-content-nature {
+            background: var(--card-bg);
+            border-radius: 0 0 25px 25px;
+            border: 1px solid var(--border-green);
+            border-top: none;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        /* Text Area */
+        .textarea-nature {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-size: 14px;
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .textarea-nature:focus {
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 0.2rem rgba(127, 154, 125, 0.25);
+            background-color: var(--card-bg);
+            outline: none;
+        }
+
+        /* Result Area */
+        .result-area {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-family: 'Georgia', 'Serif';
+            font-size: 15px;
+            min-height: 400px;
+            width: 100%;
+            padding: 15px;
+            resize: vertical;
+        }
+
+        .result-area:focus {
+            border-color: var(--secondary-green);
+            box-shadow: none;
+            outline: none;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            background: var(--card-bg);
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: rgba(159, 185, 151, 0.15);
+            border-radius: 15px;
+            padding: 12px 20px;
+        }
+
+        /* Filter Section */
+        .filter-section, .toolbar-section {
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border-green);
+            padding: 25px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .ai-container { padding: 15px; }
+            .btn-nature, .btn-nature-secondary { padding: 12px 30px; font-size: 16px; }
+            .nav-tabs-nature .nav-link { padding: 8px 12px; font-size: 12px; }
+        }
+        
+        /* Card style */
+        .card-nature {
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border-green);
+            box-shadow: 0 5px 15px rgba(93, 120, 87, 0.1);
+        }
+    </style>
+<div class=\"ai-container\">
+    <div class=\"container-fluid\">
+        <!-- Header -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"d-flex align-items-center justify-content-between flex-wrap gap-3\">
+                    <div class=\"d-flex align-items-center gap-4\">
+                        <a href=\"{{ path('admin_events_index') }}\"
+                           style=\"background:var(--input-bg); border:1px solid var(--border-green); color:var(--primary-green);
+                                  border-radius:25px; padding:10px 20px; text-decoration:none; font-weight:bold; font-size:14px;
+                                  display:flex; align-items:center; gap:6px;\">
+                            ← Retour aux événements
+                        </a>
+                        <div class=\"avatar-circle\">
+                            <span>🌿</span>
+                        </div>
+                        <div>
+                            <h1 class=\"display-4 fw-bold\" style=\"color: var(--primary-green);\">ASSISTANT BIEN-ÊTRE</h1>
+                            <p class=\"lead\" style=\"color: var(--text-muted);\">Votre espace de sérénité pour des événements apaisants</p>
+                        </div>
+                    </div>
+                    <div class=\"nature-badge\">
+                        🌱 NATURE &amp; PAIX
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"banner-wellness d-flex justify-content-between align-items-center flex-wrap gap-3\">
+                    <div class=\"d-flex align-items-center gap-2\">
+                        <span class=\"fs-3\">🍃</span>
+                        <span class=\"fw-bold\" style=\"color: var(--primary-green);\">+420 séances de bien-être planifiées cette semaine</span>
+                    </div>
+                    <div class=\"d-flex align-items-center gap-2\">
+                        <span class=\"fs-3\">🌺</span>
+                        <span style=\"color: var(--primary-green);\">Harmonie intérieure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"filter-section\">
+                    <h5 class=\"mb-3\" style=\"color: var(--primary-green); font-weight: bold;\">🔍 FILTRES BIEN-ÊTRE</h5>
+                    <div class=\"row g-3\">
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--secondary-green);\">TYPE D'EXPÉRIENCE</label>
+                            <select class=\"form-select form-select-nature\" id=\"eventTypeCombo\">
+                                <option value=\"\">Sélectionner</option>
+                                <option value=\"🧘 Bien-être & Méditation\">🧘 Bien-être & Méditation</option>
+                                <option value=\"🌿 Retraite & Nature\">🌿 Retraite & Nature</option>
+                                <option value=\"🌸 Ateliers & Cercles de parole\">🌸 Ateliers & Cercles de parole</option>
+                                <option value=\"🎯 Conférences & Séminaires\">🎯 Conférences & Séminaires</option>
+                                <option value=\"💼 Team Building & Entreprise\">💼 Team Building & Entreprise</option>
+                                <option value=\"🎉 Célébrations & Événements\">🎉 Célébrations & Événements</option>
+                                <option value=\"✨ Surprise-moi!\">✨ Surprise-moi!</option>
+                            </select>
+                        </div>
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--secondary-green);\">BUDGET</label>
+                            <select class=\"form-select form-select-nature\" id=\"budgetCombo\">
+                                <option value=\"\">Sélectionner</option>
+                                <option value=\"💰 Moins de 500 €\">💰 Moins de 500 €</option>
+                                <option value=\"💰 500 € - 2 000 €\">💰 500 € - 2 000 €</option>
+                                <option value=\"💰 2 000 € - 5 000 €\">💰 2 000 € - 5 000 €</option>
+                                <option value=\"💰 5 000 € - 10 000 €\">💰 5 000 € - 10 000 €</option>
+                                <option value=\"💰 10 000 € +\">💰 10 000 € +</option>
+                            </select>
+                        </div>
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--secondary-green);\">PARTICIPANTS</label>
+                            <select class=\"form-select form-select-nature\" id=\"audienceSizeCombo\">
+                                <option value=\"\">Sélectionner</option>
+                                <option value=\"👥 Intime (moins de 20)\">👥 Intime (moins de 20)</option>
+                                <option value=\"👥 Petit (20-50)\">👥 Petit (20-50)</option>
+                                <option value=\"👥 Moyen (50-150)\">👥 Moyen (50-150)</option>
+                                <option value=\"👥 Grand (150-300)\">👥 Grand (150-300)</option>
+                                <option value=\"👥 Très grand (300+)\">👥 Très grand (300+)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"toolbar-section\">
+                    <div class=\"row align-items-end g-3\">
+                        <div class=\"col-md-4\">
+                            <label class=\"form-label small fw-bold\" style=\"color: var(--primary-green);\">TYPE D'ACCOMPAGNEMENT</label>
+                            <select class=\"form-select form-select-nature\" id=\"helpTypeCombo\">
+                                <option value=\"🎯 Idées de thèmes\">🎯 Idées de thèmes</option>
+                                <option value=\"💰 Planification budgétaire\">💰 Planification budgétaire</option>
+                                <option value=\"✨ Suggestions d'activités\">✨ Suggestions d'activités</option>
+                                <option value=\"📢 Stratégie de partage\">📢 Stratégie de partage</option>
+                                <option value=\"🏛️ Suggestions de lieux\">🏛️ Suggestions de lieux</option>
+                                <option value=\"📅 Planification temporelle\">📅 Planification temporelle</option>
+                                <option value=\"🎨 Idées de décoration\">🎨 Idées de décoration</option>
+                                <option value=\"🍽️ Idées de restauration\">🍽️ Idées de restauration</option>
+                                <option value=\"📋 Plan complet\">📋 Plan complet</option>
+                            </select>
+                        </div>
+                        <div class=\"col-md-8\">
+                            <div class=\"d-flex gap-2 flex-wrap justify-content-md-end\">
+                                <button class=\"btn-quick btn-quick-idea\" onclick=\"handleQuickIdea()\">🌿 IDÉE VERTE</button>
+                                <button class=\"btn-quick btn-quick-budget\" onclick=\"handleBudgetHelp()\">🍃 BUDGET NATURE</button>
+                                <button class=\"btn-quick btn-quick-planning\" onclick=\"handleTimelineHelp()\">🌱 PLANNING DOUX</button>
+                                <button class=\"btn-quick btn-quick-share\" onclick=\"handleMarketingHelp()\">🕊️ PARTAGE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <ul class=\"nav nav-tabs-nature\" id=\"aiTabs\" role=\"tablist\">
+                    <li class=\"nav-item\"><button class=\"nav-link active\" data-tab=\"themes\">🎯 THÈMES</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"budget\">💰 BUDGET</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"activities\">✨ ACTIVITÉS</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"marketing\">📢 PARTAGE</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"venue\">🏛️ LIEUX</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"timeline\">📅 TIMELINE</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"decor\">🎨 DÉCOR</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"catering\">🍽️ RESTAURATION</button></li>
+                    <li class=\"nav-item\"><button class=\"nav-link\" data-tab=\"complete\">📋 PLAN COMPLET</button></li>
+                </ul>
+                <div class=\"tab-content-nature\">
+                    <div id=\"tabContent\">
+                        <p style=\"color: var(--text-muted);\">Sélectionnez un thème pour obtenir des conseils personnalisés...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"card-nature p-4\">
+                    <label class=\"fw-bold mb-2\" style=\"color: var(--primary-green);\">VOTRE INTENTION</label>
+                    <textarea id=\"eventDescriptionArea\" class=\"textarea-nature\" rows=\"4\" 
+                        placeholder=\"Décrivez votre événement en toute sérénité... (ex: 'Je souhaite organiser un atelier de méditation pour 30 personnes')\"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12 text-center\">
+                <div class=\"d-flex justify-content-center gap-4 flex-wrap\">
+                    <button id=\"generateButton\" class=\"btn-nature\" onclick=\"generateIdeas()\">
+                        <span style=\"font-size: 24px;\">🌿</span> GÉNÉRER
+                    </button>
+                    <button id=\"clearButton\" class=\"btn-nature-secondary\" onclick=\"clearFields()\">
+                        <span style=\"font-size: 18px;\">🍃</span> Effacer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id=\"loadingOverlay\" class=\"loading-overlay\">
+            <div class=\"loading-spinner\">
+                <div class=\"spinner-border text-success\" role=\"status\">
+                    <span class=\"visually-hidden\">Chargement...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class=\"row mb-4 fade-in\">
+            <div class=\"col-12\">
+                <div class=\"card-nature p-4\">
+                    <div class=\"d-flex justify-content-between align-items-center mb-3\">
+                        <div class=\"d-flex align-items-center gap-3\">
+                            <div style=\"width: 16px; height: 16px; background: linear-gradient(135deg, var(--secondary-green), var(--primary-green)); border-radius: 50%;\"></div>
+                            <h5 class=\"mb-0\" style=\"color: var(--primary-green);\">VOTRE ESPACE DE RÉFLEXION</h5>
+                        </div>
+                        <span id=\"tokenCountLabel\" style=\"color: var(--pale-green); font-size: 14px;\">0 mots</span>
+                    </div>
+                    
+                    <textarea id=\"resultArea\" class=\"result-area\" readonly rows=\"20\"></textarea>
+                    
+                    <div class=\"d-flex justify-content-end gap-2 mt-3 flex-wrap\">
+                        <button class=\"btn-nature-outline\" onclick=\"copyToClipboard()\">📋 Copier</button>
+                        <button class=\"btn-nature-outline\" onclick=\"showHistory()\">📚 Historique</button>
+                        <button class=\"btn-nature-outline\" onclick=\"showFavorites()\">⭐ Mes Favoris</button>
+                        <button class=\"btn-nature-outline\" onclick=\"exportToFile()\">📄 Exporter</button>
+                        <button class=\"btn-nature-outline\" onclick=\"shareResults()\">📤 Partager</button>
+                        <button class=\"btn-nature-outline\" onclick=\"saveToFavorites()\">➕ Ajouter</button>
+                        <button class=\"btn-nature-outline\" style=\"background: var(--soft-green); color: white;\" onclick=\"closeWindow()\">✕ Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class=\"row fade-in\">
+            <div class=\"col-12\">
+                <div class=\"status-bar d-flex align-items-center justify-content-between flex-wrap gap-3\">
+                    <div class=\"d-flex align-items-center gap-2\">
+                        <div style=\"width: 12px; height: 12px; background: var(--secondary-green); border-radius: 50%;\"></div>
+                        <span style=\"color: var(--primary-green); font-size: 13px;\">Connexion établie</span>
+                    </div>
+                    <div class=\"d-flex align-items-center gap-3\">
+                        <span id=\"modelLabel\" style=\"color: var(--primary-green); font-size: 13px;\">🌿 Modèle: gemini-1.5-flash</span>
+                        <span style=\"color: var(--pale-green);\">•</span>
+                        <span id=\"timeLabel\" style=\"color: var(--primary-green); font-size: 13px;\">🍃 00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type=\"hidden\" id=\"csrf_token\" value=\"{{ csrf_token('ai_assistant') }}\">
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+        let currentResult = '';
+        var GENERATE_URL = '{{ path('admin_ai_assistant_generate') }}';
+
+        /* ── Styled notification (replaces all alert/prompt) ── */
+        function showMsg(msg, type) {
+            var existing = document.getElementById('ai-msg-bar');
+            if (existing) existing.remove();
+            var bar = document.createElement('div');
+            bar.id = 'ai-msg-bar';
+            var colors = { info:'#7f9a7d', warn:'#e0a800', error:'#c0392b', ok:'#2e7d32' };
+            bar.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);'
+                + 'background:' + (colors[type]||colors.info) + ';color:white;padding:14px 28px;'
+                + 'border-radius:25px;z-index:10001;font-size:15px;font-weight:bold;'
+                + 'box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:90vw;text-align:center;'
+                + 'animation:fadeIn .3s ease;';
+            bar.textContent = msg;
+            document.body.appendChild(bar);
+            setTimeout(function(){ if(bar.parentNode) bar.remove(); }, 3500);
+        }
+
+        function showToast(msg) { showMsg(msg, 'ok'); }
+
+        /* ── Show friendly message in result area ── */
+        function showResultMsg(msg) {
+            document.getElementById('resultArea').value = msg;
+            updateWordCount();
+        }
+
+        function setWelcomeMessage() {
+            showResultMsg(
+                '╔══════════════════════════════════════════════════════════════╗\\n'
+              + '║         🧘  ASSISTANT BIEN-ÊTRE & ÉVÉNEMENTS  🧘            ║\\n'
+              + '╚══════════════════════════════════════════════════════════════╝\\n\\n'
+              + '✨ Bienvenue dans votre espace de sérénité.\\n\\n'
+              + '🌱 Je peux vous aider à :\\n'
+              + '🎯 Trouver l\\'inspiration — Des thèmes uniques et apaisants\\n'
+              + '💰 Planifier votre budget — Une répartition harmonieuse\\n'
+              + '✨ Créer des activités — Des moments qui comptent\\n'
+              + '📢 Partager votre vision — Toucher les cœurs\\n'
+              + '🏛️ Choisir un lieu — Des espaces qui respirent\\n'
+              + '📅 Organiser le temps — En toute quiétude\\n'
+              + '🎨 Imaginer la décoration — Une ambiance douce\\n'
+              + '🍽️ Prévoir la restauration — Des saveurs qui nourrissent l\\'âme\\n\\n'
+              + '🔍 Décrivez votre intention ci-dessous...'
+            );
+        }
+
+        function updateTime() {
+            var now = new Date();
+            document.getElementById('timeLabel').innerHTML = '🍃 ' + now.toLocaleTimeString('fr-FR');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function updateWordCount() {
+            var text = document.getElementById('resultArea').value;
+            var words = text.trim().split(/\\s+/).filter(function(w){ return w.length > 0; });
+            document.getElementById('tokenCountLabel').textContent = '📝 ' + words.length + ' mots';
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function applyQuickFilters() {
+            var eventType = document.getElementById('eventTypeCombo').value;
+            var budget    = document.getElementById('budgetCombo').value;
+            var audience  = document.getElementById('audienceSizeCombo').value;
+            var filterText = '';
+            if (eventType) filterText += eventType.replace(/[🧘🌿🌸🎯💼🎉✨]/g, '').trim();
+            if (budget)    filterText += ' avec ' + budget.replace('💰', '').trim();
+            if (audience)  filterText += ' pour ' + audience.replace('👥', '').trim();
+            if (filterText) document.getElementById('eventDescriptionArea').value = filterText.toLowerCase();
+        }
+
+        async function generateIdeas() {
+            var description  = document.getElementById('eventDescriptionArea').value.trim();
+            var eventType    = document.getElementById('eventTypeCombo').value;
+            var budget       = document.getElementById('budgetCombo').value;
+            var audienceSize = document.getElementById('audienceSizeCombo').value;
+            var helpType     = document.getElementById('helpTypeCombo').value;
+            if (!description) { showMsg('Veuillez decrire votre evenement avant de generer.', 'warn'); document.getElementById('eventDescriptionArea').focus(); return; }
+            showLoading(true);
+            showResultMsg('Generation en cours...');
+            try {
+                var resp = await fetch(GENERATE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+                    body: JSON.stringify({ description: description, event_type: eventType, budget: budget, audience_size: audienceSize, help_type: helpType })
+                });
+                var data = await resp.json();
+                if (data.success && data.result) { showResultMsg(data.result); currentResult = data.result; }
+                else { showResultMsg('Votre demande n a pas pu etre traitee. Veuillez reessayer.'); showMsg('Generation indisponible.', 'warn'); }
+            } catch(e) {
+                showResultMsg('La connexion est temporairement indisponible. Veuillez reessayer.');
+                showMsg('Service indisponible.', 'warn');
+            } finally { showLoading(false); updateWordCount(); }
+        }
+
+        function clearFields() {
+            document.getElementById('eventDescriptionArea').value = '';
+            document.getElementById('eventTypeCombo').value = '';
+            document.getElementById('budgetCombo').value = '';
+            document.getElementById('audienceSizeCombo').value = '';
+            document.getElementById('helpTypeCombo').value = '🎯 Idées de thèmes';
+            setWelcomeMessage();
+        }
+
+        async function copyToClipboard() {
+            var text = document.getElementById('resultArea').value;
+            if (!text || text.includes('Bienvenue')) { showMsg('🌿 Rien à copier pour le moment.', 'info'); return; }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('✨ Copié dans le presse-papiers !');
+            } catch (e) {
+                showMsg('La copie n\\'est pas disponible dans ce navigateur.', 'warn');
+            }
+        }
+
+        async function exportToFile() {
+            var content = document.getElementById('resultArea').value;
+            if (!content || content.includes('Bienvenue')) { showMsg('🌿 Générez d\\'abord des idées avant d\\'exporter.', 'info'); return; }
+
+            /* Inline format picker — no prompt() */
+            var existing = document.getElementById('ai-format-picker');
+            if (existing) { existing.remove(); return; }
+            var picker = document.createElement('div');
+            picker.id = 'ai-format-picker';
+            picker.style.cssText = 'position:fixed;bottom:80px;right:20px;background:var(--card-bg);border:1px solid var(--border-green);border-radius:20px;padding:16px;z-index:10002;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;gap:10px;';
+            ['txt','doc','pdf'].forEach(function(fmt) {
+                var btn = document.createElement('button');
+                btn.textContent = fmt.toUpperCase();
+                btn.style.cssText = 'background:var(--secondary-green);color:white;border:none;border-radius:15px;padding:8px 18px;cursor:pointer;font-weight:bold;';
+                btn.onclick = function() {
+                    picker.remove();
+                    doExport(content, fmt);
+                };
+                picker.appendChild(btn);
+            });
+            document.body.appendChild(picker);
+            setTimeout(function(){ if(picker.parentNode) picker.remove(); }, 8000);
+        }
+
+        async function doExport(content, format) {
+            showLoading(true);
+            try {
+                var response = await fetch('{{ path('admin_ai_assistant_export') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+                    body: JSON.stringify({ content: content, format: format })
+                });
+                if (response.ok) {
+                    var blob = await response.blob();
+                    var a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'idees_bien_etre_' + new Date().toISOString().slice(0,19) + '.' + format;
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    URL.revokeObjectURL(a.href);
+                    showToast('✅ Fichier exporté !');
+                } else {
+                    showMsg('L\\'export n\\'a pas pu être effectué.', 'warn');
+                }
+            } catch (e) {
+                showMsg('Export indisponible pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function shareResults() {
+            var content = document.getElementById('resultArea').value;
+            if (!content || content.includes('Bienvenue')) { showMsg('🌿 Rien à partager pour le moment.', 'info'); return; }
+            if (navigator.share) {
+                try { await navigator.share({ title: 'Assistant Bien-être', text: content }); }
+                catch (e) { /* cancelled */ }
+            } else {
+                await copyToClipboard();
+            }
+        }
+
+        async function saveToFavorites() {
+            var content = document.getElementById('resultArea').value;
+            if (!content || content.includes('Bienvenue')) { showMsg('🌿 Rien à sauvegarder pour le moment.', 'info'); return; }
+            showLoading(true);
+            try {
+                var response = await fetch('{{ path('admin_ai_assistant_save_favorite') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+                    body: JSON.stringify({ content: content, description: document.getElementById('eventDescriptionArea').value.substring(0, 100) })
+                });
+                var data = await response.json();
+                if (data.success) showToast('⭐ Ajouté aux favoris !');
+                else showMsg('Impossible de sauvegarder pour le moment.', 'warn');
+            } catch (e) {
+                showMsg('Service indisponible pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function showHistory() {
+            showLoading(true);
+            try {
+                var response = await fetch('{{ path('admin_ai_assistant_history') }}');
+                var data = await response.json();
+                if (data.success && data.history.length > 0) {
+                    var txt = '=== HISTORIQUE DES CONVERSATIONS ===\\n\\n';
+                    data.history.forEach(function(item, i) {
+                        txt += '[' + (i+1) + '] ' + item.created_at + '\\nType: ' + item.type + '\\nQuestion: ' + item.question.substring(0,100) + '...\\nRéponse: ' + item.result.substring(0,200) + '...\\n' + '-'.repeat(50) + '\\n\\n';
+                    });
+                    showResultMsg(txt);
+                } else {
+                    showResultMsg('🌿 Aucune conversation enregistrée pour le moment.\\nVos prochaines générations apparaîtront ici.');
+                }
+            } catch (e) {
+                showMsg('Historique indisponible pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function showFavorites() {
+            showLoading(true);
+            try {
+                var response = await fetch('{{ path('admin_ai_assistant_favorites') }}');
+                var data = await response.json();
+                if (data.success && data.favorites.length > 0) {
+                    var txt = '=== MES FAVORIS ===\\n\\n';
+                    data.favorites.forEach(function(item, i) {
+                        txt += '[' + (i+1) + '] ' + item.created_at + '\\nDescription: ' + (item.description || 'Sans description') + '\\nContenu: ' + item.content.substring(0,300) + '...\\n' + '-'.repeat(50) + '\\n\\n';
+                    });
+                    showResultMsg(txt);
+                } else {
+                    showResultMsg('🌿 Aucun favori enregistré pour le moment.\\nCliquez sur ➕ Ajouter pour sauvegarder une génération.');
+                }
+            } catch (e) {
+                showMsg('Favoris indisponibles pour le moment.', 'warn');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function handleQuickIdea()     { document.getElementById('eventDescriptionArea').value = 'Je cherche l\\'inspiration pour un événement doux et apaisant'; document.getElementById('helpTypeCombo').value = '🎯 Idées de thèmes'; generateIdeas(); }
+        function handleBudgetHelp()    { document.getElementById('eventDescriptionArea').value = 'Comment planifier un budget avec sérénité pour mon événement ?'; document.getElementById('helpTypeCombo').value = '💰 Planification budgétaire'; generateIdeas(); }
+        function handleTimelineHelp()  { document.getElementById('eventDescriptionArea').value = 'Quel calendrier apaisant pour mon événement ?'; document.getElementById('helpTypeCombo').value = '📅 Planification temporelle'; generateIdeas(); }
+        function handleMarketingHelp() { document.getElementById('eventDescriptionArea').value = 'Comment partager mon événement avec bienveillance ?'; document.getElementById('helpTypeCombo').value = '📢 Stratégie de partage'; generateIdeas(); }
+
+        document.querySelectorAll('#aiTabs .nav-link').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#aiTabs .nav-link').forEach(function(b){ b.classList.remove('active'); });
+                this.classList.add('active');
+                var map = { themes:'🎯 Idées de thèmes', budget:'💰 Planification budgétaire', activities:'✨ Suggestions d\\'activités', marketing:'📢 Stratégie de partage', venue:'🏛️ Suggestions de lieux', timeline:'📅 Planification temporelle', decor:'🎨 Idées de décoration', catering:'🍽️ Idées de restauration', complete:'📋 Plan complet' };
+                var val = map[this.getAttribute('data-tab')];
+                if (val) document.getElementById('helpTypeCombo').value = val;
+            });
+        });
+
+        document.getElementById('eventTypeCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('budgetCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('audienceSizeCombo').addEventListener('change', applyQuickFilters);
+        document.getElementById('resultArea').addEventListener('input', updateWordCount);
+
+        function closeWindow() { window.location.href = '{{ path('admin_events_index') }}'; }
+
+        setWelcomeMessage();
+    </script>
+{% endblock %}
+", "back/events/AIAssitant.html.twig", "C:\\Users\\DELL\\Downloads\\psy\\templates\\back\\events\\AIAssitant.html.twig");
+    }
+}

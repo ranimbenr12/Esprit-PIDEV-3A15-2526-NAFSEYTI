@@ -1,0 +1,2820 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* home/psy_conge_section.html.twig */
+class __TwigTemplate_6c3666e342dd9621a21d3186f365d93a extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/psy_conge_section.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/psy_conge_section.html.twig"));
+
+        // line 15
+        yield "
+";
+        // line 25
+        yield "
+";
+        // line 29
+        yield "<section class=\"psy-section\" id=\"section-conges\">
+  <div class=\"section-header\">
+    <div>
+      <h2>Congés maladie <em>reçus</em></h2>
+      <p><i class=\"fas fa-file-medical-alt\"></i> Demandes soumises par vos patients</p>
+    </div>
+    <div class=\"conge-psy-filters\">
+      <button class=\"conge-filter-btn active\" onclick=\"filterConges('', this)\">Tous</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('en_attente', this)\">En attente</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('valide', this)\">Validés</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('refuse', this)\">Refusés</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('termine', this)\">Archivés</button>
+    </div>
+  </div>
+
+  <div id=\"congesListState\" class=\"conge-list-loading\">
+    <i class=\"fas fa-circle-notch fa-spin\"></i> Chargement…
+  </div>
+
+  <div id=\"congesGrid\" class=\"conge-psy-grid\" style=\"display:none\"></div>
+
+  <div id=\"congesEmpty\" class=\"empty-state\" style=\"display:none\">
+    <i class=\"fas fa-file-times empty-state-icon\"></i>
+    <h3>Aucune demande</h3>
+    <p>Les demandes de congé de vos patients apparaîtront ici.</p>
+  </div>
+
+  <div id=\"congesPagination\" class=\"fiche-pagination\" style=\"display:none\"></div>
+</section>
+
+
+";
+        // line 64
+        yield "<div id=\"dossierCongeModal\" class=\"rdv-overlay\" style=\"display:none\"
+     onclick=\"if(event.target===this)closeDossierConge()\">
+  <div class=\"dossier-conge-modal\">
+
+    ";
+        // line 69
+        yield "    <div class=\"dossier-header\">
+      <div class=\"dossier-icon\"><i class=\"fas fa-folder-open\"></i></div>
+      <div>
+        <h2 class=\"dossier-title\" id=\"dossierPatientName\">Chargement…</h2>
+        <p class=\"dossier-sub\" id=\"dossierPatientEmail\"></p>
+      </div>
+      <button class=\"conge-close\" onclick=\"closeDossierConge()\">
+        <i class=\"fas fa-times\"></i>
+      </button>
+    </div>
+
+    ";
+        // line 81
+        yield "    <div id=\"dossierBody\" style=\"position:relative; min-height:320px\">
+
+      ";
+        // line 84
+        yield "      <div id=\"dossierBodyContent\">
+        <div style=\"padding:40px;text-align:center\">
+          <i class=\"fas fa-circle-notch fa-spin\" style=\"font-size:28px;color:#085918\"></i>
+        </div>
+      </div>
+
+      ";
+        // line 93
+        yield "      <div id=\"attOverlay\" class=\"att-overlay\">
+
+        ";
+        // line 96
+        yield "        <div class=\"att-header\">
+          <div class=\"att-header-icon\">
+            <i class=\"fas fa-file-medical\"></i>
+          </div>
+          <div>
+            <div class=\"att-header-title\">Aperçu de l'attestation</div>
+            <div class=\"att-header-sub\">Vérifiez avant d'envoyer au patient</div>
+          </div>
+          <button class=\"conge-close\" onclick=\"closeAttOverlay()\">
+            <i class=\"fas fa-times\"></i>
+          </button>
+        </div>
+
+        ";
+        // line 110
+        yield "        <div class=\"att-scroll-zone\">
+          <div class=\"cert-paper\">
+
+  <div class=\"cert-top\">
+    <div class=\"cert-psy-block\">
+      <div class=\"cert-psy-name\">Dr. ";
+        // line 115
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 115, $this->source); })()), "user", [], "any", false, false, false, 115), "firstname", [], "any", false, false, false, 115), "html", null, true);
+        yield " ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 115, $this->source); })()), "user", [], "any", false, false, false, 115), "lastname", [], "any", false, false, false, 115), "html", null, true);
+        yield "</div>
+      <div class=\"cert-psy-title\">Psychologue clinicien(ne) agréé(e)</div>
+      <div class=\"cert-psy-contact\">
+        <span>📞 <span id=\"certPsyTel\">—</span></span>
+        <span>🏠 <span id=\"certPsyAdresse\">—</span></span>
+        <span>✉ <span id=\"certPsyEmail\">—</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class=\"cert-title-band\">
+    CERTIFICAT MÉDICAL D’ARRÊT DE TRAVAIL
+  </div>
+
+  <p class=\"cert-intro\">
+    Je soussigné(e), <strong>Dr. ";
+        // line 130
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 130, $this->source); })()), "user", [], "any", false, false, false, 130), "firstname", [], "any", false, false, false, 130), "html", null, true);
+        yield " ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 130, $this->source); })()), "user", [], "any", false, false, false, 130), "lastname", [], "any", false, false, false, 130), "html", null, true);
+        yield "</strong>,
+    psychologue clinicien(ne) agréé(e), certifie avoir examiné ce jour :
+  </p>
+
+  <div class=\"cert-info-row\">
+    <span class=\"cert-info-lbl\">Nom du patient</span>
+    <strong id=\"attPatientName\" class=\"cert-info-val\">—</strong>
+  </div>
+
+  <div class=\"cert-info-row\">
+    <span class=\"cert-info-lbl\">Adresse e-mail</span>
+    <span id=\"attPatientEmail\" class=\"cert-info-val\">—</span>
+  </div>
+
+  <p class=\"cert-intro\" style=\"margin-top:18px\">
+    Après évaluation clinique de son état psychologique et émotionnel,
+    il a été constaté que son état de santé nécessite un arrêt temporaire de travail
+    pour raisons médicales.
+  </p>
+
+  <div class=\"cert-dates-box\">
+    <div class=\"cert-dates-label\">PÉRIODE D’ARRÊT PRESCRITE</div>
+    <div id=\"attDateRange\" class=\"cert-dates-range\">—</div>
+    <div id=\"attDuree\" class=\"cert-dates-dur\">—</div>
+  </div>
+
+  <div class=\"cert-section-sep\">
+    Motif médical
+    <span class=\"cert-sep-line\"></span>
+  </div>
+
+  <div id=\"attMotif\" class=\"cert-motif-box\">
+    —
+  </div>
+
+  <div class=\"cert-section-sep\">
+    Recommandations médicales
+    <span class=\"cert-sep-line\"></span>
+  </div>
+
+  <ul class=\"cert-reco-list\">
+    <li>Repos complet pendant la durée prescrite</li>
+    <li>Éviter toute source de stress professionnel</li>
+    <li>Maintien du suivi psychologique régulier</li>
+    <li>Réévaluation à la fin de la période d’arrêt</li>
+  </ul>
+
+  <p style=\"margin-top:20px; font-size:13px; color:#444;\">
+    Ce certificat est délivré à la demande de l’intéressé(e) pour servir et valoir ce que de droit.
+  </p>
+
+  
+
+            <div class=\"cert-signatures\">
+
+              
+
+              <div class=\"cert-sig-box\">
+                <div class=\"cert-sig-lbl\">Signature praticien</div>
+                <div class=\"cert-sig-pad-wrapper\">
+                  <canvas id=\"sigPsyCanvas\"></canvas>
+                </div>
+                <div id=\"certPsyName2\" class=\"cert-sig-name\"></div>
+                <div class=\"cert-sig-actions\">
+                  <button class=\"cert-sig-clear\" type=\"button\" onclick=\"clearPad('psy')\">
+                    <i class=\"fas fa-redo-alt\"></i> Effacer
+                  </button>
+                  <span id=\"sigPsyDone\" class=\"cert-sig-done\" style=\"display:none\">
+                    <i class=\"fas fa-check-circle\"></i> Signée
+                  </span>
+                </div>
+              </div>
+
+              <div class=\"cert-sig-box cert-stamp-box\">
+                <div class=\"cert-stamp\">VALIDÉ</div>
+                <div class=\"cert-sig-lbl\">Cachet praticien</div>
+              </div>
+
+            </div>
+
+          </div>";
+        // line 211
+        yield "        </div>";
+        // line 212
+        yield "
+        ";
+        // line 214
+        yield "        <div class=\"att-comment-zone\">
+          <label class=\"att-comment-label\">
+            <i class=\"fas fa-comment-alt\"></i>
+            Commentaire envoyé au patient (optionnel)
+          </label>
+          <textarea id=\"attReponse\" rows=\"2\" class=\"att-comment-textarea\"
+            placeholder=\"Ex : N'hésitez pas à me contacter si votre état s'aggrave…\"></textarea>
+        </div>
+
+        ";
+        // line 224
+        yield "        <div id=\"attSuccessBand\" class=\"att-success-band\">
+          <i class=\"fas fa-circle-check\"></i>
+          Attestation envoyée avec succès. Le patient a été notifié par email.
+        </div>
+
+        ";
+        // line 230
+        yield "        <div id=\"attError\" class=\"conge-form-error\" style=\"display:none;margin:0 20px 6px\"></div>
+
+        ";
+        // line 233
+        yield "        <div class=\"att-footer\">
+          <button class=\"conge-btn-secondary\" onclick=\"closeAttOverlay()\">
+            <i class=\"fas fa-arrow-left\"></i> Retour
+          </button>
+          <button id=\"attConfirmBtn\" class=\"att-confirm-btn\" onclick=\"sendDecisionFinale()\">
+            <i class=\"fas fa-paper-plane\"></i>
+            Confirmer et envoyer l'attestation
+          </button>
+        </div>
+
+      </div>";
+        // line 244
+        yield "    </div>";
+        // line 245
+        yield "
+  </div>";
+        // line 247
+        yield "</div>";
+        // line 248
+        yield "
+
+";
+        // line 253
+        yield "<style>
+/* ────────────────────────────────────────────
+   Filtres
+──────────────────────────────────────────── */
+.conge-psy-filters { display:flex; gap:8px; flex-wrap:wrap; }
+.conge-filter-btn {
+  background: var(--bg-soft, #f5f5f5);
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.conge-filter-btn.active,
+.conge-filter-btn:hover {
+  background: linear-gradient(135deg, #085918, #534d08);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ────────────────────────────────────────────
+   Grid cartes
+──────────────────────────────────────────── */
+.conge-psy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* ────────────────────────────────────────────
+   Carte psy
+──────────────────────────────────────────── */
+.conge-psy-card {
+  border: 1.5px solid var(--border, #eee);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  transition: box-shadow .2s;
+}
+.conge-psy-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+
+.conge-psy-stripe { height: 5px; background: #e0e0e0; }
+.conge-psy-stripe.en_attente { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.conge-psy-stripe.valide     { background: linear-gradient(90deg, #10b981, #34d399); }
+.conge-psy-stripe.refuse     { background: linear-gradient(90deg, #ef4444, #f87171); }
+.conge-psy-stripe.termine    { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.conge-psy-stripe.annule_patient { background: #9ca3af; }
+
+.conge-psy-body { padding: 16px; }
+
+.conge-psy-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.conge-psy-avatar {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #085918, #534d08);
+  color: #fff;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.conge-psy-name  { font-weight: 700; font-size: 15px; }
+.conge-psy-email { font-size: 12px; color: #888; }
+
+.conge-psy-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.conge-psy-motif {
+  font-size: 13px; color: #555; line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.conge-psy-footer { display: flex; gap: 8px; flex-wrap: wrap; }
+.conge-psy-btn {
+  flex: 1; min-width: 80px;
+  border: none; border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: opacity .15s;
+}
+.conge-psy-btn:hover { opacity: .85; }
+.conge-psy-btn.dossier { background: var(--bg-soft, #f5f5f5); color: #555; border: 1px solid #ddd; }
+.conge-psy-btn.accept  { background: #e8f5e9; color: #2e7d32; }
+.conge-psy-btn.refuse  { background: #fce4ec; color: #c62828; }
+.conge-psy-btn.decided { background: #f3f4f6; color: #6b7280; cursor: default; }
+
+.conge-list-loading { padding: 40px; text-align: center; color: #888; font-size: 15px; }
+
+/* ────────────────────────────────────────────
+   Modal dossier
+──────────────────────────────────────────── */
+.dossier-conge-modal {
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  width: min(780px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0,0,0,.2);
+  animation: congeSlideIn .3s cubic-bezier(.34, 1.56, .64, 1);
+  position: relative;
+}
+.dossier-header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border, #eee);
+  position: sticky; top: 0;
+  background: var(--surface, #fff);
+  z-index: 5;
+}
+.dossier-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #085918, #534d08);
+  color: #fff; display: grid; place-items: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.dossier-title { margin: 0; font-size: 18px; font-weight: 700; }
+.dossier-sub   { margin: 2px 0 0; font-size: 13px; color: #888; }
+
+.dossier-section-title {
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .7px;
+  color: #085918; margin: 20px 0 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dossier-section-title::after {
+  content: ''; flex: 1; height: 1px; background: #08591833;
+}
+
+.dossier-demand-box {
+  background: linear-gradient(135deg, #08591812, #534d0812);
+  border: 1.5px solid #08591833;
+  border-radius: 14px;
+  padding: 16px;
+}
+.dossier-demand-dates { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+
+.dossier-fiche-item {
+  border: 1px solid var(--border, #eee);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.dossier-fiche-toggle {
+  width: 100%; text-align: left;
+  background: var(--bg-soft, #f8f8f8);
+  border: none; padding: 12px 16px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dossier-fiche-body { padding: 14px 16px; font-size: 13px; line-height: 1.7; display: none; }
+.dossier-fiche-body.open { display: block; }
+.dossier-fiche-field { margin-bottom: 10px; }
+.dossier-fiche-label { font-weight: 600; color: #085918; margin-bottom: 4px; }
+
+.dossier-decision-area {
+  padding: 20px 28px 28px;
+  border-top: 1px solid var(--border, #eee);
+}
+.dossier-decision-btns { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.dossier-decision-textarea {
+  width: 100%;
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit; font-size: 14px;
+  resize: vertical;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.dossier-decision-textarea:focus {
+  outline: none; border-color: #085918;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.12);
+}
+.dossier-confirm-area { display: none; margin-top: 14px; }
+.dossier-confirm-area.open { display: block; }
+
+/* ────────────────────────────────────────────
+   OVERLAY ATTESTATION — intégré dans le modal
+──────────────────────────────────────────── */
+.att-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--surface, #fff);
+  border-radius: 20px;      /* même radius que le modal */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  /* État caché */
+  opacity: 0;
+  transform: translateY(32px) scale(.97);
+  pointer-events: none;
+
+  /* Transition entrée — légère élastique */
+  transition:
+    opacity .38s cubic-bezier(.4, 0, .2, 1),
+    transform .4s cubic-bezier(.34, 1.25, .64, 1);
+}
+
+/* État visible */
+.att-overlay.att-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* En-tête attestation */
+.att-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border, #eee);
+  background: var(--surface, #fff);
+  flex-shrink: 0;
+  position: sticky; top: 0; z-index: 2;
+}
+.att-header-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff; display: grid; place-items: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.att-header-title { font-size: 16px; font-weight: 700; }
+.att-header-sub   { font-size: 12px; color: #888; margin-top: 2px; }
+
+/* Zone scrollable du certificat */
+.att-scroll-zone {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* ── Certificat papier ── */
+.cert-paper {
+  border: 1.5px solid #10b981;
+  border-radius: 12px;
+  padding: 22px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.cert-entete {
+  text-align: center;
+  border-bottom: 1px solid #d1fae5;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.cert-cabinet-name { font-size: 15px; font-weight: 700; color: #085918; }
+.cert-cabinet-role { font-size: 11px; color: #888; margin-top: 3px; }
+
+.cert-title-band {
+  text-align: center;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: .5px;
+  color: #085918;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
+.cert-intro { color: #555; font-size: 13px; margin-bottom: 6px; }
+
+.cert-info-row {
+  display: flex; align-items: baseline; gap: 8px;
+  margin: 5px 0;
+}
+.cert-info-lbl { min-width: 115px; font-size: 11px; color: #888; }
+.cert-info-val { font-size: 13px; font-weight: 700; color: #222; }
+
+.cert-dates-box {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 10px;
+  padding: 14px; text-align: center;
+  margin: 16px 0;
+}
+.cert-dates-label {
+  font-size: 11px; font-weight: 700;
+  color: #166534; letter-spacing: .6px;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.cert-dates-range { font-size: 17px; font-weight: 700; color: #085918; }
+.cert-dates-dur   { font-size: 12px; color: #2e7d32; margin-top: 3px; }
+
+.cert-section-sep {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: #10b981;
+  display: flex; align-items: center; gap: 8px;
+  margin: 14px 0 6px;
+}
+.cert-sep-line {
+  flex: 1; height: 1px;
+  background: #d1fae5;
+  display: inline-block;
+}
+
+.cert-motif-box {
+  background: #f8f9fa;
+  border-left: 3px solid #10b981;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  color: #444; font-size: 13px;
+}
+
+.cert-reco-list {
+  padding-left: 18px;
+  color: #555; margin: 0;
+}
+.cert-reco-list li { margin-bottom: 4px; }
+
+.cert-signatures {
+  display: flex; gap: 14px;
+  margin-top: 22px;
+}
+.cert-sig-box {
+  width: 220px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+.cert-sig-line {
+  height: 38px;
+  border-bottom: 1.5px solid #333;
+  margin-bottom: 8px;
+}
+.cert-sig-lbl  { font-size: 11px; color: #888; }
+.cert-sig-name { font-size: 11px; color: #555; margin-top: 2px; }
+.cert-stamp {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  border: 2.5px solid #10b981;
+  margin: 0 auto 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  color: #085918;
+  text-align: center; line-height: 1.3;
+}
+
+/* Zone commentaire */
+.att-comment-zone {
+  padding: 12px 24px;
+  border-top: 1px solid var(--border, #eee);
+  flex-shrink: 0;
+}
+.att-comment-label {
+  font-size: 12px; color: #888;
+  display: block; margin-bottom: 6px;
+}
+.att-comment-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit; font-size: 13px;
+  resize: vertical;
+  transition: border-color .2s;
+}
+.att-comment-textarea:focus {
+  outline: none; border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,.1);
+}
+
+/* Bandeau succès */
+.att-success-band {
+  display: none;
+  align-items: center; gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 24px 0;
+  font-size: 13px; color: #166534;
+}
+.att-success-band.att-success-visible { display: flex; }
+
+/* Footer attestation */
+.att-footer {
+  display: flex;
+  justify-content: space-between; align-items: center;
+  padding: 14px 24px;
+  border-top: 1px solid var(--border, #eee);
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+/* Bouton confirmer (vert, dans le footer attestation) */
+.att-confirm-btn {
+  padding: 10px 20px;
+  border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: opacity .15s, transform .1s;
+}
+.att-confirm-btn:hover   { opacity: .9; }
+.att-confirm-btn:active  { transform: scale(.98); }
+.att-confirm-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* ── Animation d'entrée du modal ── */
+@keyframes congeSlideIn {
+  from { opacity: 0; transform: translateY(30px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+/* ── Wrapper SignaturePad ── */
+.cert-sig-pad-wrapper {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  border-bottom: 1.5px solid #333;
+  border-radius: 4px 4px 0 0;
+  background: #fafafa;
+  margin: 8px 0 4px;
+  overflow: hidden;
+}
+
+.cert-sig-pad-wrapper canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.cert-sig-pad-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #bbb;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+/* ── Actions sous le pad ── */
+.cert-sig-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  min-height: 20px;
+}
+
+.cert-sig-clear {
+  font-size: 11px;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+.cert-sig-clear:hover { color: #ef4444; }
+
+.cert-sig-done {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Cachet ── */
+.cert-stamp-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+</style>
+
+
+";
+        // line 761
+        yield "<script src=\"https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js\"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   ÉTAT GLOBAL
+═══════════════════════════════════════════════════════════ */
+let _congeCurrentFilter = '';
+let _congeCurrentPage   = 1;
+let _dossierCongeId     = null;
+let _pendingDecision    = null;
+
+const STATUT_LABELS = {
+  en_attente:     'En attente',
+  valide:         'Validé',
+  refuse:         'Refusé',
+  annule_patient: 'Annulé par patient',
+  termine:        'Archivé',
+};
+
+/* ═══════════════════════════════════════════════════════════
+   LISTE & FILTRES
+═══════════════════════════════════════════════════════════ */
+function filterConges(statut, btn) {
+  _congeCurrentFilter = statut;
+  _congeCurrentPage   = 1;
+  document.querySelectorAll('.conge-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadCongesPsy();
+}
+
+async function loadCongesPsy(page = 1) {
+  _congeCurrentPage = page;
+  const grid    = document.getElementById('congesGrid');
+  const empty   = document.getElementById('congesEmpty');
+  const loading = document.getElementById('congesListState');
+  const pager   = document.getElementById('congesPagination');
+
+  grid.style.display    = 'none';
+  empty.style.display   = 'none';
+  pager.style.display   = 'none';
+  loading.style.display = 'block';
+  loading.innerHTML     = '<i class=\"fas fa-circle-notch fa-spin\"></i> Chargement…';
+
+  try {
+    const params = new URLSearchParams({ page });
+    if (_congeCurrentFilter) params.set('statut', _congeCurrentFilter);
+
+    const r    = await fetch(`/conge/psy/liste?\${params}`);
+    const data = await r.json();
+
+    loading.style.display = 'none';
+
+    if (!data.items || !data.items.length) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    grid.innerHTML     = data.items.map(c => renderCongePsyCard(c)).join('');
+    grid.style.display = 'grid';
+
+    if (data.pageCount > 1) {
+      pager.innerHTML    = buildCongePagination(data.currentPage, data.pageCount);
+      pager.style.display = 'flex';
+    }
+  } catch {
+    loading.innerHTML = '<span style=\"color:#c62828\"><i class=\"fas fa-exclamation-circle\"></i> Erreur de chargement.</span>';
+  }
+}
+
+function renderCongePsyCard(c) {
+  const initials = c.patientName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const isWaiting = c.statut === 'en_attente';
+
+  return `
+  <div class=\"conge-psy-card\" id=\"congePsyCard\${c.id}\">
+    <div class=\"conge-psy-stripe \${c.statut}\"></div>
+    <div class=\"conge-psy-body\">
+      <div class=\"conge-psy-top\">
+        <div style=\"display:flex;gap:10px;align-items:center\">
+          <div class=\"conge-psy-avatar\">\${initials}</div>
+          <div>
+            <div class=\"conge-psy-name\">\${c.patientName}</div>
+            <div class=\"conge-psy-email\">\${c.patientEmail}</div>
+          </div>
+        </div>
+        <span class=\"conge-status-badge \${c.statut}\">\${STATUT_LABELS[c.statut] || c.statut}</span>
+      </div>
+      <div class=\"conge-psy-chips\">
+        <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${c.dateDebut} → \${c.dateFin}</span>
+        <span class=\"conge-chip\"><i class=\"fas fa-hourglass-half\"></i> \${c.duree} jour\${c.duree > 1 ? 's' : ''}</span>
+        <span class=\"conge-chip\"><i class=\"fas fa-clock\"></i> \${c.createdAt}</span>
+      </div>
+      <div class=\"conge-psy-motif\">\${c.motif}</div>
+      <div class=\"conge-psy-footer\">
+        <button class=\"conge-psy-btn dossier\" onclick=\"openDossierConge(\${c.id})\">
+          <i class=\"fas fa-folder-open\"></i> Dossier
+        </button>
+        \${isWaiting ? `
+          <button class=\"conge-psy-btn accept\" onclick=\"openDossierConge(\${c.id}, 'valide')\">
+            <i class=\"fas fa-check\"></i> Accepter
+          </button>
+          <button class=\"conge-psy-btn refuse\" onclick=\"openDossierConge(\${c.id}, 'refuse')\">
+            <i class=\"fas fa-times\"></i> Refuser
+          </button>
+        ` : `
+          <button class=\"conge-psy-btn decided\" disabled>
+            <i class=\"fas fa-lock\"></i> \${STATUT_LABELS[c.statut]}
+          </button>
+        `}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildCongePagination(cur, tot) {
+  let html = '';
+  const prev = cur > 1
+    ? `<a class=\"fiche-page-btn prev-next\" href=\"#\" onclick=\"loadCongesPsy(\${cur - 1});return false\"><i class=\"fas fa-chevron-left\"></i></a>`
+    : `<span class=\"fiche-page-btn prev-next disabled\"><i class=\"fas fa-chevron-left\"></i></span>`;
+  const next = cur < tot
+    ? `<a class=\"fiche-page-btn prev-next\" href=\"#\" onclick=\"loadCongesPsy(\${cur + 1});return false\"><i class=\"fas fa-chevron-right\"></i></a>`
+    : `<span class=\"fiche-page-btn prev-next disabled\"><i class=\"fas fa-chevron-right\"></i></span>`;
+
+  html += prev;
+  for (let i = 1; i <= tot; i++) {
+    if (i === 1 || i === tot || (i >= cur - 2 && i <= cur + 2)) {
+      html += `<a class=\"fiche-page-btn \${i === cur ? 'active' : ''}\" href=\"#\" onclick=\"loadCongesPsy(\${i});return false\">\${i}</a>`;
+    } else if (i === cur - 3 || i === cur + 3) {
+      html += `<span class=\"fiche-page-ellipsis\">…</span>`;
+    }
+  }
+  html += next;
+  return html;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL DOSSIER
+═══════════════════════════════════════════════════════════ */
+async function openDossierConge(congeId, preselect = null) {
+  _dossierCongeId  = congeId;
+  _pendingDecision = null;
+
+  /* Réinitialiser l'overlay attestation */
+  closeAttOverlay(true);
+
+  /* Ouvrir le modal */
+  document.getElementById('dossierCongeModal').style.display = 'flex';
+  document.getElementById('dossierPatientName').textContent  = 'Chargement…';
+  document.getElementById('dossierPatientEmail').textContent = '';
+
+  const bodyContent = document.getElementById('dossierBodyContent');
+  bodyContent.innerHTML = `
+    <div style=\"padding:40px;text-align:center\">
+      <i class=\"fas fa-circle-notch fa-spin\" style=\"font-size:28px;color:#085918\"></i>
+    </div>`;
+
+  try {
+    const r    = await fetch(`/conge/\${congeId}/dossier-patient`);
+    const data = await r.json();
+
+    if (!data.success) {
+      bodyContent.innerHTML = `<p style=\"color:#c62828;padding:20px\">\${data.message}</p>`;
+      return;
+    }
+
+    document.getElementById('dossierPatientName').textContent  = data.patientName;
+    document.getElementById('dossierPatientEmail').textContent = data.patientEmail;
+
+    const demande   = data.demandeActuelle;
+    const isWaiting = demande.statut === 'en_attente';
+
+    /* Historique congés */
+    const autresConges = data.historiqueConges.filter(h => h.id !== demande.id);
+    const historiqueHtml = autresConges.length
+      ? autresConges.map(h => `
+          <div class=\"conge-patient-card \${h.statut}\" style=\"margin-bottom:8px\">
+            <div class=\"conge-card-chips\">
+              <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${h.dateDebut} → \${h.dateFin}</span>
+              <span class=\"conge-status-badge \${h.statut}\">\${STATUT_LABELS[h.statut]}</span>
+            </div>
+            <div class=\"conge-card-motif\">\${h.motif}</div>
+            \${h.reponse ? `<div class=\"conge-card-reponse\"><strong>Réponse :</strong> \${h.reponse}</div>` : ''}
+          </div>`).join('')
+      : `<p style=\"color:#aaa;font-size:13px\">Aucun historique de congé précédent.</p>`;
+
+    /* Fiches */
+    const fichesHtml = data.fiches.length
+      ? data.fiches.map(f => `
+          <div class=\"dossier-fiche-item\">
+            <button class=\"dossier-fiche-toggle\" onclick=\"toggleFiche(this)\">
+              <span><i class=\"fas fa-file-alt\"></i> Séance du \${f.date}</span>
+              <i class=\"fas fa-chevron-down\"></i>
+            </button>
+            <div class=\"dossier-fiche-body\">
+              \${f.probleme       ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Problème principal</div>\${f.probleme}</div>` : ''}
+              \${f.diagnostic     ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Diagnostic</div>\${f.diagnostic}</div>` : ''}
+              \${f.notes          ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Notes cliniques</div>\${f.notes}</div>` : ''}
+              \${f.traitement     ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Traitement</div>\${f.traitement}</div>` : ''}
+              \${f.recommandations ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Recommandations</div>\${f.recommandations}</div>` : ''}
+            </div>
+          </div>`).join('')
+      : `<p style=\"color:#aaa;font-size:13px\">Aucune fiche de consultation trouvée.</p>`;
+
+    bodyContent.innerHTML = `
+      <div style=\"padding:20px 28px\">
+
+        <div class=\"dossier-section-title\">
+          <i class=\"fas fa-clipboard-list\"></i> Demande actuelle
+        </div>
+        <div class=\"dossier-demand-box\">
+          <div class=\"dossier-demand-dates\">
+            <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${demande.dateDebut} → \${demande.dateFin}</span>
+            <span class=\"conge-chip\"><i class=\"fas fa-hourglass-half\"></i> \${demande.duree} jour\${demande.duree > 1 ? 's' : ''}</span>
+            <span class=\"conge-status-badge \${demande.statut}\">\${STATUT_LABELS[demande.statut]}</span>
+          </div>
+          <div class=\"conge-card-motif\"><strong>Motif :</strong> \${demande.motif}</div>
+          <div style=\"font-size:12px;color:#aaa;margin-top:8px\">
+            Soumis le \${demande.createdAt}
+          </div>
+        </div>
+
+        <div class=\"dossier-section-title\">
+          <i class=\"fas fa-file-alt\"></i> Fiches de consultation (\${data.ficheCount})
+        </div>
+        \${fichesHtml}
+
+        <div class=\"dossier-section-title\">
+          <i class=\"fas fa-history\"></i> Historique des congés
+        </div>
+        \${historiqueHtml}
+      </div>
+
+      \${isWaiting ? `
+      <div class=\"dossier-decision-area\">
+        <div class=\"dossier-section-title\" style=\"margin-top:0\">
+          <i class=\"fas fa-gavel\"></i> Décision
+        </div>
+        <div class=\"dossier-decision-btns\">
+          <button class=\"conge-psy-btn accept\" style=\"flex:0 0 auto;padding:10px 20px\"
+                  onclick=\"selectDecision('valide')\">
+            <i class=\"fas fa-check-circle\"></i> Accepter le congé
+          </button>
+          <button class=\"conge-psy-btn refuse\" style=\"flex:0 0 auto;padding:10px 20px\"
+                  onclick=\"selectDecision('refuse')\">
+            <i class=\"fas fa-times-circle\"></i> Refuser le congé
+          </button>
+        </div>
+        <div class=\"dossier-confirm-area\" id=\"dossierConfirmArea\">
+          <textarea class=\"dossier-decision-textarea\" id=\"dossierReponse\" rows=\"3\"
+                    placeholder=\"Commentaire optionnel pour le patient…\"></textarea>
+          <div style=\"display:flex;gap:10px;margin-top:10px\">
+            <button class=\"conge-btn-secondary\" onclick=\"cancelDecision()\">Annuler</button>
+            <button class=\"conge-btn-primary\" id=\"dossierConfirmBtn\" onclick=\"confirmDecision(\${congeId})\">
+              <i class=\"fas fa-paper-plane\"></i> Confirmer
+            </button>
+          </div>
+          <div id=\"dossierDecisionError\" class=\"conge-form-error\" style=\"display:none;margin-top:10px\"></div>
+        </div>
+      </div>` : ''}
+    `;
+
+    /* Pré-sélectionner si venu via bouton rapide */
+    if (preselect && isWaiting) {
+      selectDecision(preselect);
+    }
+
+  } catch (err) {
+    bodyContent.innerHTML = `<p style=\"color:#c62828;padding:20px\">Erreur : \${err.message}</p>`;
+  }
+}
+
+function closeDossierConge() {
+  closeAttOverlay(true);
+  document.getElementById('dossierCongeModal').style.display = 'none';
+  _dossierCongeId  = null;
+  _pendingDecision = null;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DÉCISION (zone refus / texte)
+═══════════════════════════════════════════════════════════ */
+function selectDecision(decision) {
+  _pendingDecision = decision;
+  const area = document.getElementById('dossierConfirmArea');
+  if (!area) return;
+  area.classList.add('open');
+
+  const btn = document.getElementById('dossierConfirmBtn');
+  if (decision === 'valide') {
+    btn.innerHTML = '<i class=\"fas fa-check-circle\"></i> Confirmer l\\'acceptation';
+    btn.style.background = 'linear-gradient(135deg,#10b981,#34d399)';
+  } else {
+    btn.innerHTML = '<i class=\"fas fa-times-circle\"></i> Confirmer le refus';
+    btn.style.background = 'linear-gradient(135deg,#ef4444,#f87171)';
+  }
+  document.getElementById('dossierReponse')?.focus();
+}
+
+function cancelDecision() {
+  _pendingDecision = null;
+  document.getElementById('dossierConfirmArea')?.classList.remove('open');
+}
+
+async function confirmDecision(congeId) {
+  if (!_pendingDecision) return;
+
+  /* ── Acceptation → ouvrir l'overlay attestation ── */
+  if (_pendingDecision === 'valide') {
+    await openAttOverlay(congeId);
+    return;
+  }
+
+  /* ── Refus → envoyer directement ── */
+  const btn     = document.getElementById('dossierConfirmBtn');
+  const errDiv  = document.getElementById('dossierDecisionError');
+  const reponse = document.getElementById('dossierReponse')?.value || '';
+
+  btn.disabled           = true;
+  errDiv.style.display   = 'none';
+
+  try {
+    const r    = await fetch(`/conge/\${congeId}/traiter`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ decision: 'refuse', reponse }),
+    });
+    const data = await r.json();
+
+    if (data.success) {
+      closeDossierConge();
+      loadCongesPsy(_congeCurrentPage);
+      showToast('Congé refusé. Le patient a été notifié.', 'error');
+      _decrementBadge();
+    } else {
+      errDiv.textContent   = data.message || 'Erreur.';
+      errDiv.style.display = 'block';
+      btn.disabled         = false;
+    }
+  } catch {
+    errDiv.textContent   = 'Erreur réseau.';
+    errDiv.style.display = 'block';
+    btn.disabled         = false;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   OVERLAY ATTESTATION — ouvrir / fermer
+═══════════════════════════════════════════════════════════ */
+async function openAttOverlay(congeId) {
+  let data;
+
+  try {
+    const r = await fetch(`/conge/\${congeId}/dossier-patient`);
+    data = await r.json();
+  } catch {
+    showToast('Impossible de charger les données.', 'error');
+    return;
+  }
+
+  if (!data.success) {
+    showToast(data.message || 'Erreur.', 'error');
+    return;
+  }
+
+  const dem = data.demandeActuelle;
+  const reponse = document.getElementById('dossierReponse')?.value || '';
+
+  /* ── Données patient ── */
+  document.getElementById('attPatientName').textContent  = data.patientName;
+  document.getElementById('attPatientEmail').textContent = data.patientEmail;
+  document.getElementById('attDateRange').textContent    = `\${dem.dateDebut} → \${dem.dateFin}`;
+  document.getElementById('attDuree').textContent        =
+    `Durée : \${dem.duree} jour\${dem.duree > 1 ? 's' : ''}`;
+  document.getElementById('attMotif').textContent        = dem.motif;
+  
+
+  /* ── Données psychologue ── */
+  document.getElementById('certPsyName2').textContent   = data.psyName || '—';
+  document.getElementById('certPsyTel').textContent     = data.psyTelephone || '—';
+  document.getElementById('certPsyAdresse').textContent = data.psyAdresse || '—';
+  document.getElementById('certPsyEmail').textContent   = data.psyEmail || '—';
+
+  /* commentaire */
+  document.getElementById('attReponse').value = reponse;
+
+  /* Reset bouton */
+  const confirmBtn = document.getElementById('attConfirmBtn');
+  confirmBtn.disabled = false;
+ confirmBtn.innerHTML =
+  '<i class=\"fas fa-paper-plane\"></i> Confirmer et envoyer l\\'attestation';
+
+  document.getElementById('attSuccessBand')
+    .classList.remove('att-success-visible');
+
+  document.getElementById('attError').style.display = 'none';
+
+  /* ── RESET SIGNATURES ── */
+  resetSignaturePads();
+
+  /* Animation */
+  const overlay = document.getElementById('attOverlay');
+  overlay.classList.remove('att-visible');
+  void overlay.offsetWidth;
+  overlay.classList.add('att-visible');
+
+  /* ── IMPORTANT : init après affichage ── */
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initSignaturePads();
+    });
+  });
+}
+/**
+ * @param {boolean} instant - si true, supprime la transition (fermeture sans animation)
+ */
+function closeAttOverlay(instant = false) {
+  const overlay = document.getElementById('attOverlay');
+  if (!overlay) return;
+
+  if (instant) {
+    overlay.style.transition = 'none';
+    overlay.classList.remove('att-visible');
+    /* Réactiver la transition au prochain frame */
+    requestAnimationFrame(() => {
+      overlay.style.transition = '';
+    });
+  } else {
+    overlay.classList.remove('att-visible');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ENVOI FINAL (depuis l'overlay attestation)
+═══════════════════════════════════════════════════════════ */
+async function sendDecisionFinale() {
+  const congeId = _dossierCongeId;
+  if (!congeId) return;
+
+  /* ── NOUVEAU : Vérifier que le psy a signé ── */
+  if (!_padPsy || _padPsy.isEmpty()) {
+    const errDiv = document.getElementById('attError');
+    errDiv.textContent   = 'Veuillez apposer votre signature avant d\\'envoyer.';
+    errDiv.style.display = 'block';
+    return;
+  }
+
+  const btn     = document.getElementById('attConfirmBtn');
+  const errDiv  = document.getElementById('attError');
+  const reponse = document.getElementById('attReponse').value;
+
+  /* ── NOUVEAU : Capturer les signatures en base64 ── */
+  const signaturePsy     = _padPsy     && !_padPsy.isEmpty()
+    ? _padPsy.toDataURL('image/png')     : null;
+ 
+
+  btn.disabled         = true;
+  btn.innerHTML        = '<i class=\"fas fa-circle-notch fa-spin\"></i> Envoi en cours…';
+  errDiv.style.display = 'none';
+
+  try {
+    const r = await fetch(`/conge/\${congeId}/traiter`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        decision:          'valide',
+        reponse,
+        signaturePsy,      // ← base64 PNG
+        
+      }),
+    });
+    const data = await r.json();
+
+    if (data.success) {
+      btn.innerHTML = '<i class=\"fas fa-check-circle\"></i> Attestation envoyée';
+      document.getElementById('attSuccessBand').classList.add('att-success-visible');
+      setTimeout(() => {
+        closeDossierConge();
+        loadCongesPsy(_congeCurrentPage);
+        showToast('Congé accepté. L\\'attestation a été envoyée au patient par email.', 'success');
+        _decrementBadge();
+      }, 1600);
+    } else {
+      errDiv.textContent   = data.message || 'Erreur.';
+      errDiv.style.display = 'block';
+      btn.disabled         = false;
+      btn.innerHTML        = '<i class=\"fas fa-paper-plane\"></i> Confirmer et envoyer l\\'attestation';
+    }
+  } catch {
+    errDiv.textContent   = 'Erreur réseau.';
+    errDiv.style.display = 'block';
+    btn.disabled         = false;
+    btn.innerHTML        = '<i class=\"fas fa-paper-plane\"></i> Confirmer et envoyer l\\'attestation';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITAIRES
+═══════════════════════════════════════════════════════════ */
+function toggleFiche(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  const icon = btn.querySelector('.fa-chevron-down, .fa-chevron-up');
+  if (icon) {
+    icon.classList.toggle('fa-chevron-down');
+    icon.classList.toggle('fa-chevron-up');
+  }
+}
+
+function _decrementBadge() {
+  const badge = document.getElementById('badgeConges');
+  if (!badge) return;
+  const count = parseInt(badge.textContent || '0', 10) - 1;
+  if (count <= 0) {
+    badge.style.display = 'none';
+  } else {
+    badge.textContent = count;
+  }
+}
+
+/* Toast — utilise celui de la page s'il existe déjà */
+if (typeof showToast === 'undefined') {
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `rdv-flash \${type}`;
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;min-width:280px;animation:congeSlideIn .3s ease';
+    t.innerHTML = `<i class=\"fas fa-\${type === 'success' ? 'circle-check' : 'circle-exclamation'}\"></i> \${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIGNATURE PAD
+═══════════════════════════════════════════════════════════ */
+let _padPatient = null;
+let _padPsy     = null;
+
+function initSignaturePads() {
+  /* Psy */
+  const canvasPsy = document.getElementById('sigPsyCanvas');
+  if (canvasPsy && !_padPsy) {
+    _resizeCanvas(canvasPsy);
+    _padPsy = new SignaturePad(canvasPsy, {
+      penColor:       '#085918',
+      backgroundColor:'rgba(250,250,250,0)',
+      minWidth:       0.8,
+      maxWidth:       2.5,
+      throttle:       16,
+    });
+
+    /* Afficher le badge \"Signée\" après le premier trait */
+    _padPsy.addEventListener('endStroke', () => {
+      document.getElementById('sigPsyDone').style.display = 'flex';
+    });
+  }
+}
+
+function _resizeCanvas(canvas) {
+  const ratio  = Math.max(window.devicePixelRatio || 1, 1);
+  const wrapper = canvas.parentElement;
+  canvas.width  = wrapper.offsetWidth  * ratio;
+  canvas.height = wrapper.offsetHeight * ratio;
+  canvas.getContext('2d').scale(ratio, ratio);
+}
+
+function clearPad(who) {
+  if (who === 'patient' && _padPatient) {
+    _padPatient.clear();
+  }
+  if (who === 'psy' && _padPsy) {
+    _padPsy.clear();
+    document.getElementById('sigPsyDone').style.display = 'none';
+  }
+}
+
+function resetSignaturePads() {
+  if (_padPatient) { _padPatient.clear(); }
+  if (_padPsy)     {
+    _padPsy.clear();
+    document.getElementById('sigPsyDone').style.display = 'none';
+  }
+  /* Réinitialiser les instances pour forcer le resize à la prochaine ouverture */
+  _padPatient = null;
+  _padPsy     = null;
+}
+
+/* ─────────────────────────────────────────────────────────
+   INTÉGRATION dans showSection() existante :
+
+  
+───────────────────────────────────────────────────────── */
+function showSection(name) {
+  console.log(\"SECTION:\", name);
+
+  document.querySelectorAll('.psy-section').forEach(s => {
+    s.style.display = 'none';
+  });
+
+  const el = document.getElementById('section-' + name);
+
+  if (el) {
+    el.style.display = 'block';
+  }
+
+  if (name === 'conges') {
+    loadCongesPsy();
+  }
+}
+</script>
+";
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "home/psy_conge_section.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  806 => 761,  299 => 253,  295 => 248,  293 => 247,  290 => 245,  288 => 244,  276 => 233,  272 => 230,  265 => 224,  254 => 214,  251 => 212,  249 => 211,  164 => 130,  144 => 115,  137 => 110,  122 => 96,  118 => 93,  110 => 84,  106 => 81,  93 => 69,  87 => 64,  54 => 29,  51 => 25,  48 => 15,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{# ═══════════════════════════════════════════════════════════════════════════
+   PSY DASHBOARD — SECTION CONGÉS MALADIE REÇUS
+   À inclure dans psy_dashboard.html.twig, APRÈS la section fiches-consultation.
+
+   Dans PsyController::dashboard(), ajouter :
+     use App\\Repository\\CongeMaladieRepository;
+     \$congesEnAttente = \$em->getRepository(CongeMaladie::class)
+         ->countEnAttenteByMedecin(\$psy->getId());
+   Et passer à la vue :
+     'congesEnAttente' => \$congesEnAttente,
+
+   Dans votre showSection() existante, ajouter :
+     if (name === 'conges') loadCongesPsy();
+   ═══════════════════════════════════════════════════════════════════════════ #}
+
+{# ── Nav item à ajouter dans .psy-nav ──────────────────────────────────────
+<a class=\"nav-item\" onclick=\"showSection('conges')\" href=\"#\">
+  <i class=\"fas fa-file-medical-alt\"></i>
+  <span>Congés maladie</span>
+  {% if congesEnAttente > 0 %}
+    <span class=\"nav-badge\" id=\"badgeConges\">{{ congesEnAttente }}</span>
+  {% endif %}
+</a>
+#}
+
+{# ══════════════════════════════════════════════
+   SECTION PRINCIPALE
+   ══════════════════════════════════════════════ #}
+<section class=\"psy-section\" id=\"section-conges\">
+  <div class=\"section-header\">
+    <div>
+      <h2>Congés maladie <em>reçus</em></h2>
+      <p><i class=\"fas fa-file-medical-alt\"></i> Demandes soumises par vos patients</p>
+    </div>
+    <div class=\"conge-psy-filters\">
+      <button class=\"conge-filter-btn active\" onclick=\"filterConges('', this)\">Tous</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('en_attente', this)\">En attente</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('valide', this)\">Validés</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('refuse', this)\">Refusés</button>
+      <button class=\"conge-filter-btn\" onclick=\"filterConges('termine', this)\">Archivés</button>
+    </div>
+  </div>
+
+  <div id=\"congesListState\" class=\"conge-list-loading\">
+    <i class=\"fas fa-circle-notch fa-spin\"></i> Chargement…
+  </div>
+
+  <div id=\"congesGrid\" class=\"conge-psy-grid\" style=\"display:none\"></div>
+
+  <div id=\"congesEmpty\" class=\"empty-state\" style=\"display:none\">
+    <i class=\"fas fa-file-times empty-state-icon\"></i>
+    <h3>Aucune demande</h3>
+    <p>Les demandes de congé de vos patients apparaîtront ici.</p>
+  </div>
+
+  <div id=\"congesPagination\" class=\"fiche-pagination\" style=\"display:none\"></div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════
+   MODAL DOSSIER PATIENT
+   Contient l'overlay attestation intégré (pas de 2e modal)
+   ═══════════════════════════════════════════════════════════ #}
+<div id=\"dossierCongeModal\" class=\"rdv-overlay\" style=\"display:none\"
+     onclick=\"if(event.target===this)closeDossierConge()\">
+  <div class=\"dossier-conge-modal\">
+
+    {# ── En-tête ── #}
+    <div class=\"dossier-header\">
+      <div class=\"dossier-icon\"><i class=\"fas fa-folder-open\"></i></div>
+      <div>
+        <h2 class=\"dossier-title\" id=\"dossierPatientName\">Chargement…</h2>
+        <p class=\"dossier-sub\" id=\"dossierPatientEmail\"></p>
+      </div>
+      <button class=\"conge-close\" onclick=\"closeDossierConge()\">
+        <i class=\"fas fa-times\"></i>
+      </button>
+    </div>
+
+    {# ── Corps principal ── #}
+    <div id=\"dossierBody\" style=\"position:relative; min-height:320px\">
+
+      {# Contenu chargé dynamiquement via JS #}
+      <div id=\"dossierBodyContent\">
+        <div style=\"padding:40px;text-align:center\">
+          <i class=\"fas fa-circle-notch fa-spin\" style=\"font-size:28px;color:#085918\"></i>
+        </div>
+      </div>
+
+      {# ══════════════════════════════════════════════════════
+         OVERLAY ATTESTATION — surgit à l'intérieur du modal
+         ══════════════════════════════════════════════════════ #}
+      <div id=\"attOverlay\" class=\"att-overlay\">
+
+        {# En-tête de l'attestation #}
+        <div class=\"att-header\">
+          <div class=\"att-header-icon\">
+            <i class=\"fas fa-file-medical\"></i>
+          </div>
+          <div>
+            <div class=\"att-header-title\">Aperçu de l'attestation</div>
+            <div class=\"att-header-sub\">Vérifiez avant d'envoyer au patient</div>
+          </div>
+          <button class=\"conge-close\" onclick=\"closeAttOverlay()\">
+            <i class=\"fas fa-times\"></i>
+          </button>
+        </div>
+
+        {# Certificat scrollable #}
+        <div class=\"att-scroll-zone\">
+          <div class=\"cert-paper\">
+
+  <div class=\"cert-top\">
+    <div class=\"cert-psy-block\">
+      <div class=\"cert-psy-name\">Dr. {{ app.user.firstname }} {{ app.user.lastname }}</div>
+      <div class=\"cert-psy-title\">Psychologue clinicien(ne) agréé(e)</div>
+      <div class=\"cert-psy-contact\">
+        <span>📞 <span id=\"certPsyTel\">—</span></span>
+        <span>🏠 <span id=\"certPsyAdresse\">—</span></span>
+        <span>✉ <span id=\"certPsyEmail\">—</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class=\"cert-title-band\">
+    CERTIFICAT MÉDICAL D’ARRÊT DE TRAVAIL
+  </div>
+
+  <p class=\"cert-intro\">
+    Je soussigné(e), <strong>Dr. {{ app.user.firstname }} {{ app.user.lastname }}</strong>,
+    psychologue clinicien(ne) agréé(e), certifie avoir examiné ce jour :
+  </p>
+
+  <div class=\"cert-info-row\">
+    <span class=\"cert-info-lbl\">Nom du patient</span>
+    <strong id=\"attPatientName\" class=\"cert-info-val\">—</strong>
+  </div>
+
+  <div class=\"cert-info-row\">
+    <span class=\"cert-info-lbl\">Adresse e-mail</span>
+    <span id=\"attPatientEmail\" class=\"cert-info-val\">—</span>
+  </div>
+
+  <p class=\"cert-intro\" style=\"margin-top:18px\">
+    Après évaluation clinique de son état psychologique et émotionnel,
+    il a été constaté que son état de santé nécessite un arrêt temporaire de travail
+    pour raisons médicales.
+  </p>
+
+  <div class=\"cert-dates-box\">
+    <div class=\"cert-dates-label\">PÉRIODE D’ARRÊT PRESCRITE</div>
+    <div id=\"attDateRange\" class=\"cert-dates-range\">—</div>
+    <div id=\"attDuree\" class=\"cert-dates-dur\">—</div>
+  </div>
+
+  <div class=\"cert-section-sep\">
+    Motif médical
+    <span class=\"cert-sep-line\"></span>
+  </div>
+
+  <div id=\"attMotif\" class=\"cert-motif-box\">
+    —
+  </div>
+
+  <div class=\"cert-section-sep\">
+    Recommandations médicales
+    <span class=\"cert-sep-line\"></span>
+  </div>
+
+  <ul class=\"cert-reco-list\">
+    <li>Repos complet pendant la durée prescrite</li>
+    <li>Éviter toute source de stress professionnel</li>
+    <li>Maintien du suivi psychologique régulier</li>
+    <li>Réévaluation à la fin de la période d’arrêt</li>
+  </ul>
+
+  <p style=\"margin-top:20px; font-size:13px; color:#444;\">
+    Ce certificat est délivré à la demande de l’intéressé(e) pour servir et valoir ce que de droit.
+  </p>
+
+  
+
+            <div class=\"cert-signatures\">
+
+              
+
+              <div class=\"cert-sig-box\">
+                <div class=\"cert-sig-lbl\">Signature praticien</div>
+                <div class=\"cert-sig-pad-wrapper\">
+                  <canvas id=\"sigPsyCanvas\"></canvas>
+                </div>
+                <div id=\"certPsyName2\" class=\"cert-sig-name\"></div>
+                <div class=\"cert-sig-actions\">
+                  <button class=\"cert-sig-clear\" type=\"button\" onclick=\"clearPad('psy')\">
+                    <i class=\"fas fa-redo-alt\"></i> Effacer
+                  </button>
+                  <span id=\"sigPsyDone\" class=\"cert-sig-done\" style=\"display:none\">
+                    <i class=\"fas fa-check-circle\"></i> Signée
+                  </span>
+                </div>
+              </div>
+
+              <div class=\"cert-sig-box cert-stamp-box\">
+                <div class=\"cert-stamp\">VALIDÉ</div>
+                <div class=\"cert-sig-lbl\">Cachet praticien</div>
+              </div>
+
+            </div>
+
+          </div>{# /cert-paper #}
+        </div>{# /att-scroll-zone #}
+
+        {# Zone commentaire #}
+        <div class=\"att-comment-zone\">
+          <label class=\"att-comment-label\">
+            <i class=\"fas fa-comment-alt\"></i>
+            Commentaire envoyé au patient (optionnel)
+          </label>
+          <textarea id=\"attReponse\" rows=\"2\" class=\"att-comment-textarea\"
+            placeholder=\"Ex : N'hésitez pas à me contacter si votre état s'aggrave…\"></textarea>
+        </div>
+
+        {# Bandeau confirmation succès (caché par défaut) #}
+        <div id=\"attSuccessBand\" class=\"att-success-band\">
+          <i class=\"fas fa-circle-check\"></i>
+          Attestation envoyée avec succès. Le patient a été notifié par email.
+        </div>
+
+        {# Erreur #}
+        <div id=\"attError\" class=\"conge-form-error\" style=\"display:none;margin:0 20px 6px\"></div>
+
+        {# Footer actions #}
+        <div class=\"att-footer\">
+          <button class=\"conge-btn-secondary\" onclick=\"closeAttOverlay()\">
+            <i class=\"fas fa-arrow-left\"></i> Retour
+          </button>
+          <button id=\"attConfirmBtn\" class=\"att-confirm-btn\" onclick=\"sendDecisionFinale()\">
+            <i class=\"fas fa-paper-plane\"></i>
+            Confirmer et envoyer l'attestation
+          </button>
+        </div>
+
+      </div>{# /attOverlay #}
+    </div>{# /dossierBody #}
+
+  </div>{# /dossier-conge-modal #}
+</div>{# /rdv-overlay #}
+
+
+{# ═══════════════════════════════════════════
+   CSS
+   ═══════════════════════════════════════════ #}
+<style>
+/* ────────────────────────────────────────────
+   Filtres
+──────────────────────────────────────────── */
+.conge-psy-filters { display:flex; gap:8px; flex-wrap:wrap; }
+.conge-filter-btn {
+  background: var(--bg-soft, #f5f5f5);
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.conge-filter-btn.active,
+.conge-filter-btn:hover {
+  background: linear-gradient(135deg, #085918, #534d08);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ────────────────────────────────────────────
+   Grid cartes
+──────────────────────────────────────────── */
+.conge-psy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* ────────────────────────────────────────────
+   Carte psy
+──────────────────────────────────────────── */
+.conge-psy-card {
+  border: 1.5px solid var(--border, #eee);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  transition: box-shadow .2s;
+}
+.conge-psy-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+
+.conge-psy-stripe { height: 5px; background: #e0e0e0; }
+.conge-psy-stripe.en_attente { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.conge-psy-stripe.valide     { background: linear-gradient(90deg, #10b981, #34d399); }
+.conge-psy-stripe.refuse     { background: linear-gradient(90deg, #ef4444, #f87171); }
+.conge-psy-stripe.termine    { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.conge-psy-stripe.annule_patient { background: #9ca3af; }
+
+.conge-psy-body { padding: 16px; }
+
+.conge-psy-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.conge-psy-avatar {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #085918, #534d08);
+  color: #fff;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.conge-psy-name  { font-weight: 700; font-size: 15px; }
+.conge-psy-email { font-size: 12px; color: #888; }
+
+.conge-psy-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.conge-psy-motif {
+  font-size: 13px; color: #555; line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.conge-psy-footer { display: flex; gap: 8px; flex-wrap: wrap; }
+.conge-psy-btn {
+  flex: 1; min-width: 80px;
+  border: none; border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: opacity .15s;
+}
+.conge-psy-btn:hover { opacity: .85; }
+.conge-psy-btn.dossier { background: var(--bg-soft, #f5f5f5); color: #555; border: 1px solid #ddd; }
+.conge-psy-btn.accept  { background: #e8f5e9; color: #2e7d32; }
+.conge-psy-btn.refuse  { background: #fce4ec; color: #c62828; }
+.conge-psy-btn.decided { background: #f3f4f6; color: #6b7280; cursor: default; }
+
+.conge-list-loading { padding: 40px; text-align: center; color: #888; font-size: 15px; }
+
+/* ────────────────────────────────────────────
+   Modal dossier
+──────────────────────────────────────────── */
+.dossier-conge-modal {
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  width: min(780px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0,0,0,.2);
+  animation: congeSlideIn .3s cubic-bezier(.34, 1.56, .64, 1);
+  position: relative;
+}
+.dossier-header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border, #eee);
+  position: sticky; top: 0;
+  background: var(--surface, #fff);
+  z-index: 5;
+}
+.dossier-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #085918, #534d08);
+  color: #fff; display: grid; place-items: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.dossier-title { margin: 0; font-size: 18px; font-weight: 700; }
+.dossier-sub   { margin: 2px 0 0; font-size: 13px; color: #888; }
+
+.dossier-section-title {
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .7px;
+  color: #085918; margin: 20px 0 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dossier-section-title::after {
+  content: ''; flex: 1; height: 1px; background: #08591833;
+}
+
+.dossier-demand-box {
+  background: linear-gradient(135deg, #08591812, #534d0812);
+  border: 1.5px solid #08591833;
+  border-radius: 14px;
+  padding: 16px;
+}
+.dossier-demand-dates { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+
+.dossier-fiche-item {
+  border: 1px solid var(--border, #eee);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.dossier-fiche-toggle {
+  width: 100%; text-align: left;
+  background: var(--bg-soft, #f8f8f8);
+  border: none; padding: 12px 16px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dossier-fiche-body { padding: 14px 16px; font-size: 13px; line-height: 1.7; display: none; }
+.dossier-fiche-body.open { display: block; }
+.dossier-fiche-field { margin-bottom: 10px; }
+.dossier-fiche-label { font-weight: 600; color: #085918; margin-bottom: 4px; }
+
+.dossier-decision-area {
+  padding: 20px 28px 28px;
+  border-top: 1px solid var(--border, #eee);
+}
+.dossier-decision-btns { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.dossier-decision-textarea {
+  width: 100%;
+  border: 1.5px solid var(--border, #ddd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit; font-size: 14px;
+  resize: vertical;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.dossier-decision-textarea:focus {
+  outline: none; border-color: #085918;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.12);
+}
+.dossier-confirm-area { display: none; margin-top: 14px; }
+.dossier-confirm-area.open { display: block; }
+
+/* ────────────────────────────────────────────
+   OVERLAY ATTESTATION — intégré dans le modal
+──────────────────────────────────────────── */
+.att-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--surface, #fff);
+  border-radius: 20px;      /* même radius que le modal */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  /* État caché */
+  opacity: 0;
+  transform: translateY(32px) scale(.97);
+  pointer-events: none;
+
+  /* Transition entrée — légère élastique */
+  transition:
+    opacity .38s cubic-bezier(.4, 0, .2, 1),
+    transform .4s cubic-bezier(.34, 1.25, .64, 1);
+}
+
+/* État visible */
+.att-overlay.att-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* En-tête attestation */
+.att-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border, #eee);
+  background: var(--surface, #fff);
+  flex-shrink: 0;
+  position: sticky; top: 0; z-index: 2;
+}
+.att-header-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff; display: grid; place-items: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.att-header-title { font-size: 16px; font-weight: 700; }
+.att-header-sub   { font-size: 12px; color: #888; margin-top: 2px; }
+
+/* Zone scrollable du certificat */
+.att-scroll-zone {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* ── Certificat papier ── */
+.cert-paper {
+  border: 1.5px solid #10b981;
+  border-radius: 12px;
+  padding: 22px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.cert-entete {
+  text-align: center;
+  border-bottom: 1px solid #d1fae5;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.cert-cabinet-name { font-size: 15px; font-weight: 700; color: #085918; }
+.cert-cabinet-role { font-size: 11px; color: #888; margin-top: 3px; }
+
+.cert-title-band {
+  text-align: center;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: .5px;
+  color: #085918;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
+.cert-intro { color: #555; font-size: 13px; margin-bottom: 6px; }
+
+.cert-info-row {
+  display: flex; align-items: baseline; gap: 8px;
+  margin: 5px 0;
+}
+.cert-info-lbl { min-width: 115px; font-size: 11px; color: #888; }
+.cert-info-val { font-size: 13px; font-weight: 700; color: #222; }
+
+.cert-dates-box {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 10px;
+  padding: 14px; text-align: center;
+  margin: 16px 0;
+}
+.cert-dates-label {
+  font-size: 11px; font-weight: 700;
+  color: #166534; letter-spacing: .6px;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.cert-dates-range { font-size: 17px; font-weight: 700; color: #085918; }
+.cert-dates-dur   { font-size: 12px; color: #2e7d32; margin-top: 3px; }
+
+.cert-section-sep {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: #10b981;
+  display: flex; align-items: center; gap: 8px;
+  margin: 14px 0 6px;
+}
+.cert-sep-line {
+  flex: 1; height: 1px;
+  background: #d1fae5;
+  display: inline-block;
+}
+
+.cert-motif-box {
+  background: #f8f9fa;
+  border-left: 3px solid #10b981;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  color: #444; font-size: 13px;
+}
+
+.cert-reco-list {
+  padding-left: 18px;
+  color: #555; margin: 0;
+}
+.cert-reco-list li { margin-bottom: 4px; }
+
+.cert-signatures {
+  display: flex; gap: 14px;
+  margin-top: 22px;
+}
+.cert-sig-box {
+  width: 220px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+.cert-sig-line {
+  height: 38px;
+  border-bottom: 1.5px solid #333;
+  margin-bottom: 8px;
+}
+.cert-sig-lbl  { font-size: 11px; color: #888; }
+.cert-sig-name { font-size: 11px; color: #555; margin-top: 2px; }
+.cert-stamp {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  border: 2.5px solid #10b981;
+  margin: 0 auto 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  color: #085918;
+  text-align: center; line-height: 1.3;
+}
+
+/* Zone commentaire */
+.att-comment-zone {
+  padding: 12px 24px;
+  border-top: 1px solid var(--border, #eee);
+  flex-shrink: 0;
+}
+.att-comment-label {
+  font-size: 12px; color: #888;
+  display: block; margin-bottom: 6px;
+}
+.att-comment-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit; font-size: 13px;
+  resize: vertical;
+  transition: border-color .2s;
+}
+.att-comment-textarea:focus {
+  outline: none; border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,.1);
+}
+
+/* Bandeau succès */
+.att-success-band {
+  display: none;
+  align-items: center; gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 24px 0;
+  font-size: 13px; color: #166534;
+}
+.att-success-band.att-success-visible { display: flex; }
+
+/* Footer attestation */
+.att-footer {
+  display: flex;
+  justify-content: space-between; align-items: center;
+  padding: 14px 24px;
+  border-top: 1px solid var(--border, #eee);
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+/* Bouton confirmer (vert, dans le footer attestation) */
+.att-confirm-btn {
+  padding: 10px 20px;
+  border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: opacity .15s, transform .1s;
+}
+.att-confirm-btn:hover   { opacity: .9; }
+.att-confirm-btn:active  { transform: scale(.98); }
+.att-confirm-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* ── Animation d'entrée du modal ── */
+@keyframes congeSlideIn {
+  from { opacity: 0; transform: translateY(30px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+/* ── Wrapper SignaturePad ── */
+.cert-sig-pad-wrapper {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  border-bottom: 1.5px solid #333;
+  border-radius: 4px 4px 0 0;
+  background: #fafafa;
+  margin: 8px 0 4px;
+  overflow: hidden;
+}
+
+.cert-sig-pad-wrapper canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.cert-sig-pad-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #bbb;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+/* ── Actions sous le pad ── */
+.cert-sig-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  min-height: 20px;
+}
+
+.cert-sig-clear {
+  font-size: 11px;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+.cert-sig-clear:hover { color: #ef4444; }
+
+.cert-sig-done {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Cachet ── */
+.cert-stamp-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+</style>
+
+
+{# ═══════════════════════════════════════════
+   JS
+   ═══════════════════════════════════════════ #}
+<script src=\"https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js\"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   ÉTAT GLOBAL
+═══════════════════════════════════════════════════════════ */
+let _congeCurrentFilter = '';
+let _congeCurrentPage   = 1;
+let _dossierCongeId     = null;
+let _pendingDecision    = null;
+
+const STATUT_LABELS = {
+  en_attente:     'En attente',
+  valide:         'Validé',
+  refuse:         'Refusé',
+  annule_patient: 'Annulé par patient',
+  termine:        'Archivé',
+};
+
+/* ═══════════════════════════════════════════════════════════
+   LISTE & FILTRES
+═══════════════════════════════════════════════════════════ */
+function filterConges(statut, btn) {
+  _congeCurrentFilter = statut;
+  _congeCurrentPage   = 1;
+  document.querySelectorAll('.conge-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadCongesPsy();
+}
+
+async function loadCongesPsy(page = 1) {
+  _congeCurrentPage = page;
+  const grid    = document.getElementById('congesGrid');
+  const empty   = document.getElementById('congesEmpty');
+  const loading = document.getElementById('congesListState');
+  const pager   = document.getElementById('congesPagination');
+
+  grid.style.display    = 'none';
+  empty.style.display   = 'none';
+  pager.style.display   = 'none';
+  loading.style.display = 'block';
+  loading.innerHTML     = '<i class=\"fas fa-circle-notch fa-spin\"></i> Chargement…';
+
+  try {
+    const params = new URLSearchParams({ page });
+    if (_congeCurrentFilter) params.set('statut', _congeCurrentFilter);
+
+    const r    = await fetch(`/conge/psy/liste?\${params}`);
+    const data = await r.json();
+
+    loading.style.display = 'none';
+
+    if (!data.items || !data.items.length) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    grid.innerHTML     = data.items.map(c => renderCongePsyCard(c)).join('');
+    grid.style.display = 'grid';
+
+    if (data.pageCount > 1) {
+      pager.innerHTML    = buildCongePagination(data.currentPage, data.pageCount);
+      pager.style.display = 'flex';
+    }
+  } catch {
+    loading.innerHTML = '<span style=\"color:#c62828\"><i class=\"fas fa-exclamation-circle\"></i> Erreur de chargement.</span>';
+  }
+}
+
+function renderCongePsyCard(c) {
+  const initials = c.patientName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const isWaiting = c.statut === 'en_attente';
+
+  return `
+  <div class=\"conge-psy-card\" id=\"congePsyCard\${c.id}\">
+    <div class=\"conge-psy-stripe \${c.statut}\"></div>
+    <div class=\"conge-psy-body\">
+      <div class=\"conge-psy-top\">
+        <div style=\"display:flex;gap:10px;align-items:center\">
+          <div class=\"conge-psy-avatar\">\${initials}</div>
+          <div>
+            <div class=\"conge-psy-name\">\${c.patientName}</div>
+            <div class=\"conge-psy-email\">\${c.patientEmail}</div>
+          </div>
+        </div>
+        <span class=\"conge-status-badge \${c.statut}\">\${STATUT_LABELS[c.statut] || c.statut}</span>
+      </div>
+      <div class=\"conge-psy-chips\">
+        <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${c.dateDebut} → \${c.dateFin}</span>
+        <span class=\"conge-chip\"><i class=\"fas fa-hourglass-half\"></i> \${c.duree} jour\${c.duree > 1 ? 's' : ''}</span>
+        <span class=\"conge-chip\"><i class=\"fas fa-clock\"></i> \${c.createdAt}</span>
+      </div>
+      <div class=\"conge-psy-motif\">\${c.motif}</div>
+      <div class=\"conge-psy-footer\">
+        <button class=\"conge-psy-btn dossier\" onclick=\"openDossierConge(\${c.id})\">
+          <i class=\"fas fa-folder-open\"></i> Dossier
+        </button>
+        \${isWaiting ? `
+          <button class=\"conge-psy-btn accept\" onclick=\"openDossierConge(\${c.id}, 'valide')\">
+            <i class=\"fas fa-check\"></i> Accepter
+          </button>
+          <button class=\"conge-psy-btn refuse\" onclick=\"openDossierConge(\${c.id}, 'refuse')\">
+            <i class=\"fas fa-times\"></i> Refuser
+          </button>
+        ` : `
+          <button class=\"conge-psy-btn decided\" disabled>
+            <i class=\"fas fa-lock\"></i> \${STATUT_LABELS[c.statut]}
+          </button>
+        `}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildCongePagination(cur, tot) {
+  let html = '';
+  const prev = cur > 1
+    ? `<a class=\"fiche-page-btn prev-next\" href=\"#\" onclick=\"loadCongesPsy(\${cur - 1});return false\"><i class=\"fas fa-chevron-left\"></i></a>`
+    : `<span class=\"fiche-page-btn prev-next disabled\"><i class=\"fas fa-chevron-left\"></i></span>`;
+  const next = cur < tot
+    ? `<a class=\"fiche-page-btn prev-next\" href=\"#\" onclick=\"loadCongesPsy(\${cur + 1});return false\"><i class=\"fas fa-chevron-right\"></i></a>`
+    : `<span class=\"fiche-page-btn prev-next disabled\"><i class=\"fas fa-chevron-right\"></i></span>`;
+
+  html += prev;
+  for (let i = 1; i <= tot; i++) {
+    if (i === 1 || i === tot || (i >= cur - 2 && i <= cur + 2)) {
+      html += `<a class=\"fiche-page-btn \${i === cur ? 'active' : ''}\" href=\"#\" onclick=\"loadCongesPsy(\${i});return false\">\${i}</a>`;
+    } else if (i === cur - 3 || i === cur + 3) {
+      html += `<span class=\"fiche-page-ellipsis\">…</span>`;
+    }
+  }
+  html += next;
+  return html;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL DOSSIER
+═══════════════════════════════════════════════════════════ */
+async function openDossierConge(congeId, preselect = null) {
+  _dossierCongeId  = congeId;
+  _pendingDecision = null;
+
+  /* Réinitialiser l'overlay attestation */
+  closeAttOverlay(true);
+
+  /* Ouvrir le modal */
+  document.getElementById('dossierCongeModal').style.display = 'flex';
+  document.getElementById('dossierPatientName').textContent  = 'Chargement…';
+  document.getElementById('dossierPatientEmail').textContent = '';
+
+  const bodyContent = document.getElementById('dossierBodyContent');
+  bodyContent.innerHTML = `
+    <div style=\"padding:40px;text-align:center\">
+      <i class=\"fas fa-circle-notch fa-spin\" style=\"font-size:28px;color:#085918\"></i>
+    </div>`;
+
+  try {
+    const r    = await fetch(`/conge/\${congeId}/dossier-patient`);
+    const data = await r.json();
+
+    if (!data.success) {
+      bodyContent.innerHTML = `<p style=\"color:#c62828;padding:20px\">\${data.message}</p>`;
+      return;
+    }
+
+    document.getElementById('dossierPatientName').textContent  = data.patientName;
+    document.getElementById('dossierPatientEmail').textContent = data.patientEmail;
+
+    const demande   = data.demandeActuelle;
+    const isWaiting = demande.statut === 'en_attente';
+
+    /* Historique congés */
+    const autresConges = data.historiqueConges.filter(h => h.id !== demande.id);
+    const historiqueHtml = autresConges.length
+      ? autresConges.map(h => `
+          <div class=\"conge-patient-card \${h.statut}\" style=\"margin-bottom:8px\">
+            <div class=\"conge-card-chips\">
+              <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${h.dateDebut} → \${h.dateFin}</span>
+              <span class=\"conge-status-badge \${h.statut}\">\${STATUT_LABELS[h.statut]}</span>
+            </div>
+            <div class=\"conge-card-motif\">\${h.motif}</div>
+            \${h.reponse ? `<div class=\"conge-card-reponse\"><strong>Réponse :</strong> \${h.reponse}</div>` : ''}
+          </div>`).join('')
+      : `<p style=\"color:#aaa;font-size:13px\">Aucun historique de congé précédent.</p>`;
+
+    /* Fiches */
+    const fichesHtml = data.fiches.length
+      ? data.fiches.map(f => `
+          <div class=\"dossier-fiche-item\">
+            <button class=\"dossier-fiche-toggle\" onclick=\"toggleFiche(this)\">
+              <span><i class=\"fas fa-file-alt\"></i> Séance du \${f.date}</span>
+              <i class=\"fas fa-chevron-down\"></i>
+            </button>
+            <div class=\"dossier-fiche-body\">
+              \${f.probleme       ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Problème principal</div>\${f.probleme}</div>` : ''}
+              \${f.diagnostic     ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Diagnostic</div>\${f.diagnostic}</div>` : ''}
+              \${f.notes          ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Notes cliniques</div>\${f.notes}</div>` : ''}
+              \${f.traitement     ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Traitement</div>\${f.traitement}</div>` : ''}
+              \${f.recommandations ? `<div class=\"dossier-fiche-field\"><div class=\"dossier-fiche-label\">Recommandations</div>\${f.recommandations}</div>` : ''}
+            </div>
+          </div>`).join('')
+      : `<p style=\"color:#aaa;font-size:13px\">Aucune fiche de consultation trouvée.</p>`;
+
+    bodyContent.innerHTML = `
+      <div style=\"padding:20px 28px\">
+
+        <div class=\"dossier-section-title\">
+          <i class=\"fas fa-clipboard-list\"></i> Demande actuelle
+        </div>
+        <div class=\"dossier-demand-box\">
+          <div class=\"dossier-demand-dates\">
+            <span class=\"conge-chip\"><i class=\"fas fa-calendar-day\"></i> \${demande.dateDebut} → \${demande.dateFin}</span>
+            <span class=\"conge-chip\"><i class=\"fas fa-hourglass-half\"></i> \${demande.duree} jour\${demande.duree > 1 ? 's' : ''}</span>
+            <span class=\"conge-status-badge \${demande.statut}\">\${STATUT_LABELS[demande.statut]}</span>
+          </div>
+          <div class=\"conge-card-motif\"><strong>Motif :</strong> \${demande.motif}</div>
+          <div style=\"font-size:12px;color:#aaa;margin-top:8px\">
+            Soumis le \${demande.createdAt}
+          </div>
+        </div>
+
+        <div class=\"dossier-section-title\">
+          <i class=\"fas fa-file-alt\"></i> Fiches de consultation (\${data.ficheCount})
+        </div>
+        \${fichesHtml}
+
+        <div class=\"dossier-section-title\">
+          <i class=\"fas fa-history\"></i> Historique des congés
+        </div>
+        \${historiqueHtml}
+      </div>
+
+      \${isWaiting ? `
+      <div class=\"dossier-decision-area\">
+        <div class=\"dossier-section-title\" style=\"margin-top:0\">
+          <i class=\"fas fa-gavel\"></i> Décision
+        </div>
+        <div class=\"dossier-decision-btns\">
+          <button class=\"conge-psy-btn accept\" style=\"flex:0 0 auto;padding:10px 20px\"
+                  onclick=\"selectDecision('valide')\">
+            <i class=\"fas fa-check-circle\"></i> Accepter le congé
+          </button>
+          <button class=\"conge-psy-btn refuse\" style=\"flex:0 0 auto;padding:10px 20px\"
+                  onclick=\"selectDecision('refuse')\">
+            <i class=\"fas fa-times-circle\"></i> Refuser le congé
+          </button>
+        </div>
+        <div class=\"dossier-confirm-area\" id=\"dossierConfirmArea\">
+          <textarea class=\"dossier-decision-textarea\" id=\"dossierReponse\" rows=\"3\"
+                    placeholder=\"Commentaire optionnel pour le patient…\"></textarea>
+          <div style=\"display:flex;gap:10px;margin-top:10px\">
+            <button class=\"conge-btn-secondary\" onclick=\"cancelDecision()\">Annuler</button>
+            <button class=\"conge-btn-primary\" id=\"dossierConfirmBtn\" onclick=\"confirmDecision(\${congeId})\">
+              <i class=\"fas fa-paper-plane\"></i> Confirmer
+            </button>
+          </div>
+          <div id=\"dossierDecisionError\" class=\"conge-form-error\" style=\"display:none;margin-top:10px\"></div>
+        </div>
+      </div>` : ''}
+    `;
+
+    /* Pré-sélectionner si venu via bouton rapide */
+    if (preselect && isWaiting) {
+      selectDecision(preselect);
+    }
+
+  } catch (err) {
+    bodyContent.innerHTML = `<p style=\"color:#c62828;padding:20px\">Erreur : \${err.message}</p>`;
+  }
+}
+
+function closeDossierConge() {
+  closeAttOverlay(true);
+  document.getElementById('dossierCongeModal').style.display = 'none';
+  _dossierCongeId  = null;
+  _pendingDecision = null;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DÉCISION (zone refus / texte)
+═══════════════════════════════════════════════════════════ */
+function selectDecision(decision) {
+  _pendingDecision = decision;
+  const area = document.getElementById('dossierConfirmArea');
+  if (!area) return;
+  area.classList.add('open');
+
+  const btn = document.getElementById('dossierConfirmBtn');
+  if (decision === 'valide') {
+    btn.innerHTML = '<i class=\"fas fa-check-circle\"></i> Confirmer l\\'acceptation';
+    btn.style.background = 'linear-gradient(135deg,#10b981,#34d399)';
+  } else {
+    btn.innerHTML = '<i class=\"fas fa-times-circle\"></i> Confirmer le refus';
+    btn.style.background = 'linear-gradient(135deg,#ef4444,#f87171)';
+  }
+  document.getElementById('dossierReponse')?.focus();
+}
+
+function cancelDecision() {
+  _pendingDecision = null;
+  document.getElementById('dossierConfirmArea')?.classList.remove('open');
+}
+
+async function confirmDecision(congeId) {
+  if (!_pendingDecision) return;
+
+  /* ── Acceptation → ouvrir l'overlay attestation ── */
+  if (_pendingDecision === 'valide') {
+    await openAttOverlay(congeId);
+    return;
+  }
+
+  /* ── Refus → envoyer directement ── */
+  const btn     = document.getElementById('dossierConfirmBtn');
+  const errDiv  = document.getElementById('dossierDecisionError');
+  const reponse = document.getElementById('dossierReponse')?.value || '';
+
+  btn.disabled           = true;
+  errDiv.style.display   = 'none';
+
+  try {
+    const r    = await fetch(`/conge/\${congeId}/traiter`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ decision: 'refuse', reponse }),
+    });
+    const data = await r.json();
+
+    if (data.success) {
+      closeDossierConge();
+      loadCongesPsy(_congeCurrentPage);
+      showToast('Congé refusé. Le patient a été notifié.', 'error');
+      _decrementBadge();
+    } else {
+      errDiv.textContent   = data.message || 'Erreur.';
+      errDiv.style.display = 'block';
+      btn.disabled         = false;
+    }
+  } catch {
+    errDiv.textContent   = 'Erreur réseau.';
+    errDiv.style.display = 'block';
+    btn.disabled         = false;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   OVERLAY ATTESTATION — ouvrir / fermer
+═══════════════════════════════════════════════════════════ */
+async function openAttOverlay(congeId) {
+  let data;
+
+  try {
+    const r = await fetch(`/conge/\${congeId}/dossier-patient`);
+    data = await r.json();
+  } catch {
+    showToast('Impossible de charger les données.', 'error');
+    return;
+  }
+
+  if (!data.success) {
+    showToast(data.message || 'Erreur.', 'error');
+    return;
+  }
+
+  const dem = data.demandeActuelle;
+  const reponse = document.getElementById('dossierReponse')?.value || '';
+
+  /* ── Données patient ── */
+  document.getElementById('attPatientName').textContent  = data.patientName;
+  document.getElementById('attPatientEmail').textContent = data.patientEmail;
+  document.getElementById('attDateRange').textContent    = `\${dem.dateDebut} → \${dem.dateFin}`;
+  document.getElementById('attDuree').textContent        =
+    `Durée : \${dem.duree} jour\${dem.duree > 1 ? 's' : ''}`;
+  document.getElementById('attMotif').textContent        = dem.motif;
+  
+
+  /* ── Données psychologue ── */
+  document.getElementById('certPsyName2').textContent   = data.psyName || '—';
+  document.getElementById('certPsyTel').textContent     = data.psyTelephone || '—';
+  document.getElementById('certPsyAdresse').textContent = data.psyAdresse || '—';
+  document.getElementById('certPsyEmail').textContent   = data.psyEmail || '—';
+
+  /* commentaire */
+  document.getElementById('attReponse').value = reponse;
+
+  /* Reset bouton */
+  const confirmBtn = document.getElementById('attConfirmBtn');
+  confirmBtn.disabled = false;
+ confirmBtn.innerHTML =
+  '<i class=\"fas fa-paper-plane\"></i> Confirmer et envoyer l\\'attestation';
+
+  document.getElementById('attSuccessBand')
+    .classList.remove('att-success-visible');
+
+  document.getElementById('attError').style.display = 'none';
+
+  /* ── RESET SIGNATURES ── */
+  resetSignaturePads();
+
+  /* Animation */
+  const overlay = document.getElementById('attOverlay');
+  overlay.classList.remove('att-visible');
+  void overlay.offsetWidth;
+  overlay.classList.add('att-visible');
+
+  /* ── IMPORTANT : init après affichage ── */
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initSignaturePads();
+    });
+  });
+}
+/**
+ * @param {boolean} instant - si true, supprime la transition (fermeture sans animation)
+ */
+function closeAttOverlay(instant = false) {
+  const overlay = document.getElementById('attOverlay');
+  if (!overlay) return;
+
+  if (instant) {
+    overlay.style.transition = 'none';
+    overlay.classList.remove('att-visible');
+    /* Réactiver la transition au prochain frame */
+    requestAnimationFrame(() => {
+      overlay.style.transition = '';
+    });
+  } else {
+    overlay.classList.remove('att-visible');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ENVOI FINAL (depuis l'overlay attestation)
+═══════════════════════════════════════════════════════════ */
+async function sendDecisionFinale() {
+  const congeId = _dossierCongeId;
+  if (!congeId) return;
+
+  /* ── NOUVEAU : Vérifier que le psy a signé ── */
+  if (!_padPsy || _padPsy.isEmpty()) {
+    const errDiv = document.getElementById('attError');
+    errDiv.textContent   = 'Veuillez apposer votre signature avant d\\'envoyer.';
+    errDiv.style.display = 'block';
+    return;
+  }
+
+  const btn     = document.getElementById('attConfirmBtn');
+  const errDiv  = document.getElementById('attError');
+  const reponse = document.getElementById('attReponse').value;
+
+  /* ── NOUVEAU : Capturer les signatures en base64 ── */
+  const signaturePsy     = _padPsy     && !_padPsy.isEmpty()
+    ? _padPsy.toDataURL('image/png')     : null;
+ 
+
+  btn.disabled         = true;
+  btn.innerHTML        = '<i class=\"fas fa-circle-notch fa-spin\"></i> Envoi en cours…';
+  errDiv.style.display = 'none';
+
+  try {
+    const r = await fetch(`/conge/\${congeId}/traiter`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        decision:          'valide',
+        reponse,
+        signaturePsy,      // ← base64 PNG
+        
+      }),
+    });
+    const data = await r.json();
+
+    if (data.success) {
+      btn.innerHTML = '<i class=\"fas fa-check-circle\"></i> Attestation envoyée';
+      document.getElementById('attSuccessBand').classList.add('att-success-visible');
+      setTimeout(() => {
+        closeDossierConge();
+        loadCongesPsy(_congeCurrentPage);
+        showToast('Congé accepté. L\\'attestation a été envoyée au patient par email.', 'success');
+        _decrementBadge();
+      }, 1600);
+    } else {
+      errDiv.textContent   = data.message || 'Erreur.';
+      errDiv.style.display = 'block';
+      btn.disabled         = false;
+      btn.innerHTML        = '<i class=\"fas fa-paper-plane\"></i> Confirmer et envoyer l\\'attestation';
+    }
+  } catch {
+    errDiv.textContent   = 'Erreur réseau.';
+    errDiv.style.display = 'block';
+    btn.disabled         = false;
+    btn.innerHTML        = '<i class=\"fas fa-paper-plane\"></i> Confirmer et envoyer l\\'attestation';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITAIRES
+═══════════════════════════════════════════════════════════ */
+function toggleFiche(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  const icon = btn.querySelector('.fa-chevron-down, .fa-chevron-up');
+  if (icon) {
+    icon.classList.toggle('fa-chevron-down');
+    icon.classList.toggle('fa-chevron-up');
+  }
+}
+
+function _decrementBadge() {
+  const badge = document.getElementById('badgeConges');
+  if (!badge) return;
+  const count = parseInt(badge.textContent || '0', 10) - 1;
+  if (count <= 0) {
+    badge.style.display = 'none';
+  } else {
+    badge.textContent = count;
+  }
+}
+
+/* Toast — utilise celui de la page s'il existe déjà */
+if (typeof showToast === 'undefined') {
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `rdv-flash \${type}`;
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;min-width:280px;animation:congeSlideIn .3s ease';
+    t.innerHTML = `<i class=\"fas fa-\${type === 'success' ? 'circle-check' : 'circle-exclamation'}\"></i> \${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIGNATURE PAD
+═══════════════════════════════════════════════════════════ */
+let _padPatient = null;
+let _padPsy     = null;
+
+function initSignaturePads() {
+  /* Psy */
+  const canvasPsy = document.getElementById('sigPsyCanvas');
+  if (canvasPsy && !_padPsy) {
+    _resizeCanvas(canvasPsy);
+    _padPsy = new SignaturePad(canvasPsy, {
+      penColor:       '#085918',
+      backgroundColor:'rgba(250,250,250,0)',
+      minWidth:       0.8,
+      maxWidth:       2.5,
+      throttle:       16,
+    });
+
+    /* Afficher le badge \"Signée\" après le premier trait */
+    _padPsy.addEventListener('endStroke', () => {
+      document.getElementById('sigPsyDone').style.display = 'flex';
+    });
+  }
+}
+
+function _resizeCanvas(canvas) {
+  const ratio  = Math.max(window.devicePixelRatio || 1, 1);
+  const wrapper = canvas.parentElement;
+  canvas.width  = wrapper.offsetWidth  * ratio;
+  canvas.height = wrapper.offsetHeight * ratio;
+  canvas.getContext('2d').scale(ratio, ratio);
+}
+
+function clearPad(who) {
+  if (who === 'patient' && _padPatient) {
+    _padPatient.clear();
+  }
+  if (who === 'psy' && _padPsy) {
+    _padPsy.clear();
+    document.getElementById('sigPsyDone').style.display = 'none';
+  }
+}
+
+function resetSignaturePads() {
+  if (_padPatient) { _padPatient.clear(); }
+  if (_padPsy)     {
+    _padPsy.clear();
+    document.getElementById('sigPsyDone').style.display = 'none';
+  }
+  /* Réinitialiser les instances pour forcer le resize à la prochaine ouverture */
+  _padPatient = null;
+  _padPsy     = null;
+}
+
+/* ─────────────────────────────────────────────────────────
+   INTÉGRATION dans showSection() existante :
+
+  
+───────────────────────────────────────────────────────── */
+function showSection(name) {
+  console.log(\"SECTION:\", name);
+
+  document.querySelectorAll('.psy-section').forEach(s => {
+    s.style.display = 'none';
+  });
+
+  const el = document.getElementById('section-' + name);
+
+  if (el) {
+    el.style.display = 'block';
+  }
+
+  if (name === 'conges') {
+    loadCongesPsy();
+  }
+}
+</script>
+", "home/psy_conge_section.html.twig", "C:\\Users\\sirine\\psy\\templates\\home\\psy_conge_section.html.twig");
+    }
+}

@@ -1,0 +1,3 @@
+<?php //156bb508783e07ba754679f3cc6e39ba
+
+return [PHP_INT_MAX, 'styles/questions/show.css'];

@@ -1,0 +1,1470 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* Psychologue/index.html.twig */
+class __TwigTemplate_676fb339fdf240475da04504272bbe03 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'title' => [$this, 'block_title'],
+            'navbar' => [$this, 'block_navbar'],
+            'body' => [$this, 'block_body'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 2
+        return "base.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Psychologue/index.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Psychologue/index.html.twig"));
+
+        $this->parent = $this->load("base.html.twig", 2);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 4
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        yield "NAFSEYTI - Espace Psychologue";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 6
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_navbar(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "navbar"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "navbar"));
+
+        // line 7
+        yield "<div class=\"navbar-wrap\">
+    <div class=\"navbar-inner\">
+        <ul class=\"nav-links\">
+            <li><a href=\"";
+        // line 10
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_dashboard");
+        yield "\" class=\"active\">Accueil</a></li>
+            <li><a href=\"#\">Contenu Psychologique</a></li>
+            <li><a href=\"#\">Tests</a></li>
+            <li><a href=\"#\">Rendez-vous</a></li>
+            <li><a href=\"";
+        // line 14
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_events_index");
+        yield "\">Evenements</a></li>
+            <li><a href=\"#\">Suivi Personnel</a></li>
+        </ul>
+        ";
+        // line 17
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 17, $this->source); })()), "user", [], "any", false, false, false, 17)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 18
+            yield "            <div style=\"position:relative; display:flex; align-items:center;\" id=\"profileDropdownWrap\">
+                <div onclick=\"toggleProfileDropdown()\"
+                     style=\"display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 12px; border-radius:8px; transition:background 0.2s;\"
+                     onmouseover=\"this.style.background='rgba(0,0,0,0.05)'\"
+                     onmouseout=\"this.style.background='transparent'\">
+                    <div style=\"width:38px; height:38px; border-radius:50%; background:#4a7c3f; display:flex; align-items:center; justify-content:center; border:2px solid #4a7c3f;\">
+                        <i class=\"fas fa-user\" style=\"color:white; font-size:1rem;\"></i>
+                    </div>
+                    <div style=\"line-height:1.2;\">
+                        <div style=\"font-size:0.85rem; font-weight:600; color:#2d3a1e;\">";
+            // line 27
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27), "firstname", [], "any", false, false, false, 27), "html", null, true);
+            yield " ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27), "lastname", [], "any", false, false, false, 27), "html", null, true);
+            yield "</div>
+                        <div style=\"font-size:0.7rem; color:#6B7D5A; text-transform:uppercase; letter-spacing:1px;\">";
+            // line 28
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 28, $this->source); })()), "user", [], "any", false, false, false, 28), "role", [], "any", false, false, false, 28), "html", null, true);
+            yield "</div>
+                    </div>
+                    <i class=\"fas fa-chevron-down\" style=\"font-size:0.7rem; color:#6B7D5A;\"></i>
+                </div>
+                <div id=\"profileDropdown\"
+                     style=\"display:none; position:absolute; top:calc(100% + 8px); right:0; background:white; border-radius:12px; box-shadow:0 10px 40px rgba(45,80,22,0.15); min-width:200px; overflow:hidden; z-index:9999; border:1px solid #e8e0d0;\">
+                    <a href=\"";
+            // line 34
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_profile");
+            yield "\"
+                       style=\"display:flex; align-items:center; gap:12px; padding:14px 20px; text-decoration:none; color:#2d3a1e; font-size:0.9rem;\"
+                       onmouseover=\"this.style.background='#f5f0e8'\" onmouseout=\"this.style.background='transparent'\">
+                        <i class=\"fas fa-user-circle\" style=\"color:#4a7c3f;\"></i> Mon Profil
+                    </a>
+                    <a href=\"";
+            // line 39
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
+            yield "\"
+                       style=\"display:flex; align-items:center; gap:12px; padding:14px 20px; text-decoration:none; color:#991b1b; font-size:0.9rem; border-top:1px solid #f0ebe0;\"
+                       onmouseover=\"this.style.background='#fee2e2'\" onmouseout=\"this.style.background='transparent'\">
+                        <i class=\"fas fa-sign-out-alt\" style=\"color:#991b1b;\"></i> Se déconnecter
+                    </a>
+                </div>
+            </div>
+        ";
+        } else {
+            // line 47
+            yield "            <a href=\"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
+            yield "\" class=\"nav-cta\">Se connecter</a>
+        ";
+        }
+        // line 49
+        yield "    </div>
+</div>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 53
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 54
+        yield "
+<!-- â•â•â• HERO â•â•â• -->
+<section class=\"hero-section\">
+    <div class=\"hero-bg-pattern\"></div>
+    <div class=\"hero-organic-shape\"></div>
+    <div class=\"hero-organic-shape-2\"></div>
+    <div class=\"hero-content\">
+        <div class=\"row-flex\" style=\"gap: 80px;\">
+            <div class=\"col-half\">
+                <div class=\"hero-tag\">Plateforme de soutien psychologique universitaire</div>
+                <h1 class=\"hero-title\">
+                    NAFSEYTI, votre espace<br>
+                    de <em>bien-Ãªtre mental</em> acadÃ©mique
+                </h1>
+                <p class=\"hero-subtitle\">
+                   Une plateforme innovante dÃ©diÃ©e aux Ã©tudiants, enseignants et universitÃ©s tunisiennes.
+                   Soutien immÃ©diat, prÃ©vention, accompagnement personnalisÃ© et anonymat garanti.
+                </p>
+                <div class=\"hero-actions\">
+                    <a href=\"#!\" class=\"btn-primary-custom\">Commencer maintenant</a>
+                    <a href=\"#!\" class=\"btn-ghost\">DÃ©couvrir la plateforme</a>
+                </div>
+                <div class=\"hero-stats\">
+                <div class=\"stat-item\">
+                    <div class=\"stat-number\">1000+</div>
+                    <div class=\"stat-label\">Ã‰tudiants accompagnÃ©s</div>
+                </div>
+                <div class=\"stat-item\">
+                    <div class=\"stat-number\">24/7</div>
+                    <div class=\"stat-label\">Support disponible</div>
+                </div>
+                <div class=\"stat-item\">
+                    <div class=\"stat-number\">100%</div>
+                    <div class=\"stat-label\">Anonymat sÃ©curisÃ©</div>
+                </div>
+            </div>
+            </div>
+            <div class=\"col-half\" style=\"position:relative;\">
+                <img src=\"img/Anasayfa.jpg\" alt=\"Soutien psychologique\" 
+                     style=\"width:100%;border-radius:2px;display:block;object-fit:cover;height:500px;\">
+                <!-- Floating card -->
+                <div style=\"position:absolute;bottom:-24px;left:-24px;background:var(--beige-cream);padding:24px 28px;border-left:3px solid var(--green-sage);max-width:260px;box-shadow:0 20px 60px rgba(45,80,22,0.2);\">
+                    <i class=\"fas fa-brain\" style=\"color:var(--green-sage);font-size:1.4rem;margin-bottom:12px;display:block;\"></i>
+                    <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-mid);font-style:italic;line-height:1.6;font-weight:300;\">\"La santÃ© mentale est le fondement de tout bien-Ãªtre.\"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• VIDEO BANNER â•â•â• -->
+<div class=\"video-banner\">
+    <div class=\"video-inner\">
+        <button class=\"play-btn\" data-bs-toggle=\"modal\" data-src=\"https://www.youtube.com/embed/DWRcNpR6Kdc\" data-bs-target=\"#videoModal\">
+            <i class=\"fas fa-play\"></i>
+        </button>
+        <p class=\"video-quote\">
+            \"Ensemble, nous pouvons construire un monde oÃ¹ chacun a la chance de s'Ã©panouir pleinement, corps et Ã¢me.\"
+        </p>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div class=\"modal fade\" id=\"videoModal\" tabindex=\"-1\" aria-hidden=\"true\">
+    <div class=\"modal-dialog modal-lg\">
+        <div class=\"modal-content\" style=\"border:none;background:var(--text-dark);\">
+            <div class=\"modal-header\" style=\"border:none;padding:16px 20px;\">
+                <h5 class=\"modal-title\" style=\"color:var(--beige-light);font-family:'Playfair Display',serif;\">Notre Mission en VidÃ©o</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body p-0\">
+                <div class=\"ratio ratio-16x9\">
+                    <iframe src=\"\" id=\"video\" allowfullscreen allow=\"autoplay\"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- â•â•â• ABOUT â•â•â• -->
+<section class=\"about-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\">
+            <div class=\"col-half\">
+                <div class=\"about-img-wrap\">
+                    <img src=\"img/about.jpg\" alt=\"Ã€ propos de MindCare\" style=\"border-radius:2px;\">
+                    <div class=\"about-img-accent\"></div>
+                    <div class=\"about-img-badge\">
+                        <span class=\"badge-number\">18</span>
+                        <span class=\"badge-label\">Ans d'Engagement</span>
+                    </div>
+                </div>
+            </div>
+            <div class=\"col-half\">
+              <div class=\"section-eyebrow\">Ã€ propos de NAFSEYTI</div>
+
+                <h2 class=\"section-title-new\">
+                    Une solution pensÃ©e pour <em>lâ€™Ã©cosystÃ¨me universitaire tunisien</em>
+                </h2>
+
+                <p class=\"about-text\">
+                    NAFSEYTI est la premiÃ¨re plateforme complÃ¨te de soutien psychologique
+                    conÃ§ue spÃ©cifiquement pour les Ã©tudiants, les enseignants et les Ã©tablissements universitaires en Tunisie.
+                </p>
+                <ul class=\"mission-points\">
+                    <li>
+                        <div class=\"point-icon\"><i class=\"fas fa-check\"></i></div>
+                        <span>Soutien psychologique immÃ©diat et confidentiel pour les Ã©tudiants.</span>
+                    </li>
+
+                    <li>
+                        <div class=\"point-icon\"><i class=\"fas fa-check\"></i></div>
+                        <span>DÃ©tection prÃ©coce et outils pÃ©dagogiques pour les enseignants.</span>
+                    </li>
+
+                    <li>
+                        <div class=\"point-icon\"><i class=\"fas fa-check\"></i></div>
+                        <span>RÃ©duction du dÃ©crochage universitaire et amÃ©lioration du bien-Ãªtre collectif.</span>
+                    </li>
+                </ul>
+                <div style=\"margin-top:36px;\">
+                    <a href=\"#!\" class=\"btn-primary-custom\" style=\"background:var(--green-deep);color:var(--beige-cream);\">Notre Histoire</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• SERVICES â•â•â• -->
+<section class=\"services-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\" style=\"align-items:flex-end;margin-bottom:0;\">
+            <div class=\"col-half\">
+                <div class=\"section-eyebrow\">Ce que nous faisons</div>
+                <h2 class=\"section-title-new\">
+                    Nos <em>solutions</em><br>
+                    pour lâ€™universitÃ©
+                </h2>
+            </div>
+            <div class=\"col-half\">
+                <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#6B7D5A;line-height:1.8;font-weight:300;\">
+                    Nous crÃ©ons des programmes qui rÃ©pondent aux besoins urgents tout en favorisant 
+                    des solutions durables pour un changement profond et durable.
+                </p>
+            </div>
+        </div>
+        <div class=\"services-grid\" style=\"margin-top:48px;\">
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-brain\"></i></div>
+                <h3 class=\"service-name\">Soutien Psychologique</h3>
+                <p class=\"service-desc\">Accompagnement individuel et de groupe pour traverser les Ã©preuves de la vie avec rÃ©silience et sÃ©rÃ©nitÃ©.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-heart-pulse\"></i></div>
+                <h3 class=\"service-name\">SantÃ© Mentale</h3>
+                <p class=\"service-desc\">PrÃ©vention, sensibilisation et accÃ¨s aux soins de santÃ© mentale pour les populations les plus vulnÃ©rables.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-hands-holding-child\"></i></div>
+                <h3 class=\"service-name\">Aide Sociale</h3>
+                <p class=\"service-desc\">Soutien aux enfants et familles en difficultÃ©, pour un filet de sÃ©curitÃ© solide et bienveillant.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-seedling\"></i></div>
+                <h3 class=\"service-name\">DÃ©veloppement Personnel</h3>
+                <p class=\"service-desc\">Ateliers et formations pour cultiver la confiance en soi, la pleine conscience et le bien-Ãªtre au quotidien.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-graduation-cap\"></i></div>
+                <h3 class=\"service-name\">Ã‰ducation & Sensibilisation</h3>
+                <p class=\"service-desc\">Programmes Ã©ducatifs pour briser les tabous autour de la santÃ© mentale dans les Ã©coles et communautÃ©s.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-house-heart\"></i></div>
+                <h3 class=\"service-name\">HÃ©bergement d'Urgence</h3>
+                <p class=\"service-desc\">Solutions d'accueil et d'accompagnement pour les personnes en situation de dÃ©tresse aiguÃ«.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• FEATURES / STATS â•â•â• -->
+<section class=\"features-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\">
+            <div class=\"col-half\">
+                <div class=\"stats-mosaic\">
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-users tile-icon\"></i>
+                        <div class=\"tile-number\">500<span class=\"tile-unit\">+</span></div>
+                        <div class=\"tile-label\">Membres de l'Ã‰quipe</div>
+                    </div>
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-award tile-icon\"></i>
+                        <div class=\"tile-number\">70</div>
+                        <div class=\"tile-label\">Prix RemportÃ©s</div>
+                    </div>
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-list-check tile-icon\"></i>
+                        <div class=\"tile-number\">3K<span class=\"tile-unit\">+</span></div>
+                        <div class=\"tile-label\">Projets RÃ©alisÃ©s</div>
+                    </div>
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-comments tile-icon\"></i>
+                        <div class=\"tile-number\">7K<span class=\"tile-unit\">+</span></div>
+                        <div class=\"tile-label\">Avis Positifs</div>
+                    </div>
+                </div>
+            </div>
+            <div class=\"col-half\">
+                <div class=\"section-eyebrow\">Pourquoi NAFSEYTI ?</div>
+                <h2 class=\"section-title-new\">
+                      Une <em>valeur ajoutÃ©e unique</em>
+                </h2>
+                <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#6B7D5A;line-height:1.8;font-weight:300;margin-bottom:16px;\">
+                    Notre engagement repose sur une approche humaine, scientifique et bienveillante au service de chacun.
+                </p>
+                <div class=\"features-list\">
+                    <div class=\"feature-item\">
+                        <span class=\"feature-num\">01</span>
+                        <div class=\"feature-content\">
+                            <h4>Approche CentrÃ©e sur la Personne</h4>
+                            <p>Chaque individu est unique. Nos programmes sont personnalisÃ©s selon les besoins spÃ©cifiques de chaque bÃ©nÃ©ficiaire.</p>
+                        </div>
+                    </div>
+                    <div class=\"feature-item\">
+                        <span class=\"feature-num\">02</span>
+                        <div class=\"feature-content\">
+                            <h4>Ã‰quipe de Professionnels CertifiÃ©s</h4>
+                            <p>Psychologues, travailleurs sociaux et bÃ©nÃ©voles formÃ©s travaillent ensemble pour un soutien holistique.</p>
+                        </div>
+                    </div>
+                    <div class=\"feature-item\">
+                        <span class=\"feature-num\">03</span>
+                        <div class=\"feature-content\">
+                            <h4>Transparence & Impact Mesurable</h4>
+                            <p>Chaque don est tracÃ© et son impact documentÃ©. Vous savez exactement comment votre gÃ©nÃ©rositÃ© aide.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style=\"display:flex;gap:16px;margin-top:40px;\">
+                    <a href=\"#!\" class=\"btn-primary-custom\" style=\"background:var(--green-deep);color:var(--beige-cream);\">Faire un Don</a>
+                    <a href=\"#!\" class=\"btn-primary-custom\" style=\"background:transparent;color:var(--green-deep);border:1px solid var(--beige-mid);\">Nous Rejoindre</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• NOS CAUSES â•â•â• -->
+<section class=\"donations-section\">
+    <div class=\"container-custom\">
+        <div style=\"text-align:center;margin-bottom:0;\">
+            <div class=\"section-eyebrow\" style=\"justify-content:center;\">Nos Causes</div>
+            <h2 class=\"section-title-new\" style=\"max-width:700px;margin:0 auto;\">
+                Nos <em>solutions</em> pour le bien-Ãªtre universitaire
+            </h2>
+        </div>
+
+        <div class=\"donation-cards\">
+
+            <div class=\"donation-card\">
+                <span class=\"donation-category\">Ã‰tudiants</span>
+                <img src=\"img/student-support.jpg\" alt=\"Soutien Ã©tudiant\" class=\"donation-img\">
+                <h3 class=\"donation-title\">Soutien immÃ©diat & anonymat</h3>
+                <p class=\"donation-desc\">
+                    Un espace sÃ©curisÃ© offrant Ã©coute, prÃ©vention,
+                    accompagnement psychologique et contenu adaptÃ©
+                    aux dÃ©fis universitaires.
+                </p>
+                <div class=\"progress-wrap\">
+                    <div class=\"progress-labels\">
+                        <span>Objectif : <strong>Soutien rapide</strong></span>
+                        <span>DisponibilitÃ© : 24/7</span>
+                    </div>
+                    <div class=\"progress-bar-wrap\">
+                        <div class=\"progress-fill\" data-width=\"90\" style=\"width:0%\"></div>
+                    </div>
+                    <div class=\"progress-percent\">90% couverture</div>
+                </div>
+                <a href=\"#!\" class=\"donate-btn\">DÃ©couvrir</a>
+            </div>
+
+            <div class=\"donation-card\">
+                <span class=\"donation-category\">Enseignants</span>
+                <img src=\"img/teacher-support.jpg\" alt=\"Support enseignants\" class=\"donation-img\">
+                <h3 class=\"donation-title\">DÃ©tection prÃ©coce</h3>
+                <p class=\"donation-desc\">
+                    Outils pour repÃ©rer les signes de mal-Ãªtre,
+                    ressources pÃ©dagogiques et communication facilitÃ©e
+                    avec les Ã©tudiants.
+                </p>
+                <div class=\"progress-wrap\">
+                    <div class=\"progress-labels\">
+                        <span>Objectif : <strong>PrÃ©vention</strong></span>
+                        <span>Performance : Ã©levÃ©e</span>
+                    </div>
+                    <div class=\"progress-bar-wrap\">
+                        <div class=\"progress-fill\" data-width=\"95\" style=\"width:0%\"></div>
+                    </div>
+                    <div class=\"progress-percent\">95% efficacitÃ©</div>
+                </div>
+                <a href=\"#!\" class=\"donate-btn\">Explorer</a>
+            </div>
+
+            <div class=\"donation-card\">
+                <span class=\"donation-category\">UniversitÃ©</span>
+                <img src=\"img/university-support.jpg\" alt=\"UniversitÃ©\" class=\"donation-img\">
+                <h3 class=\"donation-title\">RÃ©duction du dÃ©crochage</h3>
+                <p class=\"donation-desc\">
+                    Suivi stratÃ©gique, amÃ©lioration du bien-Ãªtre collectif,
+                    innovation institutionnelle et donnÃ©es dâ€™aide Ã  la dÃ©cision.
+                </p>
+                <div class=\"progress-wrap\">
+                    <div class=\"progress-labels\">
+                        <span>Objectif : <strong>RÃ©ussite</strong></span>
+                        <span>Impact : fort</span>
+                    </div>
+                    <div class=\"progress-bar-wrap\">
+                        <div class=\"progress-fill\" data-width=\"85\" style=\"width:0%\"></div>
+                    </div>
+                    <div class=\"progress-percent\">85% impact positif</div>
+                </div>
+                <a href=\"#!\" class=\"donate-btn\">Voir plus</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• CTA BANNER â•â•â• -->
+<section class=\"cta-banner\">
+    <div class=\"cta-content\">
+        <h2>
+            Notre plateforme est toujours ouverte pour <em>vous accompagner</em>
+        </h2>
+
+        <p>
+            NAFSEYTI accompagne les Ã©tudiants, les enseignants et les universitÃ©s
+            en offrant un espace sÃ©curisÃ©, anonyme et accessible pour le bien-Ãªtre
+            psychologique et la rÃ©ussite acadÃ©mique.
+        </p>
+
+        <div style=\"display:flex;gap:16px;justify-content:center;flex-wrap:wrap;\">
+            <a href=\"#!\" class=\"btn-primary-custom\">DÃ©couvrir la plateforme</a>
+            <a href=\"#!\" class=\"btn-ghost\">Prendre rendez-vous</a>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• EVENTS â•â•â• -->
+<section class=\"events-section\">
+    <div class=\"container-custom\">
+        <div style=\"text-align:center;\">
+            <div class=\"section-eyebrow\" style=\"justify-content:center;\">Événements</div>
+            <h2 class=\"section-title-new\" style=\"max-width:600px;margin:0 auto;\">
+                Rejoignez nos <em>ateliers universitaires</em>
+            </h2>
+        </div>
+
+        ";
+        // line 420
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 420, $this->source); })()))) {
+            // line 421
+            yield "        <div style=\"text-align:center;padding:40px;color:#8b9a8b;\">
+            <div style=\"font-size:48px;margin-bottom:12px;\">🌸</div>
+            <p>Aucun événement disponible pour le moment.</p>
+            <a href=\"";
+            // line 424
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_events_index");
+            yield "\" class=\"btn-primary-custom\" style=\"margin-top:16px;display:inline-block;\">Voir tous les événements</a>
+        </div>
+        ";
+        } else {
+            // line 427
+            yield "        <div class=\"events-grid\" style=\"margin-top:40px;\">
+            ";
+            // line 428
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 428, $this->source); })()));
+            foreach ($context['_seq'] as $context["_key"] => $context["event"]) {
+                // line 429
+                yield "            <div class=\"event-card\">
+                ";
+                // line 430
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["event"], "link", [], "any", false, false, false, 430)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 431
+                    yield "                <img src=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "link", [], "any", false, false, false, 431), "html", null, true);
+                    yield "\" alt=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "title", [], "any", false, false, false, 431), "html", null, true);
+                    yield "\" onerror=\"this.style.display='none'\">
+                ";
+                } else {
+                    // line 433
+                    yield "                <div style=\"height:180px;background:linear-gradient(135deg,#285921,#3d7e33);display:flex;align-items:center;justify-content:center;font-size:48px;\">🎯</div>
+                ";
+                }
+                // line 435
+                yield "                <div class=\"event-body\">
+                    <div class=\"event-meta\">
+                        ";
+                // line 437
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["event"], "eventDate", [], "any", false, false, false, 437)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 438
+                    yield "                        <span><i class=\"fas fa-calendar\"></i> ";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "eventDate", [], "any", false, false, false, 438), "d M Y"), "html", null, true);
+                    yield "</span>
+                        ";
+                }
+                // line 440
+                yield "                        ";
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["event"], "location", [], "any", false, false, false, 440)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 441
+                    yield "                        <span><i class=\"fas fa-map-marker-alt\"></i> ";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "location", [], "any", false, false, false, 441), "html", null, true);
+                    yield "</span>
+                        ";
+                }
+                // line 443
+                yield "                        <span><i class=\"fas fa-users\"></i> ";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "currentParticipants", [], "any", false, false, false, 443), "html", null, true);
+                yield "/";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "maxParticipants", [], "any", false, false, false, 443), "html", null, true);
+                yield "</span>
+                    </div>
+                    <span class=\"event-name\">";
+                // line 445
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "title", [], "any", false, false, false, 445), "html", null, true);
+                yield "</span>
+                    <div style=\"margin-top:8px;height:6px;background:#e0e0e0;border-radius:6px;overflow:hidden;\">
+                        <div style=\"height:100%;width:";
+                // line 447
+                yield (((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "maxParticipants", [], "any", false, false, false, 447) > 0)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::round(((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "currentParticipants", [], "any", false, false, false, 447) / CoreExtension::getAttribute($this->env, $this->source, $context["event"], "maxParticipants", [], "any", false, false, false, 447)) * 100)), "html", null, true)) : (0));
+                yield "%;background:#285921;border-radius:6px;\"></div>
+                    </div>
+                    <div style=\"margin-top:14px;\">
+                        ";
+                // line 450
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "currentParticipants", [], "any", false, false, false, 450) >= CoreExtension::getAttribute($this->env, $this->source, $context["event"], "maxParticipants", [], "any", false, false, false, 450))) {
+                    // line 451
+                    yield "                        <button disabled style=\"width:100%;padding:10px;background:#b22222;color:white;border:none;border-radius:8px;font-weight:bold;cursor:not-allowed;\">Complet</button>
+                        ";
+                } elseif ((($tmp = CoreExtension::getAttribute($this->env, $this->source,                 // line 452
+$context["event"], "hasParticipated", [], "any", false, false, false, 452)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 453
+                    yield "                        <button disabled style=\"width:100%;padding:10px;background:#4CAF50;color:white;border:none;border-radius:8px;font-weight:bold;cursor:not-allowed;\">✅ Déjà inscrit</button>
+                        ";
+                } else {
+                    // line 455
+                    yield "                        <button class=\"dashboard-inscribe-btn\" data-id=\"";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id", [], "any", false, false, false, 455), "html", null, true);
+                    yield "\"
+                            style=\"width:100%;padding:10px;background:#285921;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;transition:all .2s;\">
+                            🎯 S'inscrire
+                        </button>
+                        ";
+                }
+                // line 460
+                yield "                    </div>
+                </div>
+            </div>
+            ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['event'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 464
+            yield "        </div>
+        <div style=\"text-align:center;margin-top:30px;\">
+            <a href=\"";
+            // line 466
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_events_index");
+            yield "\" class=\"btn-primary-custom\">Voir tous les événements →</a>
+        </div>
+        ";
+        }
+        // line 469
+        yield "    </div>
+</section>
+
+<!-- â•â•â• TEAM â•â•â• -->
+<section class=\"team-section\">
+    <div class=\"container-custom\">
+        <div style=\"text-align:center;\">
+            <div class=\"section-eyebrow\" style=\"justify-content:center;\">Notre Ã‰quipe</div>
+            <h2 class=\"section-title-new\" style=\"max-width:600px;margin:0 auto;\">
+                Rencontrez les <em>experts</em> derriÃ¨re NAFSEYTI
+            </h2>
+        </div>
+
+        <div class=\"team-grid\">
+            <div class=\"team-card\">
+                <img src=\"img/team-11.jpg\" alt=\"Psychologue clinicienne\">
+                <div class=\"team-info\">
+                    <div>
+                        <div class=\"team-name\">Dr. Sarah Ben Ali</div>
+                        <div class=\"team-role\">Psychologue Clinicienne</div>
+                    </div>
+                    <div class=\"team-socials\">
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fab fa-linkedin-in\"></i></a>
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fas fa-envelope\"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class=\"team-card\">
+                <img src=\"img/team-22.jpg\" alt=\"Expert pÃ©dagogique\">
+                <div class=\"team-info\">
+                    <div>
+                        <div class=\"team-name\">Ahmed Khalil</div>
+                        <div class=\"team-role\">Expert en Accompagnement Universitaire</div>
+                    </div>
+                    <div class=\"team-socials\">
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fab fa-linkedin-in\"></i></a>
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fas fa-envelope\"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class=\"team-card\">
+                <img src=\"img/team-33.jpg\" alt=\"Responsable plateforme\">
+                <div class=\"team-info\">
+                    <div>
+                        <div class=\"team-name\">Leila Mansour</div>
+                        <div class=\"team-role\">Responsable Support & Suivi Ã‰tudiant</div>
+                    </div>
+                    <div class=\"team-socials\">
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fab fa-linkedin-in\"></i></a>
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fas fa-envelope\"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• TESTIMONIALS â•â•â• -->
+<section class=\"testimonials-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\" style=\"align-items:flex-start;gap:80px;\">
+            <div style=\"flex:0 0 300px;\">
+                <div class=\"section-eyebrow\">TÃ©moignages</div>
+                <h2 class=\"section-title-new\">
+                    Ce que disent<br>nos <em>utilisateurs</em>
+                </h2>
+                <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#6B7D5A;line-height:1.8;font-weight:300;margin-top:16px;\">
+                    Ã‰tudiants, enseignants et responsables universitaires partagent leur expÃ©rience avec NAFSEYTI.
+                </p>
+            </div>
+
+            <div style=\"flex:1;\">
+                <div class=\"testimonial-cards\" style=\"grid-template-columns:1fr;\">
+                    
+                    <div class=\"testimonial-card\">
+                        <span class=\"quote-mark\">\"</span>
+                        <div class=\"stars\">â˜…â˜…â˜…â˜…â˜…</div>
+                        <p class=\"testimonial-text\">
+                            GrÃ¢ce Ã  NAFSEYTI, jâ€™ai trouvÃ© un espace sÃ»r pour parler de mon stress acadÃ©mique.
+                            Le suivi personnalisÃ© mâ€™a beaucoup aidÃ© pendant la pÃ©riode des examens.
+                        </p>
+                        <div class=\"testimonial-author\">
+                            <img src=\"img/testimonial-1.jpg\" alt=\"Ã‰tudiante\" class=\"author-avatar\">
+                            <div>
+                                <div class=\"author-name\">Amira Ben Salah</div>
+                                <div class=\"author-title\">Ã‰tudiante en Informatique</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=\"testimonial-card\">
+                        <span class=\"quote-mark\">\"</span>
+                        <div class=\"stars\">â˜…â˜…â˜…â˜…â˜…</div>
+                        <p class=\"testimonial-text\">
+                            La plateforme facilite la dÃ©tection prÃ©coce des Ã©tudiants en difficultÃ©
+                            et amÃ©liore la communication entre enseignants et services dâ€™accompagnement.
+                        </p>
+                        <div class=\"testimonial-author\">
+                            <img src=\"img/testimonial-2.jpg\" alt=\"Enseignant\" class=\"author-avatar\">
+                            <div>
+                                <div class=\"author-name\">Karim Trabelsi</div>
+                                <div class=\"author-title\">Enseignant Universitaire</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=\"testimonial-card\">
+                        <span class=\"quote-mark\">\"</span>
+                        <div class=\"stars\">â˜…â˜…â˜…â˜…â˜…</div>
+                        <p class=\"testimonial-text\">
+                            NAFSEYTI nous aide Ã  mieux comprendre les besoins psychologiques
+                            de notre communautÃ© Ã©tudiante grÃ¢ce Ã  des donnÃ©es stratÃ©giques fiables.
+                        </p>
+                        <div class=\"testimonial-author\">
+                            <img src=\"img/testimonial-3.jpg\" alt=\"UniversitÃ©\" class=\"author-avatar\">
+                            <div>
+                                <div class=\"author-name\">Nadia Chaieb</div>
+                                <div class=\"author-title\">Responsable Vie Universitaire</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• NEWSLETTER â•â•â• -->
+<section class=\"newsletter-section\">
+    <h2>Restez <em style=\"font-style:italic;color:var(--green-pale);\">connectÃ©s</em> Ã  notre mission</h2>
+    <p>Recevez nos actualitÃ©s, Ã©vÃ©nements et tÃ©moignages. Pas de spam, promis.</p>
+    <div class=\"newsletter-form\">
+        <input type=\"email\" class=\"newsletter-input\" placeholder=\"Votre adresse email\">
+        <button class=\"newsletter-btn\">S'abonner</button>
+    </div>
+</section>
+
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "Psychologue/index.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  682 => 469,  676 => 466,  672 => 464,  663 => 460,  654 => 455,  650 => 453,  648 => 452,  645 => 451,  643 => 450,  637 => 447,  632 => 445,  624 => 443,  618 => 441,  615 => 440,  609 => 438,  607 => 437,  603 => 435,  599 => 433,  591 => 431,  589 => 430,  586 => 429,  582 => 428,  579 => 427,  573 => 424,  568 => 421,  566 => 420,  198 => 54,  185 => 53,  172 => 49,  166 => 47,  155 => 39,  147 => 34,  138 => 28,  132 => 27,  121 => 18,  119 => 17,  113 => 14,  106 => 10,  101 => 7,  88 => 6,  65 => 4,  42 => 2,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("﻿{# templates/Psychologue/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}NAFSEYTI - Espace Psychologue{% endblock %}
+
+{% block navbar %}
+<div class=\"navbar-wrap\">
+    <div class=\"navbar-inner\">
+        <ul class=\"nav-links\">
+            <li><a href=\"{{ path('psycho_dashboard') }}\" class=\"active\">Accueil</a></li>
+            <li><a href=\"#\">Contenu Psychologique</a></li>
+            <li><a href=\"#\">Tests</a></li>
+            <li><a href=\"#\">Rendez-vous</a></li>
+            <li><a href=\"{{ path('psycho_events_index') }}\">Evenements</a></li>
+            <li><a href=\"#\">Suivi Personnel</a></li>
+        </ul>
+        {% if app.user %}
+            <div style=\"position:relative; display:flex; align-items:center;\" id=\"profileDropdownWrap\">
+                <div onclick=\"toggleProfileDropdown()\"
+                     style=\"display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 12px; border-radius:8px; transition:background 0.2s;\"
+                     onmouseover=\"this.style.background='rgba(0,0,0,0.05)'\"
+                     onmouseout=\"this.style.background='transparent'\">
+                    <div style=\"width:38px; height:38px; border-radius:50%; background:#4a7c3f; display:flex; align-items:center; justify-content:center; border:2px solid #4a7c3f;\">
+                        <i class=\"fas fa-user\" style=\"color:white; font-size:1rem;\"></i>
+                    </div>
+                    <div style=\"line-height:1.2;\">
+                        <div style=\"font-size:0.85rem; font-weight:600; color:#2d3a1e;\">{{ app.user.firstname }} {{ app.user.lastname }}</div>
+                        <div style=\"font-size:0.7rem; color:#6B7D5A; text-transform:uppercase; letter-spacing:1px;\">{{ app.user.role }}</div>
+                    </div>
+                    <i class=\"fas fa-chevron-down\" style=\"font-size:0.7rem; color:#6B7D5A;\"></i>
+                </div>
+                <div id=\"profileDropdown\"
+                     style=\"display:none; position:absolute; top:calc(100% + 8px); right:0; background:white; border-radius:12px; box-shadow:0 10px 40px rgba(45,80,22,0.15); min-width:200px; overflow:hidden; z-index:9999; border:1px solid #e8e0d0;\">
+                    <a href=\"{{ path('app_profile') }}\"
+                       style=\"display:flex; align-items:center; gap:12px; padding:14px 20px; text-decoration:none; color:#2d3a1e; font-size:0.9rem;\"
+                       onmouseover=\"this.style.background='#f5f0e8'\" onmouseout=\"this.style.background='transparent'\">
+                        <i class=\"fas fa-user-circle\" style=\"color:#4a7c3f;\"></i> Mon Profil
+                    </a>
+                    <a href=\"{{ path('app_logout') }}\"
+                       style=\"display:flex; align-items:center; gap:12px; padding:14px 20px; text-decoration:none; color:#991b1b; font-size:0.9rem; border-top:1px solid #f0ebe0;\"
+                       onmouseover=\"this.style.background='#fee2e2'\" onmouseout=\"this.style.background='transparent'\">
+                        <i class=\"fas fa-sign-out-alt\" style=\"color:#991b1b;\"></i> Se déconnecter
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <a href=\"{{ path('app_login') }}\" class=\"nav-cta\">Se connecter</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+
+<!-- â•â•â• HERO â•â•â• -->
+<section class=\"hero-section\">
+    <div class=\"hero-bg-pattern\"></div>
+    <div class=\"hero-organic-shape\"></div>
+    <div class=\"hero-organic-shape-2\"></div>
+    <div class=\"hero-content\">
+        <div class=\"row-flex\" style=\"gap: 80px;\">
+            <div class=\"col-half\">
+                <div class=\"hero-tag\">Plateforme de soutien psychologique universitaire</div>
+                <h1 class=\"hero-title\">
+                    NAFSEYTI, votre espace<br>
+                    de <em>bien-Ãªtre mental</em> acadÃ©mique
+                </h1>
+                <p class=\"hero-subtitle\">
+                   Une plateforme innovante dÃ©diÃ©e aux Ã©tudiants, enseignants et universitÃ©s tunisiennes.
+                   Soutien immÃ©diat, prÃ©vention, accompagnement personnalisÃ© et anonymat garanti.
+                </p>
+                <div class=\"hero-actions\">
+                    <a href=\"#!\" class=\"btn-primary-custom\">Commencer maintenant</a>
+                    <a href=\"#!\" class=\"btn-ghost\">DÃ©couvrir la plateforme</a>
+                </div>
+                <div class=\"hero-stats\">
+                <div class=\"stat-item\">
+                    <div class=\"stat-number\">1000+</div>
+                    <div class=\"stat-label\">Ã‰tudiants accompagnÃ©s</div>
+                </div>
+                <div class=\"stat-item\">
+                    <div class=\"stat-number\">24/7</div>
+                    <div class=\"stat-label\">Support disponible</div>
+                </div>
+                <div class=\"stat-item\">
+                    <div class=\"stat-number\">100%</div>
+                    <div class=\"stat-label\">Anonymat sÃ©curisÃ©</div>
+                </div>
+            </div>
+            </div>
+            <div class=\"col-half\" style=\"position:relative;\">
+                <img src=\"img/Anasayfa.jpg\" alt=\"Soutien psychologique\" 
+                     style=\"width:100%;border-radius:2px;display:block;object-fit:cover;height:500px;\">
+                <!-- Floating card -->
+                <div style=\"position:absolute;bottom:-24px;left:-24px;background:var(--beige-cream);padding:24px 28px;border-left:3px solid var(--green-sage);max-width:260px;box-shadow:0 20px 60px rgba(45,80,22,0.2);\">
+                    <i class=\"fas fa-brain\" style=\"color:var(--green-sage);font-size:1.4rem;margin-bottom:12px;display:block;\"></i>
+                    <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-mid);font-style:italic;line-height:1.6;font-weight:300;\">\"La santÃ© mentale est le fondement de tout bien-Ãªtre.\"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• VIDEO BANNER â•â•â• -->
+<div class=\"video-banner\">
+    <div class=\"video-inner\">
+        <button class=\"play-btn\" data-bs-toggle=\"modal\" data-src=\"https://www.youtube.com/embed/DWRcNpR6Kdc\" data-bs-target=\"#videoModal\">
+            <i class=\"fas fa-play\"></i>
+        </button>
+        <p class=\"video-quote\">
+            \"Ensemble, nous pouvons construire un monde oÃ¹ chacun a la chance de s'Ã©panouir pleinement, corps et Ã¢me.\"
+        </p>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div class=\"modal fade\" id=\"videoModal\" tabindex=\"-1\" aria-hidden=\"true\">
+    <div class=\"modal-dialog modal-lg\">
+        <div class=\"modal-content\" style=\"border:none;background:var(--text-dark);\">
+            <div class=\"modal-header\" style=\"border:none;padding:16px 20px;\">
+                <h5 class=\"modal-title\" style=\"color:var(--beige-light);font-family:'Playfair Display',serif;\">Notre Mission en VidÃ©o</h5>
+                <button type=\"button\" class=\"btn-close btn-close-white\" data-bs-dismiss=\"modal\"></button>
+            </div>
+            <div class=\"modal-body p-0\">
+                <div class=\"ratio ratio-16x9\">
+                    <iframe src=\"\" id=\"video\" allowfullscreen allow=\"autoplay\"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- â•â•â• ABOUT â•â•â• -->
+<section class=\"about-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\">
+            <div class=\"col-half\">
+                <div class=\"about-img-wrap\">
+                    <img src=\"img/about.jpg\" alt=\"Ã€ propos de MindCare\" style=\"border-radius:2px;\">
+                    <div class=\"about-img-accent\"></div>
+                    <div class=\"about-img-badge\">
+                        <span class=\"badge-number\">18</span>
+                        <span class=\"badge-label\">Ans d'Engagement</span>
+                    </div>
+                </div>
+            </div>
+            <div class=\"col-half\">
+              <div class=\"section-eyebrow\">Ã€ propos de NAFSEYTI</div>
+
+                <h2 class=\"section-title-new\">
+                    Une solution pensÃ©e pour <em>lâ€™Ã©cosystÃ¨me universitaire tunisien</em>
+                </h2>
+
+                <p class=\"about-text\">
+                    NAFSEYTI est la premiÃ¨re plateforme complÃ¨te de soutien psychologique
+                    conÃ§ue spÃ©cifiquement pour les Ã©tudiants, les enseignants et les Ã©tablissements universitaires en Tunisie.
+                </p>
+                <ul class=\"mission-points\">
+                    <li>
+                        <div class=\"point-icon\"><i class=\"fas fa-check\"></i></div>
+                        <span>Soutien psychologique immÃ©diat et confidentiel pour les Ã©tudiants.</span>
+                    </li>
+
+                    <li>
+                        <div class=\"point-icon\"><i class=\"fas fa-check\"></i></div>
+                        <span>DÃ©tection prÃ©coce et outils pÃ©dagogiques pour les enseignants.</span>
+                    </li>
+
+                    <li>
+                        <div class=\"point-icon\"><i class=\"fas fa-check\"></i></div>
+                        <span>RÃ©duction du dÃ©crochage universitaire et amÃ©lioration du bien-Ãªtre collectif.</span>
+                    </li>
+                </ul>
+                <div style=\"margin-top:36px;\">
+                    <a href=\"#!\" class=\"btn-primary-custom\" style=\"background:var(--green-deep);color:var(--beige-cream);\">Notre Histoire</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• SERVICES â•â•â• -->
+<section class=\"services-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\" style=\"align-items:flex-end;margin-bottom:0;\">
+            <div class=\"col-half\">
+                <div class=\"section-eyebrow\">Ce que nous faisons</div>
+                <h2 class=\"section-title-new\">
+                    Nos <em>solutions</em><br>
+                    pour lâ€™universitÃ©
+                </h2>
+            </div>
+            <div class=\"col-half\">
+                <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#6B7D5A;line-height:1.8;font-weight:300;\">
+                    Nous crÃ©ons des programmes qui rÃ©pondent aux besoins urgents tout en favorisant 
+                    des solutions durables pour un changement profond et durable.
+                </p>
+            </div>
+        </div>
+        <div class=\"services-grid\" style=\"margin-top:48px;\">
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-brain\"></i></div>
+                <h3 class=\"service-name\">Soutien Psychologique</h3>
+                <p class=\"service-desc\">Accompagnement individuel et de groupe pour traverser les Ã©preuves de la vie avec rÃ©silience et sÃ©rÃ©nitÃ©.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-heart-pulse\"></i></div>
+                <h3 class=\"service-name\">SantÃ© Mentale</h3>
+                <p class=\"service-desc\">PrÃ©vention, sensibilisation et accÃ¨s aux soins de santÃ© mentale pour les populations les plus vulnÃ©rables.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-hands-holding-child\"></i></div>
+                <h3 class=\"service-name\">Aide Sociale</h3>
+                <p class=\"service-desc\">Soutien aux enfants et familles en difficultÃ©, pour un filet de sÃ©curitÃ© solide et bienveillant.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-seedling\"></i></div>
+                <h3 class=\"service-name\">DÃ©veloppement Personnel</h3>
+                <p class=\"service-desc\">Ateliers et formations pour cultiver la confiance en soi, la pleine conscience et le bien-Ãªtre au quotidien.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-graduation-cap\"></i></div>
+                <h3 class=\"service-name\">Ã‰ducation & Sensibilisation</h3>
+                <p class=\"service-desc\">Programmes Ã©ducatifs pour briser les tabous autour de la santÃ© mentale dans les Ã©coles et communautÃ©s.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+            <div class=\"service-card\">
+                <div class=\"service-icon\"><i class=\"fas fa-house-heart\"></i></div>
+                <h3 class=\"service-name\">HÃ©bergement d'Urgence</h3>
+                <p class=\"service-desc\">Solutions d'accueil et d'accompagnement pour les personnes en situation de dÃ©tresse aiguÃ«.</p>
+                <a href=\"#!\" class=\"service-link\">En savoir plus â†’</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• FEATURES / STATS â•â•â• -->
+<section class=\"features-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\">
+            <div class=\"col-half\">
+                <div class=\"stats-mosaic\">
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-users tile-icon\"></i>
+                        <div class=\"tile-number\">500<span class=\"tile-unit\">+</span></div>
+                        <div class=\"tile-label\">Membres de l'Ã‰quipe</div>
+                    </div>
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-award tile-icon\"></i>
+                        <div class=\"tile-number\">70</div>
+                        <div class=\"tile-label\">Prix RemportÃ©s</div>
+                    </div>
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-list-check tile-icon\"></i>
+                        <div class=\"tile-number\">3K<span class=\"tile-unit\">+</span></div>
+                        <div class=\"tile-label\">Projets RÃ©alisÃ©s</div>
+                    </div>
+                    <div class=\"stat-tile\">
+                        <i class=\"fas fa-comments tile-icon\"></i>
+                        <div class=\"tile-number\">7K<span class=\"tile-unit\">+</span></div>
+                        <div class=\"tile-label\">Avis Positifs</div>
+                    </div>
+                </div>
+            </div>
+            <div class=\"col-half\">
+                <div class=\"section-eyebrow\">Pourquoi NAFSEYTI ?</div>
+                <h2 class=\"section-title-new\">
+                      Une <em>valeur ajoutÃ©e unique</em>
+                </h2>
+                <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#6B7D5A;line-height:1.8;font-weight:300;margin-bottom:16px;\">
+                    Notre engagement repose sur une approche humaine, scientifique et bienveillante au service de chacun.
+                </p>
+                <div class=\"features-list\">
+                    <div class=\"feature-item\">
+                        <span class=\"feature-num\">01</span>
+                        <div class=\"feature-content\">
+                            <h4>Approche CentrÃ©e sur la Personne</h4>
+                            <p>Chaque individu est unique. Nos programmes sont personnalisÃ©s selon les besoins spÃ©cifiques de chaque bÃ©nÃ©ficiaire.</p>
+                        </div>
+                    </div>
+                    <div class=\"feature-item\">
+                        <span class=\"feature-num\">02</span>
+                        <div class=\"feature-content\">
+                            <h4>Ã‰quipe de Professionnels CertifiÃ©s</h4>
+                            <p>Psychologues, travailleurs sociaux et bÃ©nÃ©voles formÃ©s travaillent ensemble pour un soutien holistique.</p>
+                        </div>
+                    </div>
+                    <div class=\"feature-item\">
+                        <span class=\"feature-num\">03</span>
+                        <div class=\"feature-content\">
+                            <h4>Transparence & Impact Mesurable</h4>
+                            <p>Chaque don est tracÃ© et son impact documentÃ©. Vous savez exactement comment votre gÃ©nÃ©rositÃ© aide.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style=\"display:flex;gap:16px;margin-top:40px;\">
+                    <a href=\"#!\" class=\"btn-primary-custom\" style=\"background:var(--green-deep);color:var(--beige-cream);\">Faire un Don</a>
+                    <a href=\"#!\" class=\"btn-primary-custom\" style=\"background:transparent;color:var(--green-deep);border:1px solid var(--beige-mid);\">Nous Rejoindre</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• NOS CAUSES â•â•â• -->
+<section class=\"donations-section\">
+    <div class=\"container-custom\">
+        <div style=\"text-align:center;margin-bottom:0;\">
+            <div class=\"section-eyebrow\" style=\"justify-content:center;\">Nos Causes</div>
+            <h2 class=\"section-title-new\" style=\"max-width:700px;margin:0 auto;\">
+                Nos <em>solutions</em> pour le bien-Ãªtre universitaire
+            </h2>
+        </div>
+
+        <div class=\"donation-cards\">
+
+            <div class=\"donation-card\">
+                <span class=\"donation-category\">Ã‰tudiants</span>
+                <img src=\"img/student-support.jpg\" alt=\"Soutien Ã©tudiant\" class=\"donation-img\">
+                <h3 class=\"donation-title\">Soutien immÃ©diat & anonymat</h3>
+                <p class=\"donation-desc\">
+                    Un espace sÃ©curisÃ© offrant Ã©coute, prÃ©vention,
+                    accompagnement psychologique et contenu adaptÃ©
+                    aux dÃ©fis universitaires.
+                </p>
+                <div class=\"progress-wrap\">
+                    <div class=\"progress-labels\">
+                        <span>Objectif : <strong>Soutien rapide</strong></span>
+                        <span>DisponibilitÃ© : 24/7</span>
+                    </div>
+                    <div class=\"progress-bar-wrap\">
+                        <div class=\"progress-fill\" data-width=\"90\" style=\"width:0%\"></div>
+                    </div>
+                    <div class=\"progress-percent\">90% couverture</div>
+                </div>
+                <a href=\"#!\" class=\"donate-btn\">DÃ©couvrir</a>
+            </div>
+
+            <div class=\"donation-card\">
+                <span class=\"donation-category\">Enseignants</span>
+                <img src=\"img/teacher-support.jpg\" alt=\"Support enseignants\" class=\"donation-img\">
+                <h3 class=\"donation-title\">DÃ©tection prÃ©coce</h3>
+                <p class=\"donation-desc\">
+                    Outils pour repÃ©rer les signes de mal-Ãªtre,
+                    ressources pÃ©dagogiques et communication facilitÃ©e
+                    avec les Ã©tudiants.
+                </p>
+                <div class=\"progress-wrap\">
+                    <div class=\"progress-labels\">
+                        <span>Objectif : <strong>PrÃ©vention</strong></span>
+                        <span>Performance : Ã©levÃ©e</span>
+                    </div>
+                    <div class=\"progress-bar-wrap\">
+                        <div class=\"progress-fill\" data-width=\"95\" style=\"width:0%\"></div>
+                    </div>
+                    <div class=\"progress-percent\">95% efficacitÃ©</div>
+                </div>
+                <a href=\"#!\" class=\"donate-btn\">Explorer</a>
+            </div>
+
+            <div class=\"donation-card\">
+                <span class=\"donation-category\">UniversitÃ©</span>
+                <img src=\"img/university-support.jpg\" alt=\"UniversitÃ©\" class=\"donation-img\">
+                <h3 class=\"donation-title\">RÃ©duction du dÃ©crochage</h3>
+                <p class=\"donation-desc\">
+                    Suivi stratÃ©gique, amÃ©lioration du bien-Ãªtre collectif,
+                    innovation institutionnelle et donnÃ©es dâ€™aide Ã  la dÃ©cision.
+                </p>
+                <div class=\"progress-wrap\">
+                    <div class=\"progress-labels\">
+                        <span>Objectif : <strong>RÃ©ussite</strong></span>
+                        <span>Impact : fort</span>
+                    </div>
+                    <div class=\"progress-bar-wrap\">
+                        <div class=\"progress-fill\" data-width=\"85\" style=\"width:0%\"></div>
+                    </div>
+                    <div class=\"progress-percent\">85% impact positif</div>
+                </div>
+                <a href=\"#!\" class=\"donate-btn\">Voir plus</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• CTA BANNER â•â•â• -->
+<section class=\"cta-banner\">
+    <div class=\"cta-content\">
+        <h2>
+            Notre plateforme est toujours ouverte pour <em>vous accompagner</em>
+        </h2>
+
+        <p>
+            NAFSEYTI accompagne les Ã©tudiants, les enseignants et les universitÃ©s
+            en offrant un espace sÃ©curisÃ©, anonyme et accessible pour le bien-Ãªtre
+            psychologique et la rÃ©ussite acadÃ©mique.
+        </p>
+
+        <div style=\"display:flex;gap:16px;justify-content:center;flex-wrap:wrap;\">
+            <a href=\"#!\" class=\"btn-primary-custom\">DÃ©couvrir la plateforme</a>
+            <a href=\"#!\" class=\"btn-ghost\">Prendre rendez-vous</a>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• EVENTS â•â•â• -->
+<section class=\"events-section\">
+    <div class=\"container-custom\">
+        <div style=\"text-align:center;\">
+            <div class=\"section-eyebrow\" style=\"justify-content:center;\">Événements</div>
+            <h2 class=\"section-title-new\" style=\"max-width:600px;margin:0 auto;\">
+                Rejoignez nos <em>ateliers universitaires</em>
+            </h2>
+        </div>
+
+        {% if events is empty %}
+        <div style=\"text-align:center;padding:40px;color:#8b9a8b;\">
+            <div style=\"font-size:48px;margin-bottom:12px;\">🌸</div>
+            <p>Aucun événement disponible pour le moment.</p>
+            <a href=\"{{ path('psycho_events_index') }}\" class=\"btn-primary-custom\" style=\"margin-top:16px;display:inline-block;\">Voir tous les événements</a>
+        </div>
+        {% else %}
+        <div class=\"events-grid\" style=\"margin-top:40px;\">
+            {% for event in events %}
+            <div class=\"event-card\">
+                {% if event.link %}
+                <img src=\"{{ event.link }}\" alt=\"{{ event.title }}\" onerror=\"this.style.display='none'\">
+                {% else %}
+                <div style=\"height:180px;background:linear-gradient(135deg,#285921,#3d7e33);display:flex;align-items:center;justify-content:center;font-size:48px;\">🎯</div>
+                {% endif %}
+                <div class=\"event-body\">
+                    <div class=\"event-meta\">
+                        {% if event.eventDate %}
+                        <span><i class=\"fas fa-calendar\"></i> {{ event.eventDate|date('d M Y') }}</span>
+                        {% endif %}
+                        {% if event.location %}
+                        <span><i class=\"fas fa-map-marker-alt\"></i> {{ event.location }}</span>
+                        {% endif %}
+                        <span><i class=\"fas fa-users\"></i> {{ event.currentParticipants }}/{{ event.maxParticipants }}</span>
+                    </div>
+                    <span class=\"event-name\">{{ event.title }}</span>
+                    <div style=\"margin-top:8px;height:6px;background:#e0e0e0;border-radius:6px;overflow:hidden;\">
+                        <div style=\"height:100%;width:{{ event.maxParticipants > 0 ? ((event.currentParticipants / event.maxParticipants) * 100)|round : 0 }}%;background:#285921;border-radius:6px;\"></div>
+                    </div>
+                    <div style=\"margin-top:14px;\">
+                        {% if event.currentParticipants >= event.maxParticipants %}
+                        <button disabled style=\"width:100%;padding:10px;background:#b22222;color:white;border:none;border-radius:8px;font-weight:bold;cursor:not-allowed;\">Complet</button>
+                        {% elseif event.hasParticipated %}
+                        <button disabled style=\"width:100%;padding:10px;background:#4CAF50;color:white;border:none;border-radius:8px;font-weight:bold;cursor:not-allowed;\">✅ Déjà inscrit</button>
+                        {% else %}
+                        <button class=\"dashboard-inscribe-btn\" data-id=\"{{ event.id }}\"
+                            style=\"width:100%;padding:10px;background:#285921;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;transition:all .2s;\">
+                            🎯 S'inscrire
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style=\"text-align:center;margin-top:30px;\">
+            <a href=\"{{ path('psycho_events_index') }}\" class=\"btn-primary-custom\">Voir tous les événements →</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- â•â•â• TEAM â•â•â• -->
+<section class=\"team-section\">
+    <div class=\"container-custom\">
+        <div style=\"text-align:center;\">
+            <div class=\"section-eyebrow\" style=\"justify-content:center;\">Notre Ã‰quipe</div>
+            <h2 class=\"section-title-new\" style=\"max-width:600px;margin:0 auto;\">
+                Rencontrez les <em>experts</em> derriÃ¨re NAFSEYTI
+            </h2>
+        </div>
+
+        <div class=\"team-grid\">
+            <div class=\"team-card\">
+                <img src=\"img/team-11.jpg\" alt=\"Psychologue clinicienne\">
+                <div class=\"team-info\">
+                    <div>
+                        <div class=\"team-name\">Dr. Sarah Ben Ali</div>
+                        <div class=\"team-role\">Psychologue Clinicienne</div>
+                    </div>
+                    <div class=\"team-socials\">
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fab fa-linkedin-in\"></i></a>
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fas fa-envelope\"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class=\"team-card\">
+                <img src=\"img/team-22.jpg\" alt=\"Expert pÃ©dagogique\">
+                <div class=\"team-info\">
+                    <div>
+                        <div class=\"team-name\">Ahmed Khalil</div>
+                        <div class=\"team-role\">Expert en Accompagnement Universitaire</div>
+                    </div>
+                    <div class=\"team-socials\">
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fab fa-linkedin-in\"></i></a>
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fas fa-envelope\"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class=\"team-card\">
+                <img src=\"img/team-33.jpg\" alt=\"Responsable plateforme\">
+                <div class=\"team-info\">
+                    <div>
+                        <div class=\"team-name\">Leila Mansour</div>
+                        <div class=\"team-role\">Responsable Support & Suivi Ã‰tudiant</div>
+                    </div>
+                    <div class=\"team-socials\">
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fab fa-linkedin-in\"></i></a>
+                        <a href=\"#!\" class=\"team-social-btn\"><i class=\"fas fa-envelope\"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• TESTIMONIALS â•â•â• -->
+<section class=\"testimonials-section\">
+    <div class=\"container-custom\">
+        <div class=\"row-flex\" style=\"align-items:flex-start;gap:80px;\">
+            <div style=\"flex:0 0 300px;\">
+                <div class=\"section-eyebrow\">TÃ©moignages</div>
+                <h2 class=\"section-title-new\">
+                    Ce que disent<br>nos <em>utilisateurs</em>
+                </h2>
+                <p style=\"font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#6B7D5A;line-height:1.8;font-weight:300;margin-top:16px;\">
+                    Ã‰tudiants, enseignants et responsables universitaires partagent leur expÃ©rience avec NAFSEYTI.
+                </p>
+            </div>
+
+            <div style=\"flex:1;\">
+                <div class=\"testimonial-cards\" style=\"grid-template-columns:1fr;\">
+                    
+                    <div class=\"testimonial-card\">
+                        <span class=\"quote-mark\">\"</span>
+                        <div class=\"stars\">â˜…â˜…â˜…â˜…â˜…</div>
+                        <p class=\"testimonial-text\">
+                            GrÃ¢ce Ã  NAFSEYTI, jâ€™ai trouvÃ© un espace sÃ»r pour parler de mon stress acadÃ©mique.
+                            Le suivi personnalisÃ© mâ€™a beaucoup aidÃ© pendant la pÃ©riode des examens.
+                        </p>
+                        <div class=\"testimonial-author\">
+                            <img src=\"img/testimonial-1.jpg\" alt=\"Ã‰tudiante\" class=\"author-avatar\">
+                            <div>
+                                <div class=\"author-name\">Amira Ben Salah</div>
+                                <div class=\"author-title\">Ã‰tudiante en Informatique</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=\"testimonial-card\">
+                        <span class=\"quote-mark\">\"</span>
+                        <div class=\"stars\">â˜…â˜…â˜…â˜…â˜…</div>
+                        <p class=\"testimonial-text\">
+                            La plateforme facilite la dÃ©tection prÃ©coce des Ã©tudiants en difficultÃ©
+                            et amÃ©liore la communication entre enseignants et services dâ€™accompagnement.
+                        </p>
+                        <div class=\"testimonial-author\">
+                            <img src=\"img/testimonial-2.jpg\" alt=\"Enseignant\" class=\"author-avatar\">
+                            <div>
+                                <div class=\"author-name\">Karim Trabelsi</div>
+                                <div class=\"author-title\">Enseignant Universitaire</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=\"testimonial-card\">
+                        <span class=\"quote-mark\">\"</span>
+                        <div class=\"stars\">â˜…â˜…â˜…â˜…â˜…</div>
+                        <p class=\"testimonial-text\">
+                            NAFSEYTI nous aide Ã  mieux comprendre les besoins psychologiques
+                            de notre communautÃ© Ã©tudiante grÃ¢ce Ã  des donnÃ©es stratÃ©giques fiables.
+                        </p>
+                        <div class=\"testimonial-author\">
+                            <img src=\"img/testimonial-3.jpg\" alt=\"UniversitÃ©\" class=\"author-avatar\">
+                            <div>
+                                <div class=\"author-name\">Nadia Chaieb</div>
+                                <div class=\"author-title\">Responsable Vie Universitaire</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- â•â•â• NEWSLETTER â•â•â• -->
+<section class=\"newsletter-section\">
+    <h2>Restez <em style=\"font-style:italic;color:var(--green-pale);\">connectÃ©s</em> Ã  notre mission</h2>
+    <p>Recevez nos actualitÃ©s, Ã©vÃ©nements et tÃ©moignages. Pas de spam, promis.</p>
+    <div class=\"newsletter-form\">
+        <input type=\"email\" class=\"newsletter-input\" placeholder=\"Votre adresse email\">
+        <button class=\"newsletter-btn\">S'abonner</button>
+    </div>
+</section>
+
+{% endblock %}
+
+", "Psychologue/index.html.twig", "C:\\Users\\DELL\\Downloads\\psy\\templates\\Psychologue\\index.html.twig");
+    }
+}

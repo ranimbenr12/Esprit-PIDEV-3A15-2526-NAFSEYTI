@@ -1,0 +1,39 @@
+<?php
+
+namespace Sensiolabs\GotenbergBundle\Builder\Behaviors\Chromium;
+
+use Sensiolabs\GotenbergBundle\Builder\Attributes\NormalizeGotenbergPayload;
+use Sensiolabs\GotenbergBundle\Builder\Attributes\WithConfigurationNode;
+use Sensiolabs\GotenbergBundle\Builder\BodyBag;
+use Sensiolabs\GotenbergBundle\Builder\Util\NormalizerFactory;
+use Sensiolabs\GotenbergBundle\Enumeration\EmulatedMediaType;
+use Sensiolabs\GotenbergBundle\NodeBuilder\NativeEnumNodeBuilder;
+
+/**
+ * @package Behavior\\MediaType
+ */
+trait EmulatedMediaTypeTrait
+{
+    abstract protected function getBodyBag(): BodyBag;
+
+    /**
+     * Forces Chromium to emulate, either "screen" or "print". (default "print").
+     *
+     * @see https://gotenberg.dev/docs/convert-with-chromium/convert-html-to-pdf#print-media
+     *
+     * @example emulatedMediaType(EmulatedMediaType::Screen)
+     */
+    #[WithConfigurationNode(new NativeEnumNodeBuilder('emulated_media_type', enumClass: EmulatedMediaType::class))]
+    public function emulatedMediaType(EmulatedMediaType $mediaType): static
+    {
+        $this->getBodyBag()->set('emulatedMediaType', $mediaType);
+
+        return $this;
+    }
+
+    #[NormalizeGotenbergPayload]
+    private function normalizeEmulatedMediaType(): \Generator
+    {
+        yield 'emulatedMediaType' => NormalizerFactory::enum();
+    }
+}

@@ -1,0 +1,141 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* home/psy_ia_analyse.html.twig */
+class __TwigTemplate_e5df6651c7e9cf68b6e3408a93c948b4 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/psy_ia_analyse.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "home/psy_ia_analyse.html.twig"));
+
+        // line 5
+        yield "
+";
+        // line 7
+        yield "<div class=\"ia-analyse-bar\">
+  <div class=\"ia-bar-icon\">
+    <svg viewBox=\"0 0 20 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">
+      <circle cx=\"10\" cy=\"10\" r=\"3.5\" stroke=\"currentColor\" stroke-width=\"1.4\"/>
+      <path d=\"M10 2v2.5M10 15.5V18M2 10h2.5M15.5 10H18
+               M4.22 4.22l1.77 1.77M14.01 14.01l1.77 1.77
+               M4.22 15.78l1.77-1.77M14.01 5.99l1.77-1.77\"
+            stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/>
+    </svg>
+  </div>
+  <input
+    type=\"text\"
+    id=\"iaPatientInput\"
+    class=\"ia-patient-input\"
+    placeholder=\"Nom du patient à analyser par l'IA…\"
+    autocomplete=\"off\"
+  >
+  <button class=\"ia-analyse-btn\" id=\"iaBtnAnalyse\" onclick=\"lancerAnalyseIA()\">
+    <svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\">
+      <path d=\"M13 8A5 5 0 1 1 3 8a5 5 0 0 1 10 0Z\" stroke=\"currentColor\" stroke-width=\"1.3\"/>
+      <path d=\"M10.5 10.5L14 14\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>
+    </svg>
+    Analyser avec IA
+  </button>
+</div>
+
+
+";
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "home/psy_ia_analyse.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  51 => 7,  48 => 5,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{# ══════════════════════════════════════════════════════
+   BLOC IA — À insérer dans la section fiches,
+   juste APRÈS la barre de recherche .fiches-search-wrap
+   ══════════════════════════════════════════════════════ #}
+
+{# ── Barre analyse IA ── #}
+<div class=\"ia-analyse-bar\">
+  <div class=\"ia-bar-icon\">
+    <svg viewBox=\"0 0 20 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">
+      <circle cx=\"10\" cy=\"10\" r=\"3.5\" stroke=\"currentColor\" stroke-width=\"1.4\"/>
+      <path d=\"M10 2v2.5M10 15.5V18M2 10h2.5M15.5 10H18
+               M4.22 4.22l1.77 1.77M14.01 14.01l1.77 1.77
+               M4.22 15.78l1.77-1.77M14.01 5.99l1.77-1.77\"
+            stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/>
+    </svg>
+  </div>
+  <input
+    type=\"text\"
+    id=\"iaPatientInput\"
+    class=\"ia-patient-input\"
+    placeholder=\"Nom du patient à analyser par l'IA…\"
+    autocomplete=\"off\"
+  >
+  <button class=\"ia-analyse-btn\" id=\"iaBtnAnalyse\" onclick=\"lancerAnalyseIA()\">
+    <svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\">
+      <path d=\"M13 8A5 5 0 1 1 3 8a5 5 0 0 1 10 0Z\" stroke=\"currentColor\" stroke-width=\"1.3\"/>
+      <path d=\"M10.5 10.5L14 14\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>
+    </svg>
+    Analyser avec IA
+  </button>
+</div>
+
+
+", "home/psy_ia_analyse.html.twig", "C:\\Users\\sirine\\psy\\templates\\home\\psy_ia_analyse.html.twig");
+    }
+}

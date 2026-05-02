@@ -1,0 +1,1725 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* back/rendez-vous.html.twig */
+class __TwigTemplate_2840ec6fb84807e44177061895afced1 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'title' => [$this, 'block_title'],
+            'body' => [$this, 'block_body'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 1
+        return "back/base.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "back/rendez-vous.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "back/rendez-vous.html.twig"));
+
+        $this->parent = $this->load("back/base.html.twig", 1);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 3
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        yield "Rendez-vous";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 5
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 6
+        yield "<div class=\"full_container\">
+    <div class=\"inner_container\">
+
+        <!-- Sidebar -->
+        <nav id=\"sidebar\">
+            <div class=\"sidebar_blog_1\">
+                <div class=\"sidebar-header\">
+                    <div class=\"logo_section\">
+                        <a href=\"#\">
+                            <img class=\"logo_icon img-responsive\"
+                                 src=\"";
+        // line 16
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("back/images/logo/logo_icon1.png"), "html", null, true);
+        yield "\"
+                                 alt=\"logo\" />
+                        </a>
+                    </div>
+                </div>
+                    <div class=\"sidebar_user_info\">
+    <div class=\"icon_setting\"></div>
+    <div class=\"user_profle_side\">
+        <div class=\"user_img\">
+            
+                <img class=\"img-responsive\"
+                    src=\"";
+        // line 27
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("back/images/layout_img/user_img.jpg"), "html", null, true);
+        yield "\" 
+                     alt=\"user\"
+                     style=\"width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;\">
+           
+        </div>
+        <div class=\"user_info\" style=\"text-align:center;\">
+            <h6 style=\"color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;\">
+                ";
+        // line 34
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 34, $this->source); })()), "user", [], "any", false, false, false, 34), "firstname", [], "any", false, false, false, 34), "html", null, true);
+        yield " ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 34, $this->source); })()), "user", [], "any", false, false, false, 34), "lastname", [], "any", false, false, false, 34), "html", null, true);
+        yield "
+            </h6>
+            <p style=\"margin:0;\">
+                <span class=\"online_animation\"></span> En ligne
+            </p>
+        </div>
+    </div>
+</div>
+            <div class=\"sidebar_blog_2\">
+                <h4></h4>
+                <ul class=\"list-unstyled components\">
+                   <li>
+    <a href=\"";
+        // line 46
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_tableau");
+        yield "\">
+        <i class=\"fa fa-dashboard yellow_color\"></i>
+        <span>Tableau de bord</span>
+    </a>
+</li>
+                    <li class=\"active\"><a href=\"";
+        // line 51
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_users");
+        yield "\"><i class=\"fa fa-users blue1_color\"></i><span>Utilisateurs</span></a></li>
+                    <li class=\"active\"><a href=\"";
+        // line 52
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_rendezvous");
+        yield "\"><i class=\"fa fa-calendar orange_color\"></i><span>Rendez-vous</span></a></li>
+                    <li><a href=\"#\"><i class=\"fa fa-book purple_color2\"></i><span>Contenu psychologique</span></a></li>
+                    <li class=\"active\"><a href=\"";
+        // line 54
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_test_index");
+        yield "\"><i class=\"fa fa-check-square green_color\"></i><span>Tests</span></a></li>
+                    <li><a href=\"#\"><i class=\"fa fa-calendar-check-o red_color\"></i><span>Événements</span></a></li>
+                    <li><a href=\"#\"><i class=\"fa fa-line-chart yellow_color\"></i><span>Suivi personnel</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id=\"content\">
+
+            <!-- Topbar -->
+            <div class=\"topbar\">
+                <nav class=\"navbar navbar-expand-lg navbar-light\">
+                    <div class=\"full\">
+                        <button type=\"button\" id=\"sidebarCollapse\" class=\"sidebar_toggle\">
+                            <i class=\"fa fa-bars\"></i>
+                        </button>
+                        <div class=\"logo_section\">
+                            <a href=\"";
+        // line 72
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_dashboard");
+        yield "\" style=\"display:flex; align-items:center; text-decoration:none;\">
+                                <img class=\"img-responsive\"
+                                     src=\"";
+        // line 74
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("back/images/logo/logo1.png"), "html", null, true);
+        yield "\"
+                                     alt=\"logo\"
+                                     style=\"width:40px; height:40px; margin-right:10px;\" />
+                                <span style=\"font-size:20px; font-weight:bold; color:#3c943c;\">
+                                    Nafseyti
+                                </span>
+                            </a>
+                        </div>
+                        <div class=\"right_topbar\">
+                            <div class=\"icon_info\">
+                                <ul>
+                                    <li><a href=\"#\"><i class=\"fa fa-bell-o\"></i><span class=\"badge\">2</span></a></li>
+                                    <li><a href=\"#\"><i class=\"fa fa-question-circle\"></i></a></li>
+                                    <li><a href=\"#\"><i class=\"fa fa-envelope-o\"></i><span class=\"badge\">3</span></a></li>
+                                </ul>
+                                <ul class=\"user_profile_dd\">
+                                    <li>
+                                                                            <a class=\"dropdown-toggle\" data-toggle=\"dropdown\">
+    <img class=\"img-responsive rounded-circle\"
+         src=\"";
+        // line 93
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("back/images/layout_img/user_img.jpg"), "html", null, true);
+        yield "\" 
+         alt=\"photo\"
+         style=\"width:35px; height:35px; object-fit:cover; border-radius:50%;\">
+
+    <span class=\"name_user\">
+        ";
+        // line 98
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 98, $this->source); })()), "user", [], "any", false, false, false, 98), "firstname", [], "any", false, false, false, 98), "html", null, true);
+        yield " ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 98, $this->source); })()), "user", [], "any", false, false, false, 98), "lastname", [], "any", false, false, false, 98), "html", null, true);
+        yield "
+    </span>
+</a>
+                                        <div class=\"dropdown-menu\">
+    <a class=\"dropdown-item\" href=\"";
+        // line 102
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_profile");
+        yield "\">
+        <i class=\"fa fa-user\"></i> Mon Profil
+    </a>
+    <div class=\"dropdown-divider\"></div>
+    <a class=\"dropdown-item\" href=\"";
+        // line 106
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
+        yield "\">
+        <span>Se déconnecter</span> <i class=\"fa fa-sign-out\"></i>
+    </a>
+</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+
+            <!-- Main Content -->
+            <div class=\"midde_cont\">
+                <div class=\"container-fluid\">
+
+                    <link href=\"https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap\" rel=\"stylesheet\">
+
+                    <style>
+                        .rdv-wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0 40px; }
+
+                        /* ── Hero header ── */
+                        .rdv-hero {
+                            background: #1a2e1a;
+                            border-radius: 24px;
+                            padding: 44px 48px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 28px;
+                            overflow: hidden;
+                            position: relative;
+                        }
+                        .rdv-hero::before {
+                            content: '';
+                            position: absolute;
+                            width: 320px; height: 320px;
+                            border-radius: 50%;
+                            background: #443e1b;
+                            right: -60px; top: -80px;
+                        }
+                        .rdv-hero::after {
+                            content: '';
+                            position: absolute;
+                            width: 200px; height: 200px;
+                            border-radius: 50%;
+                            background: rgba(180,220,130,0.05);
+                            right: 120px; bottom: -80px;
+                        }
+                        .hero-left { flex: 1; z-index: 1; }
+                        .hero-eyebrow {
+                            font-size: 11px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #8dc96e;
+                            margin-bottom: 10px;
+                        }
+                        .hero-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 42px;
+                            color: #f5f0e8;
+                            line-height: 1.1;
+                            margin-bottom: 14px;
+                        }
+                        .hero-title em { color: #a8dc78; font-style: italic; }
+                        .hero-sub {
+                            font-size: 14px;
+                            color: rgba(245,240,232,0.55);
+                            max-width: 340px;
+                            line-height: 1.6;
+                        }
+                        .hero-right { z-index: 1; }
+
+                        /* ── Stat cards ── */
+                        .modern-card {
+                            border-radius: 22px;
+                            padding: 30px;
+                            color: white;
+                            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+                            transition: 0.3s;
+                            margin-bottom: 25px;
+                            min-height: 180px;
+                        }
+                        .modern-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.18); }
+                        .rdv-gradient { background: linear-gradient(135deg, #ff9966, #ff5e62); }
+                        .fiche-gradient { background: linear-gradient(135deg, #36d1dc, #5b86e5); }
+
+                        /* ── Section label ── */
+                        .rdv-label {
+                            font-size: 10px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #888;
+                            margin-bottom: 16px;
+                            margin-top: 8px;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+                        .rdv-label::after {
+                            content: '';
+                            flex: 1;
+                            height: 1px;
+                            background: #e5e0d8;
+                        }
+
+                        /* ── Illustrated scene cards ── */
+                        .scene-grid {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 18px;
+                            margin-bottom: 28px;
+                        }
+                        .scene-card {
+                            border-radius: 20px;
+                            overflow: hidden;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            transition: transform 0.3s, box-shadow 0.3s;
+                        }
+                        .scene-card:hover {
+                            transform: translateY(-6px);
+                            box-shadow: 0 16px 36px rgba(0,0,0,0.10);
+                        }
+                        .scene-card svg { display: block; width: 100%; }
+                        .scene-body { padding: 16px 18px 20px; }
+                        .scene-tag {
+                            display: inline-block;
+                            font-size: 10px;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            padding: 3px 10px;
+                            border-radius: 20px;
+                            margin-bottom: 8px;
+                            font-weight: 500;
+                        }
+                        .tag-orange { background: #fff0e4; color: #c05a00; }
+                        .tag-green  { background: #e8f5e2; color: #2a6a10; }
+                        .tag-purple { background: #f0e8ff; color: #6a20b0; }
+                        .scene-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: #1a2e1a; margin-bottom: 5px; }
+                        .scene-desc  { font-size: 12px; color: #888; line-height: 1.5; }
+
+                        /* ── Journey steps ── */
+                        .journey-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 0;
+                            border-radius: 20px;
+                            overflow: hidden;
+                            border: 1px solid #e8e2d8;
+                            margin-bottom: 28px;
+                        }
+                        .journey-step {
+                            padding: 24px 20px;
+                            background: #fffdf8;
+                            border-right: 1px solid #e8e2d8;
+                            position: relative;
+                        }
+                        .journey-step:last-child { border-right: none; }
+                        .journey-step:hover { background: #f5f0e8; }
+                        .j-num {
+                            font-size: 11px;
+                            letter-spacing: 1px;
+                            color: #bbb;
+                            margin-bottom: 12px;
+                        }
+                        .j-icon { margin-bottom: 12px; }
+                        .j-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 15px;
+                            color: #1a2e1a;
+                            margin-bottom: 6px;
+                        }
+                        .j-desc { font-size: 11px; color: #999; line-height: 1.5; }
+                        .j-arrow {
+                            position: absolute;
+                            right: -10px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 20px;
+                            height: 20px;
+                            background: #1a2e1a;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 2;
+                        }
+                        .j-arrow svg { display: block; }
+
+                        /* ── Patient list ── */
+                        .patient-grid {
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 14px;
+                            margin-bottom: 28px;
+                        }
+                        .patient-card {
+                            border-radius: 18px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            padding: 18px 20px;
+                            display: flex;
+                            align-items: center;
+                            gap: 16px;
+                            transition: 0.25s;
+                        }
+                        .patient-card:hover { background: #f5f0e8; transform: translateX(4px); }
+                        .p-avatar {
+                            width: 48px; height: 48px;
+                            border-radius: 14px;
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 15px; font-weight: 500;
+                            flex-shrink: 0;
+                        }
+                        .av-a { background: #fff0e4; color: #c05a00; }
+                        .av-b { background: #e4f0ff; color: #0050aa; }
+                        .av-c { background: #e4fff0; color: #006640; }
+                        .av-d { background: #f0e4ff; color: #6600aa; }
+                        .p-info { flex: 1; }
+                        .p-name { font-size: 14px; font-weight: 500; color: #1a2e1a; }
+                        .p-detail { font-size: 12px; color: #999; margin-top: 3px; }
+                        .p-time {
+                            font-size: 13px; font-weight: 500;
+                            background: #1a2e1a; color: #a8dc78;
+                            padding: 7px 16px; border-radius: 20px;
+                            flex-shrink: 0;
+                        }
+                        .p-dot {
+                            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+                        }
+                        .dot-now { background: #4caf50; box-shadow: 0 0 0 3px rgba(76,175,80,0.2); }
+                        .dot-soon { background: #ff9800; }
+                        .dot-later { background: #ccc; }
+
+                        /* ── Quote footer ── */
+                        .rdv-quote {
+                            background: #1a2e1a;
+                            border-radius: 20px;
+                            padding: 32px 40px;
+                            display: flex;
+                            align-items: center;
+                            gap: 24px;
+                        }
+                        .quote-mark {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 80px;
+                            color: #a8dc78;
+                            line-height: 0.6;
+                            flex-shrink: 0;
+                            opacity: 0.6;
+                        }
+                        .quote-text {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 20px;
+                            color: #f5f0e8;
+                            font-style: italic;
+                            line-height: 1.5;
+                        }
+                        .quote-author {
+                            font-size: 12px;
+                            color: #8dc96e;
+                            margin-top: 10px;
+                            letter-spacing: 1px;
+                        }
+                    </style>
+
+                    <div class=\"rdv-wrap\">
+
+                        <!-- Hero -->
+                        <div class=\"rdv-hero\">
+                            <div class=\"hero-left\">
+                                <div class=\"hero-eyebrow\">Nafseyti · Santé mentale</div>
+                                <div class=\"hero-title\">Gestion des<br><em>Rendez-vous</em></div>
+                                <div class=\"hero-sub\">Suivez vos consultations, accompagnez vos patients et gérez votre agenda en toute sérénité.</div>
+                            </div>
+                            <div class=\"hero-right\">
+                                <svg width=\"220\" height=\"160\" viewBox=\"0 0 220 160\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <!-- Calendar illustration -->
+                                    <rect x=\"20\" y=\"20\" width=\"130\" height=\"120\" rx=\"14\" fill=\"#2a3e2a\" stroke=\"#3a5a3a\" stroke-width=\"1\"/>
+                                    <rect x=\"20\" y=\"20\" width=\"130\" height=\"40\" rx=\"14\" fill=\"#3a6a3a\"/>
+                                    <rect x=\"20\" y=\"44\" width=\"130\" height=\"16\" fill=\"#3a6a3a\"/>
+                                    <text x=\"85\" y=\"46\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"500\" fill=\"#c8e8a0\" font-family=\"DM Serif Display, serif\">Avril 2026</text>
+                                    <circle cx=\"45\" cy=\"33\" r=\"7\" fill=\"#2a3e2a\"/>
+                                    <circle cx=\"125\" cy=\"33\" r=\"7\" fill=\"#2a3e2a\"/>
+                                    <!-- day headers -->
+                                    <text x=\"37\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">L</text>
+                                    <text x=\"55\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">M</text>
+                                    <text x=\"73\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">M</text>
+                                    <text x=\"91\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">J</text>
+                                    <text x=\"109\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">V</text>
+                                    <text x=\"127\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">S</text>
+                                    <!-- days row 1 -->
+                                    <text x=\"37\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">1</text>
+                                    <text x=\"55\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">2</text>
+                                    <text x=\"73\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">3</text>
+                                    <!-- today highlight -->
+                                    <circle cx=\"91\" cy=\"87\" r=\"9\" fill=\"#a8dc78\"/>
+                                    <text x=\"91\" y=\"91\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"500\" fill=\"#1a2e1a\" font-family=\"DM Sans, sans-serif\">4</text>
+                                    <text x=\"109\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">5</text>
+                                    <text x=\"127\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">6</text>
+                                    <!-- days row 2 -->
+                                    <text x=\"37\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">7</text>
+                                    <text x=\"55\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">8</text>
+                                    <!-- dot indicators -->
+                                    <circle cx=\"73\" cy=\"106\" r=\"4\" fill=\"#ff9966\" opacity=\"0.9\"/>
+                                    <circle cx=\"91\" cy=\"106\" r=\"4\" fill=\"#5b86e5\" opacity=\"0.9\"/>
+                                    <circle cx=\"109\" cy=\"106\" r=\"4\" fill=\"#ff9966\" opacity=\"0.9\"/>
+                                    <text x=\"127\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">13</text>
+                                    <!-- days row 3 -->
+                                    <text x=\"37\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">14</text>
+                                    <circle cx=\"55\" cy=\"123\" r=\"4\" fill=\"#5dcaa5\" opacity=\"0.9\"/>
+                                    <text x=\"73\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">16</text>
+                                    <text x=\"91\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">17</text>
+                                    <circle cx=\"109\" cy=\"123\" r=\"4\" fill=\"#ff9966\" opacity=\"0.9\"/>
+                                    <text x=\"127\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">20</text>
+                                    <!-- floating pill -->
+                                    <rect x=\"160\" y=\"30\" width=\"52\" height=\"24\" rx=\"12\" fill=\"#a8dc78\"/>
+                                    <text x=\"186\" y=\"46\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"500\" fill=\"#1a2e1a\" font-family=\"DM Sans, sans-serif\">Auj. 12</text>
+                                    <!-- floating person -->
+                                    <circle cx=\"185\" cy=\"80\" r=\"16\" fill=\"#2a3e2a\" stroke=\"#a8dc78\" stroke-width=\"1.5\"/>
+                                    <circle cx=\"185\" cy=\"75\" r=\"7\" fill=\"#c8e8a0\"/>
+                                    <rect x=\"173\" y=\"84\" width=\"24\" height=\"14\" rx=\"7\" fill=\"#c8e8a0\"/>
+                                    <!-- floating badge -->
+                                    <rect x=\"158\" y=\"110\" width=\"58\" height=\"36\" rx=\"10\" fill=\"#2a3e2a\" stroke=\"#3a5a3a\" stroke-width=\"1\"/>
+                                    <text x=\"187\" y=\"125\" text-anchor=\"middle\" font-size=\"9\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">Prochain</text>
+                                    <text x=\"187\" y=\"139\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"500\" fill=\"#a8dc78\" font-family=\"DM Sans, sans-serif\">09:00</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Stat Cards -->
+                        <div class=\"row\">
+    <div class=\"col-md-6\">
+        <a href=\"";
+        // line 441
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_liste_rendezvous");
+        yield "\" class=\"card-link\">
+            <div class=\"modern-card rdv-gradient\">
+                <h3><i class=\"fa fa-calendar\"></i> Rendez-vous</h3>
+                <p>Rendez-vous programmés aujourd'hui</p>
+                <h1>12</h1>
+            </div>
+        </a>
+    </div>
+
+    <div class=\"col-md-6\">
+        <a href=\"";
+        // line 451
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("admin_fiches");
+        yield "\" class=\"card-link\">
+        <div class=\"modern-card fiche-gradient\">
+            <h3><i class=\"fa fa-file-text\"></i> Fiches de consultation</h3>
+            <p>Fiches créées cette semaine</p>
+            <h1>08</h1>
+        </div>
+    </div>
+</div>
+
+                        <!-- Scene cards -->
+                        <div class=\"rdv-label\">Moments de soin</div>
+                        <div class=\"scene-grid\">
+
+                            <!-- Scene 1: Consultation -->
+                            <div class=\"scene-card\">
+                                <svg viewBox=\"0 0 340 200\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <rect width=\"340\" height=\"200\" fill=\"#fdf6ee\"/>
+                                    <!-- floor -->
+                                    <ellipse cx=\"170\" cy=\"185\" rx=\"130\" ry=\"10\" fill=\"#f0e4cc\" opacity=\"0.6\"/>
+                                    <!-- sofa -->
+                                    <rect x=\"60\" y=\"130\" width=\"220\" height=\"55\" rx=\"14\" fill=\"#d4b896\"/>
+                                    <rect x=\"60\" y=\"118\" width=\"220\" height=\"20\" rx=\"8\" fill=\"#c4a880\"/>
+                                    <rect x=\"60\" y=\"120\" width=\"18\" height=\"65\" rx=\"8\" fill=\"#c4a880\"/>
+                                    <rect x=\"262\" y=\"120\" width=\"18\" height=\"65\" rx=\"8\" fill=\"#c4a880\"/>
+                                    <!-- cushions -->
+                                    <rect x=\"78\" y=\"124\" width=\"80\" height=\"46\" rx=\"10\" fill=\"#e8d4b8\"/>
+                                    <rect x=\"182\" y=\"124\" width=\"80\" height=\"46\" rx=\"10\" fill=\"#e8d4b8\"/>
+                                    <!-- plant left -->
+                                    <rect x=\"22\" y=\"155\" width=\"10\" height=\"30\" rx=\"3\" fill=\"#8b6914\"/>
+                                    <ellipse cx=\"27\" cy=\"148\" rx=\"18\" ry=\"22\" fill=\"#4a8c3a\"/>
+                                    <ellipse cx=\"16\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#5a9c4a\"/>
+                                    <ellipse cx=\"38\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#3a7c2a\"/>
+                                    <!-- plant right -->
+                                    <rect x=\"308\" y=\"155\" width=\"10\" height=\"30\" rx=\"3\" fill=\"#8b6914\"/>
+                                    <ellipse cx=\"313\" cy=\"148\" rx=\"18\" ry=\"22\" fill=\"#4a8c3a\"/>
+                                    <ellipse cx=\"302\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#5a9c4a\"/>
+                                    <ellipse cx=\"324\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#3a7c2a\"/>
+                                    <!-- patient (left) -->
+                                    <circle cx=\"108\" cy=\"100\" r=\"20\" fill=\"#f4c09a\"/>
+                                    <ellipse cx=\"108\" cy=\"95\" rx=\"12\" ry=\"13\" fill=\"#e8a878\"/>
+                                    <rect x=\"90\" y=\"108\" width=\"36\" height=\"30\" rx=\"10\" fill=\"#e8a878\"/>
+                                    <!-- hair -->
+                                    <ellipse cx=\"108\" cy=\"83\" rx=\"13\" ry=\"8\" fill=\"#5a3010\"/>
+                                    <ellipse cx=\"96\" cy=\"86\" rx=\"5\" ry=\"7\" fill=\"#5a3010\"/>
+                                    <ellipse cx=\"120\" cy=\"86\" rx=\"5\" ry=\"7\" fill=\"#5a3010\"/>
+                                    <!-- face -->
+                                    <circle cx=\"104\" cy=\"96\" r=\"2\" fill=\"#7a4020\"/>
+                                    <circle cx=\"112\" cy=\"96\" r=\"2\" fill=\"#7a4020\"/>
+                                    <path d=\"M104 103 Q108 107 112 103\" stroke=\"#a05030\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/>
+                                    <!-- psychologist (right) -->
+                                    <circle cx=\"232\" cy=\"100\" r=\"20\" fill=\"#9dcce0\"/>
+                                    <ellipse cx=\"232\" cy=\"95\" rx=\"12\" ry=\"13\" fill=\"#7aacca\"/>
+                                    <rect x=\"214\" y=\"108\" width=\"36\" height=\"30\" rx=\"10\" fill=\"#7aacca\"/>
+                                    <!-- hair -->
+                                    <ellipse cx=\"232\" cy=\"83\" rx=\"14\" ry=\"9\" fill=\"#3a2010\"/>
+                                    <!-- coat -->
+                                    <rect x=\"218\" y=\"112\" width=\"28\" height=\"26\" rx=\"8\" fill=\"#ffffff\" opacity=\"0.7\"/>
+                                    <!-- face -->
+                                    <circle cx=\"228\" cy=\"96\" r=\"2\" fill=\"#1a6080\"/>
+                                    <circle cx=\"236\" cy=\"96\" r=\"2\" fill=\"#1a6080\"/>
+                                    <path d=\"M228 102 Q232 106 236 102\" stroke=\"#1a6080\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/>
+                                    <!-- speech bubble -->
+                                    <rect x=\"150\" y=\"52\" width=\"100\" height=\"36\" rx=\"12\" fill=\"white\" stroke=\"#ddd\" stroke-width=\"1\"/>
+                                    <path d=\"M185 88 L180 96 L194 88\" fill=\"white\" stroke=\"#ddd\" stroke-width=\"1\"/>
+                                    <rect x=\"162\" y=\"62\" width=\"76\" height=\"5\" rx=\"2\" fill=\"#ddd\"/>
+                                    <rect x=\"162\" y=\"72\" width=\"56\" height=\"5\" rx=\"2\" fill=\"#eee\"/>
+                                    <!-- window light -->
+                                    <rect x=\"148\" y=\"10\" width=\"44\" height=\"52\" rx=\"6\" fill=\"#e8f4ff\" stroke=\"#cce4ff\" stroke-width=\"1\"/>
+                                    <line x1=\"170\" y1=\"10\" x2=\"170\" y2=\"62\" stroke=\"#cce4ff\" stroke-width=\"0.8\"/>
+                                    <line x1=\"148\" y1=\"36\" x2=\"192\" y2=\"36\" stroke=\"#cce4ff\" stroke-width=\"0.8\"/>
+                                    <ellipse cx=\"170\" cy=\"80\" rx=\"30\" ry=\"6\" fill=\"#ffe8c0\" opacity=\"0.3\"/>
+                                </svg>
+                                <div class=\"scene-body\">
+                                    <div class=\"scene-tag tag-orange\">Consultation</div>
+                                    <div class=\"scene-title\">La séance</div>
+                                    <div class=\"scene-desc\">Un espace sûr, confidentiel et bienveillant pour chaque patient.</div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 2: Notes -->
+                            <div class=\"scene-card\">
+                                <svg viewBox=\"0 0 340 200\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <rect width=\"340\" height=\"200\" fill=\"#f0faf4\"/>
+                                    <!-- desk -->
+                                    <rect x=\"30\" y=\"145\" width=\"280\" height=\"14\" rx=\"6\" fill=\"#a8c898\"/>
+                                    <rect x=\"55\" y=\"159\" width=\"12\" height=\"30\" rx=\"4\" fill=\"#88a878\"/>
+                                    <rect x=\"273\" y=\"159\" width=\"12\" height=\"30\" rx=\"4\" fill=\"#88a878\"/>
+                                    <!-- laptop -->
+                                    <rect x=\"100\" y=\"90\" width=\"140\" height=\"90\" rx=\"8\" fill=\"#2a3e2a\"/>
+                                    <rect x=\"106\" y=\"96\" width=\"128\" height=\"76\" rx=\"4\" fill=\"#1a5a3a\"/>
+                                    <!-- screen content -->
+                                    <rect x=\"114\" y=\"104\" width=\"70\" height=\"6\" rx=\"2\" fill=\"#a8dc78\"/>
+                                    <rect x=\"114\" y=\"114\" width=\"112\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"122\" width=\"90\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"130\" width=\"100\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"138\" width=\"75\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"152\" width=\"50\" height=\"12\" rx=\"4\" fill=\"#a8dc78\"/>
+                                    <text x=\"139\" y=\"162\" text-anchor=\"middle\" font-size=\"8\" fill=\"#1a2e1a\" font-family=\"DM Sans, sans-serif\">Enregistrer</text>
+                                    <rect x=\"80\" y=\"145\" width=\"180\" height=\"8\" rx=\"4\" fill=\"#1e3a1e\"/>
+                                    <!-- notebook -->
+                                    <rect x=\"30\" y=\"85\" width=\"62\" height=\"78\" rx=\"6\" fill=\"#fffdf0\" stroke=\"#e0d8b0\" stroke-width=\"1\"/>
+                                    <rect x=\"30\" y=\"85\" width=\"10\" height=\"78\" rx=\"5\" fill=\"#e8c878\"/>
+                                    <rect x=\"44\" y=\"98\" width=\"38\" height=\"4\" rx=\"2\" fill=\"#c8d8a0\"/>
+                                    <rect x=\"44\" y=\"107\" width=\"30\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"114\" width=\"34\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"121\" width=\"28\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"128\" width=\"33\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"135\" width=\"26\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"142\" width=\"30\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <!-- pen -->
+                                    <rect x=\"84\" y=\"82\" width=\"6\" height=\"30\" rx=\"3\" fill=\"#c05a00\" transform=\"rotate(-20 84 82)\"/>
+                                    <polygon points=\"84,108 90,108 87,116\" fill=\"#a04000\" transform=\"rotate(-20 84 82)\"/>
+                                    <!-- mug -->
+                                    <rect x=\"258\" y=\"112\" width=\"36\" height=\"38\" rx=\"6\" fill=\"#ffffff\" stroke=\"#e0e8d0\" stroke-width=\"1\"/>
+                                    <path d=\"M294 124 Q308 124 308 130 Q308 136 294 136\" stroke=\"#c8d8a0\" stroke-width=\"2\" fill=\"none\"/>
+                                    <path d=\"M268 108 Q270 100 272 108\" stroke=\"#c0e0b0\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" opacity=\"0.6\"/>
+                                    <path d=\"M276 106 Q278 96 280 106\" stroke=\"#c0e0b0\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" opacity=\"0.6\"/>
+                                    <!-- plant small -->
+                                    <rect x=\"295\" y=\"130\" width=\"8\" height=\"18\" rx=\"3\" fill=\"#8b6914\"/>
+                                    <ellipse cx=\"299\" cy=\"122\" rx=\"14\" ry=\"16\" fill=\"#4a8c3a\"/>
+                                    <ellipse cx=\"290\" cy=\"128\" rx=\"9\" ry=\"12\" fill=\"#5a9c4a\"/>
+                                </svg>
+                                <div class=\"scene-body\">
+                                    <div class=\"scene-tag tag-green\">Documentation</div>
+                                    <div class=\"scene-title\">La fiche médicale</div>
+                                    <div class=\"scene-desc\">Résumé, observations et recommandations après chaque séance.</div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 3: Wellbeing -->
+                            <div class=\"scene-card\">
+                                <svg viewBox=\"0 0 340 200\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <rect width=\"340\" height=\"200\" fill=\"#faf0ff\"/>
+                                    <!-- grid lines -->
+                                    <line x1=\"40\" y1=\"50\" x2=\"40\" y2=\"160\" stroke=\"#e8d8f0\" stroke-width=\"0.8\"/>
+                                    <line x1=\"40\" y1=\"160\" x2=\"300\" y2=\"160\" stroke=\"#e8d8f0\" stroke-width=\"0.8\"/>
+                                    <line x1=\"40\" y1=\"130\" x2=\"300\" y2=\"130\" stroke=\"#e8d8f0\" stroke-width=\"0.5\" stroke-dasharray=\"4 3\"/>
+                                    <line x1=\"40\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"#e8d8f0\" stroke-width=\"0.5\" stroke-dasharray=\"4 3\"/>
+                                    <line x1=\"40\" y1=\"70\" x2=\"300\" y2=\"70\" stroke=\"#e8d8f0\" stroke-width=\"0.5\" stroke-dasharray=\"4 3\"/>
+                                    <!-- area fill -->
+                                    <path d=\"M60 145 Q90 135 120 120 Q150 105 180 90 Q210 75 240 68 Q270 62 295 55 L295 160 L60 160Z\" fill=\"#c890e8\" opacity=\"0.15\"/>
+                                    <!-- line -->
+                                    <path d=\"M60 145 Q90 135 120 120 Q150 105 180 90 Q210 75 240 68 Q270 62 295 55\" stroke=\"#9a50c8\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    <!-- data points -->
+                                    <circle cx=\"60\" cy=\"145\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"120\" cy=\"120\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"180\" cy=\"90\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"240\" cy=\"68\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"295\" cy=\"55\" r=\"7\" fill=\"#9a50c8\" stroke=\"white\" stroke-width=\"2\"/>
+                                    <!-- value label -->
+                                    <rect x=\"270\" y=\"38\" width=\"50\" height=\"22\" rx=\"8\" fill=\"#9a50c8\"/>
+                                    <text x=\"295\" y=\"53\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"500\" fill=\"white\" font-family=\"DM Sans, sans-serif\">+81%</text>
+                                    <!-- emoji faces -->
+                                    <circle cx=\"60\" cy=\"175\" r=\"8\" fill=\"#ffccaa\"/>
+                                    <circle cx=\"57\" cy=\"173\" r=\"1.5\" fill=\"#804020\"/>
+                                    <circle cx=\"63\" cy=\"173\" r=\"1.5\" fill=\"#804020\"/>
+                                    <path d=\"M57 177 Q60 175 63 177\" stroke=\"#804020\" stroke-width=\"1\" fill=\"none\"/>
+                                    <circle cx=\"295\" cy=\"175\" r=\"8\" fill=\"#c8eea0\"/>
+                                    <circle cx=\"292\" cy=\"173\" r=\"1.5\" fill=\"#2a6020\"/>
+                                    <circle cx=\"298\" cy=\"173\" r=\"1.5\" fill=\"#2a6020\"/>
+                                    <path d=\"M292 176 Q295 180 298 176\" stroke=\"#2a6020\" stroke-width=\"1.2\" fill=\"none\"/>
+                                    <!-- stars -->
+                                    <text x=\"252\" y=\"25\" font-size=\"14\" fill=\"#e8b800\" font-family=\"sans-serif\">★</text>
+                                    <text x=\"268\" y=\"20\" font-size=\"10\" fill=\"#e8b800\" font-family=\"sans-serif\">★</text>
+                                    <text x=\"238\" y=\"22\" font-size=\"10\" fill=\"#e8b800\" font-family=\"sans-serif\">★</text>
+                                    <!-- month labels -->
+                                    <text x=\"60\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Jan</text>
+                                    <text x=\"120\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Fév</text>
+                                    <text x=\"180\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Mar</text>
+                                    <text x=\"240\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Avr</text>
+                                </svg>
+                                <div class=\"scene-body\">
+                                    <div class=\"scene-tag tag-purple\">Suivi</div>
+                                    <div class=\"scene-title\">L'évolution</div>
+                                    <div class=\"scene-desc\">Mesure du bien-être mental au fil des séances et du temps.</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Journey -->
+                        <div class=\"rdv-label\">Parcours du patient</div>
+                        <div class=\"journey-grid\">
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">01 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#fff0e4\" stroke=\"#ffb380\" stroke-width=\"0.8\"/>
+                                        <circle cx=\"20\" cy=\"16\" r=\"7\" fill=\"#ffb380\"/>
+                                        <rect x=\"11\" y=\"25\" width=\"18\" height=\"12\" rx=\"6\" fill=\"#ffb380\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Prise de RDV</div>
+                                <div class=\"j-desc\">Le patient réserve sa séance en ligne à tout moment.</div>
+                                <div class=\"j-arrow\">
+                                    <svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\">
+                                        <path d=\"M2 5 L8 5 M6 3 L8 5 L6 7\" stroke=\"#a8dc78\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">02 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#e4f0ff\" stroke=\"#80aaff\" stroke-width=\"0.8\"/>
+                                        <rect x=\"12\" y=\"12\" width=\"16\" height=\"14\" rx=\"3\" fill=\"#80aaff\"/>
+                                        <rect x=\"15\" y=\"15\" width=\"10\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <rect x=\"15\" y=\"19\" width=\"7\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <circle cx=\"28\" cy=\"28\" r=\"6\" fill=\"#4488ee\"/>
+                                        <path d=\"M25 28 L27 30 L31 26\" stroke=\"white\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Consultation</div>
+                                <div class=\"j-desc\">Entretien confidentiel avec le psychologue.</div>
+                                <div class=\"j-arrow\">
+                                    <svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\">
+                                        <path d=\"M2 5 L8 5 M6 3 L8 5 L6 7\" stroke=\"#a8dc78\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">03 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#e4fff0\" stroke=\"#70cc99\" stroke-width=\"0.8\"/>
+                                        <rect x=\"13\" y=\"10\" width=\"14\" height=\"20\" rx=\"2\" fill=\"#70cc99\"/>
+                                        <rect x=\"16\" y=\"14\" width=\"8\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <rect x=\"16\" y=\"18\" width=\"6\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <rect x=\"16\" y=\"22\" width=\"7\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Fiche médicale</div>
+                                <div class=\"j-desc\">Résumé de la séance et recommandations personnalisées.</div>
+                                <div class=\"j-arrow\">
+                                    <svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\">
+                                        <path d=\"M2 5 L8 5 M6 3 L8 5 L6 7\" stroke=\"#a8dc78\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">04 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#f0e4ff\" stroke=\"#bb80ff\" stroke-width=\"0.8\"/>
+                                        <path d=\"M20 11 C15 11 11 14 11 18 C11 24 17 27 20 30 C23 27 29 24 29 18 C29 14 25 11 20 11Z\" fill=\"#bb80ff\"/>
+                                        <path d=\"M16 18 L18 21 L24 16\" stroke=\"white\" stroke-width=\"1.8\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Suivi bien-être</div>
+                                <div class=\"j-desc\">Accompagnement continu de la santé mentale du patient.</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Patient list -->
+                        <div class=\"rdv-label\">Prochains rendez-vous</div>
+                        <div class=\"patient-grid\">
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-now\"></div>
+                                <div class=\"p-avatar av-a\">ABA</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Ahmed Ben Ali</div>
+                                    <div class=\"p-detail\">Suivi anxiété · Séance 1</div>
+                                </div>
+                                <div class=\"p-time\">09:00</div>
+                            </div>
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-soon\"></div>
+                                <div class=\"p-avatar av-b\">ST</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Sarah Trabelsi</div>
+                                    <div class=\"p-detail\">Thérapie cognitive · Séance 4</div>
+                                </div>
+                                <div class=\"p-time\">11:30</div>
+                            </div>
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-later\"></div>
+                                <div class=\"p-avatar av-c\">YA</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Youssef Amri</div>
+                                    <div class=\"p-detail\">Bilan psychologique</div>
+                                </div>
+                                <div class=\"p-time\">14:00</div>
+                            </div>
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-later\"></div>
+                                <div class=\"p-avatar av-d\">MG</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Mariem Gharbi</div>
+                                    <div class=\"p-detail\">Gestion du stress · Séance 2</div>
+                                </div>
+                                <div class=\"p-time\">16:15</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Quote footer -->
+                        <div class=\"rdv-quote\">
+                            <div class=\"quote-mark\">\"</div>
+                            <div>
+                                <div class=\"quote-text\">Chaque rendez-vous est une étape vers le bien-être mental.</div>
+                                <div class=\"quote-author\">— Nafseyti · Plateforme de santé mentale</div>
+                            </div>
+                        </div>
+
+                    </div><!-- /rdv-wrap -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "back/rendez-vous.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  593 => 451,  580 => 441,  242 => 106,  235 => 102,  226 => 98,  218 => 93,  196 => 74,  191 => 72,  170 => 54,  165 => 52,  161 => 51,  153 => 46,  136 => 34,  126 => 27,  112 => 16,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{% extends 'back/base.html.twig' %}
+
+{% block title %}Rendez-vous{% endblock %}
+
+{% block body %}
+<div class=\"full_container\">
+    <div class=\"inner_container\">
+
+        <!-- Sidebar -->
+        <nav id=\"sidebar\">
+            <div class=\"sidebar_blog_1\">
+                <div class=\"sidebar-header\">
+                    <div class=\"logo_section\">
+                        <a href=\"#\">
+                            <img class=\"logo_icon img-responsive\"
+                                 src=\"{{ asset('back/images/logo/logo_icon1.png') }}\"
+                                 alt=\"logo\" />
+                        </a>
+                    </div>
+                </div>
+                    <div class=\"sidebar_user_info\">
+    <div class=\"icon_setting\"></div>
+    <div class=\"user_profle_side\">
+        <div class=\"user_img\">
+            
+                <img class=\"img-responsive\"
+                    src=\"{{ asset('back/images/layout_img/user_img.jpg') }}\" 
+                     alt=\"user\"
+                     style=\"width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #3c943c; display:block; margin:0 auto 10px auto;\">
+           
+        </div>
+        <div class=\"user_info\" style=\"text-align:center;\">
+            <h6 style=\"color:white; font-size:0.95rem; font-weight:600; margin-bottom:4px;\">
+                {{ app.user.firstname }} {{ app.user.lastname }}
+            </h6>
+            <p style=\"margin:0;\">
+                <span class=\"online_animation\"></span> En ligne
+            </p>
+        </div>
+    </div>
+</div>
+            <div class=\"sidebar_blog_2\">
+                <h4></h4>
+                <ul class=\"list-unstyled components\">
+                   <li>
+    <a href=\"{{ path('admin_tableau')}}\">
+        <i class=\"fa fa-dashboard yellow_color\"></i>
+        <span>Tableau de bord</span>
+    </a>
+</li>
+                    <li class=\"active\"><a href=\"{{ path('admin_users') }}\"><i class=\"fa fa-users blue1_color\"></i><span>Utilisateurs</span></a></li>
+                    <li class=\"active\"><a href=\"{{ path('admin_rendezvous') }}\"><i class=\"fa fa-calendar orange_color\"></i><span>Rendez-vous</span></a></li>
+                    <li><a href=\"#\"><i class=\"fa fa-book purple_color2\"></i><span>Contenu psychologique</span></a></li>
+                    <li class=\"active\"><a href=\"{{ path('app_test_index') }}\"><i class=\"fa fa-check-square green_color\"></i><span>Tests</span></a></li>
+                    <li><a href=\"#\"><i class=\"fa fa-calendar-check-o red_color\"></i><span>Événements</span></a></li>
+                    <li><a href=\"#\"><i class=\"fa fa-line-chart yellow_color\"></i><span>Suivi personnel</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div id=\"content\">
+
+            <!-- Topbar -->
+            <div class=\"topbar\">
+                <nav class=\"navbar navbar-expand-lg navbar-light\">
+                    <div class=\"full\">
+                        <button type=\"button\" id=\"sidebarCollapse\" class=\"sidebar_toggle\">
+                            <i class=\"fa fa-bars\"></i>
+                        </button>
+                        <div class=\"logo_section\">
+                            <a href=\"{{ path('admin_dashboard') }}\" style=\"display:flex; align-items:center; text-decoration:none;\">
+                                <img class=\"img-responsive\"
+                                     src=\"{{ asset('back/images/logo/logo1.png') }}\"
+                                     alt=\"logo\"
+                                     style=\"width:40px; height:40px; margin-right:10px;\" />
+                                <span style=\"font-size:20px; font-weight:bold; color:#3c943c;\">
+                                    Nafseyti
+                                </span>
+                            </a>
+                        </div>
+                        <div class=\"right_topbar\">
+                            <div class=\"icon_info\">
+                                <ul>
+                                    <li><a href=\"#\"><i class=\"fa fa-bell-o\"></i><span class=\"badge\">2</span></a></li>
+                                    <li><a href=\"#\"><i class=\"fa fa-question-circle\"></i></a></li>
+                                    <li><a href=\"#\"><i class=\"fa fa-envelope-o\"></i><span class=\"badge\">3</span></a></li>
+                                </ul>
+                                <ul class=\"user_profile_dd\">
+                                    <li>
+                                                                            <a class=\"dropdown-toggle\" data-toggle=\"dropdown\">
+    <img class=\"img-responsive rounded-circle\"
+         src=\"{{ asset('back/images/layout_img/user_img.jpg') }}\" 
+         alt=\"photo\"
+         style=\"width:35px; height:35px; object-fit:cover; border-radius:50%;\">
+
+    <span class=\"name_user\">
+        {{ app.user.firstname }} {{ app.user.lastname }}
+    </span>
+</a>
+                                        <div class=\"dropdown-menu\">
+    <a class=\"dropdown-item\" href=\"{{ path('app_profile') }}\">
+        <i class=\"fa fa-user\"></i> Mon Profil
+    </a>
+    <div class=\"dropdown-divider\"></div>
+    <a class=\"dropdown-item\" href=\"{{ path('app_logout') }}\">
+        <span>Se déconnecter</span> <i class=\"fa fa-sign-out\"></i>
+    </a>
+</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+
+            <!-- Main Content -->
+            <div class=\"midde_cont\">
+                <div class=\"container-fluid\">
+
+                    <link href=\"https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap\" rel=\"stylesheet\">
+
+                    <style>
+                        .rdv-wrap { font-family: 'DM Sans', sans-serif; padding: 10px 0 40px; }
+
+                        /* ── Hero header ── */
+                        .rdv-hero {
+                            background: #1a2e1a;
+                            border-radius: 24px;
+                            padding: 44px 48px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 28px;
+                            overflow: hidden;
+                            position: relative;
+                        }
+                        .rdv-hero::before {
+                            content: '';
+                            position: absolute;
+                            width: 320px; height: 320px;
+                            border-radius: 50%;
+                            background: #443e1b;
+                            right: -60px; top: -80px;
+                        }
+                        .rdv-hero::after {
+                            content: '';
+                            position: absolute;
+                            width: 200px; height: 200px;
+                            border-radius: 50%;
+                            background: rgba(180,220,130,0.05);
+                            right: 120px; bottom: -80px;
+                        }
+                        .hero-left { flex: 1; z-index: 1; }
+                        .hero-eyebrow {
+                            font-size: 11px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #8dc96e;
+                            margin-bottom: 10px;
+                        }
+                        .hero-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 42px;
+                            color: #f5f0e8;
+                            line-height: 1.1;
+                            margin-bottom: 14px;
+                        }
+                        .hero-title em { color: #a8dc78; font-style: italic; }
+                        .hero-sub {
+                            font-size: 14px;
+                            color: rgba(245,240,232,0.55);
+                            max-width: 340px;
+                            line-height: 1.6;
+                        }
+                        .hero-right { z-index: 1; }
+
+                        /* ── Stat cards ── */
+                        .modern-card {
+                            border-radius: 22px;
+                            padding: 30px;
+                            color: white;
+                            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+                            transition: 0.3s;
+                            margin-bottom: 25px;
+                            min-height: 180px;
+                        }
+                        .modern-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.18); }
+                        .rdv-gradient { background: linear-gradient(135deg, #ff9966, #ff5e62); }
+                        .fiche-gradient { background: linear-gradient(135deg, #36d1dc, #5b86e5); }
+
+                        /* ── Section label ── */
+                        .rdv-label {
+                            font-size: 10px;
+                            letter-spacing: 2px;
+                            text-transform: uppercase;
+                            color: #888;
+                            margin-bottom: 16px;
+                            margin-top: 8px;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+                        .rdv-label::after {
+                            content: '';
+                            flex: 1;
+                            height: 1px;
+                            background: #e5e0d8;
+                        }
+
+                        /* ── Illustrated scene cards ── */
+                        .scene-grid {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 18px;
+                            margin-bottom: 28px;
+                        }
+                        .scene-card {
+                            border-radius: 20px;
+                            overflow: hidden;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            transition: transform 0.3s, box-shadow 0.3s;
+                        }
+                        .scene-card:hover {
+                            transform: translateY(-6px);
+                            box-shadow: 0 16px 36px rgba(0,0,0,0.10);
+                        }
+                        .scene-card svg { display: block; width: 100%; }
+                        .scene-body { padding: 16px 18px 20px; }
+                        .scene-tag {
+                            display: inline-block;
+                            font-size: 10px;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            padding: 3px 10px;
+                            border-radius: 20px;
+                            margin-bottom: 8px;
+                            font-weight: 500;
+                        }
+                        .tag-orange { background: #fff0e4; color: #c05a00; }
+                        .tag-green  { background: #e8f5e2; color: #2a6a10; }
+                        .tag-purple { background: #f0e8ff; color: #6a20b0; }
+                        .scene-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: #1a2e1a; margin-bottom: 5px; }
+                        .scene-desc  { font-size: 12px; color: #888; line-height: 1.5; }
+
+                        /* ── Journey steps ── */
+                        .journey-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 0;
+                            border-radius: 20px;
+                            overflow: hidden;
+                            border: 1px solid #e8e2d8;
+                            margin-bottom: 28px;
+                        }
+                        .journey-step {
+                            padding: 24px 20px;
+                            background: #fffdf8;
+                            border-right: 1px solid #e8e2d8;
+                            position: relative;
+                        }
+                        .journey-step:last-child { border-right: none; }
+                        .journey-step:hover { background: #f5f0e8; }
+                        .j-num {
+                            font-size: 11px;
+                            letter-spacing: 1px;
+                            color: #bbb;
+                            margin-bottom: 12px;
+                        }
+                        .j-icon { margin-bottom: 12px; }
+                        .j-title {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 15px;
+                            color: #1a2e1a;
+                            margin-bottom: 6px;
+                        }
+                        .j-desc { font-size: 11px; color: #999; line-height: 1.5; }
+                        .j-arrow {
+                            position: absolute;
+                            right: -10px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 20px;
+                            height: 20px;
+                            background: #1a2e1a;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 2;
+                        }
+                        .j-arrow svg { display: block; }
+
+                        /* ── Patient list ── */
+                        .patient-grid {
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 14px;
+                            margin-bottom: 28px;
+                        }
+                        .patient-card {
+                            border-radius: 18px;
+                            border: 1px solid #e8e2d8;
+                            background: #fffdf8;
+                            padding: 18px 20px;
+                            display: flex;
+                            align-items: center;
+                            gap: 16px;
+                            transition: 0.25s;
+                        }
+                        .patient-card:hover { background: #f5f0e8; transform: translateX(4px); }
+                        .p-avatar {
+                            width: 48px; height: 48px;
+                            border-radius: 14px;
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 15px; font-weight: 500;
+                            flex-shrink: 0;
+                        }
+                        .av-a { background: #fff0e4; color: #c05a00; }
+                        .av-b { background: #e4f0ff; color: #0050aa; }
+                        .av-c { background: #e4fff0; color: #006640; }
+                        .av-d { background: #f0e4ff; color: #6600aa; }
+                        .p-info { flex: 1; }
+                        .p-name { font-size: 14px; font-weight: 500; color: #1a2e1a; }
+                        .p-detail { font-size: 12px; color: #999; margin-top: 3px; }
+                        .p-time {
+                            font-size: 13px; font-weight: 500;
+                            background: #1a2e1a; color: #a8dc78;
+                            padding: 7px 16px; border-radius: 20px;
+                            flex-shrink: 0;
+                        }
+                        .p-dot {
+                            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+                        }
+                        .dot-now { background: #4caf50; box-shadow: 0 0 0 3px rgba(76,175,80,0.2); }
+                        .dot-soon { background: #ff9800; }
+                        .dot-later { background: #ccc; }
+
+                        /* ── Quote footer ── */
+                        .rdv-quote {
+                            background: #1a2e1a;
+                            border-radius: 20px;
+                            padding: 32px 40px;
+                            display: flex;
+                            align-items: center;
+                            gap: 24px;
+                        }
+                        .quote-mark {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 80px;
+                            color: #a8dc78;
+                            line-height: 0.6;
+                            flex-shrink: 0;
+                            opacity: 0.6;
+                        }
+                        .quote-text {
+                            font-family: 'DM Serif Display', serif;
+                            font-size: 20px;
+                            color: #f5f0e8;
+                            font-style: italic;
+                            line-height: 1.5;
+                        }
+                        .quote-author {
+                            font-size: 12px;
+                            color: #8dc96e;
+                            margin-top: 10px;
+                            letter-spacing: 1px;
+                        }
+                    </style>
+
+                    <div class=\"rdv-wrap\">
+
+                        <!-- Hero -->
+                        <div class=\"rdv-hero\">
+                            <div class=\"hero-left\">
+                                <div class=\"hero-eyebrow\">Nafseyti · Santé mentale</div>
+                                <div class=\"hero-title\">Gestion des<br><em>Rendez-vous</em></div>
+                                <div class=\"hero-sub\">Suivez vos consultations, accompagnez vos patients et gérez votre agenda en toute sérénité.</div>
+                            </div>
+                            <div class=\"hero-right\">
+                                <svg width=\"220\" height=\"160\" viewBox=\"0 0 220 160\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <!-- Calendar illustration -->
+                                    <rect x=\"20\" y=\"20\" width=\"130\" height=\"120\" rx=\"14\" fill=\"#2a3e2a\" stroke=\"#3a5a3a\" stroke-width=\"1\"/>
+                                    <rect x=\"20\" y=\"20\" width=\"130\" height=\"40\" rx=\"14\" fill=\"#3a6a3a\"/>
+                                    <rect x=\"20\" y=\"44\" width=\"130\" height=\"16\" fill=\"#3a6a3a\"/>
+                                    <text x=\"85\" y=\"46\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"500\" fill=\"#c8e8a0\" font-family=\"DM Serif Display, serif\">Avril 2026</text>
+                                    <circle cx=\"45\" cy=\"33\" r=\"7\" fill=\"#2a3e2a\"/>
+                                    <circle cx=\"125\" cy=\"33\" r=\"7\" fill=\"#2a3e2a\"/>
+                                    <!-- day headers -->
+                                    <text x=\"37\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">L</text>
+                                    <text x=\"55\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">M</text>
+                                    <text x=\"73\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">M</text>
+                                    <text x=\"91\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">J</text>
+                                    <text x=\"109\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">V</text>
+                                    <text x=\"127\" y=\"72\" text-anchor=\"middle\" font-size=\"8\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">S</text>
+                                    <!-- days row 1 -->
+                                    <text x=\"37\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">1</text>
+                                    <text x=\"55\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">2</text>
+                                    <text x=\"73\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">3</text>
+                                    <!-- today highlight -->
+                                    <circle cx=\"91\" cy=\"87\" r=\"9\" fill=\"#a8dc78\"/>
+                                    <text x=\"91\" y=\"91\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"500\" fill=\"#1a2e1a\" font-family=\"DM Sans, sans-serif\">4</text>
+                                    <text x=\"109\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">5</text>
+                                    <text x=\"127\" y=\"90\" text-anchor=\"middle\" font-size=\"9\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">6</text>
+                                    <!-- days row 2 -->
+                                    <text x=\"37\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">7</text>
+                                    <text x=\"55\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">8</text>
+                                    <!-- dot indicators -->
+                                    <circle cx=\"73\" cy=\"106\" r=\"4\" fill=\"#ff9966\" opacity=\"0.9\"/>
+                                    <circle cx=\"91\" cy=\"106\" r=\"4\" fill=\"#5b86e5\" opacity=\"0.9\"/>
+                                    <circle cx=\"109\" cy=\"106\" r=\"4\" fill=\"#ff9966\" opacity=\"0.9\"/>
+                                    <text x=\"127\" y=\"108\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">13</text>
+                                    <!-- days row 3 -->
+                                    <text x=\"37\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">14</text>
+                                    <circle cx=\"55\" cy=\"123\" r=\"4\" fill=\"#5dcaa5\" opacity=\"0.9\"/>
+                                    <text x=\"73\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">16</text>
+                                    <text x=\"91\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#c8e8a0\" font-family=\"DM Sans, sans-serif\">17</text>
+                                    <circle cx=\"109\" cy=\"123\" r=\"4\" fill=\"#ff9966\" opacity=\"0.9\"/>
+                                    <text x=\"127\" y=\"126\" text-anchor=\"middle\" font-size=\"9\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">20</text>
+                                    <!-- floating pill -->
+                                    <rect x=\"160\" y=\"30\" width=\"52\" height=\"24\" rx=\"12\" fill=\"#a8dc78\"/>
+                                    <text x=\"186\" y=\"46\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"500\" fill=\"#1a2e1a\" font-family=\"DM Sans, sans-serif\">Auj. 12</text>
+                                    <!-- floating person -->
+                                    <circle cx=\"185\" cy=\"80\" r=\"16\" fill=\"#2a3e2a\" stroke=\"#a8dc78\" stroke-width=\"1.5\"/>
+                                    <circle cx=\"185\" cy=\"75\" r=\"7\" fill=\"#c8e8a0\"/>
+                                    <rect x=\"173\" y=\"84\" width=\"24\" height=\"14\" rx=\"7\" fill=\"#c8e8a0\"/>
+                                    <!-- floating badge -->
+                                    <rect x=\"158\" y=\"110\" width=\"58\" height=\"36\" rx=\"10\" fill=\"#2a3e2a\" stroke=\"#3a5a3a\" stroke-width=\"1\"/>
+                                    <text x=\"187\" y=\"125\" text-anchor=\"middle\" font-size=\"9\" fill=\"#6a9a6a\" font-family=\"DM Sans, sans-serif\">Prochain</text>
+                                    <text x=\"187\" y=\"139\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"500\" fill=\"#a8dc78\" font-family=\"DM Sans, sans-serif\">09:00</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Stat Cards -->
+                        <div class=\"row\">
+    <div class=\"col-md-6\">
+        <a href=\"{{ path('admin_liste_rendezvous') }}\" class=\"card-link\">
+            <div class=\"modern-card rdv-gradient\">
+                <h3><i class=\"fa fa-calendar\"></i> Rendez-vous</h3>
+                <p>Rendez-vous programmés aujourd'hui</p>
+                <h1>12</h1>
+            </div>
+        </a>
+    </div>
+
+    <div class=\"col-md-6\">
+        <a href=\"{{ path('admin_fiches')}}\" class=\"card-link\">
+        <div class=\"modern-card fiche-gradient\">
+            <h3><i class=\"fa fa-file-text\"></i> Fiches de consultation</h3>
+            <p>Fiches créées cette semaine</p>
+            <h1>08</h1>
+        </div>
+    </div>
+</div>
+
+                        <!-- Scene cards -->
+                        <div class=\"rdv-label\">Moments de soin</div>
+                        <div class=\"scene-grid\">
+
+                            <!-- Scene 1: Consultation -->
+                            <div class=\"scene-card\">
+                                <svg viewBox=\"0 0 340 200\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <rect width=\"340\" height=\"200\" fill=\"#fdf6ee\"/>
+                                    <!-- floor -->
+                                    <ellipse cx=\"170\" cy=\"185\" rx=\"130\" ry=\"10\" fill=\"#f0e4cc\" opacity=\"0.6\"/>
+                                    <!-- sofa -->
+                                    <rect x=\"60\" y=\"130\" width=\"220\" height=\"55\" rx=\"14\" fill=\"#d4b896\"/>
+                                    <rect x=\"60\" y=\"118\" width=\"220\" height=\"20\" rx=\"8\" fill=\"#c4a880\"/>
+                                    <rect x=\"60\" y=\"120\" width=\"18\" height=\"65\" rx=\"8\" fill=\"#c4a880\"/>
+                                    <rect x=\"262\" y=\"120\" width=\"18\" height=\"65\" rx=\"8\" fill=\"#c4a880\"/>
+                                    <!-- cushions -->
+                                    <rect x=\"78\" y=\"124\" width=\"80\" height=\"46\" rx=\"10\" fill=\"#e8d4b8\"/>
+                                    <rect x=\"182\" y=\"124\" width=\"80\" height=\"46\" rx=\"10\" fill=\"#e8d4b8\"/>
+                                    <!-- plant left -->
+                                    <rect x=\"22\" y=\"155\" width=\"10\" height=\"30\" rx=\"3\" fill=\"#8b6914\"/>
+                                    <ellipse cx=\"27\" cy=\"148\" rx=\"18\" ry=\"22\" fill=\"#4a8c3a\"/>
+                                    <ellipse cx=\"16\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#5a9c4a\"/>
+                                    <ellipse cx=\"38\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#3a7c2a\"/>
+                                    <!-- plant right -->
+                                    <rect x=\"308\" y=\"155\" width=\"10\" height=\"30\" rx=\"3\" fill=\"#8b6914\"/>
+                                    <ellipse cx=\"313\" cy=\"148\" rx=\"18\" ry=\"22\" fill=\"#4a8c3a\"/>
+                                    <ellipse cx=\"302\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#5a9c4a\"/>
+                                    <ellipse cx=\"324\" cy=\"155\" rx=\"12\" ry=\"16\" fill=\"#3a7c2a\"/>
+                                    <!-- patient (left) -->
+                                    <circle cx=\"108\" cy=\"100\" r=\"20\" fill=\"#f4c09a\"/>
+                                    <ellipse cx=\"108\" cy=\"95\" rx=\"12\" ry=\"13\" fill=\"#e8a878\"/>
+                                    <rect x=\"90\" y=\"108\" width=\"36\" height=\"30\" rx=\"10\" fill=\"#e8a878\"/>
+                                    <!-- hair -->
+                                    <ellipse cx=\"108\" cy=\"83\" rx=\"13\" ry=\"8\" fill=\"#5a3010\"/>
+                                    <ellipse cx=\"96\" cy=\"86\" rx=\"5\" ry=\"7\" fill=\"#5a3010\"/>
+                                    <ellipse cx=\"120\" cy=\"86\" rx=\"5\" ry=\"7\" fill=\"#5a3010\"/>
+                                    <!-- face -->
+                                    <circle cx=\"104\" cy=\"96\" r=\"2\" fill=\"#7a4020\"/>
+                                    <circle cx=\"112\" cy=\"96\" r=\"2\" fill=\"#7a4020\"/>
+                                    <path d=\"M104 103 Q108 107 112 103\" stroke=\"#a05030\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/>
+                                    <!-- psychologist (right) -->
+                                    <circle cx=\"232\" cy=\"100\" r=\"20\" fill=\"#9dcce0\"/>
+                                    <ellipse cx=\"232\" cy=\"95\" rx=\"12\" ry=\"13\" fill=\"#7aacca\"/>
+                                    <rect x=\"214\" y=\"108\" width=\"36\" height=\"30\" rx=\"10\" fill=\"#7aacca\"/>
+                                    <!-- hair -->
+                                    <ellipse cx=\"232\" cy=\"83\" rx=\"14\" ry=\"9\" fill=\"#3a2010\"/>
+                                    <!-- coat -->
+                                    <rect x=\"218\" y=\"112\" width=\"28\" height=\"26\" rx=\"8\" fill=\"#ffffff\" opacity=\"0.7\"/>
+                                    <!-- face -->
+                                    <circle cx=\"228\" cy=\"96\" r=\"2\" fill=\"#1a6080\"/>
+                                    <circle cx=\"236\" cy=\"96\" r=\"2\" fill=\"#1a6080\"/>
+                                    <path d=\"M228 102 Q232 106 236 102\" stroke=\"#1a6080\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/>
+                                    <!-- speech bubble -->
+                                    <rect x=\"150\" y=\"52\" width=\"100\" height=\"36\" rx=\"12\" fill=\"white\" stroke=\"#ddd\" stroke-width=\"1\"/>
+                                    <path d=\"M185 88 L180 96 L194 88\" fill=\"white\" stroke=\"#ddd\" stroke-width=\"1\"/>
+                                    <rect x=\"162\" y=\"62\" width=\"76\" height=\"5\" rx=\"2\" fill=\"#ddd\"/>
+                                    <rect x=\"162\" y=\"72\" width=\"56\" height=\"5\" rx=\"2\" fill=\"#eee\"/>
+                                    <!-- window light -->
+                                    <rect x=\"148\" y=\"10\" width=\"44\" height=\"52\" rx=\"6\" fill=\"#e8f4ff\" stroke=\"#cce4ff\" stroke-width=\"1\"/>
+                                    <line x1=\"170\" y1=\"10\" x2=\"170\" y2=\"62\" stroke=\"#cce4ff\" stroke-width=\"0.8\"/>
+                                    <line x1=\"148\" y1=\"36\" x2=\"192\" y2=\"36\" stroke=\"#cce4ff\" stroke-width=\"0.8\"/>
+                                    <ellipse cx=\"170\" cy=\"80\" rx=\"30\" ry=\"6\" fill=\"#ffe8c0\" opacity=\"0.3\"/>
+                                </svg>
+                                <div class=\"scene-body\">
+                                    <div class=\"scene-tag tag-orange\">Consultation</div>
+                                    <div class=\"scene-title\">La séance</div>
+                                    <div class=\"scene-desc\">Un espace sûr, confidentiel et bienveillant pour chaque patient.</div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 2: Notes -->
+                            <div class=\"scene-card\">
+                                <svg viewBox=\"0 0 340 200\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <rect width=\"340\" height=\"200\" fill=\"#f0faf4\"/>
+                                    <!-- desk -->
+                                    <rect x=\"30\" y=\"145\" width=\"280\" height=\"14\" rx=\"6\" fill=\"#a8c898\"/>
+                                    <rect x=\"55\" y=\"159\" width=\"12\" height=\"30\" rx=\"4\" fill=\"#88a878\"/>
+                                    <rect x=\"273\" y=\"159\" width=\"12\" height=\"30\" rx=\"4\" fill=\"#88a878\"/>
+                                    <!-- laptop -->
+                                    <rect x=\"100\" y=\"90\" width=\"140\" height=\"90\" rx=\"8\" fill=\"#2a3e2a\"/>
+                                    <rect x=\"106\" y=\"96\" width=\"128\" height=\"76\" rx=\"4\" fill=\"#1a5a3a\"/>
+                                    <!-- screen content -->
+                                    <rect x=\"114\" y=\"104\" width=\"70\" height=\"6\" rx=\"2\" fill=\"#a8dc78\"/>
+                                    <rect x=\"114\" y=\"114\" width=\"112\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"122\" width=\"90\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"130\" width=\"100\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"138\" width=\"75\" height=\"4\" rx=\"2\" fill=\"#4a8a5a\" opacity=\"0.7\"/>
+                                    <rect x=\"114\" y=\"152\" width=\"50\" height=\"12\" rx=\"4\" fill=\"#a8dc78\"/>
+                                    <text x=\"139\" y=\"162\" text-anchor=\"middle\" font-size=\"8\" fill=\"#1a2e1a\" font-family=\"DM Sans, sans-serif\">Enregistrer</text>
+                                    <rect x=\"80\" y=\"145\" width=\"180\" height=\"8\" rx=\"4\" fill=\"#1e3a1e\"/>
+                                    <!-- notebook -->
+                                    <rect x=\"30\" y=\"85\" width=\"62\" height=\"78\" rx=\"6\" fill=\"#fffdf0\" stroke=\"#e0d8b0\" stroke-width=\"1\"/>
+                                    <rect x=\"30\" y=\"85\" width=\"10\" height=\"78\" rx=\"5\" fill=\"#e8c878\"/>
+                                    <rect x=\"44\" y=\"98\" width=\"38\" height=\"4\" rx=\"2\" fill=\"#c8d8a0\"/>
+                                    <rect x=\"44\" y=\"107\" width=\"30\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"114\" width=\"34\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"121\" width=\"28\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"128\" width=\"33\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"135\" width=\"26\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <rect x=\"44\" y=\"142\" width=\"30\" height=\"3\" rx=\"1\" fill=\"#dde8c0\"/>
+                                    <!-- pen -->
+                                    <rect x=\"84\" y=\"82\" width=\"6\" height=\"30\" rx=\"3\" fill=\"#c05a00\" transform=\"rotate(-20 84 82)\"/>
+                                    <polygon points=\"84,108 90,108 87,116\" fill=\"#a04000\" transform=\"rotate(-20 84 82)\"/>
+                                    <!-- mug -->
+                                    <rect x=\"258\" y=\"112\" width=\"36\" height=\"38\" rx=\"6\" fill=\"#ffffff\" stroke=\"#e0e8d0\" stroke-width=\"1\"/>
+                                    <path d=\"M294 124 Q308 124 308 130 Q308 136 294 136\" stroke=\"#c8d8a0\" stroke-width=\"2\" fill=\"none\"/>
+                                    <path d=\"M268 108 Q270 100 272 108\" stroke=\"#c0e0b0\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" opacity=\"0.6\"/>
+                                    <path d=\"M276 106 Q278 96 280 106\" stroke=\"#c0e0b0\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" opacity=\"0.6\"/>
+                                    <!-- plant small -->
+                                    <rect x=\"295\" y=\"130\" width=\"8\" height=\"18\" rx=\"3\" fill=\"#8b6914\"/>
+                                    <ellipse cx=\"299\" cy=\"122\" rx=\"14\" ry=\"16\" fill=\"#4a8c3a\"/>
+                                    <ellipse cx=\"290\" cy=\"128\" rx=\"9\" ry=\"12\" fill=\"#5a9c4a\"/>
+                                </svg>
+                                <div class=\"scene-body\">
+                                    <div class=\"scene-tag tag-green\">Documentation</div>
+                                    <div class=\"scene-title\">La fiche médicale</div>
+                                    <div class=\"scene-desc\">Résumé, observations et recommandations après chaque séance.</div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 3: Wellbeing -->
+                            <div class=\"scene-card\">
+                                <svg viewBox=\"0 0 340 200\" xmlns=\"http://www.w3.org/2000/svg\">
+                                    <rect width=\"340\" height=\"200\" fill=\"#faf0ff\"/>
+                                    <!-- grid lines -->
+                                    <line x1=\"40\" y1=\"50\" x2=\"40\" y2=\"160\" stroke=\"#e8d8f0\" stroke-width=\"0.8\"/>
+                                    <line x1=\"40\" y1=\"160\" x2=\"300\" y2=\"160\" stroke=\"#e8d8f0\" stroke-width=\"0.8\"/>
+                                    <line x1=\"40\" y1=\"130\" x2=\"300\" y2=\"130\" stroke=\"#e8d8f0\" stroke-width=\"0.5\" stroke-dasharray=\"4 3\"/>
+                                    <line x1=\"40\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"#e8d8f0\" stroke-width=\"0.5\" stroke-dasharray=\"4 3\"/>
+                                    <line x1=\"40\" y1=\"70\" x2=\"300\" y2=\"70\" stroke=\"#e8d8f0\" stroke-width=\"0.5\" stroke-dasharray=\"4 3\"/>
+                                    <!-- area fill -->
+                                    <path d=\"M60 145 Q90 135 120 120 Q150 105 180 90 Q210 75 240 68 Q270 62 295 55 L295 160 L60 160Z\" fill=\"#c890e8\" opacity=\"0.15\"/>
+                                    <!-- line -->
+                                    <path d=\"M60 145 Q90 135 120 120 Q150 105 180 90 Q210 75 240 68 Q270 62 295 55\" stroke=\"#9a50c8\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    <!-- data points -->
+                                    <circle cx=\"60\" cy=\"145\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"120\" cy=\"120\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"180\" cy=\"90\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"240\" cy=\"68\" r=\"5\" fill=\"white\" stroke=\"#9a50c8\" stroke-width=\"2\"/>
+                                    <circle cx=\"295\" cy=\"55\" r=\"7\" fill=\"#9a50c8\" stroke=\"white\" stroke-width=\"2\"/>
+                                    <!-- value label -->
+                                    <rect x=\"270\" y=\"38\" width=\"50\" height=\"22\" rx=\"8\" fill=\"#9a50c8\"/>
+                                    <text x=\"295\" y=\"53\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"500\" fill=\"white\" font-family=\"DM Sans, sans-serif\">+81%</text>
+                                    <!-- emoji faces -->
+                                    <circle cx=\"60\" cy=\"175\" r=\"8\" fill=\"#ffccaa\"/>
+                                    <circle cx=\"57\" cy=\"173\" r=\"1.5\" fill=\"#804020\"/>
+                                    <circle cx=\"63\" cy=\"173\" r=\"1.5\" fill=\"#804020\"/>
+                                    <path d=\"M57 177 Q60 175 63 177\" stroke=\"#804020\" stroke-width=\"1\" fill=\"none\"/>
+                                    <circle cx=\"295\" cy=\"175\" r=\"8\" fill=\"#c8eea0\"/>
+                                    <circle cx=\"292\" cy=\"173\" r=\"1.5\" fill=\"#2a6020\"/>
+                                    <circle cx=\"298\" cy=\"173\" r=\"1.5\" fill=\"#2a6020\"/>
+                                    <path d=\"M292 176 Q295 180 298 176\" stroke=\"#2a6020\" stroke-width=\"1.2\" fill=\"none\"/>
+                                    <!-- stars -->
+                                    <text x=\"252\" y=\"25\" font-size=\"14\" fill=\"#e8b800\" font-family=\"sans-serif\">★</text>
+                                    <text x=\"268\" y=\"20\" font-size=\"10\" fill=\"#e8b800\" font-family=\"sans-serif\">★</text>
+                                    <text x=\"238\" y=\"22\" font-size=\"10\" fill=\"#e8b800\" font-family=\"sans-serif\">★</text>
+                                    <!-- month labels -->
+                                    <text x=\"60\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Jan</text>
+                                    <text x=\"120\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Fév</text>
+                                    <text x=\"180\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Mar</text>
+                                    <text x=\"240\" y=\"175\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b898d0\" dy=\"16\" font-family=\"DM Sans, sans-serif\">Avr</text>
+                                </svg>
+                                <div class=\"scene-body\">
+                                    <div class=\"scene-tag tag-purple\">Suivi</div>
+                                    <div class=\"scene-title\">L'évolution</div>
+                                    <div class=\"scene-desc\">Mesure du bien-être mental au fil des séances et du temps.</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Journey -->
+                        <div class=\"rdv-label\">Parcours du patient</div>
+                        <div class=\"journey-grid\">
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">01 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#fff0e4\" stroke=\"#ffb380\" stroke-width=\"0.8\"/>
+                                        <circle cx=\"20\" cy=\"16\" r=\"7\" fill=\"#ffb380\"/>
+                                        <rect x=\"11\" y=\"25\" width=\"18\" height=\"12\" rx=\"6\" fill=\"#ffb380\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Prise de RDV</div>
+                                <div class=\"j-desc\">Le patient réserve sa séance en ligne à tout moment.</div>
+                                <div class=\"j-arrow\">
+                                    <svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\">
+                                        <path d=\"M2 5 L8 5 M6 3 L8 5 L6 7\" stroke=\"#a8dc78\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">02 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#e4f0ff\" stroke=\"#80aaff\" stroke-width=\"0.8\"/>
+                                        <rect x=\"12\" y=\"12\" width=\"16\" height=\"14\" rx=\"3\" fill=\"#80aaff\"/>
+                                        <rect x=\"15\" y=\"15\" width=\"10\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <rect x=\"15\" y=\"19\" width=\"7\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <circle cx=\"28\" cy=\"28\" r=\"6\" fill=\"#4488ee\"/>
+                                        <path d=\"M25 28 L27 30 L31 26\" stroke=\"white\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Consultation</div>
+                                <div class=\"j-desc\">Entretien confidentiel avec le psychologue.</div>
+                                <div class=\"j-arrow\">
+                                    <svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\">
+                                        <path d=\"M2 5 L8 5 M6 3 L8 5 L6 7\" stroke=\"#a8dc78\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">03 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#e4fff0\" stroke=\"#70cc99\" stroke-width=\"0.8\"/>
+                                        <rect x=\"13\" y=\"10\" width=\"14\" height=\"20\" rx=\"2\" fill=\"#70cc99\"/>
+                                        <rect x=\"16\" y=\"14\" width=\"8\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <rect x=\"16\" y=\"18\" width=\"6\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                        <rect x=\"16\" y=\"22\" width=\"7\" height=\"2\" rx=\"1\" fill=\"white\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Fiche médicale</div>
+                                <div class=\"j-desc\">Résumé de la séance et recommandations personnalisées.</div>
+                                <div class=\"j-arrow\">
+                                    <svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\">
+                                        <path d=\"M2 5 L8 5 M6 3 L8 5 L6 7\" stroke=\"#a8dc78\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class=\"journey-step\">
+                                <div class=\"j-num\">04 —</div>
+                                <div class=\"j-icon\">
+                                    <svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\">
+                                        <circle cx=\"20\" cy=\"20\" r=\"19\" fill=\"#f0e4ff\" stroke=\"#bb80ff\" stroke-width=\"0.8\"/>
+                                        <path d=\"M20 11 C15 11 11 14 11 18 C11 24 17 27 20 30 C23 27 29 24 29 18 C29 14 25 11 20 11Z\" fill=\"#bb80ff\"/>
+                                        <path d=\"M16 18 L18 21 L24 16\" stroke=\"white\" stroke-width=\"1.8\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                                    </svg>
+                                </div>
+                                <div class=\"j-title\">Suivi bien-être</div>
+                                <div class=\"j-desc\">Accompagnement continu de la santé mentale du patient.</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Patient list -->
+                        <div class=\"rdv-label\">Prochains rendez-vous</div>
+                        <div class=\"patient-grid\">
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-now\"></div>
+                                <div class=\"p-avatar av-a\">ABA</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Ahmed Ben Ali</div>
+                                    <div class=\"p-detail\">Suivi anxiété · Séance 1</div>
+                                </div>
+                                <div class=\"p-time\">09:00</div>
+                            </div>
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-soon\"></div>
+                                <div class=\"p-avatar av-b\">ST</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Sarah Trabelsi</div>
+                                    <div class=\"p-detail\">Thérapie cognitive · Séance 4</div>
+                                </div>
+                                <div class=\"p-time\">11:30</div>
+                            </div>
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-later\"></div>
+                                <div class=\"p-avatar av-c\">YA</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Youssef Amri</div>
+                                    <div class=\"p-detail\">Bilan psychologique</div>
+                                </div>
+                                <div class=\"p-time\">14:00</div>
+                            </div>
+
+                            <div class=\"patient-card\">
+                                <div class=\"p-dot dot-later\"></div>
+                                <div class=\"p-avatar av-d\">MG</div>
+                                <div class=\"p-info\">
+                                    <div class=\"p-name\">Mariem Gharbi</div>
+                                    <div class=\"p-detail\">Gestion du stress · Séance 2</div>
+                                </div>
+                                <div class=\"p-time\">16:15</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Quote footer -->
+                        <div class=\"rdv-quote\">
+                            <div class=\"quote-mark\">\"</div>
+                            <div>
+                                <div class=\"quote-text\">Chaque rendez-vous est une étape vers le bien-être mental.</div>
+                                <div class=\"quote-author\">— Nafseyti · Plateforme de santé mentale</div>
+                            </div>
+                        </div>
+
+                    </div><!-- /rdv-wrap -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+", "back/rendez-vous.html.twig", "C:\\Users\\DELL\\Downloads\\psy\\templates\\back\\rendez-vous.html.twig");
+    }
+}

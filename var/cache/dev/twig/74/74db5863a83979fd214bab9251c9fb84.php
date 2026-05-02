@@ -1,0 +1,828 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* Psychologue/evente/AIAssitant.html.twig */
+class __TwigTemplate_cdcd5f8e4e3a1e4cd024f3041c47a1de extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'title' => [$this, 'block_title'],
+            'body' => [$this, 'block_body'],
+            'javascripts' => [$this, 'block_javascripts'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 1
+        return "base.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Psychologue/evente/AIAssitant.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Psychologue/evente/AIAssitant.html.twig"));
+
+        $this->parent = $this->load("base.html.twig", 1);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 2
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
+
+        yield "Assistant Bien-�tre";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 3
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 4
+        yield "<style>
+:root{--primary-green:#5c715a;--secondary-green:#7f9a7d;--light-green:#9cb39b;--pale-green:#a5b8a3;--soft-green:#b7c9b5;--bg-light:#f5f3ed;--card-bg:#fcfaf7;--border-green:#d2e0cf;--input-bg:#f0f1ec;--text-dark:#4d604b;--text-muted:#8a9a87;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background-color:var(--bg-light);font-family:'Segoe UI',Georgia,serif;}
+.ai-container{background:linear-gradient(135deg,#f3efe9,#e8e3db);min-height:100vh;padding:25px;}
+.avatar-circle{width:90px;height:90px;background:linear-gradient(135deg,var(--light-green),var(--secondary-green));border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.avatar-circle span{font-size:45px;}
+.nature-badge{background:linear-gradient(135deg,var(--soft-green),var(--pale-green));padding:8px 20px;border-radius:25px;color:#3d533b;font-weight:bold;font-size:14px;}
+.banner-wellness{background:rgba(159,185,151,.15);border-radius:20px;padding:15px 20px;}
+.form-select-nature{background-color:var(--input-bg);border:1px solid var(--border-green);border-radius:25px;padding:10px 15px;color:var(--text-dark);width:100%;}
+.form-select-nature:focus{border-color:var(--secondary-green);outline:none;}
+.btn-nature{background:linear-gradient(135deg,var(--secondary-green),var(--primary-green));color:white;border:none;border-radius:35px;padding:18px 60px;font-weight:bold;font-size:20px;cursor:pointer;box-shadow:0 5px 15px rgba(127,154,125,.3);}
+.btn-nature:hover{transform:translateY(-2px);}
+.btn-nature-secondary{background:var(--input-bg);color:var(--primary-green);border:1px solid var(--border-green);border-radius:35px;padding:18px 40px;font-size:18px;cursor:pointer;}
+.btn-nature-outline{background:#e2f0e0;color:var(--primary-green);border:1px solid var(--border-green);border-radius:25px;padding:8px 20px;cursor:pointer;font-size:14px;}
+.btn-nature-outline:hover{background:var(--secondary-green);color:white;}
+.btn-quick{border-radius:25px;padding:12px 25px;font-weight:bold;font-size:13px;color:white;cursor:pointer;border:none;}
+.btn-quick-idea{background:var(--light-green);}.btn-quick-budget{background:var(--secondary-green);}
+.btn-quick-planning{background:var(--pale-green);}.btn-quick-share{background:var(--soft-green);}
+.nav-tabs-nature{border-bottom:2px solid var(--border-green);gap:5px;flex-wrap:wrap;display:flex;list-style:none;padding:0;margin:0;}
+.nav-tabs-nature .nav-link{border:none;color:var(--text-muted);font-weight:600;padding:12px 20px;border-radius:15px 15px 0 0;cursor:pointer;background:transparent;}
+.nav-tabs-nature .nav-link.active{color:var(--primary-green);background:var(--card-bg);border-bottom:3px solid var(--secondary-green);}
+.tab-content-nature{background:var(--card-bg);border-radius:0 0 25px 25px;border:1px solid var(--border-green);border-top:none;padding:20px;min-height:150px;}
+.textarea-nature{background-color:var(--input-bg);border:1px solid var(--border-green);border-radius:20px;color:var(--text-dark);font-size:14px;width:100%;padding:12px;font-family:inherit;resize:vertical;}
+.textarea-nature:focus{border-color:var(--secondary-green);outline:none;}
+.result-area{background-color:var(--input-bg);border:1px solid var(--border-green);border-radius:20px;color:var(--text-dark);font-family:Georgia,serif;font-size:15px;min-height:400px;width:100%;padding:15px;resize:vertical;}
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:none;align-items:center;justify-content:center;}
+.loading-spinner{background:var(--card-bg);border-radius:50%;padding:20px;}
+.status-bar{background:rgba(159,185,151,.15);border-radius:15px;padding:12px 20px;}
+.filter-section,.toolbar-section{background:var(--card-bg);border-radius:30px;border:1px solid var(--border-green);padding:25px;}
+.card-nature{background:var(--card-bg);border-radius:30px;border:1px solid var(--border-green);box-shadow:0 5px 15px rgba(93,120,87,.1);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .5s ease-out;}
+</style>
+<div class=\"ai-container\"><div class=\"container-fluid\">
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\">
+  <div class=\"d-flex align-items-center justify-content-between flex-wrap gap-3\">
+    <div class=\"d-flex align-items-center gap-4\">
+      <a href=\"";
+        // line 42
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_events_index");
+        yield "\" style=\"background:var(--input-bg);border:1px solid var(--border-green);color:var(--primary-green);border-radius:25px;padding:10px 20px;text-decoration:none;font-weight:bold;font-size:14px;\">? Retour aux �v�nements</a>
+      <div class=\"avatar-circle\"><span>??</span></div>
+      <div>
+        <h1 class=\"display-4 fw-bold\" style=\"color:var(--primary-green);\">ASSISTANT BIEN-�TRE</h1>
+        <p class=\"lead\" style=\"color:var(--text-muted);\">Votre espace de s�r�nit� pour des �v�nements apaisants</p>
+      </div>
+    </div>
+    <div class=\"nature-badge\">?? NATURE &amp; PAIX</div>
+  </div>
+</div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\">
+  <div class=\"banner-wellness d-flex justify-content-between align-items-center flex-wrap gap-3\">
+    <div class=\"d-flex align-items-center gap-2\"><span class=\"fs-3\">??</span><span class=\"fw-bold\" style=\"color:var(--primary-green);\">+420 s�ances de bien-�tre planifi�es cette semaine</span></div>
+    <div class=\"d-flex align-items-center gap-2\"><span class=\"fs-3\">??</span><span style=\"color:var(--primary-green);\">Harmonie int�rieure</span></div>
+  </div>
+</div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"filter-section\">
+  <h5 class=\"mb-3\" style=\"color:var(--primary-green);font-weight:bold;\">?? FILTRES BIEN-�TRE</h5>
+  <div class=\"row g-3\">
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--secondary-green);\">TYPE D'EXP�RIENCE</label>
+      <select class=\"form-select-nature\" id=\"eventTypeCombo\">
+        <option value=\"\">S�lectionner</option>
+        <option value=\"Bien-�tre et M�ditation\">?? Bien-�tre &amp; M�ditation</option>
+        <option value=\"Retraite et Nature\">?? Retraite &amp; Nature</option>
+        <option value=\"Ateliers et Cercles de parole\">?? Ateliers &amp; Cercles de parole</option>
+        <option value=\"Conf�rences et S�minaires\">?? Conf�rences &amp; S�minaires</option>
+        <option value=\"Team Building\">?? Team Building &amp; Entreprise</option>
+        <option value=\"C�l�brations\">?? C�l�brations &amp; �v�nements</option>
+        <option value=\"Surprise\">? Surprise-moi!</option>
+      </select>
+    </div>
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--secondary-green);\">BUDGET</label>
+      <select class=\"form-select-nature\" id=\"budgetCombo\">
+        <option value=\"\">S�lectionner</option>
+        <option value=\"Moins de 500 euros\">?? Moins de 500 �</option>
+        <option value=\"500 � 2000 euros\">?? 500 � - 2 000 �</option>
+        <option value=\"2000 � 5000 euros\">?? 2 000 � - 5 000 �</option>
+        <option value=\"5000 � 10000 euros\">?? 5 000 � - 10 000 �</option>
+        <option value=\"Plus de 10000 euros\">?? 10 000 � +</option>
+      </select>
+    </div>
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--secondary-green);\">PARTICIPANTS</label>
+      <select class=\"form-select-nature\" id=\"audienceSizeCombo\">
+        <option value=\"\">S�lectionner</option>
+        <option value=\"Intime moins de 20\">?? Intime (moins de 20)</option>
+        <option value=\"Petit 20 � 50\">?? Petit (20-50)</option>
+        <option value=\"Moyen 50 � 150\">?? Moyen (50-150)</option>
+        <option value=\"Grand 150 � 300\">?? Grand (150-300)</option>
+        <option value=\"Tr�s grand 300 plus\">?? Tr�s grand (300+)</option>
+      </select>
+    </div>
+  </div>
+</div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"toolbar-section\">
+  <div class=\"row align-items-end g-3\">
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--primary-green);\">TYPE D'ACCOMPAGNEMENT</label>
+      <select class=\"form-select-nature\" id=\"helpTypeCombo\">
+        <option value=\"Id�es de th�mes\">?? Id�es de th�mes</option>
+        <option value=\"Planification budg�taire\">?? Planification budg�taire</option>
+        <option value=\"Suggestions d'activit�s\">? Suggestions d'activit�s</option>
+        <option value=\"Strat�gie de partage\">?? Strat�gie de partage</option>
+        <option value=\"Suggestions de lieux\">??? Suggestions de lieux</option>
+        <option value=\"Planification temporelle\">?? Planification temporelle</option>
+        <option value=\"Id�es de d�coration\">?? Id�es de d�coration</option>
+        <option value=\"Id�es de restauration\">??? Id�es de restauration</option>
+        <option value=\"Plan complet\">?? Plan complet</option>
+      </select>
+    </div>
+    <div class=\"col-md-8\">
+      <div class=\"d-flex gap-2 flex-wrap justify-content-md-end\">
+        <button class=\"btn-quick btn-quick-idea\"     onclick=\"handleQuickIdea()\">?? ID�E VERTE</button>
+        <button class=\"btn-quick btn-quick-budget\"   onclick=\"handleBudgetHelp()\">?? BUDGET NATURE</button>
+        <button class=\"btn-quick btn-quick-planning\" onclick=\"handleTimelineHelp()\">?? PLANNING DOUX</button>
+        <button class=\"btn-quick btn-quick-share\"    onclick=\"handleMarketingHelp()\">??? PARTAGE</button>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\">
+  <ul class=\"nav-tabs-nature\" id=\"aiTabs\">
+    <li><button class=\"nav-link active\" data-tab=\"themes\">?? TH�MES</button></li>
+    <li><button class=\"nav-link\" data-tab=\"budget\">?? BUDGET</button></li>
+    <li><button class=\"nav-link\" data-tab=\"activities\">? ACTIVIT�S</button></li>
+    <li><button class=\"nav-link\" data-tab=\"marketing\">?? PARTAGE</button></li>
+    <li><button class=\"nav-link\" data-tab=\"venue\">??? LIEUX</button></li>
+    <li><button class=\"nav-link\" data-tab=\"timeline\">?? TIMELINE</button></li>
+    <li><button class=\"nav-link\" data-tab=\"decor\">?? D�COR</button></li>
+    <li><button class=\"nav-link\" data-tab=\"catering\">??? RESTAURATION</button></li>
+    <li><button class=\"nav-link\" data-tab=\"complete\">?? PLAN COMPLET</button></li>
+  </ul>
+  <div class=\"tab-content-nature\"><p style=\"color:var(--text-muted);\">S�lectionnez un th�me pour obtenir des conseils personnalis�s...</p></div>
+</div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"card-nature p-4\">
+  <label class=\"fw-bold mb-2\" style=\"color:var(--primary-green);\">VOTRE INTENTION</label>
+  <textarea id=\"eventDescriptionArea\" class=\"textarea-nature\" rows=\"4\" placeholder=\"D�crivez votre �v�nement en toute s�r�nit�...\"></textarea>
+</div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12 text-center\">
+  <div class=\"d-flex justify-content-center gap-4 flex-wrap\">
+    <button class=\"btn-nature\" onclick=\"generateIdeas()\"><span style=\"font-size:24px;\">??</span> G�N�RER</button>
+    <button class=\"btn-nature-secondary\" onclick=\"clearFields()\"><span style=\"font-size:18px;\">??</span> Effacer</button>
+  </div>
+</div></div>
+<div id=\"loadingOverlay\" class=\"loading-overlay\"><div class=\"loading-spinner\"><div class=\"spinner-border text-success\" role=\"status\"><span class=\"visually-hidden\">Chargement...</span></div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"card-nature p-4\">
+  <div class=\"d-flex justify-content-between align-items-center mb-3\">
+    <div class=\"d-flex align-items-center gap-3\">
+      <div style=\"width:16px;height:16px;background:linear-gradient(135deg,var(--secondary-green),var(--primary-green));border-radius:50%;\"></div>
+      <h5 class=\"mb-0\" style=\"color:var(--primary-green);\">VOTRE ESPACE DE R�FLEXION</h5>
+    </div>
+    <span id=\"tokenCountLabel\" style=\"color:var(--pale-green);font-size:14px;\">0 mots</span>
+  </div>
+  <textarea id=\"resultArea\" class=\"result-area\" readonly rows=\"20\"></textarea>
+  <div class=\"d-flex justify-content-end gap-2 mt-3 flex-wrap\">
+    <button class=\"btn-nature-outline\" onclick=\"copyToClipboard()\">?? Copier</button>
+    <button class=\"btn-nature-outline\" onclick=\"showHistory()\">?? Historique</button>
+    <button class=\"btn-nature-outline\" onclick=\"showFavorites()\">? Mes Favoris</button>
+    <button class=\"btn-nature-outline\" onclick=\"exportToFile()\">?? Exporter</button>
+    <button class=\"btn-nature-outline\" onclick=\"saveToFavorites()\">? Ajouter</button>
+    <button class=\"btn-nature-outline\" style=\"background:var(--soft-green);color:white;\" onclick=\"window.location.href='";
+        // line 160
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_events_index");
+        yield "'\">? Fermer</button>
+  </div>
+</div></div></div>
+<div class=\"row fade-in\"><div class=\"col-12\">
+  <div class=\"status-bar d-flex align-items-center justify-content-between flex-wrap gap-3\">
+    <div class=\"d-flex align-items-center gap-2\"><div style=\"width:12px;height:12px;background:var(--secondary-green);border-radius:50%;\"></div><span style=\"color:var(--primary-green);font-size:13px;\">Connexion �tablie</span></div>
+    <div class=\"d-flex align-items-center gap-3\"><span style=\"color:var(--primary-green);font-size:13px;\">?? gemini-2.5-flash</span><span style=\"color:var(--pale-green);\">�</span><span id=\"timeLabel\" style=\"color:var(--primary-green);font-size:13px;\">?? 00:00:00</span></div>
+  </div>
+</div></div>
+</div></div>
+<input type=\"hidden\" id=\"csrf_token\" value=\"";
+        // line 170
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("ai_assistant"), "html", null, true);
+        yield "\">
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 172
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_javascripts(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
+
+        yield from $this->yieldParentBlock("javascripts", $context, $blocks);
+        yield "
+<script>
+var GENERATE_URL = \"";
+        // line 174
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_ai_assistant_generate");
+        yield "\";
+var historyUrl   = \"";
+        // line 175
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_ai_assistant_history");
+        yield "\";
+var favoritesUrl = \"";
+        // line 176
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_ai_assistant_favorites");
+        yield "\";
+var saveFavUrl   = \"";
+        // line 177
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_ai_assistant_save_favorite");
+        yield "\";
+var exportUrl    = \"";
+        // line 178
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("psycho_ai_assistant_export");
+        yield "\";
+
+/* -- Styled notification (replaces all alert/prompt) -- */
+function showMsg(msg, type) {
+    var existing = document.getElementById('ai-msg-bar');
+    if (existing) existing.remove();
+    var bar = document.createElement('div');
+    bar.id = 'ai-msg-bar';
+    var colors = { info:'#7f9a7d', warn:'#e0a800', error:'#c0392b', ok:'#2e7d32' };
+    bar.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);'
+        + 'background:' + (colors[type]||colors.info) + ';color:white;padding:14px 28px;'
+        + 'border-radius:25px;z-index:10001;font-size:15px;font-weight:bold;'
+        + 'box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:90vw;text-align:center;';
+    bar.textContent = msg;
+    document.body.appendChild(bar);
+    setTimeout(function(){ if(bar.parentNode) bar.remove(); }, 3500);
+}
+function showToast(msg) { showMsg(msg, 'ok'); }
+function showResultMsg(msg) { document.getElementById('resultArea').value = msg; updateWordCount(); }
+
+function setWelcomeMessage() {
+    showResultMsg(
+        'Bienvenue dans votre espace de s�r�nit�.\\n\\n'
+      + 'Je peux vous aider � :\\n'
+      + '?? Trouver l\\'inspiration\\n'
+      + '?? Planifier votre budget\\n'
+      + '? Cr�er des activit�s\\n'
+      + '??? Choisir un lieu\\n'
+      + '?? Organiser le temps\\n\\n'
+      + 'D�crivez votre intention ci-dessous...'
+    );
+}
+function updateTime(){document.getElementById('timeLabel').textContent='?? '+new Date().toLocaleTimeString('fr-FR');}
+setInterval(updateTime,1000);updateTime();
+function updateWordCount(){var w=document.getElementById('resultArea').value.trim().split(/\\s+/).filter(function(x){return x.length>0;});document.getElementById('tokenCountLabel').textContent=w.length+' mots';}
+function showLoading(s){document.getElementById('loadingOverlay').style.display=s?'flex':'none';}
+function applyQuickFilters(){var t=document.getElementById('eventTypeCombo').value,b=document.getElementById('budgetCombo').value,a=document.getElementById('audienceSizeCombo').value,txt='';if(t)txt+=t;if(b)txt+=(txt?' avec ':'')+b;if(a)txt+=(txt?' pour ':'')+a;if(txt)document.getElementById('eventDescriptionArea').value=txt;}
+
+function generateIdeas() {
+    var desc = document.getElementById('eventDescriptionArea').value.trim();
+    if (!desc) { showMsg('Veuillez decrire votre evenement avant de generer.', 'warn'); document.getElementById('eventDescriptionArea').focus(); return; }
+    showLoading(true);
+    showResultMsg('Generation en cours...');
+    var eventType = document.getElementById('eventTypeCombo').value;
+    var budget    = document.getElementById('budgetCombo').value;
+    var audience  = document.getElementById('audienceSizeCombo').value;
+    var helpType  = document.getElementById('helpTypeCombo').value;
+    fetch(GENERATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+        body: JSON.stringify({ description: desc, event_type: eventType, budget: budget, audience_size: audience, help_type: helpType })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success && data.result) { showResultMsg(data.result); }
+        else { showResultMsg('Votre demande n a pas pu etre traitee. Veuillez reessayer.'); showMsg('Generation indisponible.', 'warn'); }
+    })
+    .catch(function() { showResultMsg('La connexion est temporairement indisponible.'); showMsg('Service indisponible.', 'warn'); })
+    .finally(function() { showLoading(false); });
+}
+
+function clearFields(){document.getElementById('eventDescriptionArea').value='';document.getElementById('eventTypeCombo').value='';document.getElementById('budgetCombo').value='';document.getElementById('audienceSizeCombo').value='';document.getElementById('helpTypeCombo').value='Id�es de th�mes';setWelcomeMessage();}
+
+function copyToClipboard(){
+    var t=document.getElementById('resultArea').value;
+    if(!t||t.includes('Bienvenue')){showMsg('?? Rien � copier pour le moment.','info');return;}
+    navigator.clipboard.writeText(t).then(function(){showToast('? Copi� dans le presse-papiers !');}).catch(function(){showMsg('La copie n\\'est pas disponible dans ce navigateur.','warn');});
+}
+
+function exportToFile(){
+    var c=document.getElementById('resultArea').value;
+    if(!c||c.includes('Bienvenue')){showMsg('?? G�n�rez d\\'abord des id�es avant d\\'exporter.','info');return;}
+    var existing=document.getElementById('ai-format-picker');
+    if(existing){existing.remove();return;}
+    var picker=document.createElement('div');
+    picker.id='ai-format-picker';
+    picker.style.cssText='position:fixed;bottom:80px;right:20px;background:var(--card-bg);border:1px solid var(--border-green);border-radius:20px;padding:16px;z-index:10002;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;gap:10px;';
+    ['txt','doc','pdf'].forEach(function(fmt){
+        var btn=document.createElement('button');
+        btn.textContent=fmt.toUpperCase();
+        btn.style.cssText='background:var(--secondary-green);color:white;border:none;border-radius:15px;padding:8px 18px;cursor:pointer;font-weight:bold;';
+        btn.onclick=function(){picker.remove();doExport(c,fmt);};
+        picker.appendChild(btn);
+    });
+    document.body.appendChild(picker);
+    setTimeout(function(){if(picker.parentNode)picker.remove();},8000);
+}
+
+function doExport(content,format){
+    showLoading(true);
+    fetch(exportUrl,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':document.getElementById('csrf_token').value},body:JSON.stringify({content:content,format:format})})
+    .then(function(r){return r.blob();})
+    .then(function(b){var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='idees_'+Date.now()+'.'+format;a.click();showToast('? Fichier export� !');})
+    .catch(function(){showMsg('Export indisponible pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function saveToFavorites(){
+    var c=document.getElementById('resultArea').value;
+    if(!c||c.includes('Bienvenue')){showMsg('?? Rien � sauvegarder pour le moment.','info');return;}
+    showLoading(true);
+    fetch(saveFavUrl,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':document.getElementById('csrf_token').value},body:JSON.stringify({content:c,description:document.getElementById('eventDescriptionArea').value.substring(0,100)})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(d.success)showToast('? Ajout� aux favoris !');else showMsg('Impossible de sauvegarder pour le moment.','warn');})
+    .catch(function(){showMsg('Service indisponible pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function showHistory(){
+    showLoading(true);
+    fetch(historyUrl)
+    .then(function(r){return r.json();})
+    .then(function(d){
+        if(d.success&&d.history.length>0){var t='=== HISTORIQUE ===\\n\\n';d.history.forEach(function(item,i){t+='['+(i+1)+'] '+item.created_at+'\\n'+item.question.substring(0,100)+'...\\n---\\n\\n';});showResultMsg(t);}
+        else{showResultMsg('?? Aucune conversation enregistr�e pour le moment.\\nVos prochaines g�n�rations appara�tront ici.');}
+    })
+    .catch(function(){showMsg('Historique indisponible pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function showFavorites(){
+    showLoading(true);
+    fetch(favoritesUrl)
+    .then(function(r){return r.json();})
+    .then(function(d){
+        if(d.success&&d.favorites.length>0){var t='=== MES FAVORIS ===\\n\\n';d.favorites.forEach(function(item,i){t+='['+(i+1)+'] '+item.created_at+'\\n'+item.content.substring(0,300)+'...\\n---\\n\\n';});showResultMsg(t);}
+        else{showResultMsg('?? Aucun favori enregistr� pour le moment.\\nCliquez sur ? Ajouter pour sauvegarder une g�n�ration.');}
+    })
+    .catch(function(){showMsg('Favoris indisponibles pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function handleQuickIdea()     {document.getElementById('eventDescriptionArea').value=\"Je cherche l'inspiration pour un �v�nement apaisant\";document.getElementById('helpTypeCombo').value=\"Id�es de th�mes\";generateIdeas();}
+function handleBudgetHelp()    {document.getElementById('eventDescriptionArea').value=\"Comment planifier un budget pour mon �v�nement ?\";document.getElementById('helpTypeCombo').value=\"Planification budg�taire\";generateIdeas();}
+function handleTimelineHelp()  {document.getElementById('eventDescriptionArea').value=\"Quel calendrier pour mon �v�nement ?\";document.getElementById('helpTypeCombo').value=\"Planification temporelle\";generateIdeas();}
+function handleMarketingHelp() {document.getElementById('eventDescriptionArea').value=\"Comment partager mon �v�nement ?\";document.getElementById('helpTypeCombo').value=\"Strat�gie de partage\";generateIdeas();}
+
+var tabMap={themes:\"Id�es de th�mes\",budget:\"Planification budg�taire\",activities:\"Suggestions d'activit�s\",marketing:\"Strat�gie de partage\",venue:\"Suggestions de lieux\",timeline:\"Planification temporelle\",decor:\"Id�es de d�coration\",catering:\"Id�es de restauration\",complete:\"Plan complet\"};
+document.querySelectorAll('#aiTabs .nav-link').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('#aiTabs .nav-link').forEach(function(b){b.classList.remove('active');});this.classList.add('active');var v=tabMap[this.getAttribute('data-tab')];if(v)document.getElementById('helpTypeCombo').value=v;});});
+document.getElementById('eventTypeCombo').addEventListener('change',applyQuickFilters);
+document.getElementById('budgetCombo').addEventListener('change',applyQuickFilters);
+document.getElementById('audienceSizeCombo').addEventListener('change',applyQuickFilters);
+document.getElementById('resultArea').addEventListener('input',updateWordCount);
+setWelcomeMessage();
+</script>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "Psychologue/evente/AIAssitant.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  321 => 178,  317 => 177,  313 => 176,  309 => 175,  305 => 174,  288 => 172,  275 => 170,  262 => 160,  141 => 42,  101 => 4,  88 => 3,  65 => 2,  42 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{% extends 'base.html.twig' %}
+{% block title %}Assistant Bien-�tre{% endblock %}
+{% block body %}
+<style>
+:root{--primary-green:#5c715a;--secondary-green:#7f9a7d;--light-green:#9cb39b;--pale-green:#a5b8a3;--soft-green:#b7c9b5;--bg-light:#f5f3ed;--card-bg:#fcfaf7;--border-green:#d2e0cf;--input-bg:#f0f1ec;--text-dark:#4d604b;--text-muted:#8a9a87;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background-color:var(--bg-light);font-family:'Segoe UI',Georgia,serif;}
+.ai-container{background:linear-gradient(135deg,#f3efe9,#e8e3db);min-height:100vh;padding:25px;}
+.avatar-circle{width:90px;height:90px;background:linear-gradient(135deg,var(--light-green),var(--secondary-green));border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.avatar-circle span{font-size:45px;}
+.nature-badge{background:linear-gradient(135deg,var(--soft-green),var(--pale-green));padding:8px 20px;border-radius:25px;color:#3d533b;font-weight:bold;font-size:14px;}
+.banner-wellness{background:rgba(159,185,151,.15);border-radius:20px;padding:15px 20px;}
+.form-select-nature{background-color:var(--input-bg);border:1px solid var(--border-green);border-radius:25px;padding:10px 15px;color:var(--text-dark);width:100%;}
+.form-select-nature:focus{border-color:var(--secondary-green);outline:none;}
+.btn-nature{background:linear-gradient(135deg,var(--secondary-green),var(--primary-green));color:white;border:none;border-radius:35px;padding:18px 60px;font-weight:bold;font-size:20px;cursor:pointer;box-shadow:0 5px 15px rgba(127,154,125,.3);}
+.btn-nature:hover{transform:translateY(-2px);}
+.btn-nature-secondary{background:var(--input-bg);color:var(--primary-green);border:1px solid var(--border-green);border-radius:35px;padding:18px 40px;font-size:18px;cursor:pointer;}
+.btn-nature-outline{background:#e2f0e0;color:var(--primary-green);border:1px solid var(--border-green);border-radius:25px;padding:8px 20px;cursor:pointer;font-size:14px;}
+.btn-nature-outline:hover{background:var(--secondary-green);color:white;}
+.btn-quick{border-radius:25px;padding:12px 25px;font-weight:bold;font-size:13px;color:white;cursor:pointer;border:none;}
+.btn-quick-idea{background:var(--light-green);}.btn-quick-budget{background:var(--secondary-green);}
+.btn-quick-planning{background:var(--pale-green);}.btn-quick-share{background:var(--soft-green);}
+.nav-tabs-nature{border-bottom:2px solid var(--border-green);gap:5px;flex-wrap:wrap;display:flex;list-style:none;padding:0;margin:0;}
+.nav-tabs-nature .nav-link{border:none;color:var(--text-muted);font-weight:600;padding:12px 20px;border-radius:15px 15px 0 0;cursor:pointer;background:transparent;}
+.nav-tabs-nature .nav-link.active{color:var(--primary-green);background:var(--card-bg);border-bottom:3px solid var(--secondary-green);}
+.tab-content-nature{background:var(--card-bg);border-radius:0 0 25px 25px;border:1px solid var(--border-green);border-top:none;padding:20px;min-height:150px;}
+.textarea-nature{background-color:var(--input-bg);border:1px solid var(--border-green);border-radius:20px;color:var(--text-dark);font-size:14px;width:100%;padding:12px;font-family:inherit;resize:vertical;}
+.textarea-nature:focus{border-color:var(--secondary-green);outline:none;}
+.result-area{background-color:var(--input-bg);border:1px solid var(--border-green);border-radius:20px;color:var(--text-dark);font-family:Georgia,serif;font-size:15px;min-height:400px;width:100%;padding:15px;resize:vertical;}
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:none;align-items:center;justify-content:center;}
+.loading-spinner{background:var(--card-bg);border-radius:50%;padding:20px;}
+.status-bar{background:rgba(159,185,151,.15);border-radius:15px;padding:12px 20px;}
+.filter-section,.toolbar-section{background:var(--card-bg);border-radius:30px;border:1px solid var(--border-green);padding:25px;}
+.card-nature{background:var(--card-bg);border-radius:30px;border:1px solid var(--border-green);box-shadow:0 5px 15px rgba(93,120,87,.1);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .5s ease-out;}
+</style>
+<div class=\"ai-container\"><div class=\"container-fluid\">
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\">
+  <div class=\"d-flex align-items-center justify-content-between flex-wrap gap-3\">
+    <div class=\"d-flex align-items-center gap-4\">
+      <a href=\"{{ path('psycho_events_index') }}\" style=\"background:var(--input-bg);border:1px solid var(--border-green);color:var(--primary-green);border-radius:25px;padding:10px 20px;text-decoration:none;font-weight:bold;font-size:14px;\">? Retour aux �v�nements</a>
+      <div class=\"avatar-circle\"><span>??</span></div>
+      <div>
+        <h1 class=\"display-4 fw-bold\" style=\"color:var(--primary-green);\">ASSISTANT BIEN-�TRE</h1>
+        <p class=\"lead\" style=\"color:var(--text-muted);\">Votre espace de s�r�nit� pour des �v�nements apaisants</p>
+      </div>
+    </div>
+    <div class=\"nature-badge\">?? NATURE &amp; PAIX</div>
+  </div>
+</div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\">
+  <div class=\"banner-wellness d-flex justify-content-between align-items-center flex-wrap gap-3\">
+    <div class=\"d-flex align-items-center gap-2\"><span class=\"fs-3\">??</span><span class=\"fw-bold\" style=\"color:var(--primary-green);\">+420 s�ances de bien-�tre planifi�es cette semaine</span></div>
+    <div class=\"d-flex align-items-center gap-2\"><span class=\"fs-3\">??</span><span style=\"color:var(--primary-green);\">Harmonie int�rieure</span></div>
+  </div>
+</div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"filter-section\">
+  <h5 class=\"mb-3\" style=\"color:var(--primary-green);font-weight:bold;\">?? FILTRES BIEN-�TRE</h5>
+  <div class=\"row g-3\">
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--secondary-green);\">TYPE D'EXP�RIENCE</label>
+      <select class=\"form-select-nature\" id=\"eventTypeCombo\">
+        <option value=\"\">S�lectionner</option>
+        <option value=\"Bien-�tre et M�ditation\">?? Bien-�tre &amp; M�ditation</option>
+        <option value=\"Retraite et Nature\">?? Retraite &amp; Nature</option>
+        <option value=\"Ateliers et Cercles de parole\">?? Ateliers &amp; Cercles de parole</option>
+        <option value=\"Conf�rences et S�minaires\">?? Conf�rences &amp; S�minaires</option>
+        <option value=\"Team Building\">?? Team Building &amp; Entreprise</option>
+        <option value=\"C�l�brations\">?? C�l�brations &amp; �v�nements</option>
+        <option value=\"Surprise\">? Surprise-moi!</option>
+      </select>
+    </div>
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--secondary-green);\">BUDGET</label>
+      <select class=\"form-select-nature\" id=\"budgetCombo\">
+        <option value=\"\">S�lectionner</option>
+        <option value=\"Moins de 500 euros\">?? Moins de 500 �</option>
+        <option value=\"500 � 2000 euros\">?? 500 � - 2 000 �</option>
+        <option value=\"2000 � 5000 euros\">?? 2 000 � - 5 000 �</option>
+        <option value=\"5000 � 10000 euros\">?? 5 000 � - 10 000 �</option>
+        <option value=\"Plus de 10000 euros\">?? 10 000 � +</option>
+      </select>
+    </div>
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--secondary-green);\">PARTICIPANTS</label>
+      <select class=\"form-select-nature\" id=\"audienceSizeCombo\">
+        <option value=\"\">S�lectionner</option>
+        <option value=\"Intime moins de 20\">?? Intime (moins de 20)</option>
+        <option value=\"Petit 20 � 50\">?? Petit (20-50)</option>
+        <option value=\"Moyen 50 � 150\">?? Moyen (50-150)</option>
+        <option value=\"Grand 150 � 300\">?? Grand (150-300)</option>
+        <option value=\"Tr�s grand 300 plus\">?? Tr�s grand (300+)</option>
+      </select>
+    </div>
+  </div>
+</div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"toolbar-section\">
+  <div class=\"row align-items-end g-3\">
+    <div class=\"col-md-4\"><label class=\"form-label small fw-bold\" style=\"color:var(--primary-green);\">TYPE D'ACCOMPAGNEMENT</label>
+      <select class=\"form-select-nature\" id=\"helpTypeCombo\">
+        <option value=\"Id�es de th�mes\">?? Id�es de th�mes</option>
+        <option value=\"Planification budg�taire\">?? Planification budg�taire</option>
+        <option value=\"Suggestions d'activit�s\">? Suggestions d'activit�s</option>
+        <option value=\"Strat�gie de partage\">?? Strat�gie de partage</option>
+        <option value=\"Suggestions de lieux\">??? Suggestions de lieux</option>
+        <option value=\"Planification temporelle\">?? Planification temporelle</option>
+        <option value=\"Id�es de d�coration\">?? Id�es de d�coration</option>
+        <option value=\"Id�es de restauration\">??? Id�es de restauration</option>
+        <option value=\"Plan complet\">?? Plan complet</option>
+      </select>
+    </div>
+    <div class=\"col-md-8\">
+      <div class=\"d-flex gap-2 flex-wrap justify-content-md-end\">
+        <button class=\"btn-quick btn-quick-idea\"     onclick=\"handleQuickIdea()\">?? ID�E VERTE</button>
+        <button class=\"btn-quick btn-quick-budget\"   onclick=\"handleBudgetHelp()\">?? BUDGET NATURE</button>
+        <button class=\"btn-quick btn-quick-planning\" onclick=\"handleTimelineHelp()\">?? PLANNING DOUX</button>
+        <button class=\"btn-quick btn-quick-share\"    onclick=\"handleMarketingHelp()\">??? PARTAGE</button>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\">
+  <ul class=\"nav-tabs-nature\" id=\"aiTabs\">
+    <li><button class=\"nav-link active\" data-tab=\"themes\">?? TH�MES</button></li>
+    <li><button class=\"nav-link\" data-tab=\"budget\">?? BUDGET</button></li>
+    <li><button class=\"nav-link\" data-tab=\"activities\">? ACTIVIT�S</button></li>
+    <li><button class=\"nav-link\" data-tab=\"marketing\">?? PARTAGE</button></li>
+    <li><button class=\"nav-link\" data-tab=\"venue\">??? LIEUX</button></li>
+    <li><button class=\"nav-link\" data-tab=\"timeline\">?? TIMELINE</button></li>
+    <li><button class=\"nav-link\" data-tab=\"decor\">?? D�COR</button></li>
+    <li><button class=\"nav-link\" data-tab=\"catering\">??? RESTAURATION</button></li>
+    <li><button class=\"nav-link\" data-tab=\"complete\">?? PLAN COMPLET</button></li>
+  </ul>
+  <div class=\"tab-content-nature\"><p style=\"color:var(--text-muted);\">S�lectionnez un th�me pour obtenir des conseils personnalis�s...</p></div>
+</div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"card-nature p-4\">
+  <label class=\"fw-bold mb-2\" style=\"color:var(--primary-green);\">VOTRE INTENTION</label>
+  <textarea id=\"eventDescriptionArea\" class=\"textarea-nature\" rows=\"4\" placeholder=\"D�crivez votre �v�nement en toute s�r�nit�...\"></textarea>
+</div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12 text-center\">
+  <div class=\"d-flex justify-content-center gap-4 flex-wrap\">
+    <button class=\"btn-nature\" onclick=\"generateIdeas()\"><span style=\"font-size:24px;\">??</span> G�N�RER</button>
+    <button class=\"btn-nature-secondary\" onclick=\"clearFields()\"><span style=\"font-size:18px;\">??</span> Effacer</button>
+  </div>
+</div></div>
+<div id=\"loadingOverlay\" class=\"loading-overlay\"><div class=\"loading-spinner\"><div class=\"spinner-border text-success\" role=\"status\"><span class=\"visually-hidden\">Chargement...</span></div></div></div>
+<div class=\"row mb-4 fade-in\"><div class=\"col-12\"><div class=\"card-nature p-4\">
+  <div class=\"d-flex justify-content-between align-items-center mb-3\">
+    <div class=\"d-flex align-items-center gap-3\">
+      <div style=\"width:16px;height:16px;background:linear-gradient(135deg,var(--secondary-green),var(--primary-green));border-radius:50%;\"></div>
+      <h5 class=\"mb-0\" style=\"color:var(--primary-green);\">VOTRE ESPACE DE R�FLEXION</h5>
+    </div>
+    <span id=\"tokenCountLabel\" style=\"color:var(--pale-green);font-size:14px;\">0 mots</span>
+  </div>
+  <textarea id=\"resultArea\" class=\"result-area\" readonly rows=\"20\"></textarea>
+  <div class=\"d-flex justify-content-end gap-2 mt-3 flex-wrap\">
+    <button class=\"btn-nature-outline\" onclick=\"copyToClipboard()\">?? Copier</button>
+    <button class=\"btn-nature-outline\" onclick=\"showHistory()\">?? Historique</button>
+    <button class=\"btn-nature-outline\" onclick=\"showFavorites()\">? Mes Favoris</button>
+    <button class=\"btn-nature-outline\" onclick=\"exportToFile()\">?? Exporter</button>
+    <button class=\"btn-nature-outline\" onclick=\"saveToFavorites()\">? Ajouter</button>
+    <button class=\"btn-nature-outline\" style=\"background:var(--soft-green);color:white;\" onclick=\"window.location.href='{{ path('psycho_events_index') }}'\">? Fermer</button>
+  </div>
+</div></div></div>
+<div class=\"row fade-in\"><div class=\"col-12\">
+  <div class=\"status-bar d-flex align-items-center justify-content-between flex-wrap gap-3\">
+    <div class=\"d-flex align-items-center gap-2\"><div style=\"width:12px;height:12px;background:var(--secondary-green);border-radius:50%;\"></div><span style=\"color:var(--primary-green);font-size:13px;\">Connexion �tablie</span></div>
+    <div class=\"d-flex align-items-center gap-3\"><span style=\"color:var(--primary-green);font-size:13px;\">?? gemini-2.5-flash</span><span style=\"color:var(--pale-green);\">�</span><span id=\"timeLabel\" style=\"color:var(--primary-green);font-size:13px;\">?? 00:00:00</span></div>
+  </div>
+</div></div>
+</div></div>
+<input type=\"hidden\" id=\"csrf_token\" value=\"{{ csrf_token('ai_assistant') }}\">
+{% endblock %}
+{% block javascripts %}{{ parent() }}
+<script>
+var GENERATE_URL = \"{{ path('psycho_ai_assistant_generate') }}\";
+var historyUrl   = \"{{ path('psycho_ai_assistant_history') }}\";
+var favoritesUrl = \"{{ path('psycho_ai_assistant_favorites') }}\";
+var saveFavUrl   = \"{{ path('psycho_ai_assistant_save_favorite') }}\";
+var exportUrl    = \"{{ path('psycho_ai_assistant_export') }}\";
+
+/* -- Styled notification (replaces all alert/prompt) -- */
+function showMsg(msg, type) {
+    var existing = document.getElementById('ai-msg-bar');
+    if (existing) existing.remove();
+    var bar = document.createElement('div');
+    bar.id = 'ai-msg-bar';
+    var colors = { info:'#7f9a7d', warn:'#e0a800', error:'#c0392b', ok:'#2e7d32' };
+    bar.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);'
+        + 'background:' + (colors[type]||colors.info) + ';color:white;padding:14px 28px;'
+        + 'border-radius:25px;z-index:10001;font-size:15px;font-weight:bold;'
+        + 'box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:90vw;text-align:center;';
+    bar.textContent = msg;
+    document.body.appendChild(bar);
+    setTimeout(function(){ if(bar.parentNode) bar.remove(); }, 3500);
+}
+function showToast(msg) { showMsg(msg, 'ok'); }
+function showResultMsg(msg) { document.getElementById('resultArea').value = msg; updateWordCount(); }
+
+function setWelcomeMessage() {
+    showResultMsg(
+        'Bienvenue dans votre espace de s�r�nit�.\\n\\n'
+      + 'Je peux vous aider � :\\n'
+      + '?? Trouver l\\'inspiration\\n'
+      + '?? Planifier votre budget\\n'
+      + '? Cr�er des activit�s\\n'
+      + '??? Choisir un lieu\\n'
+      + '?? Organiser le temps\\n\\n'
+      + 'D�crivez votre intention ci-dessous...'
+    );
+}
+function updateTime(){document.getElementById('timeLabel').textContent='?? '+new Date().toLocaleTimeString('fr-FR');}
+setInterval(updateTime,1000);updateTime();
+function updateWordCount(){var w=document.getElementById('resultArea').value.trim().split(/\\s+/).filter(function(x){return x.length>0;});document.getElementById('tokenCountLabel').textContent=w.length+' mots';}
+function showLoading(s){document.getElementById('loadingOverlay').style.display=s?'flex':'none';}
+function applyQuickFilters(){var t=document.getElementById('eventTypeCombo').value,b=document.getElementById('budgetCombo').value,a=document.getElementById('audienceSizeCombo').value,txt='';if(t)txt+=t;if(b)txt+=(txt?' avec ':'')+b;if(a)txt+=(txt?' pour ':'')+a;if(txt)document.getElementById('eventDescriptionArea').value=txt;}
+
+function generateIdeas() {
+    var desc = document.getElementById('eventDescriptionArea').value.trim();
+    if (!desc) { showMsg('Veuillez decrire votre evenement avant de generer.', 'warn'); document.getElementById('eventDescriptionArea').focus(); return; }
+    showLoading(true);
+    showResultMsg('Generation en cours...');
+    var eventType = document.getElementById('eventTypeCombo').value;
+    var budget    = document.getElementById('budgetCombo').value;
+    var audience  = document.getElementById('audienceSizeCombo').value;
+    var helpType  = document.getElementById('helpTypeCombo').value;
+    fetch(GENERATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.getElementById('csrf_token').value },
+        body: JSON.stringify({ description: desc, event_type: eventType, budget: budget, audience_size: audience, help_type: helpType })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success && data.result) { showResultMsg(data.result); }
+        else { showResultMsg('Votre demande n a pas pu etre traitee. Veuillez reessayer.'); showMsg('Generation indisponible.', 'warn'); }
+    })
+    .catch(function() { showResultMsg('La connexion est temporairement indisponible.'); showMsg('Service indisponible.', 'warn'); })
+    .finally(function() { showLoading(false); });
+}
+
+function clearFields(){document.getElementById('eventDescriptionArea').value='';document.getElementById('eventTypeCombo').value='';document.getElementById('budgetCombo').value='';document.getElementById('audienceSizeCombo').value='';document.getElementById('helpTypeCombo').value='Id�es de th�mes';setWelcomeMessage();}
+
+function copyToClipboard(){
+    var t=document.getElementById('resultArea').value;
+    if(!t||t.includes('Bienvenue')){showMsg('?? Rien � copier pour le moment.','info');return;}
+    navigator.clipboard.writeText(t).then(function(){showToast('? Copi� dans le presse-papiers !');}).catch(function(){showMsg('La copie n\\'est pas disponible dans ce navigateur.','warn');});
+}
+
+function exportToFile(){
+    var c=document.getElementById('resultArea').value;
+    if(!c||c.includes('Bienvenue')){showMsg('?? G�n�rez d\\'abord des id�es avant d\\'exporter.','info');return;}
+    var existing=document.getElementById('ai-format-picker');
+    if(existing){existing.remove();return;}
+    var picker=document.createElement('div');
+    picker.id='ai-format-picker';
+    picker.style.cssText='position:fixed;bottom:80px;right:20px;background:var(--card-bg);border:1px solid var(--border-green);border-radius:20px;padding:16px;z-index:10002;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;gap:10px;';
+    ['txt','doc','pdf'].forEach(function(fmt){
+        var btn=document.createElement('button');
+        btn.textContent=fmt.toUpperCase();
+        btn.style.cssText='background:var(--secondary-green);color:white;border:none;border-radius:15px;padding:8px 18px;cursor:pointer;font-weight:bold;';
+        btn.onclick=function(){picker.remove();doExport(c,fmt);};
+        picker.appendChild(btn);
+    });
+    document.body.appendChild(picker);
+    setTimeout(function(){if(picker.parentNode)picker.remove();},8000);
+}
+
+function doExport(content,format){
+    showLoading(true);
+    fetch(exportUrl,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':document.getElementById('csrf_token').value},body:JSON.stringify({content:content,format:format})})
+    .then(function(r){return r.blob();})
+    .then(function(b){var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='idees_'+Date.now()+'.'+format;a.click();showToast('? Fichier export� !');})
+    .catch(function(){showMsg('Export indisponible pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function saveToFavorites(){
+    var c=document.getElementById('resultArea').value;
+    if(!c||c.includes('Bienvenue')){showMsg('?? Rien � sauvegarder pour le moment.','info');return;}
+    showLoading(true);
+    fetch(saveFavUrl,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':document.getElementById('csrf_token').value},body:JSON.stringify({content:c,description:document.getElementById('eventDescriptionArea').value.substring(0,100)})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(d.success)showToast('? Ajout� aux favoris !');else showMsg('Impossible de sauvegarder pour le moment.','warn');})
+    .catch(function(){showMsg('Service indisponible pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function showHistory(){
+    showLoading(true);
+    fetch(historyUrl)
+    .then(function(r){return r.json();})
+    .then(function(d){
+        if(d.success&&d.history.length>0){var t='=== HISTORIQUE ===\\n\\n';d.history.forEach(function(item,i){t+='['+(i+1)+'] '+item.created_at+'\\n'+item.question.substring(0,100)+'...\\n---\\n\\n';});showResultMsg(t);}
+        else{showResultMsg('?? Aucune conversation enregistr�e pour le moment.\\nVos prochaines g�n�rations appara�tront ici.');}
+    })
+    .catch(function(){showMsg('Historique indisponible pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function showFavorites(){
+    showLoading(true);
+    fetch(favoritesUrl)
+    .then(function(r){return r.json();})
+    .then(function(d){
+        if(d.success&&d.favorites.length>0){var t='=== MES FAVORIS ===\\n\\n';d.favorites.forEach(function(item,i){t+='['+(i+1)+'] '+item.created_at+'\\n'+item.content.substring(0,300)+'...\\n---\\n\\n';});showResultMsg(t);}
+        else{showResultMsg('?? Aucun favori enregistr� pour le moment.\\nCliquez sur ? Ajouter pour sauvegarder une g�n�ration.');}
+    })
+    .catch(function(){showMsg('Favoris indisponibles pour le moment.','warn');})
+    .finally(function(){showLoading(false);});
+}
+
+function handleQuickIdea()     {document.getElementById('eventDescriptionArea').value=\"Je cherche l'inspiration pour un �v�nement apaisant\";document.getElementById('helpTypeCombo').value=\"Id�es de th�mes\";generateIdeas();}
+function handleBudgetHelp()    {document.getElementById('eventDescriptionArea').value=\"Comment planifier un budget pour mon �v�nement ?\";document.getElementById('helpTypeCombo').value=\"Planification budg�taire\";generateIdeas();}
+function handleTimelineHelp()  {document.getElementById('eventDescriptionArea').value=\"Quel calendrier pour mon �v�nement ?\";document.getElementById('helpTypeCombo').value=\"Planification temporelle\";generateIdeas();}
+function handleMarketingHelp() {document.getElementById('eventDescriptionArea').value=\"Comment partager mon �v�nement ?\";document.getElementById('helpTypeCombo').value=\"Strat�gie de partage\";generateIdeas();}
+
+var tabMap={themes:\"Id�es de th�mes\",budget:\"Planification budg�taire\",activities:\"Suggestions d'activit�s\",marketing:\"Strat�gie de partage\",venue:\"Suggestions de lieux\",timeline:\"Planification temporelle\",decor:\"Id�es de d�coration\",catering:\"Id�es de restauration\",complete:\"Plan complet\"};
+document.querySelectorAll('#aiTabs .nav-link').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('#aiTabs .nav-link').forEach(function(b){b.classList.remove('active');});this.classList.add('active');var v=tabMap[this.getAttribute('data-tab')];if(v)document.getElementById('helpTypeCombo').value=v;});});
+document.getElementById('eventTypeCombo').addEventListener('change',applyQuickFilters);
+document.getElementById('budgetCombo').addEventListener('change',applyQuickFilters);
+document.getElementById('audienceSizeCombo').addEventListener('change',applyQuickFilters);
+document.getElementById('resultArea').addEventListener('input',updateWordCount);
+setWelcomeMessage();
+</script>
+{% endblock %}
+", "Psychologue/evente/AIAssitant.html.twig", "C:\\Users\\sirine\\psy1\\psy\\templates\\Psychologue\\evente\\AIAssitant.html.twig");
+    }
+}
